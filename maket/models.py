@@ -3,14 +3,14 @@ from django.db import models
 
 class Color_scheme(models.Model):
     """ color scheme IV, Grant, Eco """
-    scheme_name = models.CharField(max_length=3)
+    scheme_name = models.CharField(max_length=13)
 
 
 class Print_place(models.Model):
     """ detail_name name of part of item
         print_name name of printing place clip/top/cap"""
     detail_name = models.CharField(max_length=20)
-    place_name = models.CharField(max_length=20)
+    place_name = models.CharField(max_length=30)
 
 
 class Detail_set(models.Model):

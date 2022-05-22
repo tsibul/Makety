@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
     <!-- Bootstrap core CSS -->
-    <link href="{% static 'razvozki/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
+    <link href="{% static 'maket/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
 
     <style>
       .bd-placeholder-img {
@@ -33,77 +33,55 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="{% static 'razvozki/navbar-top-fixed.css' %}" rel="stylesheet">
+    <link href="{% static 'maket/navbar-top-fixed.css' %}" rel="stylesheet">
   </head>
   <body>
 
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-success">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#"><i class="bi bi-truck"></i></a>
+    <a class="navbar-brand" href="#"><i class="bi bi-palette2"></i></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav me-auto mb-2 mb-md-0">
-      {% if navi == 'razvozka' %}
+      {% if navi == 'orders' %}
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page"  href="{% url 'razvozki:index' %}">Развозки</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page"  href="{% url 'razvozki:customers' 'name' %}">Клиенты</a>
+            <a class="nav-link active" aria-current="page"  href="{% url 'maket:index' %}">Заказы</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'razvozki:double' 'name' %}"  aria-current="page">Дубликаты</a>
+            <a class="nav-link" aria-current="page"  href="{% url 'maket:dicts' %}">Виды печати</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'razvozki:admin' %}"  aria-current="page">Администрирование</a>
+            <a class="nav-link" href="{% url 'maket:admin' %}"  aria-current="page">Администрирование</a>
           </li>
-      {% elif navi == 'customers' %}
-           <li class="nav-item">
-            <a class="nav-link" aria-current="page"  href="{% url 'razvozki:index' %}">Развозки</a>
+      {% elif navi == 'dicts' %}
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page"  href="{% url 'maket:index' %}">Заказы</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page"  href="{% url 'razvozki:customers' order='name' %}">Клиенты</a>
+            <a class="nav-link active" aria-current="page"  href="{% url 'maket:dicts' %}">Виды печати</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'razvozki:double' 'name' %}"  aria-current="page">Дубликаты</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'razvozki:admin' %}"  aria-current="page">Администрирование</a>
-          </li>
-      {% elif navi == 'double' %}
-           <li class="nav-item">
-            <a class="nav-link" aria-current="page"  href="{% url 'razvozki:index' %}">Развозки</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page"  href="{% url 'razvozki:customers' 'name' %}">Клиенты</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="{% url 'razvozki:double' 'name' %}"  aria-current="page">Дубликаты</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'razvozki:admin' %}"  aria-current="page">Администрирование</a>
+            <a class="nav-link" href="{% url 'maket:admin' %}"  aria-current="page">Администрирование</a>
           </li>
       {% elif navi == 'admin' %}
-           <li class="nav-item">
-            <a class="nav-link" aria-current="page"  href="{% url 'razvozki:index' %}">Развозки</a>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page"  href="{% url 'maket:index' %}">Заказы</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" aria-current="page"  href="{% url 'razvozki:customers' 'name' %}">Клиенты</a>
+            <a class="nav-link" aria-current="page"  href="{% url 'maket:dicts' %}">Виды печати</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'razvozki:double' 'name' %}"  aria-current="page">Дубликаты</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="{% url 'razvozki:admin' %}"  aria-current="page">Администрирование</a>
+            <a class="nav-link active" href="{% url 'maket:admin' %}"  aria-current="page">Администрирование</a>
           </li>
 
       {% endif %}
       </ul>
       <form class="d-flex">
         <input class="form-control me-2" type="search" placeholder="Поиск (нету)" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Поиск</button>
-      <p style="color: white"> v1.0 </p>
+        <button class="btn btn-primary" type="submit">Поиск</button>
+      <p style="color: white"> v0.0 </p>
       </form>
     </div>
   </div>
