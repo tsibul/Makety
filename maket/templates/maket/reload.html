@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="{% static 'maket/style.css' %}">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="border border-3 border-primary">
+<div class="row">
+    <div class="col m-2 fw-bold">ЗАКАЗ {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
+    <div class="col m-2 d-md-flex justify-content-md-end">
+    <form action="maket_print/{{ord_imp.id}}" method="post">
+    {% csrf_token %}
+    <button class="btn btn-outline-primary d-print-none" type="submit" >Печатать макет</button>
+    </form></div>
+</div>
+<table class="table-sm">
+    <tbody>
+        <tr>
+            <td class="fw-bold">Поставщик </td>
+            <td >{{ord_imp.supplier}}</td>
+        </tr>
+        <tr>
+            <td class="fw-bold">Покупатель </td>
+            <td>{{ord_imp.customer_name}}</td>
+            <td>{{ord_imp.customer_INN}}</td>
+            <td>{{ord_imp.customer_address}}</td>
+        </tr>
+        <tr class="d-print-none">
+            <td class="fw-bold">Пленка </td>
+            <td>Номер {{ord_imp.film.film_id}}</td>
+            <td> от {{ord_imp.film.date}}</td>
+            <td class="text-center">
+            <label for="filmstatus">без ошибок</label>
+            {% if ord_imp.film_status %}
+            <input class="form-check-input" type="checkbox" checked disabled name="filmstatus">
+            {% else %}
+            <input class="form-check-input" type="checkbox" disabled name="filmstatus">
+            {% endif %}
+            </td>
+
+        </tr>
+    </tbody>
+
+
+
+</table>
+<div class="border border-4">
+<table class="table-sm">
+    <thead>
+    <tr class="text-center lh-1">
+        <th scope="col" class="col" style="font-size:80%;"> # </th>
+        <th scope="col" class="col" style="font-size:80%;"> Арт. </th>
+        <th scope="col" class="col-3" style="font-size:80%;"> Наименование </th>
+        <th scope="col" class="col-2" style="font-size:80%;"> Нанесение </th>
+        <th scope="col" class="col" style="font-size:80%;"> Кол-во </th>
+        <th scope="col" class="col text-start" style="font-size:80%;"> Место / Тип / Цветов / 2-й проход /Положение</th>
+<!--        <th scope="col" class="col" style="font-size:80%;"> Тип </th>
+        <th scope="col" colspan="2" class="col" style="font-size:80%;"> Цветов / 2-й проход </th>
+        <th scope="col" class="col" style="font-size:80%;"> Положение </th><--->
+    </tr>
+    {% for item in item_import %}
+    </thead>
+    <tbody>
+    <tr class="lh-1">
+        <td scope="row" class="col text-center" style="font-size:80%;"> {{item.print_id}} </td>
+        <td scope="col" class="col text-center" style="font-size:80%;"> {{item.code}} </td>
+        <td scope="col" class="col-3" style="font-size:80%;"> {{item.name}}</td>
+        <td scope="col" class="col-2 text-center" style="font-size:80%;"> {{item.print_name}}</td>
+        <td scope="col" class="col text-center" style="font-size:80%;"> {{item.quantity}}</td>
+    <td colspan="4">
+    <table class="table-sm mb-0">
+
+    {% for prt in print_import %}
+    {% if prt.print_id == item.print_id %}
+    <tr class="lh-1 align-top">
+        <td scope="col" colspan="5" style="font-size:80%;"> </td>
+        <td scope="col" class="col text-start" style="font-size:80%;"> {{prt.place}} /</td>
+        <td scope="col" class="col text-center" style="font-size:80%;"> {{prt.type}} /</td>
+        <td scope="col" class="col text-center" style="font-size:80%;"> {{prt.colors}} /</td>
+         <td scope="col" class="col text-center" style="font-size:80%;">
+        {% if prt.second_pass %}
+            <input class="form-check-input" type="checkbox" checked disabled>
+        {% else %}
+            <input class="form-check-input" type="checkbox" disabled>
+        {% endif %}
+        </td>
+        <td scope="col" class="col text-center" style="font-size:80%;">/ {{prt.position}} </td>
+    </tr>
+    {% else %}
+    {% endif %}
+    {% endfor %}
+    </table>
+    </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+
+<script src="{% static 'maket/maket.js' %}"></script>
+<script src="{% static 'maket/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
+
+</body>
+</html>
