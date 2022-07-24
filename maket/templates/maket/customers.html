@@ -1,0 +1,47 @@
+<!doctype html>
+{% load static %}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="{% static 'maket/style.css' %}">
+    <title>Клиенты</title>
+</head>
+
+{% include 'maket/main.html' %}
+<body>
+<h5>Клиенты</h5>
+<table class="table table-sm table-hover">
+<thead>
+    <tr  class="table-primary">
+    <th><h6>Название</h6></th>
+    <th><h6>Группа</h6></th>
+    <th><h6>Тип</h6></th>
+    <th><h6>Регион</h6></th>
+    <th><h6>ИНН</h6></th>
+    <th ><h6>Адрес</h6></th>
+    </tr>
+</thead>
+<tbody>
+{% for cst in customers %}
+    <tr onclick="javascript:upd_cst({{cst.id}});">
+    <td id="nm_{{cst.id}}">{{cst.name}}"</td>
+    <td id="gr_{{cst.id}}">{{cst.group}}</td>
+    <td id="tp_{{cst.id}}">{{cst.type}}</td>
+    <td id="rg_{{cst.id}}">{{cst.region}}</td>
+    <td id="in_{{cst.id}}">{{cst.inn}}</td>
+    <td id="addr_{{cst.id}}">{{cst.address}}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+
+<script src="{% static 'maket/maket.js' %}"></script>
+
+</body>
+
+</html>
