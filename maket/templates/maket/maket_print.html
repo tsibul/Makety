@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'maket/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'maket/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
+    <title>Макет {{ord_imp.order_id}} от {{ord_imp.order_date}} &nbsp {{ord_imp.customer.name}}</title>
+</head>
+<body>
+   <span class="step-links">
+        &nbsp;
+        <button onclick="window.print()" class="btn btn-outline-primary d-print-none"><i class="bi bi-printer-fill" style="currentColor"></i> Печать</button>
+        <a href="{% url 'maket:index' %}" class="btn btn-outline-secondary d-print-none">Назад</a>
+    </span>
+<div class="border border-3 border-primary p-1 m-1" style="width:200mm;">
+    <div class="row">
+        <div class="col m-1 fw-bold  lh-1">Макет к заказу {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
+    </div>
+<table class="table-sm mb-0">
+    <tbody>
+        <tr class="lh-1">
+            <td class="fw-bold">Поставщик </td>
+            <td >{{ord_imp.supplier}}</td>
+        </tr>
+        <tr class="lh-1">
+            <td class="fw-bold">Покупатель </td>
+            <td>{{ord_imp.customer_name}}</td>
+        </tr>
+    </tbody>
+
+<div class=" row d-print-none">
+    <div class="col">
+    Пленка {{ord_imp.film.film_id}} от {{ord_imp.film.date}}
+    {% if ord_imp.film_status %}
+    <input class="form-check-input" type="checkbox" checked disabled name="filmstatus">
+    <label for="filmstatus">без ошибок</label>
+    {% else %}
+    <input class="form-check-input" type="checkbox" disabled name="filmstatus">
+    <label for="filmstatus"> ошибки </label>
+    {% endif %}
+    </div>
+</div>
+</table>
+
+</div>
+<div class="row">
+
+<div class="col p-2 m-2" style="width:200mm;">
+<table class="table-sm border border-2 border-secondary" style="width:200mm;">
+    <thead>
+    <tr class="text-center lh-1">
+        <th scope="col" class="col" style="max-width:4mm; font-size:60%;"> # </th>
+        <th scope="col" class="col-1" style="font-size:60%;"> Арт. </th>
+        <th scope="col" class="col-3" style="font-size:60%;"> Наименование </th>
+        <th scope="col" class="col-2" style="font-size:60%;"> Нанесение </th>
+        <th scope="col" class="col-1" style="font-size:60%;"> Кол-во </th>
+        <th scope="col" class="col-1" style="font-size:60%;"> Место  </th>
+        <th colspan="4" scope="col" class="col-5" style="font-size:60%;">Тип / Цветов / 2-й проход / Положение </th>
+<!--          <th scope="col" class="col-2" style="font-size:60%;"> Тип </th>
+        <th colspan="2"  style="font-size:60%;"> Цветов / 2-й проход </th>
+        <th scope="col" class="col-1" style="font-size:60%;"> Положение </th> <--->
+
+    </tr>
+    {% for item in item_import %}
+    </thead>
+    <tbody>
+    <tr class="lh-1">
+        <td scope="row" class="col text-center" style="max-width:4mm; font-size:60%;"> {{item.print_id}} </td>
+        <td scope="col" class="col-1 text-center" style="font-size:60%;"> {{item.code}} </td>
+        <td scope="col" class="col-3" style="font-size:60%;"> {{item.name}}</td>
+        <td scope="col" class="col-2 text-center" style="font-size:60%;"> {{item.print_name}}</td>
+        <td scope="col" class="col-1 text-center" style="font-size:60%;"> {{item.quantity}}</td>
+    <td colspan="4">
+    <table class="table-sm mb-0">
+
+    {% for prt in print_import %}
+    {% if prt.0.print_id == item.print_id %}
+    <tr class="lh-1 align-top">
+<!--        <td scope="col" colspan="4" style="font-size:60%;"> </td> <--->
+        <td scope="col" class="col-4 text-start" style="min-width:20mm; font-size:60%;"> {{prt.0.place}} </td>
+        <td scope="col" class="col-2 text-center" style="font-size:60%;"> {{prt.0.type}}</td>
+        <td scope="col" class="col-1 text-center" style="min-width:5mm; font-size:60%;"> {{prt.0.colors}} /</td>
+         <td scope="col" class="col-1 text-center" style="font-size:60%;">
+        {% if prt.0.second_pass %}
+            <input class="form-check-input" type="checkbox" checked disabled>
+        {% else %}
+            <input class="form-check-input" type="checkbox" disabled>
+        {% endif %}
+        </td>
+        <td scope="col" class="text-center" style="font-size:60%;"> {{prt.0.position}} </td>
+    </tr>
+    {% else %}
+    {% endif %}
+    {% endfor %}
+    </table>
+    </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<div class="col p-1 m-1">
+<img src="{% static 'maket/img/ruler.svg' %}" />
+{% for prt in print_import %}
+    {% if '34' in prt.2 or '350' in prt.2  %}
+    <div class="col p-2 m-2">
+    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="136.205mm" height="9mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 13621 900"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:#818180;stroke-width:7.62}
+    .str1 {stroke:#2B2A29;stroke-width:20;stroke-linejoin:round}
+    .str2 {stroke:#898989;stroke-width:25.01;stroke-linecap:round;stroke-linejoin:round}
+    .fil4 {fill:none}
+    .fil0 {fill:#E9E4D8}
+    .fil2 {fill:#B6AD92}
+    .fil1 {fill:#938768}
+    .fil3 {fill:#352B20}
+    .fil5 {fill:{{prt.1}}}
+   ]]>
+  </style>
+ </defs>
+ <g id="Слой_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <g id="_3105015326432">
+   <path class="fil0" d="M259 341c0,0 103,0 117,0l0 77c-11,0 -112,-2 -123,-2 0,-11 0,-69 6,-75z"/>
+   <path class="fil1" d="M376 418l0 41c-65,6 -264,55 -264,55l-85 -25c-16,-11 -25,-25 -27,-48 -1,-6 15,-27 17,-31 7,-9 19,-12 32,-17 1,26 9,18 30,13 13,-3 37,0 61,-3 40,-5 98,-45 98,13l138 2z"/>
+   <path class="fil1" d="M380 541c0,2 0,15 1,19 -39,0 -50,0 -89,0 -1,0 -41,-7 -42,-7 -1,-16 -1,-12 -1,-12 0,0 103,0 131,0z"/>
+   <path class="fil2" d="M253 322l123 2c0,0 0,22 0,19 0,0 0,-2 0,0 0,0 -117,0 -114,0 -5,7 -9,33 -9,78 -27,-1 -11,-17 -21,-25 -30,-13 -57,5 -96,9 -24,3 -47,2 -60,5 -20,4 -41,19 -46,-1 0,-12 28,-19 42,-25l181 -62z"/>
+   <path class="fil3" d="M379 486c-12,1 -80,2 -123,0 -3,1 -216,-29 -216,-29l0 -16 213 0 0 -20c0,0 111,3 125,0l1 65z"/>
+   <path class="fil2" d="M27 489c-14,-25 -5,-35 -5,-35l8 3 223 29 123 0 0 71 -123 0 -226 -68z"/>
+   <path class="fil4 str0" d="M0 441c1,-12 15,-31 27,-40l226 -79 123 0 0 235 -123 0 -226 -68c-13,-9 -28,-35 -27,-48z"/>
+   <g>
+    <path class="fil5" d="M517 687l0 0 0 0zm1138 -688l11762 0 7 0 4 0 3 0 25 4 24 7 21 7 21 14 18 17 14 18 14 21 7 25 10 39 10 42 7 42 7 43 4 42 3 46 4 42 0 43 0 42 -4 42 -3 43 -4 42 -7 42 -7 43 -10 42 -10 42 -7 21 -14 25 -14 18 -18 17 -21 11 -21 11 -24 7 -14 0 -25 0 -11762 0 -63 0 -46 0 -48 0 -14 0 -4 -4 -3 -3 -7 0 -4 -7 -3 -4 -56 7 -46 4 -17 3 -3 0 -740 -187 0 -7 -33 -3 -50 -22 19 16 -20 -5 -112 -28 -10 -4 -7 -3 -11 -11c-6,-5 -9,-11 -10,-21l0 -11c0,-109 0,-218 0,-328l10 -24 11 -11 17 -7 147 -35 789 -198 3 -3 7 0 3 0 4 0 7 -4 3 0 4 0 3 0 7 0 32 0 38 0 42 0 4 0 55 0 102 0z"/>
+    <path id="1" fill="{{prt.1}}" class="str1" d="M517 687l0 0m1138 -688l11762 0 7 0 4 0 3 0 25 4 24 7 21 7 21 14 18 17 14 18 14 21 7 25 10 39 10 42 7 42 7 43 4 42 3 46 4 42 0 43 0 42 -4 42 -3 43 -4 42 -7 42 -7 43 -10 42 -10 42 -7 21 -14 25 -14 18 -18 17 -21 11 -21 11 -24 7 -14 0 -25 0 -11762 0 -63 0 -46 0 -48 0 -14 0 -4 -4 -3 -3 -7 0 -4 -7 -3 -4 -56 7 -46 4 -17 3 -3 0 -740 -187 0 -7 -33 -3 -50 -22 19 16 -20 -5 -112 -28 -10 -4 -7 -3 -11 -11c-6,-5 -9,-11 -10,-21l0 -11c0,-109 0,-218 0,-328l10 -24 11 -11 17 -7 147 -35 789 -198 3 -3 7 0 3 0 4 0 7 -4 3 0 4 0 3 0 7 0 32 0 38 0 42 0 4 0 55 0 102 0z"/>
+   </g>
+   <path class="fil4 str2" d="M552 206l-146 35m935 -233l-789 198m-7 490l796 201m-935 -236l139 35m13030 96l11 -43 10 -42 7 -42 7 -43 4 -42 3 -42 4 -43 0 -42m0 0l0 -42 -4 -43 -3 -46 -4 -42 -7 -42 -7 -43 -10 -42 -11 -39m-13208 498l0 10 4 7 3 7 4 7 7 7 3 4 7 3 11 4m0 -420l-11 4 -7 3 -3 7 -7 4 -4 7 -3 10 -4 8 0 7m13208 -177l-7 -24 -14 -22 -14 -17 -17 -18 -21 -14 -21 -7 -25 -7 -24 -4m0 900l24 0 25 -7 21 -11 21 -10 17 -18 14 -18 14 -24 7 -21m-12234 -784l4 -3 7 0 3 0 4 0 7 -4 3 0 4 0 3 0m0 900l-3 0 -4 0 -3 0 -7 0 -4 0 -3 0 -7 -4 -4 0m122 -14l56 0 59 -3 77 0m-192 3l0 -31 0 -43 0 -46 0 -56 0 -57 0 -63 0 -67 0 -67 0 -67 0 -67 0 -64 0 -60 0 -53 0 -49 0 -39 0 -35m192 3l-63 0 -62 0 -35 0 -32 -3m192 3l0 43 0 53 0 56 0 64 0 70 0 71 0 74 0 74 0 71 0 67 0 67 0 56 0 49 0 43m0 0l11763 0m0 -858l-11763 0m11763 858l0 -43 0 -49 0 -56 0 -67 0 -67 0 -71 0 -74 0 -74 0 -71 0 -70 0 -64 0 -56 0 -53 0 -43m0 0l25 4 20 4 21 7 21 10 18 14 14 14 14 18 7 21m0 0l0 35 0 43 0 53 0 56 0 57 0 63 0 64 0 60 0 60 0 56 0 49 0 46 0 36m-140 88l25 0 20 -4 21 -10 21 -11 18 -11 14 -17 14 -18 7 -17m-12918 -110l0 7 -7 18 -18 3 -17 0 -25 -7 -28 -7 -28 -7 -24 -7 -24 -7 -14 -14 -7 -18 0 -3m192 42l0 -7 -7 -35 -14 -25 -21 -21 -25 -18 -28 -7 -24 0 -28 11 -24 14 -14 21 -7 25m1207 240l0 7 0 3 0 4 0 3 0 4m0 0l-63 0 -45 0 -49 0m-35 -18l4 4 3 7 7 0 4 3 3 4 7 0 4 0 3 0m0 -900l56 0 101 0m0 0l0 0 0 4 0 3 0 4 0 3 0 4 0 3m-157 -21l-3 0 -4 4 -7 0 -3 3 -4 0 -7 4 -3 3 -4 4m192 -18l11763 0m0 0l0 0 0 4 0 3 0 4 0 3 0 4 0 3m0 -21l25 4 20 7 25 7 17 14 21 18 14 17 11 22 7 24m-140 766l0 7 0 3 0 4 0 3 0 4m0 0l-11763 0m11763 0l25 0 20 -7 25 -11 17 -10 21 -18 14 -18 11 -24 7 -21m-13110 -152l24 -4 28 -3 24 0 28 3 25 7 21 11 24 14 18 14m-273 -229l0 -42 0 -36 0 -31 0 -29 0 -17 0 -7m0 321l0 0 0 -7 0 -18 0 -25 0 -32 0 -38 0 -39m13051 -452l7 0 4 0 3 0m0 900l0 0 -3 0 -4 0 -7 0m-12038 -900l-4 0 7 0 31 0 39 0 45 0m0 900l-56 0 -45 0 -17 0m-39 -4l4 0 17 -3 45 -4 56 -7m0 -864l-45 -4 -42 -3 -28 -4 -7 0m-935 445l0 46 0 42 0 39 0 32 0 24 0 18 0 7m0 -420l0 4 0 7 0 14 0 28 0 32 0 39 0 42 0 46m13169 -339l0 0 -3 0 -4 0 -10 0m0 678l10 0 4 0 3 0"/>
+  </g>
+ </g>
+</svg>
+    </div>
+    {% elif 'A6' in prt.2 %}
+    <div class="col p-2 m-2">
+    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="105mm" height="150mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+    viewBox="0 0 10500 15000"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+     <defs>
+      <style type="text/css">
+       <![CDATA[
+        .str1 {stroke:#2B2A29;stroke-width:64}
+        .str0 {stroke:#2B2A29;stroke-width:20}
+        .fil2 {fill:none}
+        .fil1 {fill:#FEFEFE}
+        .fil0 {fill:#00ABC9}
+       ]]>
+      </style>
+     </defs>
+     <g id="Слой_x0020_1">
+      <metadata id="CorelCorpID_0Corel-Layer"/>
+      <g id="_3068774426128">
+       <polygon fill="{{prt.1}}" points="0,0 10500,0 10500,15000 0,15000 "/>
+       <g>
+        <polygon class="fil1 str0" points="404,293 774,293 774,663 404,663 "/>
+        <polygon class="fil1 str0" points="1257,293 1627,293 1627,663 1257,663 "/>
+        <polygon class="fil1 str0" points="2108,293 2478,293 2478,663 2108,663 "/>
+        <polygon class="fil1 str0" points="2941,293 3311,293 3311,663 2941,663 "/>
+        <polygon class="fil1 str0" points="3792,293 4162,293 4162,663 3792,663 "/>
+        <polygon class="fil1 str0" points="4635,293 5005,293 5005,663 4635,663 "/>
+        <polygon class="fil1 str0" points="5486,293 5856,293 5856,663 5486,663 "/>
+        <path class="fil2 str1" d="M645 433c0,-112 0,-223 1,-335l1 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M1498 433c1,-112 1,-223 1,-335l2 -98m-117 0l0 435"/>
+        <path class="fil2 str1" d="M2349 433c1,-112 1,-223 1,-335l2 -98m-117 0l0 435"/>
+        <path class="fil2 str1" d="M3182 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M4033 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M4876 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M5727 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+        <polygon class="fil1 str0" points="6338,293 6708,293 6708,663 6338,663 "/>
+        <polygon class="fil1 str0" points="7189,293 7559,293 7559,663 7189,663 "/>
+        <polygon class="fil1 str0" points="8032,293 8402,293 8402,663 8032,663 "/>
+        <polygon class="fil1 str0" points="8883,293 9253,293 9253,663 8883,663 "/>
+        <path class="fil2 str1" d="M6579 433c0,-112 1,-223 1,-335l1 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M7430 433c0,-112 0,-223 1,-335l1 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M8273 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M9124 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+        <polygon class="fil1 str0" points="9726,293 10096,293 10096,663 9726,663 "/>
+        <path class="fil2 str1" d="M9967 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+       </g>
+      </g>
+     </g>
+    </svg>
+    </div>
+    {% elif 'A5' in prt.2 %}
+    <div class="col p-2 m-2">
+    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="148mm" height="212mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+    viewBox="0 0 14800 21200"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+     <defs>
+      <style type="text/css">
+       <![CDATA[
+        .str1 {stroke:#2B2A29;stroke-width:64}
+        .str0 {stroke:#2B2A29;stroke-width:20}
+        .fil2 {fill:none}
+        .fil1 {fill:#FEFEFE}
+        .fil0 {fill:#00ABC9}
+       ]]>
+      </style>
+     </defs>
+     <g id="Слой_x0020_1">
+      <metadata id="CorelCorpID_0Corel-Layer"/>
+      <g id="_3105066048208">
+       <polygon fill="{{prt.1}}" points="0,0 14800,0 14800,21200 0,21200 "/>
+       <g>
+        <polygon class="fil1 str0" points="440,293 810,293 810,663 440,663 "/>
+        <polygon class="fil1 str0" points="1272,293 1642,293 1642,663 1272,663 "/>
+        <polygon class="fil1 str0" points="2123,293 2493,293 2493,663 2123,663 "/>
+        <polygon class="fil1 str0" points="2977,293 3347,293 3347,663 2977,663 "/>
+        <polygon class="fil1 str0" points="3828,293 4198,293 4198,663 3828,663 "/>
+        <polygon class="fil1 str0" points="4660,293 5030,293 5030,663 4660,663 "/>
+        <polygon class="fil1 str0" points="5511,293 5881,293 5881,663 5511,663 "/>
+        <polygon class="fil1 str0" points="6354,293 6724,293 6724,663 6354,663 "/>
+        <polygon class="fil1 str0" points="7205,293 7575,293 7575,663 7205,663 "/>
+        <path class="fil2 str1" d="M681 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M1514 433c0,-112 0,-223 0,-335l2 -98m-117 0l0 435"/>
+        <path class="fil2 str1" d="M2364 433c1,-112 1,-223 1,-335l2 -98m-117 0l0 435"/>
+        <path class="fil2 str1" d="M3218 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M4069 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M4901 433c0,-112 0,-223 1,-335l1 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M5752 433c0,-112 0,-223 1,-335l1 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M6595 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M7446 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+        <polygon class="fil1 str0" points="8058,293 8427,293 8427,663 8058,663 "/>
+        <polygon class="fil1 str0" points="8908,293 9278,293 9278,663 8908,663 "/>
+        <polygon class="fil1 str0" points="9751,293 10121,293 10121,663 9751,663 "/>
+        <polygon class="fil1 str0" points="10602,293 10972,293 10972,663 10602,663 "/>
+        <path class="fil2 str1" d="M8299 433c0,-112 0,-223 0,-335l2 -98m-117 0l0 435"/>
+        <path class="fil2 str1" d="M9150 433c0,-112 0,-223 0,-335l2 -98m-117 0l0 435"/>
+        <path class="fil2 str1" d="M9992 433c1,-112 1,-223 1,-335l1 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M10843 433c1,-112 1,-223 1,-335l1 -98m-116 0l0 435"/>
+        <polygon class="fil1 str0" points="11445,293 11815,293 11815,663 11445,663 "/>
+        <polygon class="fil1 str0" points="12296,293 12666,293 12666,663 12296,663 "/>
+        <polygon class="fil1 str0" points="13139,293 13509,293 13509,663 13139,663 "/>
+        <polygon class="fil1 str0" points="13990,293 14360,293 14360,663 13990,663 "/>
+        <path class="fil2 str1" d="M11686 433c0,-112 1,-223 1,-335l1 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M12537 433c0,-112 0,-223 1,-335l1 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M13380 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+        <path class="fil2 str1" d="M14231 433c0,-112 0,-223 0,-335l2 -98m-116 0l0 435"/>
+       </g>
+      </g>
+     </g>
+</svg>
+    </div>
+    {% elif 'D5' in prt.2 %}
+    <div class="col p-2 m-2">
+    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="155mm" height="213mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+    viewBox="0 0 15500 21300"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+     <defs>
+      <style type="text/css">
+       <![CDATA[
+        .str1 {stroke:#2B2A29;stroke-width:17.64}
+        .str0 {stroke:#2B2A29;stroke-width:7.62}
+        .fil1 {fill:#C5C6C6}
+        .fil0 {fill:#00ABC9}
+       ]]>
+      </style>
+     </defs>
+     <g id="Слой_x0020_1">
+      <metadata id="CorelCorpID_0Corel-Layer"/>
+      <g id="_3104820322976">
+       <path fill="{{prt.1}}"  d="M1285 50l13600 0c330,0 600,270 600,600l0 20000c0,330 -270,600 -600,600l-13600 0c-330,0 -600,-270 -600,-600l0 -20000c0,-330 270,-600 600,-600z"/>
+       <path fill="{{prt1}}"  d="M685 2332l446 0 5 -2 9 -4 11 -11 2 -4 3 -8 0 -207c0,-2 0,-3 1,-5l3 -10 4 -9c1,-1 1,-2 2,-3l14 -14c2,-2 4,-3 5,-3l21 -8c2,0 3,0 4,0 97,-1 193,0 290,0 2,0 4,0 6,1l21 11c2,1 4,3 5,6l3 5 2 2c1,1 2,3 2,4l4 8 29 84c14,57 29,113 35,172 3,62 5,112 0,175 -10,62 -19,110 -36,171l-28 79c-2,6 -5,11 -7,16 -1,1 -2,2 -3,3l-3 4c-1,1 -2,2 -3,2l-29 15c-1,1 -3,1 -5,1 -92,0 -184,0 -275,0 -3,0 -5,0 -7,-1l-3 -2 -8 0c-3,0 -6,-1 -8,-3l-9 -6 -6 -4c-3,-1 -5,-3 -6,-5l-6 -10 -4 -8 -5 -13c0,-1 0,-2 0,-4 -1,-68 0,-137 0,-206 -3,-5 -4,-8 -6,-14l-10 -10 -8 -3 -6 -2 -446 0 0 3111 446 0 5 -2 9 -3 10 -11 3 -8 3 -6 0 -206c0,-1 0,-3 1,-4l3 -10 4 -9c1,-1 1,-2 2,-3l14 -15c1,-1 2,-1 3,-2l10 -7c2,-1 4,-2 7,-2l8 0 3 -2c2,-1 4,-1 7,-1l268 0c2,0 4,0 6,2l4 1 4 0c2,0 4,1 6,2l21 10c2,2 4,4 6,7l2 4 2 3c1,1 2,2 2,3l4 8 29 84c43,168 51,261 21,431 -16,63 -29,105 -50,167l-4 8c0,2 -1,3 -2,4l-2 2 -3 5c-1,3 -3,5 -5,6l-22 11c-1,1 -3,1 -5,1l-4 0 -4 2c-2,1 -4,2 -6,2l-268 0c-3,0 -5,-1 -7,-2l-6 -3 -20 -7c-2,-1 -4,-2 -5,-3l-14 -14c-1,-1 -1,-2 -2,-4l-4 -7 -4 -12c0,-2 0,-3 0,-4 -1,-69 0,-138 0,-207l-3 -8 -2 -5 -11 -10 -8 -3 -6 -3 -446 0 0 3112 446 0 5 -3 9 -3 10 -10 3 -8 3 -6 0 -206c0,-2 0,-3 1,-5l6 -21c1,-2 2,-4 4,-5l6 -7c1,-1 2,-1 4,-2l6 -3 10 -7c1,-1 2,-1 3,-2l10 -3c2,-1 3,-1 4,-1 95,0 189,0 283,0 2,0 4,1 6,2l28 14c1,1 2,2 3,3l3 3c1,1 2,2 3,4 2,5 5,10 7,15 34,94 48,153 64,250 9,93 2,174 -14,265 -16,63 -29,105 -50,166 0,2 -2,4 -3,5l-2 2 -6 13c-1,2 -3,4 -5,5l-22 11c-1,1 -3,2 -5,2 -97,0 -193,0 -290,0 -1,0 -3,-1 -4,-1l-21 -7c-2,-1 -4,-2 -5,-4l-14 -14c-1,-1 -2,-2 -2,-4l-3 -6 -5 -13c0,-1 0,-2 0,-4 -1,-69 0,-138 0,-206l-3 -9 -2 -4 -11 -11 -8 -3 -6 -2 -446 0 0 3111 437 0 8 -3c2,0 3,0 4,0l4 0c4,-4 7,-6 12,-8l5 -8 3 -5 3 -8 0 -207c0,-3 0,-5 1,-7l3 -5 3 -10c1,-2 2,-4 4,-5l13 -14c2,-2 4,-3 5,-4l21 -7c2,0 3,0 4,0 95,-1 189,0 283,0 2,0 4,0 6,1l4 2 4 0c2,0 5,1 6,2l6 3c2,1 3,2 4,3l10 10c1,1 2,2 3,4 2,5 5,10 7,15l29 81c14,57 29,113 35,171 5,103 5,158 -14,263 -16,64 -28,101 -50,163 -2,5 -5,11 -7,16 -1,1 -2,2 -3,3l-10 11c-1,1 -3,2 -4,3l-7 3c-1,1 -3,1 -5,1l-4 0 -5 3c-1,1 -3,1 -5,1 -94,0 -188,0 -283,0 -1,0 -3,0 -4,-1l-21 -7c-2,-1 -4,-2 -5,-3l-14 -14c-1,-2 -2,-4 -3,-5l-3 -10 -3 -7c-1,-1 -1,-3 -1,-5 -1,-69 0,-138 0,-207l-3 -8 -3 -6 -5 -7 -4 -2 -8 -6 -4 0c-1,0 -3,0 -5,-1l-7 -3 -437 0 0 3116 437 0 7 -3 7 -3 9 -3 11 -11 2 -5 3 -8 0 -207c0,-2 0,-4 1,-6l3 -5 3 -11c1,-2 2,-3 4,-5l13 -14c2,-1 4,-2 5,-3l21 -7c2,-1 3,-1 4,-1 97,0 193,0 290,0 2,0 4,1 6,2l21 10c2,2 4,4 6,7l5 12 2 1c1,2 3,3 3,5l29 84c14,57 29,113 35,172 3,63 5,112 0,175 -10,62 -19,110 -36,172l-28 79c-2,5 -5,10 -7,16 -1,1 -2,2 -3,3l-3 3c-1,1 -2,2 -3,3l-6 2 -5 6c-3,3 -6,4 -9,4l-4 0 -5 2c-1,1 -3,2 -5,2 -94,0 -188,0 -283,0 -1,0 -3,-1 -4,-1l-10 -4c-1,0 -2,-1 -3,-1l-10 -7 -6 -3c-2,-1 -3,-2 -4,-3l-7 -7c-1,-1 -2,-3 -3,-5l-7 -21c0,-2 0,-3 0,-4 -1,-69 0,-138 0,-206 -3,-5 -4,-9 -6,-14l-10 -10 -8 -3 -6 -3 -446 0 0 3111 446 0 5 -2 9 -4 11 -10 2 -5 3 -8 0 -207c0,-2 0,-3 1,-5l3 -10 4 -8c1,-2 1,-3 2,-4l14 -14c2,-1 4,-3 5,-3l21 -7c2,-1 3,-1 4,-1 97,0 193,0 290,0 2,0 4,1 6,2l21 10c2,2 4,4 6,7l2 4 2 2c1,2 2,3 2,4l4 8 29 84c14,57 29,113 35,172 3,62 5,112 0,175l-14 84c-16,63 -29,105 -50,166l-4 9c0,1 -1,2 -2,3l-2 3 -3 5c-1,2 -3,4 -5,6l-22 10c-1,1 -3,2 -5,2l-4 0 -4 1c-2,2 -4,2 -6,2l-268 0c-3,0 -5,0 -7,-1l-3 -2 -8 0c-3,0 -6,-1 -8,-3l-10 -7c-1,0 -1,-1 -2,-2l-14 -14c-1,-1 -2,-2 -2,-3l-3 -7 -5 -12c0,-2 0,-3 0,-4 -1,-69 0,-138 0,-206 -3,-6 -4,-9 -6,-15l-10 -10 -8 -2 -6 -3 -446 0 0 -16633z"/>
+       <g>
+        <path class="fil1 str0" d="M1556 2139l-1481 6c-11,0 -17,9 -20,20 -52,196 -54,368 0,524 3,11 9,20 20,20l1481 -5c11,0 17,-10 20,-20 51,-160 55,-333 0,-525 -3,-10 -9,-20 -20,-20z"/>
+        <path class="fil1 str0" d="M1556 5430l-1481 6c-11,0 -17,9 -20,20 -52,195 -54,368 0,524 3,10 9,20 20,20l1481 -6c11,0 17,-9 20,-20 51,-159 55,-332 0,-524 -3,-11 -9,-20 -20,-20z"/>
+        <path class="fil1 str0" d="M1556 8721l-1481 5c-11,0 -17,10 -20,20 -52,196 -54,369 0,525 3,10 9,20 20,20l1481 -6c11,0 17,-9 20,-20 51,-159 55,-333 0,-524 -3,-11 -9,-20 -20,-20z"/>
+        <path class="fil1 str0" d="M1556 12012l-1481 5c-11,0 -17,10 -20,20 -52,196 -54,369 0,525 3,10 9,20 20,20l1481 -6c11,0 17,-9 20,-20 51,-159 55,-333 0,-524 -3,-11 -9,-20 -20,-20z"/>
+        <path class="fil1 str0" d="M1556 15302l-1481 6c-11,0 -17,9 -20,20 -52,196 -54,369 0,524 3,11 9,21 20,20l1481 -5c11,0 17,-10 20,-20 51,-159 55,-333 0,-525 -3,-10 -9,-20 -20,-20z"/>
+        <path class="fil1 str0" d="M1556 18593l-1481 6c-11,0 -17,9 -20,20 -52,196 -54,368 0,524 3,11 9,20 20,20l1481 -5c11,0 17,-10 20,-20 51,-160 55,-333 0,-525 -3,-10 -9,-20 -20,-20z"/>
+       </g>
+      </g>
+     </g>
+    </svg>
+
+    </div>
+    {% endif %}
+
+{% endfor %}
+</div>
+</div>
+
+<script src="{% static 'maket/maket.js' %}"></script>
+<script src="{% static 'maket/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
+
+</body>
+</html>
