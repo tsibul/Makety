@@ -7,7 +7,8 @@ import datetime
 from datetime import date, timedelta
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator
-from .models import Color_scheme, Print_type, Print_place, Print_position
+from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports,\
+    Print_imports, Detail_set, Customer
 from django.db.models.lookups import GreaterThan, LessThan
 from django.template import loader
 from django.shortcuts import render
@@ -17,6 +18,8 @@ from django.db import transaction
 from django.core.files import File
 from django.views.generic import ListView
 import csv
+from .forms import FileForm
+
 
 
 def main_maket(request):
@@ -26,18 +29,54 @@ def main_maket(request):
 
 def index(request):
     navi = 'orders'
-    context = {'navi': navi}
+    try:
+        ord_i = request.POST['ord_id']
+        ord_imp = Order_imports.objects.get(pk=int(ord_i))
+    except:
+        ord_imp = Order_imports.objects.order_by('-order_date', '-id').first()
+    order_id = ord_imp.id
+    item_import = list(Item_imports.objects.filter(order=order_id).order_by('code'))
+    print_import = ()
+    for item in item_import:
+        print_import = print_import + tuple(Print_imports.objects.filter(item=item))
+    print_import = list(print_import)
+
+    orders = Order_imports.objects.all().order_by('-order_date', '-id')
+
+    context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import, 'orders': orders}
+    return render(request, 'maket/index.html', context)
+
+def reload(request, id):
+    navi = 'orders'
+    ord_i = id
+    try:
+        ord_imp = Order_imports.objects.get(pk=int(ord_i))
+    except:
+        ord_imp = Order_imports.objects.order_by('-order_date', '-id').first()
+    order_id = ord_imp.id
+    item_import = list(Item_imports.objects.filter(order=order_id).order_by('code'))
+    print_import = ()
+    for item in item_import:
+        print_import = print_import + tuple(Print_imports.objects.filter(item=item))
+    print_import = list(print_import)
+
+    orders = Order_imports.objects.all().order_by('-order_date', '-id')
+
+    context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import, 'orders': orders}
     return render(request, 'maket/index.html', context)
 
 def dicts(request):
     navi = 'dicts'
     color_scheme = Color_scheme.objects.all()
+    color = Item_color.objects.all().order_by('-color_scheme', 'color_id')
+
     print_type = Print_type.objects.all()
     print_place = Print_place.objects.all()
     print_position = Print_position.objects.all()
+    details = Detail_set.objects.all().order_by('item_name')
 
-    context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place':print_place,
-               'print_position': print_position}
+    context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
+               'print_position': print_position, 'details': details, 'color' :color}
     return render(request, 'maket/dicts.html', context)
 
 
@@ -117,4 +156,307 @@ def add_prt_pos(request):
     print_position = Print_position(position_option=pos_opt, position_orientation=pos_orn)
     print_position.save()
     return HttpResponseRedirect(reverse('maket:dicts'))
+
+
+def customers(request):
+    navi = 'customers'
+    customers = Customer.objects.all().order_by('name')
+
+    context = {'navi': navi, 'customers':customers}
+    return render(request, 'maket/customers.html', context)
+
+def import_order(request):
+    file_name = request.POST['Chosen']
+    with open(file_name, newline='') as csvfile:
+        soup = csv.reader(csvfile, delimiter=';')
+        list_soup = list(soup)
+    number_strings = len(list_soup)
+    order_no = list_soup[0][2]
+    order_date = list_soup[0][3]
+    order_date = datetime.datetime.strptime(order_date, '%d.%m.%Y').date()
+    supplier = list_soup[1][2]
+    customer_name = list_soup[2][2]
+    customer_inn = list_soup[2][5]
+    customer_address = list_soup[2][8]
+    ord_imp = Order_imports(order_id=order_no, supplier=supplier, customer_name=customer_name,
+                            customer_INN=customer_inn, customer_address=customer_address, order_date=order_date)
+    try:
+        if customer_inn != '':
+            customer = Customer.objects.get(inn=customer_inn)
+            ord_imp.customer = customer
+        elif customer_inn == '':
+            customer = Customer.objects.get(name=customer_name)
+            ord_imp.customer = customer
+    except:
+        region = customer_inn[slice(0, 2)]
+        type = order_no[slice(13, 14)]
+        type2 = order_no[slice(14, 15)]
+        if type == 'Д':
+            type = 'Дилер'
+        elif type == 'А':
+            type ='Агентство'
+        elif type == 'Р':
+            type ='Рекламщик'
+        elif type == 'К':
+            type ='Конечник'
+        if type2 == 'М':
+            type = type + ' Москва'
+        elif type2 == 'Р':
+            type = type + ' Регион'
+        elif type2 == 'Т':
+            type = 'Розничная точка'
+        elif type2 == 'К':
+            type = 'Экспорт'
+        customer = Customer(name=customer_name, address=customer_address, inn=customer_inn, region=region,
+                            type=type)
+        customer.save()
+    ord_imp.save()
+    order = []
+    pk = ord_imp.id
+    order_body = range(3, number_strings, 1)
+    items_list = []
+    print_list = []
+    j = 0
+    for i in order_body:
+        if list_soup[i][0] != '' and list_soup[i][16] == '' and list_soup[i][7] != '':
+            itm_clr = list_soup[i][6].split('.')
+            itm_group = itm_clr[0]
+            itm_clr.pop(0)
+            clr = '.'.join(itm_clr)
+            num_details = len(itm_clr)
+            x = range(num_details)
+            item = Item_imports(print_id=list_soup[i][0], code=list_soup[i][6], name=list_soup[i][1],
+                                quantity=list_soup[i][11], print_name=list_soup[i][7], order=ord_imp,
+                                item_group=itm_group, item_color=clr)
+            try:
+                itm_obj = Detail_set.objects.get(item_name=itm_group)
+                item.item = itm_obj
+            except:
+                itm_obj = ''
+
+#TODO check if order exists, if no print_name, if no print details
+            for n in x:
+                detail = 'detail' + str(n+1) + '_color'
+                setattr(item, detail, itm_clr[n])
+            item.save()
+            items_list.append(item)
+        elif list_soup[i][0] != '' and list_soup[i][16] == '' and list_soup[i][7] == '':
+            j = j + 1
+        elif list_soup[i][16] != '':
+            for x in items_list:
+                if x.name == list_soup[i][1]:
+                    prt_item = x
+            if list_soup[i][0] != '':
+                print_id = prt_item.print_id
+            place = list_soup[i][10]
+            type = list_soup[i][13]
+            colors = list_soup[i][14]
+            if list_soup[i][15] == '-':
+                second_pass = False
+            else:
+                second_pass = True
+            print_item = Print_imports(place=place, type=type, colors=colors, item=prt_item, print_id=print_id)
+            print_item.save()
+            print_list.append([place, type, colors, second_pass, print_item, print_id])
+    number_items = len(items_list)
+    number_prints = len(print_list)
+#        for row in soup:
+#            order.append(row)
+    return HttpResponseRedirect(reverse('maket:index'), {'order': order})
+
+
+def delete_order(request, id):
+    order_d = Order_imports.objects.get(id=id)
+    order_d.delete()
+    return HttpResponseRedirect(reverse('maket:index'))
+
+
+def add_detail(request):
+    item_code = request.POST['dt_it_nm']
+    detail1_name = request.POST['dt1_nm']
+    try:
+        detail1_place = request.POST['flexCheck_det1']
+    except:
+        detail1_place = False
+
+    detail2_name = request.POST['dt2_nm']
+    if detail2_name != '':
+        try:
+            detail2_place = request.POST['flexCheck_det2']
+        except:
+            detail2_place = False
+    else:
+        detail2_place = False
+
+    detail3_name = request.POST['dt3_nm']
+    if detail3_name != '':
+        try:
+            detail3_place = request.POST['flexCheck_det3']
+        except:
+            detail3_place = False
+    else:
+        detail3_place = False
+
+    detail4_name = request.POST['dt4_nm']
+    if detail4_name != '':
+        try:
+            detail4_place = request.POST['flexCheck_det4']
+        except:
+            detail4_place = False
+    else:
+        detail4_place = False
+
+    detail5_name = request.POST['dt5_nm']
+    if detail5_name != '':
+        try:
+            detail5_place = request.POST['flexCheck_det5']
+        except:
+            detail5_place = False
+    else:
+        detail5_place = False
+
+    det_set = Detail_set(item_name=item_code,
+                         detail1_name=detail1_name, detail1_place=detail1_place,
+                         detail2_name=detail2_name, detail2_place=detail2_place,
+                         detail3_name= detail3_name, detail3_place=detail3_place,
+                         detail4_name=detail4_name, detail4_place=detail4_place,
+                         detail5_name=detail5_name, detail5_place=detail5_place)
+    det_set.save()
+    return HttpResponseRedirect(reverse('maket:dicts'))
+# TODO change add_detail
+
+
+def upd_detail(request, id):
+    item = Detail_set.objects.get(id=id)
+    item_code = request.POST['code']
+    item.item_name = item_code
+    item_name = request.POST['name']
+    item.name = item_name
+    item_clr = request.POST['ColorSelect']
+    if item_clr != 'None':
+        item.color_scheme = Color_scheme.objects.get(scheme_name=item_clr)
+
+    detail1_name = request.POST['dt1_nm']
+    item.detail1_name = detail1_name
+    try:
+        detail1_place = request.POST['flexCheck_det1_']
+    except:
+        detail1_place = False
+    item.detail1_place = detail1_place
+
+    detail2_name = request.POST['dt2_nm']
+    if detail2_name != '':
+        try:
+            detail2_place = request.POST['flexCheck_det2_']
+        except:
+            detail2_place = False
+    else:
+        detail2_place = False
+    item.detail2_name = detail2_name
+    item.detail2_place = detail2_place
+
+    detail3_name = request.POST['dt3_nm']
+    if detail3_name != '':
+        try:
+            detail3_place = request.POST['flexCheck_det3_']
+        except:
+            detail3_place = False
+    else:
+        detail3_place = False
+    item.detail3_name = detail3_name
+    item.detail3_place = detail3_place
+
+    detail4_name = request.POST['dt4_nm']
+    if detail4_name != '':
+        try:
+            detail4_place = request.POST['flexCheck_det4_']
+        except:
+            detail4_place = False
+    else:
+        detail4_place = False
+    item.detail4_name = detail4_name
+    item.detail4_place = detail4_place
+
+    detail5_name = request.POST['dt5_nm']
+    if detail5_name != '':
+        try:
+            detail5_place = request.POST['flexCheck_det5_']
+        except:
+            detail5_place = False
+    else:
+        detail5_place = False
+    item.detail5_name = detail5_name
+    item.detail5_place = detail5_place
+    item.save()
+    return HttpResponseRedirect(reverse('maket:dicts'))
+
+
+def add_clr(request):
+    color_id = request.POST['clr_id']
+    color_name = request.POST['clr_nm']
+    color_code = request.POST['dt1_hex']
+    pantone = request.POST['dt1_ptn']
+    color_scheme = request.POST['ColorSelect_add']
+    color_scheme = Color_scheme.objects.get(id=color_scheme)
+    color = Item_color(color_id=color_id, color_name=color_name, pantone=pantone,
+                       color_code=color_code, color_scheme=color_scheme)
+    color.save()
+    return HttpResponseRedirect(reverse('maket:dicts'))
+
+def update_clr(request, id):
+    color = Item_color.objects.get(id=id)
+    color_id = request.POST['clrid']
+    color.color_id = color_id
+    color_name = request.POST['clr_nm']
+    color.color_name = color_name
+    color_code = request.POST['dt1_hex']
+    color.color_code = color_code
+    pantone = request.POST['dt1_ptn']
+    color.pantone = pantone
+    color_scheme = request.POST['ColorSelect2']
+    color_scheme = Color_scheme.objects.get(scheme_name=color_scheme)
+    color.color_scheme = color_scheme
+
+    color.save()
+    return HttpResponseRedirect(reverse('maket:dicts'))
+
+def maket_print(request, id):
+    ord_i = id
+    try:
+        ord_imp = Order_imports.objects.get(pk=int(ord_i))
+    except:
+        ord_imp = Order_imports.objects.order_by('-order_date', '-id').first()
+    order_id = ord_imp.id
+    item_import = list(Item_imports.objects.filter(order=order_id).order_by('code'))
+    print_import = ()
+    for item in item_import:
+        print_import = print_import + tuple(Print_imports.objects.filter(item=item))
+    print_import = list(print_import)
+    prt_import = []
+    for print_item in print_import:
+        item = print_item.item
+        clr = item.detail1_color
+        item_code = item.item_group
+        item = Detail_set.objects.get(item_name=item_code)
+        clr_sch = item.color_scheme
+        clr_hex = Item_color.objects.get(color_scheme=clr_sch, color_id=clr)
+        clr_hex = clr_hex.color_code
+        prt_import.append([print_item, clr_hex, item_code])
+
+    context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': prt_import}
+    return render(request, 'maket/maket_print.html', context)
+
+def svg343(request, id):
+    print_item = Print_imports.objects.get(id=id)
+    item = print_item.item
+    clr = item.detail1_color
+    item_code = item.item_group
+    item = Detail_set.objects.get(item_name=item_code)
+    clr_sch = item.color_scheme
+    clr_hex = Item_color.objects.get(color_scheme=clr_sch, color_id=clr)
+    clr_hex = clr_hex.color_code
+    context = {'color': clr_hex}
+    return render(request, 'maket/maket_print.html', context)
+
+
 
