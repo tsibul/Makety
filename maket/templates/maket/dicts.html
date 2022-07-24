@@ -13,18 +13,222 @@
 {% include 'maket/main.html' %}
 
 <body>
-<div class="row p-2 m-2">
+<h5> Номенклатура </h5>
+<div class="table-responsive">
+<table class="table table-sm table-hover"><!--Item Details><--->
+  <theader>
+    <tr class="table-primary">
+      <th></th>
+      <th style="max-width:50px"> Арт </th>
+      <th> Название </th>
+      <th> Цвет </th>
+      <th colspan="10" class="text-center"> Деталь/Нанесение </th>
+      <th colspan="2" class="text-end">
+<!-- Button trigger modal -->
+          <button type="button" class="btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+              Добавить
+          </button>
 
-<div class="card p-1 m-1" style="width: 20rem;">
+<!-- Modal --> <form id="add_detail" action="{% url 'maket:add_detail' %}" method="post">
+          {% csrf_token %}
+            <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Добавление состава</h5>
+                  </div>
+                  <div class="modal-body">
+                     <!--  --->
+                      <div class="col">
+                          <input type="text" class="form-control" name="dt_it_nm" placeholder="Артикул"></div>
+                      <div class="row p-1">
+                        <div class="col-8">
+                            <input type="text" class="form-control" name="dt1_nm" placeholder="Деталь 1"></div>
+                        <div class="col align-right">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det1"  name="flexCheck_det1">
+                          <label class="form-check-label" for="flexCheck_det1" >
+                            нанесение
+                          </label>
+                        </div>
+                        </div>
+                      </div>
+                      <div class="row p-1">
+                        <div class="col-8">
+                            <input type="text" class="form-control" name="dt2_nm" placeholder="Деталь 2"></div>
+                        <div class="col align-right">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det2" name="flexCheck_det2">
+                          <label class="form-check-label" for="flexCheck_det2">
+                            нанесение
+                          </label>
+                        </div>
+                        </div>
+                      </div>
+                       <div class="row p-1">
+                        <div class="col-8">
+                            <input type="text" class="form-control" name="dt3_nm" placeholder="Деталь 3"></div>
+                        <div class="col align-right">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="True"  id="flexCheck_det3" name="flexCheck_det3">
+                          <label class="form-check-label" for="flexCheck_det3">
+                            нанесение
+                          </label>
+                        </div>
+                        </div>
+                       </div>
+                       <div class="row p-1">
+                        <div class="col-8">
+                            <input type="text" class="form-control" name="dt4_nm" placeholder="Деталь 4"></div>
+                        <div class="col align-right">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det4" name="flexCheck_det4">
+                          <label class="form-check-label" for="flexCheck_det4">
+                            нанесение
+                          </label>
+                        </div>
+                        </div>
+                        </div>
+                       <div class="row p-1">
+                        <div class="col-8">
+                            <input type="text" class="form-control" name="dt5_nm" placeholder="Деталь 5"></div>
+                        <div class="col align-right">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det5"  name="flexCheck_det5">
+                          <label class="form-check-label" for="flexCheck_det5">
+                            нанесение
+                          </label>
+                        </div>
+                        </div>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </form>
+
+
+      </th>
+    </tr>
+  </theader>
+  <tbody>
+    {% for detail in details %}
+    <tr id="dtl_id_{{detail.id}}">
+    <form action="update_details/{{ detail.id }}" method="post" >
+    {% csrf_token %}
+    <input type="hidden" class="form-control" name="detail_id" value="{{ detail.id }}">
+    <td  style="max-width:35px">
+ <!--       <a href="javascript:upd_detail({{detail.id}}, '{{detail.detail1_place}}', '{{detail.detail2_place}}',
+        '{{detail.detail3_place}}', '{{detail.detail4_place}}', '{{detail.detail5_place}}',
+        '{{detail.detail1_name }}', '{{detail.detail2_name}}', '{{detail.detail3_name}}',
+        '{{detail.detail4_name }}', '{{detail.detail5_name}}', '{{detail.item_name}}', '{{ detail.name}}',
+        '{{ detail.color_scheme}}');"> -->
+        <a href="javascript:upd_dtl({{detail.id}},'{{ detail.color_scheme.scheme_name}}');">
+        <button type="button" class="btn-sm btn-outline-primary" id="red_{{detail.id}}">Ред.</button></a>
+    </td>
+    <td style="max-width:40px"><input id="it_nm_{{detail.id}}" class="form-control" value="{{ detail.item_name}}"
+               name="code" disabled></td>
+    <td><input id="nm_{{detail.id}}" class="form-control" value="{{ detail.name}}" name="name" disabled> </td>
+    <td style="max-width:90px" id="clr_{{detail.id}}" >
+        <div class="input-group" >
+        <select class="form-select" id="ColorSelect_{{detail.id}}" name="ColorSelect" disabled>
+            <option value="0" selected>{{ detail.color_scheme.scheme_name}}</option>
+        </select>
+        </div>
+    </td>
+
+    <td>
+        {% if detail.detail1_place %}
+        <input class="form-check-input" type="checkbox"  disabled checked value="{{detail.detail1_place}}"
+               id="chck1_{{detail.id}}" name="flexCheck_det1_">
+        {% else %}
+        <input class="form-check-input" type="checkbox" disabled  value="{{detail.detail1_place}}"
+               id="chck1_{{detail.id}}" name="flexCheck_det1_">
+        {% endif %}
+    </td>
+    <td style="max-width:80px"><input id="dt1_nm_{{detail.id}}" class="form-control" value="{{ detail.detail1_name }}"
+               name="dt1_nm" disabled></td>
+
+    <td>
+        {% if detail.detail2_place %}
+        <input class="form-check-input" type="checkbox"  disabled checked value="{{detail.detail2_place}}"
+               id="chck2_{{detail.id}}" name="flexCheck_det2_">
+        {% else %}
+        <input class="form-check-input" type="checkbox" disabled  value="{{detail.detail1_place}}"
+               id="chck2_{{detail.id}}" name="flexCheck_det2_">
+        {% endif %}
+    </td>
+    <td style="max-width:80px"><input id="dt2_nm_{{detail.id}}" class="form-control" value="{{ detail.detail2_name }}"
+               name="dt2_nm" disabled></td>
+
+    <td>
+        {% if detail.detail3_place %}
+        <input class="form-check-input" type="checkbox"  disabled checked value="{{detail.detail3_place}}"
+               id="chck3_{{detail.id}}" name="flexCheck_det3_">
+        {% else %}
+        <input class="form-check-input" type="checkbox" disabled  value="{{detail.detail3_place}}"
+               id="chck3_{{detail.id}}" name="flexCheck_det3_">
+        {% endif %}
+    </td>
+    <td style="max-width:80px"><input id="dt3_nm_{{detail.id}}" class="form-control" value="{{ detail.detail3_name }}"
+               name="dt3_nm" disabled></td>
+
+    <td>
+        {% if detail.detail4_place %}
+        <input class="form-check-input" type="checkbox"  disabled checked value="{{detail.detail4_place}}"
+               id="chck4_{{detail.id}}" name="flexCheck_det4_">
+        {% else %}
+        <input class="form-check-input" type="checkbox" disabled  value="{{detail.detail1_place}}"
+               id="chck4_{{detail.id}}" name="flexCheck_det4_">
+        {% endif %}
+    </td>
+    <td style="max-width:80px"><input id="dt4_nm_{{detail.id}}" class="form-control" value="{{ detail.detail4_name }}"
+               name="dt4_nm" disabled></td>
+
+    <td>
+        {% if detail.detail5_place %}
+        <input class="form-check-input" type="checkbox"  disabled checked value="{{detail.detail5_place}}"
+               id="chck5_{{detail.id}}" name="flexCheck_det5_">
+        {% else %}
+        <input class="form-check-input" type="checkbox" disabled  value="{{detail.detail5_place}}"
+               id="chck5_{{detail.id}}" name="flexCheck_det5_">
+        {% endif %}
+    </td>
+    <td style="max-width:60px"><input id="dt5_nm_{{detail.id}}" class="form-control" value="{{ detail.detail5_name }}"
+               name="dt5_nm" disabled></td>
+    <td style="max-width:30px" class="text-end"><a href="javascript:upd_dtl_reverse({{detail.id}}, '{{ detail.color_scheme.scheme_name}}');">
+        <button type="button" class="btn-sm btn-outline-danger" id="otm_{{detail.id}}" disabled>Отм.</button></a> </td>
+        <td style="max-width:30px" class="text-end"><button type="submit" class="btn-sm btn-outline-primary" id="ok_{{detail.id}}" disabled>OK</button></td>
+
+    </form>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div><!-- Item Details ><--->
+
+
+<theader class="row p-1 m-1">
+
+
+<div class="col">
+
+<div class="row">
+
+<div class="card" style="width: 12rem;">
   <div class="card-header">
-      <div class="d-flex justify-content-between">
-        Цветовая группа
+      <div class="d-flex justify-content-between"><h5>Цветовая группа</h5> </div>
+  <div class="text-end">
         <a href="javascript:add_ln('new_line');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
-    </div>
+  </div>
   </div>
   <ul class="list-group list-group-flush">
     {% for clr_sch in color_scheme %}
-    <li class="list-group-item" id="cst_id_{{clr_sch.id}}">
+    <li class="list-group-item" id="cst_id_{{clr_sch.id}}" >
     <a href="javascript:upd_ln({{clr_sch.id}});" class="form-control">{{ clr_sch.scheme_name }}</a>
     </li>
     <li class="list-group-item" id="cst_id2_{{clr_sch.id}}" style="display:none">
@@ -32,7 +236,7 @@
         {% csrf_token %}
         <div class="d-flex justify-content-between" >
             <div class="col">
-            <input type="text" class="form-control" name="clr_sch" value="{{ clr_sch.scheme_name }}">
+            <input id="clr_sr_{{ clr_sch.id }}" type="text" class="form-control" name="clr_sch" value="{{ clr_sch.scheme_name }}">
             <input type="hidden" class="form-control" name="clr_sch_id" value="{{ clr_sch.id }}">
             </div>
             <div class="col">
@@ -66,10 +270,11 @@
   </ul>
 </div><!-- Color schemes><--->
 
-<div class="card p-1 m-1" style="width: 20rem;">
+<div class="card" style="width: 12rem;">
   <div class="card-header">
       <div class="d-flex justify-content-between">
-        Тип печати
+          <h5>Тип печати </h5></div>
+      <div class="text-end">
         <a href="javascript:add_ln('new_ln');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
     </div>
   </div>
@@ -117,8 +322,11 @@
   </ul>
 </div><!-- Print types><--->
 
-<div class="card p-1 m-1" style="width: 40rem;"><!-- Print places><--->
+</div>
+
+<div class="card" style="width: 25rem;"><!-- Print places><--->
   <div class="card-header">
+      <div><h5>Место печати</h5></div>
       <div class="d-flex justify-content-between">
       <div class="col"> Название детали</div>
       <div class="col"> Место печати </div>
@@ -178,8 +386,10 @@
   </ul>
 </div><!-- Print places><--->
 
-<div class="card p-1 m-1" style="width: 40rem;"><!-- Print positions><--->
+<div class="card" style="width: 25rem;"><!-- Print positions><--->
   <div class="card-header">
+      <div><h5>Позиция</h5></div>
+
       <div class="d-flex justify-content-between">
       <div class="col"> Опция</div>
       <div class="col"> Ориентация </div>
@@ -238,6 +448,108 @@
     </li>
   </ul>
 </div><!-- Print positions><--->
+</div>
+
+<div class="card p-1 m-1" style="width: 60rem;">
+      <div class="card-header">
+      <div class="d-flex justify-content-between">
+      <div><h5>Цвета</h5></div>
+
+<!-- Modal --> <form id="add_clr" action="{% url 'maket:add_clr' %}" method="post">
+      {% csrf_token %}
+        <div class="modal fade" id="addclrModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addclrModalLabel">Добавление Цвета</h5>
+              </div>
+              <div class="modal-body">
+                 <!--  --->
+              <div class="row p-1">
+                  <div class="col-2">
+                      <input type="text" class="form-control" name="clr_id" placeholder="Цвет"></div>
+                  <div class="col-4">
+                      <input type="text" class="form-control" name="clr_nm" placeholder="Название"></div>
+                  <div class="col-3">
+                        <input type="text" class="form-control" name="dt1_ptn" placeholder="Pantone"></div>
+              </div>
+              <div class="row p-1">
+                    <div class="col">
+                        <input type="text" class="form-control" name="dt1_hex" placeholder="#HEX"></div>
+                    <div class="col">
+                    <div class="input-group" >
+                    <select class="form-select" id="ColorSelect_add" name="ColorSelect_add">
+                    {% for clr_sch in color_scheme %}
+                         <option value="{{ clr_sch.id}}" >{{ clr_sch.scheme_name}}</option>
+                    {% endfor %}
+                    </select>
+                    </div>
+                    </div>
+              </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+    </div>
+  </div>
+   <table class="table table-hover">
+<thead>
+<tr class="table-primary">
+    <th></th>
+    <th class="text-center">ID</th>
+    <th class="text-center">Название</th>
+    <th class="text-center">Pantone С</th>
+    <th class="text-center">#HEX</th>
+    <th class="text-center">Цветовая группа</th>
+    <th colspan="2" class="text-end">
+<!-- Button trigger modal --><button type="button" class="btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addclrModal">
+      Добавить</button>
+    </th>
+</tr>
+</thead>
+<tbody>
+{% for clr in color %}
+<form action="update_clr/{{ clr.id }}" method="post">
+{% csrf_token %}
+<tr >
+    <td class="col-1"><a href="javascript:clr_edit({{clr.id}}, '{{clr.color_scheme.scheme_name}}');">
+        <button type="button" class="btn-sm btn-outline-primary" id="red_{{clr.id}}">Ред.</button>
+    </a> </td>
+    <td class="col-1">
+        <input class="form-control" value="{{clr.color_id}}" disabled id="clrid_{{clr.id}}" name="clrid"></td>
+    <td class="col">
+        <input class="form-control" value="{{clr.color_name}}"  id="clrnm_{{clr.id}}" disabled name="clr_nm"></td>
+    <td class="col-2">
+        <input class="form-control" value="{{clr.pantone}}" disabled id="clrpnt_{{clr.id}}" name="dt1_ptn"></td>
+    <td class="col-2">
+        <input class="form-control" value="{{clr.color_code}}" disabled  id="clrhex_{{clr.id}}" name="dt1_hex"></td>
+    <td class="col-2">
+        <div class="input-group" >
+        <select class="form-select" id="ColorSelect2_{{clr.id}}" name="ColorSelect2" disabled>
+            <option value="0" selected>{{ clr.color_scheme.scheme_name}}</option>
+        </select>
+        </div>
+    </td>
+    <td class="col-1 text-end">
+        <a href="javascript:clr_edit_reverse({{clr.id}}, '{{ clr.color_scheme.scheme_name}}');">
+        <button type="button" class="btn-sm btn-outline-danger" id="otmclr_{{clr.id}}" disabled>Отм.</button></a>
+    </td>
+    <td class="col-1 text-end">
+        <button type="submit" class="btn-sm btn-outline-primary" id="okclr_{{clr.id}}" disabled>OK</button>
+    </td>
+</tr>
+</form>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+</theader>
 
 <!-- Добавить карточки сочетаний Item_to_type, Item_to_position, Item_to_color если их потом использовать><--->
 
@@ -245,5 +557,8 @@
 
 
 <script src="{% static 'maket/maket.js' %}"></script>
+<script src="{% static 'maket/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
+
 
 </body>
+</html>
