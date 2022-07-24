@@ -10,6 +10,7 @@ from django.core.paginator import Paginator
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports,\
     Print_imports, Detail_set, Customer
 from django.db.models.lookups import GreaterThan, LessThan
+from django.db.models import Q
 from django.template import loader
 from django.shortcuts import render
 from django.http import Http404
@@ -428,6 +429,25 @@ def maket_print(request, id):
         ord_imp = Order_imports.objects.order_by('-order_date', '-id').first()
     order_id = ord_imp.id
     item_import = list(Item_imports.objects.filter(order=order_id).order_by('code'))
+    items_34 = len(Item_imports.objects.filter(Q(order=order_id) & (Q(item_group__icontains='34')|
+                                                                    Q(item_group__icontains='350'))))
+    items_37 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='37')))
+    items_310 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='310')))
+    items_311 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='311')))
+    items_312 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='312')))
+    items_3A6 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3A6')))
+    items_3A5 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3A5')))
+    items_3D5 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3D5')))
+    items_101 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='101')))
+    items_102 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='102')))
+    items_105 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='105')))
+    items_115 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='115')))
+    items_120 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='120')))
+    items_121 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='121')))
+    items_703 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='703')))
+    items_701 = len(Item_imports.objects.filter(Q(order=order_id) & (Q(item_group__icontains='701')|
+                 Q(item_group__icontains='702')|Q(item_group__icontains='711')|Q(item_group__icontains='712'))))
+
     print_import = ()
     for item in item_import:
         print_import = print_import + tuple(Print_imports.objects.filter(item=item))
@@ -449,6 +469,7 @@ def maket_print(request, id):
     prt_120 = []
     prt_121 = []
     for print_item in print_import:
+        item_id = print_item.print_id
         item = print_item.item
         clr = item.detail1_color
         item_code = item.item_group
@@ -457,88 +478,88 @@ def maket_print(request, id):
         clr_hex = Item_color.objects.get(color_scheme=clr_sch, color_id=clr)
         clr_hex = clr_hex.color_code
         if '34' in item_code or '350' in item_code:
-            prt_34.append([print_item, clr_hex, item_code])
+            prt_34.append([print_item, clr_hex])
         elif '310' in item_code:
-            prt_310.append([print_item, clr_hex, item_code])
+            prt_310.append([print_item, clr_hex])
         elif '311' in item_code:
-            prt_311.append([print_item, clr_hex, item_code])
+            prt_311.append([print_item, clr_hex])
         elif '312' in item_code:
-            prt_312.append([print_item, clr_hex, item_code])
+            prt_312.append([print_item, clr_hex])
         elif '3A6' in item_code:
-            prt_3A6.append([print_item, clr_hex, item_code])
+            prt_3A6.append([print_item, clr_hex])
         elif '3A5' in item_code:
-            prt_3A5.append([print_item, clr_hex, item_code])
+            prt_3A5.append([print_item, clr_hex])
         elif '3D5' in item_code:
-            prt_3D5.append([print_item, clr_hex, item_code])
+            prt_3D5.append([print_item, clr_hex])
         elif '37' in item_code:
-            prt_37.append([print_item, clr_hex, item_code])
+            prt_37.append([print_item, clr_hex])
         elif '101' in item_code:
-            prt_101.append([print_item, clr_hex, item_code])
+            prt_101.append([print_item, clr_hex])
         elif '102' in item_code:
-            prt_102.append([print_item, clr_hex, item_code])
+            prt_102.append([print_item, clr_hex])
         elif '105' in item_code:
-            prt_105.append([print_item, clr_hex, item_code])
+            prt_105.append([print_item, clr_hex])
         elif '115' in item_code:
-            prt_115.append([print_item, clr_hex, item_code])
+            prt_115.append([print_item, clr_hex])
         elif '120' in item_code:
-            prt_120.append([print_item, clr_hex, item_code])
+            prt_120.append([print_item, clr_hex])
         elif '121' in item_code:
-            prt_121.append([print_item, clr_hex, item_code])
+            prt_121.append([print_item, clr_hex])
         elif '703' in item_code:
-            prt_703.append([print_item, clr_hex, item_code])
-        elif ('701' or '702' or '711' or '712') in item_code:
-            prt_701.append([print_item, clr_hex, item_code])
+            prt_703.append([print_item, clr_hex])
+        elif ('701' in item_code) or ('702' in item_code) or ('711' in item_code) or ('712' in item_code):
+            prt_701.append([print_item, clr_hex])
 
     context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import}
     product_range = []
     if len(prt_34) != 0:
         context.update({'prt_34': prt_34})
-        product_range.append(['ProEcoPen', len(prt_34)])
+        product_range.append(['ProEcoPen', len(prt_34), 'prt_34', items_34])
     if len(prt_310) != 0:
         context.update({'prt_310': prt_310})
-        product_range.append(['Зажим 65мм', len(prt_310)])
+        product_range.append(['Зажим 65мм', len(prt_310), 'prt_310', items_310])
     if len(prt_311) != 0:
         context.update({'prt_311': prt_311})
-        product_range.append(['Зажим 105мм', len(prt_311)])
+        product_range.append(['Зажим 105мм', len(prt_311), 'prt_311', items_311])
     if len(prt_312) != 0:
         context.update({'prt_312': prt_312})
-        product_range.append(['Зажим с ложкой', len(prt_312)])
+        product_range.append(['Зажим с ложкой', len(prt_312), 'prt_312', items_312])
     if len(prt_37) != 0:
         context.update({'prt_37': prt_37})
-        product_range.append(['Чехол', len(prt_37)])
+        product_range.append(['Чехол', len(prt_37), 'prt_37', items_37])
     if len(prt_3A6) != 0:
         context.update({'prt_3A6': prt_3A6})
-        product_range.append(['Блокнот А6', len(prt_3A6)])
+        product_range.append(['Блокнот А6', len(prt_3A6), 'prt_3A6', items_3A6])
     if len(prt_3A5) != 0:
         context.update({'prt_3A5': prt_3A5})
-        product_range.append(['Блокнот А5', len(prt_3A5)])
+        product_range.append(['Блокнот А5', len(prt_3A5), 'prt_3A5', items_3A5])
     if len(prt_3D5) != 0:
         context.update({'prt_3D5': prt_3D5})
-        product_range.append(['Блокнот на дисках', len(prt_3D5)])
+        product_range.append(['Блокнот на дисках', len(prt_3D5), 'prt_3D5', items_3D5])
     if len(prt_101) != 0:
         context.update({'prt_101': prt_101})
-        product_range.append(['Автомат', len(prt_101)])
+        product_range.append(['Автомат', len(prt_101), 'prt_101', items_101])
     if len(prt_102) != 0:
         context.update({'prt_102': prt_102})
-        product_range.append(['Эрроу', len(prt_102)])
+        product_range.append(['Эрроу', len(prt_102), 'prt_102', items_102])
     if len(prt_105) != 0:
         context.update({'prt_105': prt_105})
-        product_range.append(['Болид', len(prt_105)])
+        product_range.append(['Болид', len(prt_105), 'prt_105', items_105])
     if len(prt_115) != 0:
         context.update({'prt_115': prt_115})
-        product_range.append(['Прима', len(prt_115)])
+        product_range.append(['Прима', len(prt_115), 'prt_115', items_115])
     if len(prt_120) != 0:
         context.update({'prt_120': prt_120})
-        product_range.append(['Спот', len(prt_120)])
+        product_range.append(['Спот', len(prt_120), 'prt_120', items_120])
     if len(prt_121) != 0:
         context.update({'prt_121': prt_121})
-        product_range.append(['Спот Люкс', len(prt_121)])
+        product_range.append(['Спот Люкс', len(prt_121), 'prt_121', items_121])
     if len(prt_701) != 0:
         context.update({'prt_701': prt_701})
-        product_range.append(['Каролина', len(prt_701)])
+        product_range.append(['Каролина', len(prt_701), 'prt_701', items_701])
     if len(prt_703) != 0:
         context.update({'prt_703': prt_703})
-        product_range.append(['Краваттоне', len(prt_703)])
+        product_range.append(['Краваттоне', len(prt_703), 'prt_703',items_703])
     context.update({'product_range': product_range})
 
     return render(request, 'maket/maket_print.html', context)
