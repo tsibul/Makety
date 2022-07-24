@@ -17,6 +17,8 @@
         <a href="{% url 'maket:index' %}" class="btn btn-outline-secondary d-print-none">Назад</a>
     </span>
 <div class="border border-3 border-primary p-1 m-1" style="width:200mm;">
+<div class="row">
+<div class="col">
     <div class="row">
         <div class="col m-1 fw-bold  lh-1">Макет к заказу {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
     </div>
@@ -36,17 +38,34 @@
     <div class="col">
     Пленка {{ord_imp.film.film_id}} от {{ord_imp.film.date}}
     {% if ord_imp.film_status %}
-    <input class="form-check-input" type="checkbox" checked disabled name="filmstatus">
+    <input class="form-check-input" type="checkbox" checked disabled name="filmstatus" id="filmstatus">
     <label for="filmstatus">без ошибок</label>
     {% else %}
-    <input class="form-check-input" type="checkbox" disabled name="filmstatus">
-    <label for="filmstatus"> ошибки </label>
+    <input class="form-check-input" type="checkbox" disabled name="filmstatus" id="filmstatus_">
+    <label for="filmstatus_"> ошибки </label>
     {% endif %}
     </div>
 </div>
 </table>
-
 </div>
+<div class="col-4 align-end d-print-none">
+    {% for prd in product_range %}
+    <div class="row align-end">
+    <div class="col" style="font-size:60%" >{{prd.0}}</div>
+    <div class="col-1" style="font-size:60%" >{{prd.1}}</div>
+    <div class="col" class="form-check" style="font-size:60%" >
+        <input  class="form-check-input" type="checkbox" name="{{prd.0}}" id="{{prd.0}}">
+        <label class="form-check-label" for="{{prd.0}}"> в макет </label>
+    </div>
+    </div>
+    {% endfor %}
+    <div class="row text-end p-1">
+    <a href="javascript:split_maket();"><button class="btn-sm btn-outline-primary">Применить</button> </a>
+    </div>
+</div>
+</div>
+</div>
+
 <div class="row">
 
 <div class="col p-2 m-2" style="width:200mm;">
@@ -78,20 +97,20 @@
     <table class="table-sm mb-0">
 
     {% for prt in print_import %}
-    {% if prt.0.print_id == item.print_id %}
+    {% if prt.print_id == item.print_id %}
     <tr class="lh-1 align-top">
 <!--        <td scope="col" colspan="4" style="font-size:60%;"> </td> <--->
-        <td scope="col" class="col-4 text-start" style="min-width:20mm; font-size:60%;"> {{prt.0.place}} </td>
-        <td scope="col" class="col-2 text-center" style="font-size:60%;"> {{prt.0.type}}</td>
-        <td scope="col" class="col-1 text-center" style="min-width:5mm; font-size:60%;"> {{prt.0.colors}} /</td>
+        <td scope="col" class="col-4 text-start" style="min-width:20mm; font-size:60%;"> {{prt.place}} </td>
+        <td scope="col" class="col-2 text-center" style="font-size:60%;"> {{prt.type}}</td>
+        <td scope="col" class="col-1 text-center" style="min-width:5mm; font-size:60%;"> {{prt.colors}} /</td>
          <td scope="col" class="col-1 text-center" style="font-size:60%;">
-        {% if prt.0.second_pass %}
+        {% if prt.second_pass %}
             <input class="form-check-input" type="checkbox" checked disabled>
         {% else %}
             <input class="form-check-input" type="checkbox" disabled>
         {% endif %}
         </td>
-        <td scope="col" class="text-center" style="font-size:60%;"> {{prt.0.position}} </td>
+        <td scope="col" class="text-center" style="font-size:60%;"> {{prt.position}} </td>
     </tr>
     {% else %}
     {% endif %}
