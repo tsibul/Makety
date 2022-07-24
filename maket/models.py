@@ -1,5 +1,10 @@
 from django.db import models
 
+class Films(models.Model):
+    film_id = models.IntegerField(default=0)
+    date = models.DateField(default='')
+    format = models.CharField(max_length=3,default='A5')
+
 
 class Color_scheme(models.Model):
     """ color scheme IV, Grant, Eco """
@@ -15,33 +20,24 @@ class Print_place(models.Model):
 
 class Detail_set(models.Model):
     """details of item detail# if exist
-                       name - name of detail
-                       place - name of prinring place"""
-    detail1 = models.BooleanField(default=True)
-    detail1_name = models.CharField(max_length=60)
-    detail1_place = models.ForeignKey(Print_place, models.SET_NULL, related_name='detail1', null=True, blank=True)
-    detail2 = models.BooleanField(default=False)
-    detail2_name = models.CharField(max_length=60)
-    detail2_place = models.ForeignKey(Print_place, models.SET_NULL, related_name='detail2', null=True, blank=True)
-    detail3 = models.BooleanField(default=False)
-    detail3_name = models.CharField(max_length=60)
-    detail3_place = models.ForeignKey(Print_place, models.SET_NULL, related_name='detail3', null=True, blank=True)
-    detail4 = models.BooleanField(default=False)
-    detail4_name = models.CharField(max_length=60)
-    detail4_place = models.ForeignKey(Print_place, models.SET_NULL, related_name='detail4', null=True, blank=True)
-    detail5 = models.BooleanField(default=False)
-    detail5_name = models.CharField(max_length=60)
-    detail5_place = models.ForeignKey(Print_place, models.SET_NULL, related_name='detail5', null=True, blank=True)
-
-
-class Items(models.Model):
-    """code - series code
-       item_details - quantity of parts for total code """
-    item_code = models.CharField(max_length=
-                                 6)
+        name - name of goods
+        item_name - item code
+        detail_name - name of detail
+        detail_place - if prinring possible"""
+    name = models.CharField(max_length=200, null=True, blank=True)
+    item_name = models.CharField(max_length=6, null=True, blank=True)
     color_scheme = models.ForeignKey(Color_scheme, models.SET_NULL, null=True)
-    item_details = models.SmallIntegerField
-    details = models.ForeignKey(Detail_set, models.SET_NULL, null=True)
+    detail1_name = models.CharField(max_length=60)
+    detail1_place = models.BooleanField(default=False)
+    detail2_name = models.CharField(max_length=60, default='', null=True, blank=True)
+    detail2_place = models.BooleanField(default=False)
+    detail3_name = models.CharField(max_length=60, default='', null=True, blank=True)
+    detail3_place = models.BooleanField(default=False)
+    detail4_name = models.CharField(max_length=60, default='', null=True, blank=True)
+    detail4_place = models.BooleanField(default=False)
+    detail5_name = models.CharField(max_length=60, default='', null=True, blank=True)
+    detail5_place = models.BooleanField(default=False)
+
 
 class Print_type(models.Model):
     """ Pad, screen, UW, soft_touch etc."""
@@ -58,9 +54,11 @@ class Print_position(models.Model):
 class Item_color(models.Model):
     """ id - (07)
         name - name
+        pantone - pantone color
         code - HEX"""
-    color_id = models.CharField(max_length=60)
-    color_name = models.CharField(max_length=10)
+    color_id = models.CharField(max_length=10)
+    pantone = models.CharField(max_length=20, default='')
+    color_name = models.CharField(max_length=60)
     color_code = models.CharField(max_length=7)
     color_scheme = models.ForeignKey(Color_scheme, models.SET_NULL, null=True)
 
@@ -70,55 +68,68 @@ class Customer(models.Model):
         number of Region"""
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
+    inn = models.CharField(max_length=12, null=True)
     type = models.CharField(max_length=30)
     region = models.CharField(max_length=2, default='77')
     group = models.CharField(max_length=255)
 
 
-class Order(models.Model):
+class Order_imports(models.Model):
     """ date_num - 'date' part of order no (dmy)"""
-    date = models.DateField('date of order')
-    date_num = models.CharField(max_length=6)
-    order_number = models.CharField(max_length=10)
+    order_id = models.CharField(max_length=18, blank=True, null=True)
+    order_date = models.DateField(default='1000-01-01')
+    date_num = models.CharField(max_length=6 , blank=True, null=True)
+    supplier = models.CharField(max_length=50, blank=True, null=True)
+    customer_name = models.CharField(max_length=255, blank=True, null=True)
+    customer_INN = models.CharField(max_length=12, blank=True, null=True)
+    customer_address = models.CharField(max_length=120, blank=True, null=True)
     customer = models.ForeignKey(Customer, models.SET_NULL, null=True)
+    film = models.ForeignKey(Films, models.SET_NULL, null=True, default=None)
+    film_status = models.BooleanField(default=True)
 
 
-class Order_items(models.Model):
+class Item_imports(models.Model):
     """item_color - total color code back part of item code(after Item series)
         detail_color - should be extracted from item_color
         print_name - name of print"""
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    item_series = models.ForeignKey(Items, on_delete=models.CASCADE)
-    item_color = models.CharField(max_length=10)
-    detail1_color = models.CharField(max_length=10)
-    detail2_color = models.CharField(max_length=10)
-    detail3_color = models.CharField(max_length=10)
-    detail4_color = models.CharField(max_length=10)
-    detail5_color = models.CharField(max_length=10)
-    item_quant = models.IntegerField(default=1)
-    print_name = models.CharField(max_length=40)
+    print_id = models.IntegerField(default=0)
+    item = models.ForeignKey(Detail_set, models.SET_NULL, null=True)
+    code = models.CharField(max_length=20, blank=True, null=True)
+    name = models.CharField(max_length=80, blank=True, null=True)
+    quantity = models.IntegerField(default=0)
+    print_name = models.CharField(max_length=50, blank=True, null=True)
+    order = models.ForeignKey(Order_imports, on_delete=models.CASCADE, null=True)
+    item_group = models.CharField(max_length=8, default='', blank=True, null=True)
+    item_color = models.CharField(max_length=40, default='', blank=True, null=True)
+    detail1_color = models.CharField(max_length=10, default='', blank=True, null=True)
+    detail2_color = models.CharField(max_length=10, default='', blank=True, null=True)
+    detail3_color = models.CharField(max_length=10, default='', blank=True, null=True)
+    detail4_color = models.CharField(max_length=10, default='', blank=True, null=True)
+    detail5_color = models.CharField(max_length=10, default='', blank=True, null=True)
+
+
+
+
+class Print_imports(models.Model):
+    """quantity - number of colors
+        shots - number of shots 1 or 2"""
+    place = models.CharField(max_length=30, blank=True, null=True)
+    type = models.CharField(max_length=20, blank=True, null=True)
+    colors = models.SmallIntegerField(default=1)
+    second_pass = models.BooleanField(default=False)
+    item = models.ForeignKey(Item_imports, on_delete=models.CASCADE, null=True)
+    print_id = models.IntegerField(default=0)
+    position = models.ForeignKey(Print_position, models.SET_NULL, null=True)
 
 
 class Order_item_print(models.Model):
     """quantity - number of colors
         shots - number of shots 1 or 2"""
-    order_item = models.ForeignKey(Order_items, on_delete=models.CASCADE)
+    order_item = models.ForeignKey(Item_imports, on_delete=models.CASCADE)
     place = models.ForeignKey(Print_place, models.SET_NULL, null=True)
     position = models.ForeignKey(Print_position, models.SET_NULL, null=True)
     quantity = models.SmallIntegerField(default=1)
     shots = models.SmallIntegerField(default=1)
 
 
-class Item_to_type(models.Model):
-    item_name = models.ForeignKey(Items, on_delete=models.CASCADE)
-    print_type = models.ForeignKey(Print_type, on_delete=models.CASCADE)
 
-
-class Item_to_position(models.Model):
-    item_name = models.ForeignKey(Items, on_delete=models.CASCADE)
-    position_name = models.ForeignKey(Print_position, on_delete=models.CASCADE)
-
-
-class Item_to_color(models.Model):
-    item_name = models.ForeignKey(Items, on_delete=models.CASCADE)
-    place_name = models.ForeignKey(Print_place, on_delete=models.CASCADE)
