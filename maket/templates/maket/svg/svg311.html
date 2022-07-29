@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'maket/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'maket/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
+
+    <title>Title</title>
+</head>
+<body>
+
+<div class="row p-1 m-1" id="prt_311">
+<div class="col lh-1 p-1 m-1"  >
+    <div class="m-2"><img src="{% static 'maket/img/ruler.svg' %}" /></div>
+
+<div>
+{% for prt in prt_311 %}
+    <div class="col p-1 m-1" id="itm_311_{{prt.0.id}}" style="display:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="221mm" height="13mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+    viewBox="0 0 22100 1300"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+     <defs>
+      <style type="text/css">
+       <![CDATA[
+        .str1 {stroke:#2B2A29;stroke-width:17.6}
+        .str0 {stroke:#2B2A29;stroke-width:17.64}
+        .fil2 {fill:none}
+        .fil1 {fill:#FEFEFE}
+        .fil0 {fill:#005EC4}
+       ]]>
+      </style>
+     </defs>
+     <g id="Слой_x0020_1">
+      <metadata id="CorelCorpID_0Corel-Layer"/>
+      <g id="_2778962988736">
+       <polygon fill="{{prt.1}}" points="11786,1277 11786,912 10536,912 10536,1277 "/>
+       <polygon fill="{{prt.1}}" points="10528,385 10528,20 11778,20 11778,385 "/>
+       <path fill="{{prt.1}}" d="M10534 24l-10320 -1c-76,0 -200,12 -200,86l0 1083c0,74 124,82 199,82l10322 0c288,-26 489,-210 479,-676 -25,-349 -179,-544 -480,-574z"/>
+       <path fill="#ffffff" d="M488 334l-258 0c-16,0 -14,-2 -14,18l0 576c0,20 -1,18 14,18l258 0c15,0 14,2 14,-17l0 -577c0,-20 1,-18 -14,-18z"/>
+       <g>
+        <path fill="{{prt.1}}" d="M20302 30l1584 -1c76,0 200,12 200,86l0 1083c0,74 -124,82 -199,82l0 0 -1585 0 0 -1250z"/>
+        <g>
+         <path fill="{{prt.1}}" d="M11565 30l9924 0c636,-2 644,1247 0,1250l-9924 0c-288,-26 -489,-211 -479,-676 25,-350 179,-544 479,-574z"/>
+         <path fill="#ffffff" d="M21602 340l188 0c114,218 107,404 0,612l-188 0 0 -612z"/>
+        </g>
+       </g>
+       <polygon fill="{{prt.1}}" points="2190,216 9190,216 9190,1066 2190,1066 "/>
+       <polygon fill="{{prt.1}}" points="13042,221 20042,221 20042,1071 13042,1071 "/>
+      </g>
+     </g>
+    </svg>
+    </div>
+{% endfor %}
+</div>
+</div>
+
+<div class="col p-1 m-1">
+{% for prt in prt_311 %}
+    <div class="d-flex flex-row lh-1">
+      <div class="col" style="font-size:60%;">
+        <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_311_{{prt.0.id}}">
+      </div>
+      <div class="col" style="font-size:60%;">&nbsp{{prt.0.print_id}}&nbsp</div>
+      <div class="col" style="font-size:60%;">&nbsp{{prt.0.item.item_group}}.{{prt.0.item.detail1_color}}&nbsp</div>
+      <div class="col">
+    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="77mm" height="4.3mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+    viewBox="0 0 22100 1300"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+     <defs>
+      <style type="text/css">
+       <![CDATA[
+        .str1 {stroke:#2B2A29;stroke-width:17.6}
+        .str0 {stroke:#2B2A29;stroke-width:17.64}
+        .fil2 {fill:none}
+        .fil1 {fill:#FEFEFE}
+        .fil0 {fill:#005EC4}
+       ]]>
+      </style>
+     </defs>
+     <g id="Слой_x0020_1">
+      <metadata id="CorelCorpID_0Corel-Layer"/>
+      <g id="_2778962988736">
+       <polygon fill="{{prt.1}}" points="11786,1277 11786,912 10536,912 10536,1277 "/>
+       <polygon fill="{{prt.1}}" points="10528,385 10528,20 11778,20 11778,385 "/>
+       <path fill="{{prt.1}}" d="M10534 24l-10320 -1c-76,0 -200,12 -200,86l0 1083c0,74 124,82 199,82l10322 0c288,-26 489,-210 479,-676 -25,-349 -179,-544 -480,-574z"/>
+       <path fill="#ffffff" d="M488 334l-258 0c-16,0 -14,-2 -14,18l0 576c0,20 -1,18 14,18l258 0c15,0 14,2 14,-17l0 -577c0,-20 1,-18 -14,-18z"/>
+       <g>
+        <path fill="{{prt.1}}" d="M20302 30l1584 -1c76,0 200,12 200,86l0 1083c0,74 -124,82 -199,82l0 0 -1585 0 0 -1250z"/>
+        <g>
+         <path fill="{{prt.1}}" d="M11565 30l9924 0c636,-2 644,1247 0,1250l-9924 0c-288,-26 -489,-211 -479,-676 25,-350 179,-544 479,-574z"/>
+         <path fill="#ffffff" d="M21602 340l188 0c114,218 107,404 0,612l-188 0 0 -612z"/>
+        </g>
+       </g>
+       <polygon fill="{{prt.1}}" points="2190,216 9190,216 9190,1066 2190,1066 "/>
+       <polygon fill="{{prt.1}}" points="13042,221 20042,221 20042,1071 13042,1071 "/>
+      </g>
+     </g>
+    </svg>
+      </div>
+    </div>
+
+{% endfor %}
+    <div class="d-flex flex-row lh-1">
+     <div class="col d-print-none" style="font-size:60%;">
+        <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_311_all">
+      </div>
+      <div class="col" style="font-size:60%;">выбрать все</div>
+    </div>
+
+    <div class="d-print-none p-1 m-1">
+        <a href="javascript:chs_note({{prt_311_}},'311');">
+            <button type="button" class="btn-sm btn-outline-primary">в макет</button> </a>
+    </div>
+</div>
+</div>
+
+<script src="{% static 'maket/maket.js' %}"></script>
+<script src="{% static 'maket/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
+
+</body>
+</html>
