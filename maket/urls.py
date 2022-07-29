@@ -32,6 +32,5 @@ urlpatterns = [
     path('add_clr', views.add_clr, name='add_clr'),
     path('update_clr/<int:id>', views.update_clr, name='update_clr'),
     path('maket_print/<int:id>', views.maket_print, name='maket_print'),
-    path('svg343/<int:id>', views.svg343, name='svg343'),
 
 ]
