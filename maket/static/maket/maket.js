@@ -289,8 +289,57 @@ function upd_cst(id){
     ad = 'addr_' + id;
 
     nm_html = '<input type="text" value="{{cst.name}}" name="' + nm + '" id="' + nm +'">'
-
     document.getElementById(nm).innerHTML = nm_html;
-
-
 }
+
+function split_maket(print_range){
+    var number_items = print_range.length;
+    for(i=0; i<number_items; i++){
+    var line = 'chck_' + print_range[i][2]
+    if(document.getElementById(line).checked){if (print_range[i][2] == 'prt_3A6' ||
+     print_range[i][2] == 'prt_3A5' || print_range[i][2] == 'prt_3D5' || print_range[i][2] == 'prt_37'){
+    document.getElementById(print_range[i][2]).style.display='block';}
+    else{document.getElementById(print_range[i][2]).style.display='inherit';};
+    var hd_line = print_range[i][2] + '_';
+    var hd_line1 = document.querySelectorAll("[id=" + CSS.escape(hd_line) + "]");
+    for(var j = 0; j < hd_line1.length; j++) {hd_line1[j].style.display='table-row';}
+    }
+    else{
+    document.getElementById(print_range[i][2]).style.display ='none';
+    var hd_line = print_range[i][2] + '_';
+    var hd_line1 = document.querySelectorAll("[id=" + CSS.escape(hd_line) + "]");
+    for(var j = 0; j < hd_line1.length; j++) {hd_line1[j].style.display='none';}
+    }
+}}
+
+function chs_note(prt_3A6, note){
+    var number_items = prt_3A6.length;
+    try{if(document.getElementById(('chck_'+ note + '_all')).checked){
+    for(i=0; i<number_items; i++){var itm_id = 'itm_' + note + '_' + prt_3A6[i][0];
+    document.getElementById(itm_id).style.display='block';}
+    }else{
+        try {document.getElementById(('chck_'+ note + '_0'));
+    if(document.getElementById(('chck_'+ note + '_0')).checked){
+    document.getElementById(('itm_' + note + '_0')).style.display='block';}
+    else{document.getElementById(('itm_' + note + '_0')).style.display='none';};}
+    catch(err){};
+    for(i=0; i<number_items; i++){
+    var line = 'chck_' + note + '_' + prt_3A6[i][0]
+    var itm_id = 'itm_' + note + '_' + prt_3A6[i][0]
+    if(document.getElementById(line).checked){
+    document.getElementById(itm_id).style.display='block';}
+    else{document.getElementById(itm_id).style.display='none';}
+}
+    }}catch(err){
+    try {document.getElementById(('chck_'+ note + '_0'));
+    if(document.getElementById(('chck_'+ note + '_0')).checked){
+    document.getElementById(('itm_' + note + '_0')).style.display='block';}
+    else{document.getElementById(('itm_' + note + '_0')).style.display='none';};}
+    catch(err){};
+    for(i=0; i<number_items; i++){
+    var line = 'chck_' + note + '_' + prt_3A6[i][0]
+    var itm_id = 'itm_' + note + '_' + prt_3A6[i][0]
+    if(document.getElementById(line).checked){
+    document.getElementById(itm_id).style.display='block';}
+    else{document.getElementById(itm_id).style.display='none';}
+}}}
