@@ -86,6 +86,12 @@ class Order_imports(models.Model):
     customer = models.ForeignKey(Customer, models.SET_NULL, null=True)
     film = models.ForeignKey(Films, models.SET_NULL, null=True, default=None)
     film_status = models.BooleanField(default=True)
+    order_quantity = models.IntegerField(default=0)
+    order_sum = models.FloatField(default=0)
+    our_manager = models.CharField(max_length=50, blank=True, null=True, default='')
+    customer_manager = models.CharField(max_length=50, blank=True, null=True, default='')
+    customer_manager_phone= models.CharField(max_length=50, blank=True, null=True, default='')
+    customer_manager_mail = models.CharField(max_length=50, blank=True, null=True, default='')
 
 
 class Item_imports(models.Model):
