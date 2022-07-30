@@ -18,9 +18,9 @@
     </span>
 
 
+<div class="row">
 
 <div class="d-flex border border-3 border-primary p-2 m-2" style="width:190mm;">
-<div class="row">
 <div class="col">
     <div class="row">
         <div class="col m-1 fw-bold  lh-1">Макет к заказу {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
@@ -51,7 +51,10 @@
 </div>
 </table>
 </div>
-<div class="col-4 align-end d-print-none">
+</div>
+
+<div class="d-flex flex-row border p-2 m-2" style="width:140mm;">
+<div class="col align-end d-print-none">
     {% for prd in product_range %}
     <div class="row align-end">
     <div class="col" style="font-size:60%" >{{prd.0}}</div>
@@ -62,11 +65,11 @@
     </div>
     </div>
     {% endfor %}
-    <div class="row text-end p-1">
-    <a href="javascript:split_maket({{product_range}});"><button class="btn-sm btn-outline-primary">Применить</button> </a>
+</div>
+    <div class="col-2">
+    <a href="javascript:split_maket({{product_range}});"><button class="btn-sm btn-outline-primary">Выбрать</button> </a>
     </div>
-</div>
-</div>
+</div><!-- chose items for show -->
 </div>
 <div class="d-flex align-content-start flex-wrap">
 
