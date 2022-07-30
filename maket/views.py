@@ -1,26 +1,18 @@
-from django.shortcuts import render
-
-from django.db import models
-from django.utils import timezone
 # Create your views here.
-import datetime
-from datetime import date, timedelta
-from django.http import HttpResponse, HttpResponseRedirect
-from django.core.paginator import Paginator
-from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports,\
-    Print_imports, Detail_set, Customer
-from django.db.models.lookups import GreaterThan, LessThan
-from django.db.models import Q
-from django.template import loader
-from django.shortcuts import render
-from django.http import Http404
-from django.urls import reverse
-from django.db import transaction
-from django.core.files import File
-from django.views.generic import ListView
 import csv
-from .forms import FileForm
+import datetime
+import os
 
+from bs4 import BeautifulSoup
+from django.core.files.storage import default_storage
+from django.db.models import Q
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.template import loader
+from django.urls import reverse
+
+from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
+    Print_imports, Detail_set, Customer
 
 
 def main_maket(request):
@@ -44,8 +36,10 @@ def index(request):
 
     orders = Order_imports.objects.all().order_by('-order_date', '-id')
 
-    context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import, 'orders': orders}
+    context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
+               'orders': orders}
     return render(request, 'maket/index.html', context)
+
 
 def reload(request, id):
     navi = 'orders'
@@ -63,8 +57,10 @@ def reload(request, id):
 
     orders = Order_imports.objects.all().order_by('-order_date', '-id')
 
-    context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import, 'orders': orders}
+    context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
+               'orders': orders}
     return render(request, 'maket/index.html', context)
+
 
 def dicts(request):
     navi = 'dicts'
@@ -77,7 +73,7 @@ def dicts(request):
     details = Detail_set.objects.all().order_by('item_name')
 
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
-               'print_position': print_position, 'details': details, 'color' :color}
+               'print_position': print_position, 'details': details, 'color': color}
     return render(request, 'maket/dicts.html', context)
 
 
@@ -163,11 +159,177 @@ def customers(request):
     navi = 'customers'
     customers = Customer.objects.all().order_by('name')
 
-    context = {'navi': navi, 'customers':customers}
+    context = {'navi': navi, 'customers': customers}
     return render(request, 'maket/customers.html', context)
 
+
 def import_order(request):
-    file_name = request.POST['Chosen']
+    try:
+        os.remove('tmp_file')
+    except:
+        pass
+    file = request.FILES['Chosen']
+    file_name = default_storage.save('tmp_file', file)
+    tmp = open('tmp_file', 'r', encoding="utf-8")
+    demo = tmp.read()
+    souphtml = BeautifulSoup(demo, "html.parser")
+    souptr = souphtml.find_all("tr")
+    trstrings = []
+    for tr in souptr:
+        tmptr = tr.contents
+        tmpstrings = []
+        for td in tmptr:
+            try:
+                tmptd = td.contents[0]
+                if tmptd != '':
+                    tmpstrings.append(tmptd)
+            except:
+                pass
+        if tmpstrings != []:
+            trstrings.append(tmpstrings)
+
+    number_tr = len(trstrings)
+    order_no = str(trstrings[2][0])
+    order_date = trstrings[1][0]
+    order_date = datetime.datetime.strptime(order_date, '%d.%m.%Y').date()
+    supplier = str(trstrings[4][0])
+    customer_name = str(trstrings[6][0])
+    customer_inn = str(trstrings[7][0])
+    customer_address = str(trstrings[8][0])
+    order_quantity = str(trstrings[10][0])
+    order_sum = str(trstrings[12][0])
+    our_manager = str(trstrings[13][0])
+#    our_manager_phone = str(trstrings[14][0])
+    customer_manager = str(trstrings[15][0])
+    customer_manager_phone = str(trstrings[16][0])
+    customer_manager_mail = str(trstrings[17][0])
+    ord_imp = Order_imports(order_id=order_no, supplier=supplier, customer_name=customer_name,
+                            customer_INN=customer_inn, customer_address=customer_address, order_date=order_date,
+                            order_quantity=order_quantity, order_sum=order_sum, our_manager=our_manager,
+                            customer_manager=customer_manager, customer_manager_phone=customer_manager_phone,
+                            customer_manager_mail=customer_manager_mail)
+    try:
+        if customer_inn != '':
+            customer = Customer.objects.get(inn=customer_inn)
+            ord_imp.customer = customer
+        elif customer_inn == '':
+            customer = Customer.objects.get(name=customer_name)
+            ord_imp.customer = customer
+    except:
+        region = customer_inn[slice(0, 2)]
+        type = order_no[slice(13, 14)]
+        type2 = order_no[slice(14, 15)]
+        if type == 'Д':
+            type = 'Дилер'
+        elif type == 'А':
+            type = 'Агентство'
+        elif type == 'Р':
+            type = 'Рекламщик'
+        elif type == 'К':
+            type = 'Конечник'
+        if type2 == 'М':
+            type = type + ' Москва'
+        elif type2 == 'Р':
+            type = type + ' Регион'
+        elif type2 == 'Т':
+            type = 'Розничная точка'
+        elif type2 == 'К':
+            type = 'Экспорт'
+        customer = Customer(name=customer_name, address=customer_address, inn=customer_inn, region=region,
+                            type=type)
+        customer.save()
+        ord_imp.customer = customer
+    try:
+        orderbase = Order_imports.objects.get(order_id=order_no)
+        orderbase.order_id = ord_imp.order_id
+        orderbase.customer_name = ord_imp.customer_name
+        orderbase.customer_INN = ord_imp.customer_INN
+        orderbase.customer_address = ord_imp.customer_address
+        orderbase.order_date = ord_imp.order_date
+        orderbase.customer = ord_imp.customer
+        orderbase.order_quantity = ord_imp.order_quantity
+        orderbase.order_sum = ord_imp.order_sum
+        orderbase.our_manager = ord_imp.our_manager
+        orderbase.customer_manager = ord_imp.customer_manager
+        orderbase.customer_manager_phone = ord_imp.customer_manager_phone
+        orderbase.customer_manager_mail = ord_imp.customer_manager_mail
+        orderbase.save()
+        ord_imp = orderbase
+    except:
+        ord_imp.save()
+#    order = []
+#    try:
+#        pk = ord_imp.id
+#    except:
+#        pk = orderbase.id
+    order_body = range(19, number_tr, 1)
+    items_list = []
+    print_list = []
+#    j = 0
+    for i in order_body:
+        tr_len = len(trstrings[i])
+        if trstrings[i][tr_len-1] == '1sec_endofline' and trstrings[i][3] != '\xa0':
+            itm_clr = trstrings[i][2].split('.')
+            itm_group = itm_clr[0]
+            itm_clr.pop(0)
+            clr = '.'.join(itm_clr)
+            num_details = len(itm_clr)
+            x = range(num_details)
+            item = Item_imports(print_id=trstrings[i][0], code=trstrings[i][2], name=trstrings[i][1],
+                                quantity=trstrings[i][4], print_name=trstrings[i][3], order=ord_imp,
+                                item_group=itm_group, item_color=clr)
+            try:
+                itm_obj = Detail_set.objects.get(item_name=itm_group)
+                item.item = itm_obj
+            except:
+                pass
+
+            # TODO check if order exists, if no print_name, if no print details
+            for n in x:
+                detail = 'detail' + str(n + 1) + '_color'
+                setattr(item, detail, itm_clr[n])
+            item.save()
+            items_list.append(item)
+        elif trstrings[i][tr_len-1] == '2 sec_endofline':
+#            j = j + 1
+#        elif list_soup[i][16] != '':
+            for x in items_list:
+                if x.name == trstrings[i][1]:
+                    prt_item = x
+            if trstrings[i][0] != '':
+                print_id = prt_item.print_id
+            if tr_len == 8:
+                place = trstrings[i][3]
+                type = trstrings[i][4]
+                colors = trstrings[i][5]
+                if trstrings[i][6] == '-':
+                    second_pass = False
+                else:
+                    second_pass = True
+            elif tr_len == 5:
+                place = trstrings[i][0]
+                type = trstrings[i][1]
+                colors = trstrings[i][2]
+                if trstrings[i][3] == '-':
+                    second_pass = False
+                else:
+                    second_pass = True
+            print_item = Print_imports(place=place, type=type, colors=colors, item=prt_item, print_id=print_id)
+            print_item.save()
+            print_list.append([place, type, colors, second_pass, print_item, print_id])
+#    number_items = len(items_list)
+#    number_prints = len(print_list)
+    return HttpResponseRedirect(reverse('maket:index'))
+
+
+def import_csv_order(request):
+    try:
+        os.remove('tmp_file')
+    except:
+        pass
+    file = request.FILES['Chosen']
+    file_name = default_storage.save('tmp_file', file)
+
     with open(file_name, newline='') as csvfile:
         soup = csv.reader(csvfile, delimiter=';')
         list_soup = list(soup)
@@ -195,11 +357,11 @@ def import_order(request):
         if type == 'Д':
             type = 'Дилер'
         elif type == 'А':
-            type ='Агентство'
+            type = 'Агентство'
         elif type == 'Р':
-            type ='Рекламщик'
+            type = 'Рекламщик'
         elif type == 'К':
-            type ='Конечник'
+            type = 'Конечник'
         if type2 == 'М':
             type = type + ' Москва'
         elif type2 == 'Р':
@@ -212,8 +374,8 @@ def import_order(request):
                             type=type)
         customer.save()
     ord_imp.save()
-    order = []
-    pk = ord_imp.id
+#    order = []
+#    pk = ord_imp.id
     order_body = range(3, number_strings, 1)
     items_list = []
     print_list = []
@@ -235,9 +397,9 @@ def import_order(request):
             except:
                 itm_obj = ''
 
-#TODO check if order exists, if no print_name, if no print details
+            # TODO check if order exists, if no print_name, if no print details
             for n in x:
-                detail = 'detail' + str(n+1) + '_color'
+                detail = 'detail' + str(n + 1) + '_color'
                 setattr(item, detail, itm_clr[n])
             item.save()
             items_list.append(item)
@@ -261,9 +423,9 @@ def import_order(request):
             print_list.append([place, type, colors, second_pass, print_item, print_id])
     number_items = len(items_list)
     number_prints = len(print_list)
-#        for row in soup:
-#            order.append(row)
-    return HttpResponseRedirect(reverse('maket:index'), {'order': order})
+    #        for row in soup:
+    #            order.append(row)
+    return HttpResponseRedirect(reverse('maket:index'))
 
 
 def delete_order(request, id):
@@ -319,11 +481,13 @@ def add_detail(request):
     det_set = Detail_set(item_name=item_code,
                          detail1_name=detail1_name, detail1_place=detail1_place,
                          detail2_name=detail2_name, detail2_place=detail2_place,
-                         detail3_name= detail3_name, detail3_place=detail3_place,
+                         detail3_name=detail3_name, detail3_place=detail3_place,
                          detail4_name=detail4_name, detail4_place=detail4_place,
                          detail5_name=detail5_name, detail5_place=detail5_place)
     det_set.save()
     return HttpResponseRedirect(reverse('maket:dicts'))
+
+
 # TODO change add_detail
 
 
@@ -404,6 +568,7 @@ def add_clr(request):
     color.save()
     return HttpResponseRedirect(reverse('maket:dicts'))
 
+
 def update_clr(request, id):
     color = Item_color.objects.get(id=id)
     color_id = request.POST['clrid']
@@ -421,6 +586,7 @@ def update_clr(request, id):
     color.save()
     return HttpResponseRedirect(reverse('maket:dicts'))
 
+
 def maket_print(request, id):
     ord_i = id
     try:
@@ -429,7 +595,7 @@ def maket_print(request, id):
         ord_imp = Order_imports.objects.order_by('-order_date', '-id').first()
     order_id = ord_imp.id
     item_import = list(Item_imports.objects.filter(order=order_id).order_by('code'))
-    items_34 = len(Item_imports.objects.filter(Q(order=order_id) & (Q(item_group__icontains='34')|
+    items_34 = len(Item_imports.objects.filter(Q(order=order_id) & (Q(item_group__icontains='34') |
                                                                     Q(item_group__icontains='350'))))
     items_37 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='37')))
     items_310 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='310')))
@@ -445,8 +611,9 @@ def maket_print(request, id):
     items_120 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='120')))
     items_121 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='121')))
     items_703 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='703')))
-    items_701 = len(Item_imports.objects.filter(Q(order=order_id) & (Q(item_group__icontains='701')|
-                 Q(item_group__icontains='702')|Q(item_group__icontains='711')|Q(item_group__icontains='712'))))
+    items_701 = len(Item_imports.objects.filter(Q(order=order_id) & (Q(item_group__icontains='701') |
+                                                                     Q(item_group__icontains='702') | Q(
+                item_group__icontains='711') | Q(item_group__icontains='712'))))
 
     print_import = ()
     for item in item_import:
@@ -607,8 +774,7 @@ def maket_print(request, id):
     if len(prt_703) != 0:
         context.update({'prt_703': prt_703})
         context.update({'prt_703_': prt_703_})
-        product_range.append(['Краваттоне', len(prt_703), 'prt_703',items_703])
+        product_range.append(['Краваттоне', len(prt_703), 'prt_703', items_703])
     context.update({'product_range': product_range})
 
     return render(request, 'maket/maket_print.html', context)
-
