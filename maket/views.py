@@ -201,8 +201,8 @@ def import_order(request):
     our_manager = str(trstrings[13][0])
 #    our_manager_phone = str(trstrings[14][0])
     customer_manager = str(trstrings[15][0])
-    customer_manager_phone = str(trstrings[16][0])
-    customer_manager_mail = str(trstrings[17][0])
+    customer_manager_phone = str(trstrings[17][0])
+    customer_manager_mail = str(trstrings[16][0])
     ord_imp = Order_imports(order_id=order_no, supplier=supplier, customer_name=customer_name,
                             customer_INN=customer_inn, customer_address=customer_address, order_date=order_date,
                             order_quantity=order_quantity, order_sum=order_sum, our_manager=our_manager,
@@ -298,23 +298,34 @@ def import_order(request):
                     prt_item = x
             if trstrings[i][0] != '':
                 print_id = prt_item.print_id
-            if tr_len == 8:
+            if tr_len == 9:
                 place = trstrings[i][3]
                 type = trstrings[i][4]
                 colors = trstrings[i][5]
+                itm_price = trstrings[i][2].split(',')
+                item_price = int(itm_price[0])+int(itm_price[1])/10
+                prt_price = trstrings[i][8]
+                print_price = int(prt_price[0])+int(prt_price[1])/10
                 if trstrings[i][6] == '-':
                     second_pass = False
                 else:
                     second_pass = True
-            elif tr_len == 5:
+                itm_for_price = Item_imports.objects.get(id=prt_item.id)
+                itm_for_price.item_price = item_price
+                itm_for_price.save()
+
+            elif tr_len == 6:
                 place = trstrings[i][0]
                 type = trstrings[i][1]
                 colors = trstrings[i][2]
+                prt_price = trstrings[i][4]
+                print_price = int(prt_price[0])+int(prt_price[1])/10
                 if trstrings[i][3] == '-':
                     second_pass = False
                 else:
                     second_pass = True
-            print_item = Print_imports(place=place, type=type, colors=colors, item=prt_item, print_id=print_id)
+            print_item = Print_imports(place=place, type=type, colors=colors, item=prt_item, print_id=print_id,
+                                       second_pass=second_pass, print_price=print_price)
             print_item.save()
             print_list.append([place, type, colors, second_pass, print_item, print_id])
 #    number_items = len(items_list)

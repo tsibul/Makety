@@ -112,6 +112,7 @@ class Item_imports(models.Model):
     detail3_color = models.CharField(max_length=10, default='', blank=True, null=True)
     detail4_color = models.CharField(max_length=10, default='', blank=True, null=True)
     detail5_color = models.CharField(max_length=10, default='', blank=True, null=True)
+    item_price = models.FloatField(default=0)
 
 
 
@@ -125,8 +126,7 @@ class Print_imports(models.Model):
     second_pass = models.BooleanField(default=False)
     item = models.ForeignKey(Item_imports, on_delete=models.CASCADE, null=True)
     print_id = models.IntegerField(default=0)
-    position = models.ForeignKey(Print_position, models.SET_NULL, null=True)
-
+    print_price = models.FloatField(default=0)
 
 class Order_item_print(models.Model):
     """quantity - number of colors
