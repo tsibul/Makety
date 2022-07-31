@@ -46,76 +46,6 @@
 
 {% include 'maket/reload.html' %}
 
-<!--
-<div class="border border-3 border-primary">
-<div class="row">
-    <div class="col m-2 fw-bold">ЗАКАЗ {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
-    <div class="col m-2 d-md-flex justify-content-md-end"><button class="btn btn-outline-primary" type="button" >Button</button></div>
-</div>
-<table class="table-sm">
-    <tbody>
-        <tr>
-            <td class="fw-bold">Поставщик </td>
-            <td>{{ord_imp.supplier}}</td>
-        </tr>
-        <tr>
-            <td class="fw-bold">Покупатель </td>
-            <td>{{ord_imp.customer_name}}</td>
-            <td>{{ord_imp.customer_INN}}</td>
-            <td>{{ord_imp.customer_address}}</td>
-        </tr>
-    </tbody>
-
-
-
-</table>
-<div class="border border-4">
-<table class="table-sm">
-    <thead>
-    <tr class="text-center">
-        <th> # </th>
-        <th> Артикул </th>
-        <th> Наименование </th>
-        <th> Нанесение </th>
-        <th class="px-3"> Кол-во </th>
-        <th> Место </th>
-        <th> Тип </th>
-        <th> Цветов </th>
-        <th> 2-й проход </th>
-        <th> Положение </th>
-
-    </tr>
-    {% for item in item_import %}
-    </thead>
-    <tbody>
-    <tr>
-        <td> {{item.print_id}} </td>
-        <td class="px-3"> {{item.code}} </td>
-        <td class="px-3" > {{item.name}}</td>
-        <td class="px-3"> {{item.print_name}}</td>
-        <td class="text-end"> {{item.quantity}}</td>
-    {% for prt in print_import %}
-    {% if prt.print_id == item.print_id %}
-    <tr>
-        <td colspan="5"></td>
-        <td class="px-3"> {{prt.place}} </td>
-        <td class="px-3"> {{prt.type}}</td>
-        <td class="text-center"> {{prt.colors}}</td>
-        <td class="text-center"> {{prt.second_pass}} </td>
-        <td class="text-center"> {{prt.position}} </td>
-
-    </tr>
-    {% else %}
-    {% endif %}
-    {% endfor %}
-    </tr>
-    {% endfor %}
-    </tbody>
-</table> <--->
-
-
-</div>
-</div>
 <br>
 
 <h5>Список Заказов</h5>
@@ -123,27 +53,36 @@
 <table class="table table-info table-hover">
     <tbody >
     {% for ord in orders %}
-    <tr onclick="window.location.href='{{ord.id}}'">
+    <tr onclick="window.location.href='{{ord.id}}'" class="align-middle" >
 <!--        <form action="reload" method="post">
         {% csrf_token %} <--->
-        <td><button type="button" class="btn btn-outline-primary">Ред.</button></td>
+        <td class="align-middle"><button type="button" class="btn btn-outline-primary" style="font-size:60%;">Ред.</button></td>
         <input type="hidden" value="{{ord.id}}" id="{{ord.id}}_" name="ord_id">
 <!--        </form><--->
 
-        <td>{{ord.order_id}}</td>
+        <td >{{ord.order_id}}</td>
         <td>{{ord.order_date|date:'d.m.Y'}}</td>
-        <td> {{ord.supplier}}</td>
-        <td> {{ord.customer_name}}</td>
-        <td> {{ord.customer_INN}}</td>
+{% if 'Сувенир' in ord.supplier %}
+        <td> ВВС </td>
+{% elif 'Студия' in ord.supplier %}
+        <td> ССП </td>
+{% else %}
+        <td> ВВ </td>
+{% endif %}
+        <td class="text-wrap"> {{ord.customer_name}}</td>
+        <td> {{ord.customer_manager}}</td>
+        <td class="text-break"> {{ord.customer_manager_mail}}</td>
+        <td class="text-end"> {{ord.order_sum}}</td>
+<!--        <td> {{ord.customer_INN}}</td><--->
         <td> {{ord.film.film_id}}</td>
         <td> {{ord.film.date}}</td>
         {% if ord_imp.film_status %}
-            <td><input class="form-check-input" type="checkbox" checked disabled></td>
+            <td class="align-middle"><input class="form-check-input" type="checkbox" checked disabled></td>
         {% else %}
-            <td><input class="form-check-input" type="checkbox" checked disabled></td>
+            <td class="align-middle"><input class="form-check-input" type="checkbox" checked disabled></td>
         {% endif %}
-        <td><a href="delete_order/{{ ord.id }}">
-            <button type="submit" class="btn btn-outline-danger">Удалить</button>
+        <td class="align-middle"><a href="delete_order/{{ ord.id }}">
+            <button type="submit" class="btn btn-outline-danger" style="font-size:60%;">Удалить</button>
         </a></td>
     </tr>
     {% endfor %}
