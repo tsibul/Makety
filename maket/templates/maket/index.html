@@ -7,16 +7,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="{% static 'maket/style.css' %}">
+    <link href="{% static 'maket/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
     <title>Заказы</title>
 </head>
 
 {% include 'maket/main.html' %}
 
 <body>
+{% include 'maket/reload.html' %}
+
+<div class="p-1 m-1"> <h5>
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
     Загрузить заказ
-</button>
+</button><!-- Button trigger modal -->
+&nbsp Список Заказов</h5></div>
 
 <!-- Modal -->
 <form id="import_order" action="{% url 'maket:import_order' %}" method="post" enctype="multipart/form-data">
@@ -41,24 +46,13 @@
     </div>
   </div>
 </div>
-</form>
-<br>
+</form><!-- Modal Import order -->
 
-{% include 'maket/reload.html' %}
-
-<br>
-
-<h5>Список Заказов</h5>
 <div class="overflow-auto" style="max-height: 600px">
-<table class="table table-info table-hover">
+<table class="table table-info table-hover" style="font-size:80%;">
     <tbody >
     {% for ord in orders %}
     <tr onclick="window.location.href='{{ord.id}}'" class="align-middle" >
-<!--        <form action="reload" method="post">
-        {% csrf_token %} <--->
-        <td class="align-middle"><button type="button" class="btn btn-outline-primary" style="font-size:60%;">Ред.</button></td>
-        <input type="hidden" value="{{ord.id}}" id="{{ord.id}}_" name="ord_id">
-<!--        </form><--->
 
         <td >{{ord.order_id}}</td>
         <td>{{ord.order_date|date:'d.m.Y'}}</td>
@@ -70,8 +64,8 @@
         <td> ВВ </td>
 {% endif %}
         <td class="text-wrap"> {{ord.customer_name}}</td>
-        <td> {{ord.customer_manager}}</td>
-        <td class="text-break"> {{ord.customer_manager_mail}}</td>
+        <td> {{ord.manager.manager}}</td>
+        <td class="text-break"> {{ord.manager.manager_mail}}</td>
         <td class="text-end"> {{ord.order_sum}}</td>
 <!--        <td> {{ord.customer_INN}}</td><--->
         <td> {{ord.film.film_id}}</td>
@@ -82,13 +76,13 @@
             <td class="align-middle"><input class="form-check-input" type="checkbox" checked disabled></td>
         {% endif %}
         <td class="align-middle"><a href="delete_order/{{ ord.id }}">
-            <button type="submit" class="btn btn-outline-danger" style="font-size:60%;">Удалить</button>
+            <button type="submit" class="btn btn-sm btn-outline-danger" style="font-size:80%;">Удалить</button>
         </a></td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
-</div>
+</div><!-- Table of orders -->
 
 
 

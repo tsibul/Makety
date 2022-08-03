@@ -25,7 +25,7 @@ class Detail_set(models.Model):
         detail_name - name of detail
         detail_place - if prinring possible"""
     name = models.CharField(max_length=200, null=True, blank=True)
-    item_name = models.CharField(max_length=6, null=True, blank=True)
+    item_name = models.CharField(max_length=20, null=True, blank=True)
     color_scheme = models.ForeignKey(Color_scheme, models.SET_NULL, null=True)
     detail1_name = models.CharField(max_length=60)
     detail1_place = models.BooleanField(default=False)
@@ -73,9 +73,20 @@ class Customer(models.Model):
     region = models.CharField(max_length=2, default='77')
     group = models.CharField(max_length=255)
 
+class Manger(models.Model):
+    """Customer managers """
+    manager = models.CharField(max_length=100, blank=True, null=True, default='')
+    manager_phone= models.CharField(max_length=50, blank=True, null=True, default='')
+    manager_mail = models.CharField(max_length=50, blank=True, null=True, default='')
+
 
 class Order_imports(models.Model):
-    """ date_num - 'date' part of order no (dmy)"""
+    """ date_num - 'date' part of order no (dmy)
+    order_quantity — total items
+    order_sum — total amount
+    print_quantity — number of prints
+    print_sum — amount for prints only
+    """
     order_id = models.CharField(max_length=18, blank=True, null=True)
     order_date = models.DateField(default='1000-01-01')
     date_num = models.CharField(max_length=6 , blank=True, null=True)
@@ -88,11 +99,10 @@ class Order_imports(models.Model):
     film_status = models.BooleanField(default=True)
     order_quantity = models.IntegerField(default=0)
     order_sum = models.FloatField(default=0)
+    print_quantity = models.IntegerField(default=0)
+    print_sum = models.FloatField(default=0)
     our_manager = models.CharField(max_length=50, blank=True, null=True, default='')
-    customer_manager = models.CharField(max_length=50, blank=True, null=True, default='')
-    customer_manager_phone= models.CharField(max_length=50, blank=True, null=True, default='')
-    customer_manager_mail = models.CharField(max_length=50, blank=True, null=True, default='')
-
+    manager = models.ForeignKey(Manger, models.SET_NULL, blank=True, null=True, default='')
 
 class Item_imports(models.Model):
     """item_color - total color code back part of item code(after Item series)
@@ -105,7 +115,7 @@ class Item_imports(models.Model):
     quantity = models.IntegerField(default=0)
     print_name = models.CharField(max_length=50, blank=True, null=True)
     order = models.ForeignKey(Order_imports, on_delete=models.CASCADE, null=True)
-    item_group = models.CharField(max_length=8, default='', blank=True, null=True)
+    item_group = models.CharField(max_length=20, default='', blank=True, null=True)
     item_color = models.CharField(max_length=40, default='', blank=True, null=True)
     detail1_color = models.CharField(max_length=10, default='', blank=True, null=True)
     detail2_color = models.CharField(max_length=10, default='', blank=True, null=True)
@@ -113,8 +123,8 @@ class Item_imports(models.Model):
     detail4_color = models.CharField(max_length=10, default='', blank=True, null=True)
     detail5_color = models.CharField(max_length=10, default='', blank=True, null=True)
     item_price = models.FloatField(default=0)
-
-
+    print_price = models.FloatField(default=0)
+    num_prints = models.IntegerField(default=0)
 
 
 class Print_imports(models.Model):

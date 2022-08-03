@@ -6,51 +6,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="{% static 'maket/style.css' %}">
+    <link href="{% static 'maket/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
+
     <title>Title</title>
+
 </head>
 <body>
 
 <div class="border border-3 border-primary">
-<div class="row">
-    <div class="col m-2 fw-bold">ЗАКАЗ {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
-    <div class="col m-2 d-md-flex justify-content-md-end">
-    <form action="maket_print/{{ord_imp.id}}" method="post">
-    {% csrf_token %}
-    <button class="btn btn-outline-primary d-print-none" type="submit" >Печатать макет</button>
-    </form></div>
+<div class="d-flex flex-row lh-1">
+    <div class="d-flex justify-content-md-end">
+        <form action="order_edit/{{ord_imp.id}}" method="post">
+        {% csrf_token %}
+        <button class="btn btn-sm btn-outline-primary d-print-none" type="submit" >Редактировать</button>
+        </form>&nbsp
+        <form action="maket_print/{{ord_imp.id}}" method="post">
+        {% csrf_token %}
+        <button class="btn btn-sm btn-outline-primary d-print-none" type="submit" >
+            <i class="bi bi-printer-fill" style="currentColor"></i>Печатать макет</button>
+        </form>
+    </div>
+    <div class="fw-bold m-2">ЗАКАЗ {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
+    <div class="m-2" style="font-size:80%;">Сумма {{ord_imp.order_sum}}</div>
+    <div class="m-2" style="font-size:80%;">Кол-во {{ord_imp.order_quantity}}</div>
+    <div class="m-2" style="font-size:80%;">Сумма нанес. {{ord_imp.print_sum}}</div>
+    <div class="m-2" style="font-size:80%;">Кол-во нанес. {{ord_imp.print_quantity}}</div>
+    <div class="d-flex flex-row border border-2">
+    <div class="fw-bold m-2"style="font-size:80%;">Пленка </div>
+    <div class="m-2" style="font-size:80%;"> номер {{ord_imp.film.film_id}}</div>
+    <div class="m-2" style="font-size:80%;"> от {{ord_imp.film.date}}</div>
+    <div class="m-2" style="font-size:80%;"></div>
+    <div class="text-center m-2" style="font-size:80%;">
+    <label for="filmstatus" style="font-size:80%;">без ошибок</label>
+    {% if ord_imp.film_status %}
+    <input class="form-check-input align-middle" type="checkbox" checked disabled name="filmstatus">
+    {% else %}
+    <input class="form-check-input align-middle" type="checkbox" disabled name="filmstatus">
+    {% endif %}
+    </div>
+    </div>
+
+</div><!-- Order -->
+
+<div class="d-flex flex-rowlh-1">
+    <div class="fw-bold m-1">Поставщик </div>
+    <div class="m-1">{{ord_imp.supplier}},</div>
+    <div class="m-1"> менеджер </div>
+    <div class="m-1"> {{ord_imp.our_manager}}</div>
+</div><!-- Supplier -->
+
+<div class="d-flex flex-row lh-1">
+    <div class="fw-bold m-1">Покупатель </div>
+    <div class="m-1">{{ord_imp.customer_name}},</div>
+    <div class="m-1">ИНН {{ord_imp.customer_INN}},</div>
+    <div class="m-1">{{ord_imp.customer_address}}</div>
+</div><!-- Customer -->
+
+<div class="row justify-content-between">
+<div class="col">
+<div class="d-flex flex-row">
+    <div class="fw-bold align-middle m-1">Менеджер клиента</div>
+    <div class="align-middle m-1">{{ord_imp.manager.manager}},</div>
+    <div class="align-middle m-1">E-mail: {{ord_imp.manager.manager_mail}},</div>
+    <div class="align-middle m-1">тел. {{ord_imp.manager.manager_phone}}</div>
+</div><!-- Customer manager -->
 </div>
-<table class="table-sm">
-    <tbody>
-        <tr>
-            <td class="fw-bold">Поставщик </td>
-            <td >{{ord_imp.supplier}}</td>
-        </tr>
-        <tr>
-            <td class="fw-bold">Покупатель </td>
-            <td>{{ord_imp.customer_name}}</td>
-            <td>{{ord_imp.customer_INN}}</td>
-            <td>{{ord_imp.customer_address}}</td>
-        </tr>
-        <tr class="d-print-none">
-            <td class="fw-bold">Пленка </td>
-            <td>Номер {{ord_imp.film.film_id}}</td>
-            <td> от {{ord_imp.film.date}}</td>
-            <td class="text-center">
-            <label for="filmstatus">без ошибок</label>
-            {% if ord_imp.film_status %}
-            <input class="form-check-input" type="checkbox" checked disabled name="filmstatus">
-            {% else %}
-            <input class="form-check-input" type="checkbox" disabled name="filmstatus">
-            {% endif %}
-            </td>
+<div class="col-2">
+<div class="m-1 row align-self-end">
+<button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContents" aria-expanded="false" aria-controls="collapseContents">
+    Cостав заказа
+</button></div></div>
+</div><!-- Manager with collapse button -->
 
-        </tr>
-    </tbody>
-
-
-
-</table>
-<div class="border border-4">
+<div class="collapse" id="collapseContents">
+<div class="border border-4" >
 <table class="table-sm">
     <thead>
     <tr class="text-center lh-1">
@@ -59,10 +88,7 @@
         <th scope="col" class="col-3" style="font-size:80%;"> Наименование </th>
         <th scope="col" class="col-2" style="font-size:80%;"> Нанесение </th>
         <th scope="col" class="col" style="font-size:80%;"> Кол-во </th>
-        <th scope="col" class="col text-start" style="font-size:80%;"> Место / Тип / Цветов / 2-й проход /Положение</th>
-<!--        <th scope="col" class="col" style="font-size:80%;"> Тип </th>
-        <th scope="col" colspan="2" class="col" style="font-size:80%;"> Цветов / 2-й проход </th>
-        <th scope="col" class="col" style="font-size:80%;"> Положение </th><--->
+        <th scope="col" class="col-4" style="font-size:80%;"> Место / Тип / Цветов / 2-й проход </th>
     </tr>
     {% for item in item_import %}
     </thead>
@@ -79,7 +105,7 @@
     {% for prt in print_import %}
     {% if prt.print_id == item.print_id %}
     <tr class="lh-1 align-top">
-        <td scope="col" colspan="5" style="font-size:80%;"> </td>
+        <td scope="col" colspan="5" > </td>
         <td scope="col" class="col text-start" style="font-size:80%;"> {{prt.place}} /</td>
         <td scope="col" class="col text-center" style="font-size:80%;"> {{prt.type}} /</td>
         <td scope="col" class="col text-center" style="font-size:80%;"> {{prt.colors}} /</td>
@@ -90,7 +116,6 @@
             <input class="form-check-input" type="checkbox" disabled>
         {% endif %}
         </td>
-        <td scope="col" class="col text-center" style="font-size:80%;">/ {{prt.position}} </td>
     </tr>
     {% else %}
     {% endif %}
@@ -101,7 +126,8 @@
     {% endfor %}
     </tbody>
 </table>
-</div>
+</div><!-- Table border -->
+</div><!-- Collapse table -->
 </div>
 
 <script src="{% static 'maket/maket.js' %}"></script>

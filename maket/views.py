@@ -12,7 +12,7 @@ from django.template import loader
 from django.urls import reverse
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
-    Print_imports, Detail_set, Customer
+    Print_imports, Detail_set, Customer, Manger
 
 
 def main_maket(request):
@@ -197,17 +197,31 @@ def import_order(request):
     customer_inn = str(trstrings[7][0])
     customer_address = str(trstrings[8][0])
     order_quantity = str(trstrings[10][0])
-    order_sum = str(trstrings[12][0])
+    ord_sum = str(trstrings[12][0])
+    order_sum = ord_sum.replace(',', '.')
     our_manager = str(trstrings[13][0])
 #    our_manager_phone = str(trstrings[14][0])
     customer_manager = str(trstrings[15][0])
     customer_manager_phone = str(trstrings[17][0])
     customer_manager_mail = str(trstrings[16][0])
+    if customer_manager_mail != '' and customer_manager_mail != '\xa0':
+        try:
+            imp_manager = Manger.orders.get(manager_mail=customer_manager_mail)
+            if imp_manager.manager == customer_manager:
+                customer_manager = imp_manager
+            else:
+                cust_manager = Manger(manager=customer_manager, manager_phone=customer_manager_phone,
+                                      manager_mail=customer_manager_mail)
+        except:
+            cust_manager = Manger(manager=customer_manager, manager_phone=customer_manager_phone,
+                                  manager_mail=customer_manager_mail)
+    else:
+        cust_manager = Manger(manager=customer_manager, manager_phone=customer_manager_phone)
+    cust_manager.save()
     ord_imp = Order_imports(order_id=order_no, supplier=supplier, customer_name=customer_name,
                             customer_INN=customer_inn, customer_address=customer_address, order_date=order_date,
                             order_quantity=order_quantity, order_sum=order_sum, our_manager=our_manager,
-                            customer_manager=customer_manager, customer_manager_phone=customer_manager_phone,
-                            customer_manager_mail=customer_manager_mail)
+                            manager=cust_manager)
     try:
         if customer_inn != '':
             customer = Customer.objects.get(inn=customer_inn)
@@ -291,8 +305,6 @@ def import_order(request):
             item.save()
             items_list.append(item)
         elif trstrings[i][tr_len-1] == '2 sec_endofline':
-#            j = j + 1
-#        elif list_soup[i][16] != '':
             for x in items_list:
                 if x.name == trstrings[i][1]:
                     prt_item = x
@@ -303,33 +315,45 @@ def import_order(request):
                 type = trstrings[i][4]
                 colors = trstrings[i][5]
                 itm_price = trstrings[i][2].split(',')
-                item_price = int(itm_price[0])+int(itm_price[1])/10
-                prt_price = trstrings[i][8]
-                print_price = int(prt_price[0])+int(prt_price[1])/10
+                if itm_price != ['\xa0']:
+                    try:
+                        item_price = float(itm_price[0])+int(itm_price[1])/10
+                    except:
+                        item_price = float(itm_price[0])
+                    itm_for_price = Item_imports.objects.get(id=prt_item.id)
+                    itm_for_price.item_price = item_price
+                    itm_for_price.save()
+                prt_price = trstrings[i][7].split(',')
+                try:
+                    print_price = float(prt_price[0])+int(prt_price[1])/10
+                except:
+                    print_price = float(prt_price[0])
                 if trstrings[i][6] == '-':
                     second_pass = False
                 else:
                     second_pass = True
-                itm_for_price = Item_imports.objects.get(id=prt_item.id)
-                itm_for_price.item_price = item_price
-                itm_for_price.save()
 
-            elif tr_len == 6:
-                place = trstrings[i][0]
-                type = trstrings[i][1]
-                colors = trstrings[i][2]
-                prt_price = trstrings[i][4]
-                print_price = int(prt_price[0])+int(prt_price[1])/10
-                if trstrings[i][3] == '-':
-                    second_pass = False
-                else:
-                    second_pass = True
             print_item = Print_imports(place=place, type=type, colors=colors, item=prt_item, print_id=print_id,
                                        second_pass=second_pass, print_price=print_price)
             print_item.save()
             print_list.append([place, type, colors, second_pass, print_item, print_id])
-#    number_items = len(items_list)
-#    number_prints = len(print_list)
+    itms_for_price = Item_imports.objects.filter(order=ord_imp)
+    gross_prt_quantity = 0
+    gross_prt_price = 0
+    for itm in itms_for_price:
+        prts_for_price = Print_imports.objects.filter(item=itm)
+        prt_price = 0.0
+        prt_quantity = len(prts_for_price)
+        for prt in prts_for_price:
+            prt_price = prt_price + prt.print_price
+        gross_prt_quantity = gross_prt_quantity + prt_quantity * itm.quantity
+        gross_prt_price = gross_prt_price + prt_price * itm.quantity
+        itm.print_price = prt_price
+        itm.num_prints = prt_quantity
+        itm.save()
+    ord_imp.print_quantity = gross_prt_quantity
+    ord_imp.print_sum = gross_prt_price
+    ord_imp.save()
     return HttpResponseRedirect(reverse('maket:index'))
 
 
