@@ -27,14 +27,20 @@ def index(request):
         ord_imp = Order_imports.objects.get(pk=int(ord_i))
     except:
         ord_imp = Order_imports.objects.order_by('-order_date', '-id').first()
-    order_id = ord_imp.id
-    item_import = list(Item_imports.objects.filter(order=order_id).order_by('code'))
-    print_import = ()
-    for item in item_import:
-        print_import = print_import + tuple(Print_imports.objects.filter(item=item))
-    print_import = list(print_import)
+    try:
+        order_id = ord_imp.id
+        item_import = list(Item_imports.objects.filter(order=order_id).order_by('code'))
+        print_import = ()
+        for item in item_import:
+            print_import = print_import + tuple(Print_imports.objects.filter(item=item))
+        print_import = list(print_import)
+    except:
+        pass
 
-    orders = Order_imports.objects.all().order_by('-order_date', '-id')
+    try:
+        orders = Order_imports.objects.all().order_by('-order_date', '-id')
+    except:
+        pass
 
     context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                'orders': orders}
