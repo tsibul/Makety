@@ -41,9 +41,11 @@ def index(request):
         orders = Order_imports.objects.all().order_by('-order_date', '-id')
         context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                'orders': orders}
-        return render(request, 'maket/index.html', context)
+
     except:
-        return render(request, 'maket/index.html')
+        context = {'navi': navi}
+
+    return render(request, 'maket/index.html', context)
 
 
 def reload(request, id):
