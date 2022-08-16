@@ -87,7 +87,7 @@ def dicts(request):
 def admin(request):
     navi = 'admin'
     context = {'navi': navi}
-    return render(request, 'maket/index.html', context)
+    return render(request, 'maket/admin.html', context)
 
 
 def maket(request):
