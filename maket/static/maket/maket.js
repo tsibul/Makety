@@ -343,3 +343,11 @@ function chs_note(prt_3A6, note){
     document.getElementById(itm_id).style.display='block';}
     else{document.getElementById(itm_id).style.display='none';}
 }}}
+
+
+function colapse(id){
+    var area = 'collapse_' + id;
+    if (document.getElementById(area).style.display =='none'){
+    document.getElementById(area).style.display = 'initial';}
+    else {document.getElementById(area).style.display = 'none';};
+}

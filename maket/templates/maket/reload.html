@@ -75,14 +75,14 @@
 </div>
 <div class="col-2">
 <div class="m-1 row align-self-end">
-<button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContents" aria-expanded="false" aria-controls="collapseContents">
+<button class="btn btn-sm btn-outline-secondary" type="button" onclick="javascript:colapse({{ord_imp.id}});">
     Cостав заказа
 </button></div></div>
 </div><!-- Manager with collapse button -->
 
-<div class="collapse" id="collapseContents">
+<div >
 <div class="border border-4" >
-<table class="table-sm">
+<table class="table-sm" id="collapse_{{ord_imp.id}}" style="display:none;">
     <thead>
     <tr class="text-center lh-1">
         <th scope="col" class="col" style="font-size:80%;"> # </th>
