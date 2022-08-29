@@ -40,7 +40,7 @@ def index(request):
     try:
         orders = Order_imports.objects.all().order_by('-order_date', '-id')
         context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
-               'orders': orders}
+               'orders': orders, 'active1': 'active'}
 
     except:
         context = {'navi': navi}
@@ -65,7 +65,7 @@ def reload(request, id):
     orders = Order_imports.objects.all().order_by('-order_date', '-id')
 
     context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
-               'orders': orders}
+               'orders': orders, 'active1': 'active'}
     return render(request, 'maket/index.html', context)
 
 
@@ -80,14 +80,19 @@ def dicts(request):
     details = Detail_set.objects.all().order_by('item_name')
 
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
-               'print_position': print_position, 'details': details, 'color': color}
+               'print_position': print_position, 'details': details, 'color': color, 'active2': 'active'}
     return render(request, 'maket/dicts.html', context)
 
 
 def admin(request):
     navi = 'admin'
-    context = {'navi': navi}
+    context = {'navi': navi, 'active4': 'active'}
     return render(request, 'maket/admin.html', context)
+
+def maket_base(request):
+    navi = 'maket_base'
+    context = {'navi': navi, 'active5': 'active'}
+    return render(request, 'maket/maket_base.html', context)
 
 
 def maket(request):
@@ -166,8 +171,26 @@ def customers(request):
     navi = 'customers'
     customers = Customer.objects.all().order_by('name')
 
-    context = {'navi': navi, 'customers': customers}
+    context = {'navi': navi, 'customers': customers, 'active3': 'active'}
     return render(request, 'maket/customers.html', context)
+
+
+def update_cst(request, id):
+    cst = Customer.objects.get(id=id)
+    nm = request.POST['nm']
+    gr = request.POST['gr']
+    tp = request.POST['tp']
+    rg = request.POST['rg']
+    in_ = request.POST['in_']
+    ad = request.POST['ad']
+    cst.name = nm
+    cst.group = gr
+    cst.type = tp
+    cst.region = rg
+    cst.inn = in_
+    cst.address = ad
+    cst.save()
+    return HttpResponseRedirect(reverse('maket:customers'))
 
 
 def import_order(request):

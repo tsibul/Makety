@@ -281,15 +281,66 @@ function clr_edit_reverse(detail_id, color){
 }
 
 function upd_cst(id){
-    nm = 'nm_' + id;
-    gr = 'gr_' + id;
-    tp = 'tp_' + id;
-    rg = 'rg_' + id;
-    in_ = 'in_' + id;
-    ad = 'addr_' + id;
-
-    nm_html = '<input type="text" value="{{cst.name}}" name="' + nm + '" id="' + nm +'">'
+    var nm = 'nm_' + id;
+    var gr = 'gr_' + id;
+    var tp = 'tp_' + id;
+    var rg = 'rg_' + id;
+    var in_ = 'in_' + id;
+    var ad = 'addr_' + id;
+    var nm_val = document.getElementById(nm).textContent;
+    var gr_val = document.getElementById(gr).textContent;
+    var tp_val = document.getElementById(tp).textContent;
+    var rg_val = document.getElementById(rg).textContent;
+    var in_val = document.getElementById(in_).textContent;
+    var ad_val = document.getElementById(ad).textContent;
+    var nm_html = ('<div class="row"><div class="col" style="max-width:40px;"><div class="m-1">' +
+    '<a href="javascript:upd_cst_reverse(' + id + ');"><button class="btn btn-sm btn-outline-secondary" type="button">' +
+    '<i class="bi bi-arrow-counterclockwise"></i></button></a></div>' +
+    '<div class="m-1"><button class="btn btn-sm btn-outline-primary" type="submit" form="form_' + id + '">' +
+    '<i class="bi bi-check2"></i></button></div></div><div class="col">' +
+    '<textarea  class="form-control" name="nm" form="form_' + id + '">' +
+    nm_val + '</textarea></div></div>');
     document.getElementById(nm).innerHTML = nm_html;
+    var gr_html = ('<textarea  class="form-control" name="gr" id="' + gr +'" form="form_' + id + '">' +
+    gr_val + '</textarea>');
+    document.getElementById(gr).innerHTML = gr_html;
+    var tp_html = ('<textarea  class="form-control" name="tp" form="form_' + id + '">' +
+    tp_val + '</textarea>');
+    document.getElementById(tp).innerHTML = tp_html;
+    var rg_html = ('<textarea  class="form-control" name="rg" form="form_' + id + '">' +
+    rg_val + '</textarea>');
+    document.getElementById(rg).innerHTML = rg_html;
+    var in_html = ('<textarea  class="form-control" name="in_" form="form_' + id + '">' +
+    in_val + '</textarea>');
+    document.getElementById(in_).innerHTML = in_html;
+    var ad_html = ('<textarea  class="form-control" name="ad" form="form_' + id + '">' +
+    ad_val + '</textarea>');
+    document.getElementById(ad).innerHTML = ad_html;
+    document.getElementById('row_'+id).setAttribute('onclick','');
+}
+
+function upd_cst_reverse(id){
+    var nm = 'nm_' + id;
+    var gr = 'gr_' + id;
+    var tp = 'tp_' + id;
+    var rg = 'rg_' + id;
+    var in_ = 'in_' + id;
+    var ad = 'addr_' + id;
+    var nm_val = document.getElementById(nm).textContent;
+    var gr_val = document.getElementById(gr).textContent;
+    var tp_val = document.getElementById(tp).textContent;
+    var rg_val = document.getElementById(rg).textContent;
+    var in_val = document.getElementById(in_).textContent;
+    var ad_val = document.getElementById(ad).textContent;
+
+    document.getElementById(nm).innerHTML = nm_val;
+    document.getElementById(gr).innerHTML = gr_val;
+    document.getElementById(tp).innerHTML = tp_val;
+    document.getElementById(rg).innerHTML = rg_val;
+    document.getElementById(in_).innerHTML = in_val;
+    document.getElementById(ad).innerHTML = ad_val;
+    document.getElementById('row_'+id).setAttribute('onclick','javascript:upd_cst(' + id + ');');
+
 }
 
 function split_maket(print_range){
@@ -349,5 +400,12 @@ function colapse(id){
     var area = 'collapse_' + id;
     if (document.getElementById(area).style.display =='none'){
     document.getElementById(area).style.display = 'initial';}
+    else {document.getElementById(area).style.display = 'none';};
+}
+
+function colapse_(id){
+    var area = 'collapse_' + id;
+    if (document.getElementById(area).style.display =='none'){
+    document.getElementById(area).style.display = 'table-row-group';}
     else {document.getElementById(area).style.display = 'none';};
 }

@@ -25,6 +25,7 @@ urlpatterns = [
     path('import_order', views.import_order, name='import_order'),
 
     path('admin', views.admin, name='admin'),
+    path('maket_base', views.maket_base, name='maket_base'),
     path('maket/maket', views.maket, name='maket'),
     path('delete_order/<int:id>', views.delete_order, name='delete order'),
     path('add_detail', views.add_detail, name='add_detail'),
@@ -32,5 +33,6 @@ urlpatterns = [
     path('add_clr', views.add_clr, name='add_clr'),
     path('update_clr/<int:id>', views.update_clr, name='update_clr'),
     path('maket_print/<int:id>', views.maket_print, name='maket_print'),
+    path('update_cst/<int:id>', views.update_cst, name='update_cst'),
 
 ]
