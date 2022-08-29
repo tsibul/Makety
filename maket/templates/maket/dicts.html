@@ -1,28 +1,18 @@
-<!doctype html>
-{% load static %}
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends 'maket/main.html' %}
+{% block title %}Справочники{% endblock %}
+{% block content %}
 
-    <link rel="stylesheet" href="{% static 'maket/style.css' %}">
-    <title>Справочники</title>
-</head>
-
-{% include 'maket/main.html' %}
-
-<body>
 <h5> Номенклатура </h5>
 <div class="table-responsive">
 <table class="table table-sm table-hover"><!--Item Details><--->
   <theader>
     <tr class="table-primary">
       <th></th>
-      <th style="max-width:50px"> Арт </th>
-      <th> Название </th>
-      <th> Цвет </th>
-      <th colspan="10" class="text-center"> Деталь/Нанесение </th>
+      <th style="max-width:50px" onclick="javascript:colapse_('1');"> Арт </th>
+      <th onclick="javascript:colapse_('1');"> Название </th>
+      <th onclick="javascript:colapse_('1');"> Цвет </th>
+      <th colspan="10" class="text-center"  onclick="javascript:colapse_('1');"> Деталь/Нанесение </th>
+
       <th colspan="2" class="text-end">
 <!-- Button trigger modal -->
           <button type="button" class="btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
@@ -115,7 +105,7 @@
       </th>
     </tr>
   </theader>
-  <tbody>
+  <tbody id="collapse_1" style="display:none;">
     {% for detail in details %}
     <tr id="dtl_id_{{detail.id}}">
     <form action="update_details/{{ detail.id }}" method="post" >
@@ -221,12 +211,12 @@
 
 <div class="card" style="width: 12rem;">
   <div class="card-header">
-      <div class="d-flex justify-content-between"><h5>Цветовая группа</h5> </div>
+      <div class="d-flex justify-content-between" onclick="javascript:colapse('6');"><h5>Цветовая группа</h5> </div>
   <div class="text-end">
         <a href="javascript:add_ln('new_line');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
   </div>
   </div>
-  <ul class="list-group list-group-flush">
+  <ul class="list-group list-group-flush" id="collapse_6" style="display:none;">
     {% for clr_sch in color_scheme %}
     <li class="list-group-item" id="cst_id_{{clr_sch.id}}" >
     <a href="javascript:upd_ln({{clr_sch.id}});" class="form-control">{{ clr_sch.scheme_name }}</a>
@@ -273,12 +263,12 @@
 <div class="card" style="width: 12rem;">
   <div class="card-header">
       <div class="d-flex justify-content-between">
-          <h5>Тип печати </h5></div>
+          <h5 onclick="javascript:colapse('2');">Тип печати </h5></div>
       <div class="text-end">
         <a href="javascript:add_ln('new_ln');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
     </div>
   </div>
-  <ul class="list-group list-group-flush">
+  <ul class="list-group list-group-flush" id="collapse_2" style="display:none;">
     {% for prt_typ in print_type %}
     <li class="list-group-item" id="cst_id_{{prt_typ.id}}_pr">
     <a href="javascript:upd_ln({{prt_typ.id}}+'_pr');" class="form-control">{{ prt_typ.type_name }}</a>
@@ -326,14 +316,14 @@
 
 <div class="card" style="width: 25rem;"><!-- Print places><--->
   <div class="card-header">
-      <div><h5>Место печати</h5></div>
+      <div onclick="javascript:colapse('3');"><h5>Место печати</h5></div>
       <div class="d-flex justify-content-between">
-      <div class="col"> Название детали</div>
-      <div class="col"> Место печати </div>
+      <div class="col" onclick="javascript:colapse('3');"> Название детали</div>
+      <div class="col" onclick="javascript:colapse('3');"> Место печати </div>
         <a href="javascript:add_ln('new_ln3');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
     </div>
   </div>
-  <ul class="list-group list-group-flush">
+  <ul class="list-group list-group-flush" id="collapse_3" style="display:none;">
     {% for prt_plc in print_place %}
     <li class="list-group-item" id="cst_id_{{prt_plc.id}}_pl">
     <div class="d-flex justify-content-between" >
@@ -388,15 +378,15 @@
 
 <div class="card" style="width: 25rem;"><!-- Print positions><--->
   <div class="card-header">
-      <div><h5>Позиция</h5></div>
+      <div onclick="javascript:colapse('4');"><h5>Позиция</h5></div>
 
       <div class="d-flex justify-content-between">
-      <div class="col"> Опция</div>
-      <div class="col"> Ориентация </div>
+      <div class="col" onclick="javascript:colapse('4');"> Опция</div>
+      <div class="col" onclick="javascript:colapse('4');"> Ориентация </div>
         <a href="javascript:add_ln('new_ln4');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
     </div>
   </div>
-  <ul class="list-group list-group-flush">
+  <ul class="list-group list-group-flush" id="collapse_4" style="display:none;">
     {% for prt_pos in print_position %}
     <li class="list-group-item" id="cst_id_{{prt_pos.id}}_ps">
     <div class="d-flex justify-content-between" >
@@ -501,18 +491,18 @@
 <thead>
 <tr class="table-primary">
     <th></th>
-    <th class="text-center">ID</th>
-    <th class="text-center">Название</th>
-    <th class="text-center">Pantone С</th>
-    <th class="text-center">#HEX</th>
-    <th class="text-center">Цветовая группа</th>
+    <th class="text-center" onclick="javascript:colapse_('5');">ID</th>
+    <th class="text-center" onclick="javascript:colapse_('5');">Название</th>
+    <th class="text-center" onclick="javascript:colapse_('5');">Pantone С</th>
+    <th class="text-center" onclick="javascript:colapse_('5');">#HEX</th>
+    <th class="text-center" onclick="javascript:colapse_('5');">Цветовая группа</th>
     <th colspan="2" class="text-end">
 <!-- Button trigger modal --><button type="button" class="btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addclrModal">
       Добавить</button>
     </th>
 </tr>
 </thead>
-<tbody>
+<tbody id="collapse_5" style="display:none;">
 {% for clr in color %}
 <form action="update_clr/{{ clr.id }}" method="post">
 {% csrf_token %}
@@ -554,11 +544,4 @@
 <!-- Добавить карточки сочетаний Item_to_type, Item_to_position, Item_to_color если их потом использовать><--->
 
 </div>
-
-
-<script src="{% static 'maket/maket.js' %}"></script>
-<script src="{% static 'maket/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
-
-
-</body>
-</html>
+{% endblock %}
