@@ -169,6 +169,13 @@
 </div><!--701, 702, 710, 711--->
 {% endif %}
 
+{% if 'prt_703' == product.2 %}
+<div class="d-flex">
+    {% include 'maket/svg/svg703.html' %}
+</div><!--703--->
+{% endif %}
+
+
 {% if 'prt_310' == product.2 %}
 <div class="d-flex">
     {% include 'maket/svg/svg310.html' %}
@@ -234,17 +241,7 @@
 
 {% if 'prt_115' == product.2 %}
 <div class="d-flex">
-<div class="col p-1 m-1" id="prt_115">
-    <div class="m-2"><img src="{% static 'maket/img/Ruler.svg' %}" /></div>
-{% for prt in prt_115 %}
-    <div class="row lh-1 p-1 m-1">
-    <div class="col p-1 m-1" style="max-width:8mm;">{{prt.0.print_id}}</div>
-    <div class="col p-1 m-1">
-
-    </div>
-    </div>
-{% endfor %}
-</div>
+    {% include 'maket/svg/svg115.html' %}
 </div><!--Prima--->
 {% endif %}
 
