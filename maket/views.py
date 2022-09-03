@@ -12,7 +12,7 @@ from django.template import loader
 from django.urls import reverse
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
-    Print_imports, Detail_set, Customer, Manger
+    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Maket, Item_in_Film
 
 
 def main_maket(request):

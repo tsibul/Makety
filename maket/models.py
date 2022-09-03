@@ -1,9 +1,10 @@
 from django.db import models
 
+
 class Films(models.Model):
     film_id = models.IntegerField(default=0)
     date = models.DateField(default='')
-    format = models.CharField(max_length=3,default='A5')
+    format = models.CharField(max_length=3, default='A5')
 
 
 class Color_scheme(models.Model):
@@ -138,6 +139,7 @@ class Print_imports(models.Model):
     print_id = models.IntegerField(default=0)
     print_price = models.FloatField(default=0)
 
+
 class Order_item_print(models.Model):
     """quantity - number of colors
         shots - number of shots 1 or 2"""
@@ -147,5 +149,35 @@ class Order_item_print(models.Model):
     quantity = models.SmallIntegerField(default=1)
     shots = models.SmallIntegerField(default=1)
 
+
+class Makety(models.Model):
+    date_create = models.DateField(blank=True)
+    date_modified = models.DateField(blank=True, null=True)
+    maket_id = models.SmallIntegerField(default=0)
+    uploaded = models.BooleanField(default=False)
+    maket_file = models.FilePathField(null=True, blank=True)
+    comment = models.CharField(max_length=255, default='')
+    order = models.ForeignKey(Order_imports, models.SET_NULL, null=True)
+    order_num = models.CharField(max_length=6 , blank=True, null=True)
+    order_date = models.DateField(default='1000-01-01')
+
+
+class Item_in_Maket(models.Model):
+    """If item from order exists in Maket"""
+    item = models.ForeignKey(Item_imports, models.SET_NULL, null=True, blank=True)
+    maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
+
+
+class Print_in_Maket(models.Model):
+    """If print item shows big in Maket"""
+    print_item = models.ForeignKey(Print_imports, models.SET_NULL, null=True, blank=True)
+    maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
+
+
+class Item_in_Film(models.Model):
+    """If item correctly outputed in film"""
+    item = models.ForeignKey(Item_imports, models.SET_NULL, null=True, blank=True)
+    film = models.ForeignKey(Films, models.SET_NULL, null=True, blank=True)
+    status = models.BooleanField(default=True)
 
 
