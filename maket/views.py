@@ -880,6 +880,7 @@ def update_maket(request, id):
     order_id = ord_imp.id
     product_range = prt_imports(order_id, print_import)[1]
     maket_id = request.POST['maket_id']
+    all_checked = True
     try:
         maket = Makety.objects.get(Q(maket_id=maket_id) & Q(order=ord_imp))
         maket.date_modified = datetime.date.today()
@@ -897,6 +898,7 @@ def update_maket(request, id):
                     item_checked.checked = True
             except:
                 item_checked.checked = False
+                all_checked = False
             item_checked.maket = maket
             item_checked.save()
     except:
@@ -913,6 +915,7 @@ def update_maket(request, id):
                     item_checked.checked = True
             except:
                 item_checked.checked = False
+                all_checked = False
             maket.save()
             item_checked.maket = maket
             item_checked.save()
