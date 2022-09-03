@@ -112,11 +112,6 @@
     {% csrf_token %}
     <input type="hidden" class="form-control" name="detail_id" value="{{ detail.id }}">
     <td  style="max-width:35px">
- <!--       <a href="javascript:upd_detail({{detail.id}}, '{{detail.detail1_place}}', '{{detail.detail2_place}}',
-        '{{detail.detail3_place}}', '{{detail.detail4_place}}', '{{detail.detail5_place}}',
-        '{{detail.detail1_name }}', '{{detail.detail2_name}}', '{{detail.detail3_name}}',
-        '{{detail.detail4_name }}', '{{detail.detail5_name}}', '{{detail.item_name}}', '{{ detail.name}}',
-        '{{ detail.color_scheme}}');"> -->
         <a href="javascript:upd_dtl({{detail.id}},'{{ detail.color_scheme.scheme_name}}');">
         <button type="button" class="btn-sm btn-outline-primary" id="red_{{detail.id}}">Ред.</button></a>
     </td>
