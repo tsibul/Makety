@@ -12,7 +12,7 @@ from django.template import loader
 from django.urls import reverse
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
-    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Maket, Item_in_Film
+    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket
 
 
 def main_maket(request):
@@ -652,7 +652,7 @@ def update_clr(request, id):
     return HttpResponseRedirect(reverse('maket:dicts'))
 
 
-def maket_print(request, id):
+def order_imports(id):
     ord_i = id
     try:
         ord_imp = Order_imports.objects.get(pk=int(ord_i))
@@ -660,36 +660,25 @@ def maket_print(request, id):
         ord_imp = Order_imports.objects.order_by('-order_date', '-id').first()
     order_id = ord_imp.id
     item_import = list(Item_imports.objects.filter(order=order_id).order_by('code'))
-    items_34 = len(Item_imports.objects.filter(Q(order=order_id) & (Q(item_group__icontains='34') |
-                                                                    Q(item_group__icontains='350'))))
-    items_37 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='37')))
-    items_310 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='310')))
-    items_311 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='311')))
-    items_312 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='312')))
-    items_3A6 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3A6')))
-    items_3A5 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3A5')))
-    items_3D5 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3D5')))
-    items_101 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='101')))
-    items_102 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='102')))
-    items_105 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='105')))
-    items_115 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='115')))
-    items_120 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='120')))
-    items_121 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='121')))
-    items_703 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='703')))
-    items_701 = len(Item_imports.objects.filter(Q(order=order_id) & (Q(item_group__icontains='701') |
-                                                                     Q(item_group__icontains='702') | Q(
-                item_group__icontains='711') | Q(item_group__icontains='712'))))
 
     print_import = ()
     for item in item_import:
         print_import = print_import + tuple(Print_imports.objects.filter(item=item))
     print_import = list(print_import)
+    return [ord_imp, item_import, print_import]
+
+
+def prt_imports(id, print_import):
+    context = {}
+    order_id = id
+
     prt_34_ = []
     prt_310_ = []
     prt_311_ = []
     prt_312_ = []
     prt_3A6_ = []
     prt_3A5_ = []
+    prt_3A4_ = []
     prt_3D5_ = []
     prt_37_ = []
     prt_101_ = []
@@ -706,6 +695,7 @@ def maket_print(request, id):
     prt_312 = []
     prt_3A6 = []
     prt_3A5 = []
+    prt_3A4 = []
     prt_3D5 = []
     prt_37 = []
     prt_101 = []
@@ -717,7 +707,6 @@ def maket_print(request, id):
     prt_120 = []
     prt_121 = []
     for print_item in print_import:
-        item_id = print_item.print_id
         item = print_item.item
         clr = item.detail1_color
         item_code = item.item_group
@@ -743,6 +732,9 @@ def maket_print(request, id):
         elif '3A5' in item_code:
             prt_3A5_.append([print_item.id, clr_hex, clr])
             prt_3A5.append([print_item, clr_hex])
+        elif '3A4' in item_code:
+            prt_3A4_.append([print_item.id, clr_hex, clr])
+            prt_3A4.append([print_item, clr_hex])
         elif '3D5' in item_code:
             prt_3D5_.append([print_item.id, clr_hex, clr])
             prt_3D5.append([print_item, clr_hex])
@@ -773,8 +765,26 @@ def maket_print(request, id):
         elif ('701' in item_code) or ('702' in item_code) or ('711' in item_code) or ('712' in item_code):
             prt_701.append([print_item, clr_hex])
             prt_701_.append([print_item.id, clr_hex, clr])
-
-    context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import}
+    items_34 = len(Item_imports.objects.filter(Q(order=order_id) & (Q(item_group__icontains='34') |
+                                                                    Q(item_group__icontains='350'))))
+    items_37 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='37')))
+    items_310 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='310')))
+    items_311 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='311')))
+    items_312 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='312')))
+    items_3A6 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3A6')))
+    items_3A5 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3A5')))
+    items_3A4 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3A4')))
+    items_3D5 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3D5')))
+    items_101 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='101')))
+    items_102 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='102')))
+    items_105 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='105')))
+    items_115 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='115')))
+    items_120 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='120')))
+    items_121 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='121')))
+    items_703 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='703')))
+    items_701 = len(Item_imports.objects.filter(Q(order=order_id) & (Q(item_group__icontains='701') |
+                                                                     Q(item_group__icontains='702') | Q(
+                item_group__icontains='711') | Q(item_group__icontains='712'))))
     product_range = []
     if len(prt_34) != 0:
         context.update({'prt_34': prt_34})
@@ -804,6 +814,10 @@ def maket_print(request, id):
         context.update({'prt_3A5': prt_3A5})
         context.update({'prt_3A5_': prt_3A5_})
         product_range.append(['Блокнот А5', len(prt_3A5), 'prt_3A5', items_3A5])
+    if len(prt_3A4) != 0:
+        context.update({'prt_3A4': prt_3A4})
+        context.update({'prt_3A4_': prt_3A4_})
+        product_range.append(['Блокнот А4', len(prt_3A4), 'prt_3A5', items_3A4])
     if len(prt_3D5) != 0:
         context.update({'prt_3D5': prt_3D5})
         context.update({'prt_3D5_': prt_3D5_})
@@ -840,6 +854,68 @@ def maket_print(request, id):
         context.update({'prt_703': prt_703})
         context.update({'prt_703_': prt_703_})
         product_range.append(['Краваттоне', len(prt_703), 'prt_703', items_703])
+
+    return [context, product_range]
+
+
+def maket_print(request, id):
+    ord_imp = order_imports(id)[0]
+    item_import = order_imports(id)[1]
+    print_import = order_imports(id)[2]
+    context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import}
+
+    order_id = ord_imp.id
+    product_range = prt_imports(order_id, print_import)[1]
+    context_imp = prt_imports(order_id, print_import)[0]
     context.update({'product_range': product_range})
+    context = context | context_imp
 
     return render(request, 'maket/maket_print.html', context)
+
+
+def update_maket(request, id):
+    ord_imp = order_imports(id)[0]
+    item_import = order_imports(id)[1]
+    print_import = order_imports(id)[2]
+    order_id = ord_imp.id
+    product_range = prt_imports(order_id, print_import)[1]
+    maket_id = request.POST['maket_id']
+    try:
+        maket = Makety.objects.get(Q(maket_id=maket_id) & Q(order=ord_imp))
+        maket.date_modified = datetime.date.today()
+        for pr_rg in product_range:
+            prt = 'chck_' + pr_rg[2]
+            itemgroup = pr_rg[2][4:len(prt)+1]
+            itemgroup = Detail_set.objects.filter(item_name__icontains=itemgroup).first()
+            try:
+                item_checked = Itemgroup_in_Maket.objects.get(item=itemgroup)
+            except:
+                item_checked = Itemgroup_in_Maket(item=itemgroup)
+            try:
+                sel_item = request.POST[prt]
+                if sel_item == 'on':
+                    item_checked.checked = True
+            except:
+                item_checked.checked = False
+            item_checked.maket = maket
+            item_checked.save()
+    except:
+        maket = Makety(maket_id=maket_id, order=ord_imp, date_create=datetime.date.today(), order_num=ord_imp.order_id,
+                       order_date=ord_imp.order_date, date_modified=datetime.date.today())
+        for pr_rg in product_range:
+            prt = 'chck_' + pr_rg[2]
+            itemgroup = pr_rg[2][4:len(prt)+1]
+            itemgroup = Detail_set.objects.filter(item_name__icontains=itemgroup).first()
+            item_checked = Itemgroup_in_Maket(item=itemgroup)
+            try:
+                sel_item = request.POST[prt]
+                if sel_item == 'on':
+                    item_checked.checked = True
+            except:
+                item_checked.checked = False
+            maket.save()
+            item_checked.maket = maket
+            item_checked.save()
+    return
+
+

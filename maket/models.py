@@ -158,20 +158,22 @@ class Makety(models.Model):
     maket_file = models.FilePathField(null=True, blank=True)
     comment = models.CharField(max_length=255, default='')
     order = models.ForeignKey(Order_imports, models.SET_NULL, null=True)
-    order_num = models.CharField(max_length=6 , blank=True, null=True)
+    order_num = models.CharField(max_length=18, blank=True, null=True)
     order_date = models.DateField(default='1000-01-01')
 
 
-class Item_in_Maket(models.Model):
+class Itemgroup_in_Maket(models.Model):
     """If item from order exists in Maket"""
-    item = models.ForeignKey(Item_imports, models.SET_NULL, null=True, blank=True)
+    item = models.ForeignKey(Detail_set, models.SET_NULL, null=True, blank=True)
     maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
+    checked = models.BooleanField(default=True)
 
 
 class Print_in_Maket(models.Model):
     """If print item shows big in Maket"""
     print_item = models.ForeignKey(Print_imports, models.SET_NULL, null=True, blank=True)
     maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
+    checked = models.BooleanField(default=True)
 
 
 class Item_in_Film(models.Model):
