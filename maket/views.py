@@ -916,11 +916,12 @@ def update_maket(request, id):
     ord_imp.save()
     return HttpResponse()
 
+
 def goods(request):
     navi = 'customers'
     goods = Detail_set.objects.all().order_by('item_name')
     color_scheme = Color_scheme.objects.all()
 
     context = {'navi': navi, 'goods': goods, 'active6': 'active', 'color_scheme': color_scheme}
-    return render(request, 'maket/customers.html', context)
+    return render(request, 'maket/goods.html', context)
 
