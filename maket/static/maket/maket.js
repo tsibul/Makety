@@ -367,7 +367,9 @@ function chs_note(prt_3A6, note){
     var number_items = prt_3A6.length;
     try{if(document.getElementById(('chck_'+ note + '_all')).checked){
     for(i=0; i<number_items; i++){var itm_id = 'itm_' + note + '_' + prt_3A6[i][0];
-    document.getElementById(itm_id).style.display='block';}
+    document.getElementById(itm_id).style.display='block';
+    var ln = 'chck_' + note + '_' + prt_3A6[i][0]
+    document.getElementById(ln).checked = true;}
     }else{
         try {document.getElementById(('chck_'+ note + '_0'));
     if(document.getElementById(('chck_'+ note + '_0')).checked){
