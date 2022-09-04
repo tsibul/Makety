@@ -13,6 +13,12 @@ class Print_place(models.Model):
     place_name = models.CharField(max_length=30)
 
 
+class Print_group(models.Model):
+    """code for similar shapes of items"""
+    code = models.CharField(max_length=6, default=0)
+    name = models.CharField(max_length=255)
+
+
 class Detail_set(models.Model):
     """details of item detail# if exist
         name - name of goods
@@ -22,6 +28,7 @@ class Detail_set(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
     item_name = models.CharField(max_length=20, null=True, blank=True)
     color_scheme = models.ForeignKey(Color_scheme, models.SET_NULL, null=True)
+    print_group = models.ForeignKey(Print_group, models.SET_NULL, null=True)
     detail1_name = models.CharField(max_length=60)
     detail1_place = models.BooleanField(default=False)
     detail2_name = models.CharField(max_length=60, default='', null=True, blank=True)
