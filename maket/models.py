@@ -84,7 +84,6 @@ class Order_imports(models.Model):
     """
     order_id = models.CharField(max_length=18, blank=True, null=True)
     order_date = models.DateField(default='1000-01-01')
-    date_num = models.CharField(max_length=6 , blank=True, null=True)
     supplier = models.CharField(max_length=50, blank=True, null=True)
     customer_name = models.CharField(max_length=255, blank=True, null=True)
     customer_INN = models.CharField(max_length=12, blank=True, null=True)

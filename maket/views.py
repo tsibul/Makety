@@ -908,7 +908,9 @@ def update_maket(request, id):
             prt = 'chck_' + pr_rg[2]
             itemgroup = pr_rg[2][4:len(prt)+1]
             itemgroup = Detail_set.objects.filter(item_name__icontains=itemgroup).first()
+            print_name = item_import.objects.filter(code__icontains=itemgroup).first()
             item_checked = Itemgroup_in_Maket(item=itemgroup)
+            item_checked.print_name = print_name
             try:
                 sel_item = request.POST[prt]
                 if sel_item == 'on':
