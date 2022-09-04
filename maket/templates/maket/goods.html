@@ -2,48 +2,52 @@
 {% block title %}Номенклатура{% endblock %}
 {% block content %}
 <h5>Номенклатура</h5>
-<table class="table table-sm table-hover">
+<table class="table table-sm table-hover ms-1">
 <thead>
     <tr  class="table-primary">
     <th><h6>Арт</h6></th>
-    <th><h6>Название</h6></th>
+    <th style="min-width:520px;"><h6>Название</h6></th>
     <th><h6>Цветовая группа</h6></th>
     <th><h6>Группа печати</h6></th>
-    <th><h6>Регион</h6></th>
-    <th colspan="10"><h6>Детали</h6></th>
+    <th colspan="10" class="text-center"><h6>Детали</h6></th>
     </tr>
 </thead>
 <tbody>
 {% for good in goods %}
     <form action="update_good/{{good.id}}" method="post" id="form_{{good.id}}">
     {% csrf_token %}
-    <tr onclick="javascript:upd_good({{good.id}});" id="row_{{good.id}}">
+    <tr onclick="javascript:upd_good({{good.id}}, {{color_scheme}}, {{print_group}});" id="row_{{good.id}}">
     <input type="text" hidden value="{{good.id}}" id="id_{{good.id}}">
 
-    <td id="art_{{good.id}}"><div >{{ good.item_name}}</div></td>
+    <td id="art_{{good.id}}" style="min-width:90px;"><div >{{ good.item_name}}</div></td>
     <td id="nm_{{good.id}}">{{good.name}}</td>
     <td id="cs_{{good.id}}">{{good.color_scheme.scheme_name}}</td>
     <td id="pg_{{good.id}}" >{{good.print_name.code}}</td>
+    <td>
+        <input type="checkbox" class="form-check-input" name="dt1_chck" disabled id="dt1c_{{good.id}}"
+                {% if good.detail1_place %} checked {%endif%} value="{{good.detail1_place}}" form="form_{{good.id}}">
+    </td>
     <td id="dt1_{{good.id}}">{{good.detail1_name}}</td>
-    <td id="dt1c_{{good.id}}">
-        <input type="checkbox" class="form-check-input" name="dt1_chck" value="{{good.detail1_place}}">
+    <td >
+        <input type="checkbox" class="form-check-input" name="dt2_chck" disabled id="dt2c_{{good.id}}"
+               {% if good.detail2_place %} checked {%endif%} value="{{good.detail2_place}}" form="form_{{good.id}}">
     </td>
     <td id="dt2_{{good.id}}">{{good.detail2_name}}</td>
-    <td id="dt2c_{{good.id}}">
-        <input type="checkbox" class="form-check-input" name="dt2_chck" value="{{good.detail2_place}}">
+    <td>
+        <input type="checkbox" class="form-check-input" name="dt3_chck" disabled id="dt3c_{{good.id}}"
+               {% if good.detail3_place %} checked {%endif%} value="{{good.detail3_place}}" form="form_{{good.id}}">
     </td>
     <td id="dt3_{{good.id}}">{{good.detail3_name}}</td>
-    <td id="dt3c_{{good.id}}">
-        <input type="checkbox" class="form-check-input" name="dt3_chck" value="{{good.detail3_place}}">
+    <td>
+        <input type="checkbox" class="form-check-input" name="dt4_chck" disabled id="dt4c_{{good.id}}"
+               {% if good.detail4_place %} checked {%endif%} value="{{good.detail4_place}}" form="form_{{good.id}}">
     </td>
     <td id="dt4_{{good.id}}">{{good.detail4_name}}</td>
-    <td id="dt4c_{{good.id}}">
-        <input type="checkbox" class="form-check-input" name="dt4_chck" value="{{good.detail4_place}}">
+    <td>
+        <input type="checkbox" class="form-check-input" name="dt5_chck" disabled id="dt5c_{{good.id}}"
+               {% if good.detail5_place %} checked {%endif%} value="{{good.detail5_place}}" form="form_{{good.id}}">
     </td>
     <td id="dt5_{{good.id}}">{{good.detail5_name}}</td>
-    <td id="dt5c_{{good.id}}">
-        <input type="checkbox" class="form-check-input" name="dt5_chck" value="{{good.detail5_place}}">
-    </td>
 
     </tr>
     </form>
