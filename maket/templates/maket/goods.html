@@ -23,8 +23,28 @@
     <td id="art_{{good.id}}"><div >{{ good.item_name}}</div></td>
     <td id="nm_{{good.id}}">{{good.name}}</td>
     <td id="cs_{{good.id}}">{{good.color_scheme.scheme_name}}</td>
-    <td id="pg_{{good.id}}" >{{good.print_name.codepyt}}</td>
-    <td id="addr_{{cst.id}}">{{cst.address}}</td>
+    <td id="pg_{{good.id}}" >{{good.print_name.code}}</td>
+    <td id="dt1_{{good.id}}">{{good.detail1_name}}</td>
+    <td id="dt1c_{{good.id}}">
+        <input type="checkbox" class="form-check-input" name="dt1_chck" value="{{good.detail1_place}}">
+    </td>
+    <td id="dt2_{{good.id}}">{{good.detail2_name}}</td>
+    <td id="dt2c_{{good.id}}">
+        <input type="checkbox" class="form-check-input" name="dt2_chck" value="{{good.detail2_place}}">
+    </td>
+    <td id="dt3_{{good.id}}">{{good.detail3_name}}</td>
+    <td id="dt3c_{{good.id}}">
+        <input type="checkbox" class="form-check-input" name="dt3_chck" value="{{good.detail3_place}}">
+    </td>
+    <td id="dt4_{{good.id}}">{{good.detail4_name}}</td>
+    <td id="dt4c_{{good.id}}">
+        <input type="checkbox" class="form-check-input" name="dt4_chck" value="{{good.detail4_place}}">
+    </td>
+    <td id="dt5_{{good.id}}">{{good.detail5_name}}</td>
+    <td id="dt5c_{{good.id}}">
+        <input type="checkbox" class="form-check-input" name="dt5_chck" value="{{good.detail5_place}}">
+    </td>
+
     </tr>
     </form>
 {% endfor %}
