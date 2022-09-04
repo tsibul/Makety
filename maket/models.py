@@ -1,12 +1,6 @@
 from django.db import models
 
 
-class Films(models.Model):
-    film_id = models.IntegerField(default=0)
-    date = models.DateField(default='')
-    format = models.CharField(max_length=3, default='A5')
-
-
 class Color_scheme(models.Model):
     """ color scheme IV, Grant, Eco """
     scheme_name = models.CharField(max_length=13)
@@ -96,8 +90,6 @@ class Order_imports(models.Model):
     customer_INN = models.CharField(max_length=12, blank=True, null=True)
     customer_address = models.CharField(max_length=120, blank=True, null=True)
     customer = models.ForeignKey(Customer, models.SET_NULL, null=True)
-    film = models.ForeignKey(Films, models.SET_NULL, null=True, default=None)
-    film_status = models.BooleanField(default=True)
     order_quantity = models.IntegerField(default=0)
     order_sum = models.FloatField(default=0)
     print_quantity = models.IntegerField(default=0)
@@ -173,6 +165,8 @@ class Itemgroup_in_Maket(models.Model):
     item = models.ForeignKey(Detail_set, models.SET_NULL, null=True, blank=True)
     maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
     checked = models.BooleanField(default=True)
+    print_name = models.CharField(max_length=50,  null=True, blank=True)
+
 
 
 class Print_in_Maket(models.Model):
@@ -180,6 +174,13 @@ class Print_in_Maket(models.Model):
     print_item = models.ForeignKey(Print_imports, models.SET_NULL, null=True, blank=True)
     maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
     checked = models.BooleanField(default=True)
+
+
+class Films(models.Model):
+    film_id = models.IntegerField(default=0)
+    date = models.DateField(default='')
+    format = models.CharField(max_length=3, default='A5')
+    item_group = models.ForeignKey(Itemgroup_in_Maket, models.SET_NULL, null=True)
 
 
 class Item_in_Film(models.Model):
