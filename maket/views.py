@@ -12,7 +12,7 @@ from django.template import loader
 from django.urls import reverse
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
-    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket
+    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_in_Maket
 
 
 def main_maket(request):
@@ -914,6 +914,23 @@ def update_maket(request, id):
     else:
         ord_imp.maket_status = 'P'
     ord_imp.save()
+
+    for pr_imp in print_import:
+        pr_checked_name = 'chck_' + pr_imp.id
+        try:
+            pr_checked = Print_in_Maket.objects.get(Q(maket=maket) & Q(prtint_item=pr_imp))
+        except:
+            pr_checked = Print_in_Maket(maket=maket, pint_item=pr_imp)
+        try:
+            pr_checked_st = request.POST['pr_checked_name']
+            if pr_checked_st == 'on':
+                pr_checked.checked = True
+            else:
+                pr_checked.checked = False
+        except:
+            pr_checked.checked = False
+        pr_checked.save()
+
     return HttpResponse()
 
 
