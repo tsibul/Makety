@@ -55,13 +55,24 @@
         <td class="text-break"> {{ord.manager.manager_mail}}</td>
         <td class="text-end"> {{ord.order_sum}}</td>
 <!--        <td> {{ord.customer_INN}}</td><--->
-        <td> {{ord.film.film_id}}</td>
+<!--        <td> {{ord.film.film_id}}</td>
         <td> {{ord.film.date}}</td>
         {% if ord_imp.film_status %}
             <td class="align-middle"><input class="form-check-input" type="checkbox" checked disabled></td>
         {% else %}
             <td class="align-middle"><input class="form-check-input" type="checkbox" checked disabled></td>
-        {% endif %}
+        {% endif %}--->
+        <td class="text-end fw-bold" style="font-size:120%">
+            <div
+            {%  if ord.maket_status == 'R' %}
+                   class="text-success">R
+            {% elif ord.maket_status == 'P' %}
+                    >P
+            {% elif ord.maket_status == 'N' %}
+                    class="text-danger">N
+            {% endif %}
+            </div>
+        </td>
         <td class="align-middle"><a href="delete_order/{{ ord.id }}">
             <button type="submit" class="btn btn-sm btn-outline-danger" style="font-size:80%;">Удалить</button>
         </a></td>

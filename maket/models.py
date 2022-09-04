@@ -104,6 +104,12 @@ class Order_imports(models.Model):
     print_sum = models.FloatField(default=0)
     our_manager = models.CharField(max_length=50, blank=True, null=True, default='')
     manager = models.ForeignKey(Manger, models.SET_NULL, blank=True, null=True, default='')
+    Ready = 'R'
+    Partial = 'P'
+    NotReady = 'N'
+    status_choices = [(Ready, 'R'), (Partial, 'P'), (NotReady, 'N')]
+    maket_status = models.CharField(max_length=1, choices=status_choices, default=NotReady)
+
 
 class Item_imports(models.Model):
     """item_color - total color code back part of item code(after Item series)
@@ -183,12 +189,4 @@ class Item_in_Film(models.Model):
     status = models.BooleanField(default=True)
 
 
-class Order_to_Maket(models.Model):
-    Ready = 'R'
-    Partial = 'P'
-    NotReady = 'N'
-    status_choices = [(Ready, 'R'), (Partial, 'P'), (NotReady, 'N')]
-    maket = models.ForeignKey(Makety, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order_imports, models.SET_NULL, null=True)
-    status = models.CharField(max_length=1, choices=status_choices, default=NotReady)
 

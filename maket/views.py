@@ -41,10 +41,8 @@ def index(request):
         orders = Order_imports.objects.all().order_by('-order_date', '-id')
         context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                'orders': orders, 'active1': 'active'}
-
     except:
         context = {'navi': navi}
-
     return render(request, 'maket/index.html', context)
 
 
@@ -919,6 +917,12 @@ def update_maket(request, id):
             maket.save()
             item_checked.maket = maket
             item_checked.save()
+
+    if all_checked:
+        ord_imp.maket_status = 'R'
+    else:
+        ord_imp.maket_status = 'P'
+    ord_imp.save()
     return
 
 
