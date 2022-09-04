@@ -882,51 +882,38 @@ def update_maket(request, id):
     try:
         maket = Makety.objects.get(Q(maket_id=maket_id) & Q(order=ord_imp))
         maket.date_modified = datetime.date.today()
-        for pr_rg in product_range:
-            prt = 'chck_' + pr_rg[2]
-            itemgroup = pr_rg[2][4:len(prt)+1]
-            print_name = item_import.objects.filter(code__icontains=itemgroup).first()
-            itemgroup = Detail_set.objects.filter(item_name__icontains=itemgroup).first()
-            try:
-                item_checked = Itemgroup_in_Maket.objects.get(item=itemgroup)
-            except:
-                item_checked = Itemgroup_in_Maket(item=itemgroup)
-            item_checked.print_name = print_name
-            try:
-                sel_item = request.POST[prt]
-                if sel_item == 'on':
-                    item_checked.checked = True
-            except:
-                item_checked.checked = False
-                all_checked = False
-            item_checked.maket = maket
-            item_checked.save()
     except:
         maket = Makety(maket_id=maket_id, order=ord_imp, date_create=datetime.date.today(), order_num=ord_imp.order_id,
                        order_date=ord_imp.order_date, date_modified=datetime.date.today())
-        for pr_rg in product_range:
-            prt = 'chck_' + pr_rg[2]
-            itemgroup = pr_rg[2][4:len(prt)+1]
-            itemgroup = Detail_set.objects.filter(item_name__icontains=itemgroup).first()
-            print_name = item_import.objects.filter(code__icontains=itemgroup).first()
+    maket.save()
+    for pr_rg in product_range:
+        prt = 'chck_' + pr_rg[2]
+        itemgroup = pr_rg[2][4:len(prt)+1]
+        for item in item_import:
+            if itemgroup in item.code:
+                print_name = item.print_name
+                break
+        itemgroup = Detail_set.objects.filter(item_name__icontains=itemgroup).first()
+        try:
+            item_checked = Itemgroup_in_Maket.objects.get(item=itemgroup)
+        except:
             item_checked = Itemgroup_in_Maket(item=itemgroup)
-            item_checked.print_name = print_name
-            try:
-                sel_item = request.POST[prt]
-                if sel_item == 'on':
-                    item_checked.checked = True
-            except:
-                item_checked.checked = False
-                all_checked = False
-            maket.save()
-            item_checked.maket = maket
-            item_checked.save()
+        item_checked.print_name = print_name
+        try:
+            sel_item = request.POST[prt]
+            if sel_item == 'on':
+                item_checked.checked = True
+        except:
+            item_checked.checked = False
+            all_checked = False
+        item_checked.maket = maket
+        item_checked.save()
 
     if all_checked:
         ord_imp.maket_status = 'R'
     else:
         ord_imp.maket_status = 'P'
     ord_imp.save()
-    return
+    return HttpResponse()
 
 
