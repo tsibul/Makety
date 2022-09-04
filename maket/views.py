@@ -12,7 +12,7 @@ from django.template import loader
 from django.urls import reverse
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
-    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket
+    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group
 
 
 def main_maket(request):
@@ -920,8 +920,15 @@ def update_maket(request, id):
 def goods(request):
     navi = 'customers'
     goods = Detail_set.objects.all().order_by('item_name')
-    color_scheme = Color_scheme.objects.all()
+    clr_scheme = Color_scheme.objects.all()
+    color_scheme = []
+    for clr in clr_scheme:
+        color_scheme.append(clr.scheme_name)
+    print_group = []
+    prt_group = Print_group.objects.all()
+    for prt in prt_group:
+        print_group.append(prt.code)
 
-    context = {'navi': navi, 'goods': goods, 'active6': 'active', 'color_scheme': color_scheme}
+    context = {'navi': navi, 'goods': goods, 'active6': 'active', 'color_scheme': color_scheme, 'print_group': print_group}
     return render(request, 'maket/goods.html', context)
 
