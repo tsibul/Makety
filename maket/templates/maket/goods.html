@@ -6,7 +6,7 @@
 <thead>
     <tr  class="table-primary">
     <th><h6>Арт</h6></th>
-    <th style="min-width:520px;"><h6>Название</h6></th>
+    <th style="min-width:480px;"><h6>Название</h6></th>
     <th><h6>Цветовая группа</h6></th>
     <th><h6>Группа печати</h6></th>
     <th colspan="10" class="text-center"><h6>Детали</h6></th>
@@ -14,7 +14,7 @@
 </thead>
 <tbody>
 {% for good in goods %}
-    <form action="update_good/{{good.id}}" method="post" id="form_{{good.id}}">
+    <form action="update_goods/{{good.id}}" method="post" id="form_{{good.id}}">
     {% csrf_token %}
     <tr onclick="javascript:upd_good({{good.id}}, {{color_scheme}}, {{print_group}});" id="row_{{good.id}}">
     <input type="text" hidden value="{{good.id}}" id="id_{{good.id}}">
@@ -22,7 +22,7 @@
     <td id="art_{{good.id}}" style="min-width:90px;"><div >{{ good.item_name}}</div></td>
     <td id="nm_{{good.id}}">{{good.name}}</td>
     <td id="cs_{{good.id}}">{{good.color_scheme.scheme_name}}</td>
-    <td id="pg_{{good.id}}" >{{good.print_name.code}}</td>
+    <td id="pg_{{good.id}}" >{{good.print_group.code}}</td>
     <td>
         <input type="checkbox" class="form-check-input" name="dt1_chck" disabled id="dt1c_{{good.id}}"
                 {% if good.detail1_place %} checked {%endif%} value="{{good.detail1_place}}" form="form_{{good.id}}">

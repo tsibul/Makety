@@ -932,3 +932,52 @@ def goods(request):
     context = {'navi': navi, 'goods': goods, 'active6': 'active', 'color_scheme': color_scheme, 'print_group': print_group}
     return render(request, 'maket/goods.html', context)
 
+def upd_goods(request, id):
+    item = Detail_set.objects.get(id=id)
+    item_code = request.POST['art']
+    item.item_name = item_code
+    item_name = request.POST['nm']
+    item.name = item_name
+    item_clr = request.POST['ColorSelect']
+    if item_clr != 'None':
+        item.color_scheme = Color_scheme.objects.get(scheme_name=item_clr)
+    prt_group = request.POST['PrtSelect']
+    if prt_group != 'None':
+        item.print_group = Print_group.objects.get(code=prt_group)
+    detail1_name = request.POST['dt1']
+    item.detail1_name = detail1_name
+    try:
+        detail1_place = request.POST['dt1_chck']
+    except:
+        detail1_place = False
+    item.detail1_place = detail1_place
+    detail2_name = request.POST['dt2']
+    item.detail2_name = detail2_name
+    try:
+        detail2_place = request.POST['dt2_chck']
+    except:
+        detail2_place = False
+    item.detail2_place = detail2_place
+    detail3_name = request.POST['dt3']
+    item.detail3_name = detail3_name
+    try:
+        detail3_place = request.POST['dt3_chck']
+    except:
+        detail3_place = False
+    item.detail3_place = detail3_place
+    detail4_name = request.POST['dt4']
+    item.detail4_name = detail4_name
+    try:
+        detail4_place = request.POST['dt4_chck']
+    except:
+        detail4_place = False
+    item.detail4_place = detail4_place
+    detail5_name = request.POST['dt5']
+    item.detail5_name = detail5_name
+    try:
+        detail5_place = request.POST['dt5_chck']
+    except:
+        detail5_place = False
+    item.detail5_place = detail5_place
+    item.save()
+    return HttpResponseRedirect(reverse('maket:goods'))
