@@ -334,7 +334,19 @@ function pen_position(id, pen_pos){
 }
 
 function upd_good(id, clr_schemes, print_group){
-   document.getElementById('row_' + id).onclick = ""
+   document.getElementById('row_' + id).onclick = "";
+   var clr_scheme ='[';
+   for(i=0; i<clr_schemes.length; i++){
+   clr_scheme += "'" + clr_schemes[i] +"',";
+   }
+   clr_scheme = clr_scheme.substring(0, clr_scheme.length - 1);
+   clr_scheme += ']';
+   var print_grp ='[';
+   for(i=0; i<print_group.length; i++){
+   print_grp += "'" + print_group[i] +"',";
+   }
+   print_grp = print_grp.substring(0, print_grp.length - 1);
+   print_grp += ']';
    var art_ln = 'art_' + id;
    var nm_ln = 'nm_' + id;
    var cs_ln = 'cs_' + id;
@@ -364,15 +376,6 @@ function upd_good(id, clr_schemes, print_group){
    document.getElementById(dt4c_ln).disabled=false;
    document.getElementById(dt5c_ln).disabled=false;
 
-   var nm = document.getElementById(nm_ln).textContent;
-   var cs = document.getElementById(cs_ln).textContent;
-   var pg = document.getElementById(pg_ln).textContent;
-   var dt1 = document.getElementById(dt1_ln).textContent;
-   var dt2 = document.getElementById(dt2_ln).textContent;
-   var dt3 = document.getElementById(dt3_ln).textContent;
-   var dt4 = document.getElementById(dt4_ln).textContent;
-   var dt5 = document.getElementById(dt5_ln).textContent;
-
    var clr_numb = clr_schemes.length;
    var clr_html = ('<div class="input-group"><select class="form-select" style="font-size:80%" id="ColorSelect_' + id
                    + '" name="ColorSelect" form="form_' + id + '">');
@@ -397,19 +400,92 @@ function upd_good(id, clr_schemes, print_group){
    prt_html += '</select></div>';
    document.getElementById(pg_ln).innerHTML = prt_html;
 
-   document.getElementById(art_ln).innerHTML = '<input type="text" name="art" style="max-width:60px; font-size:80%;"' +
-                                                'value="' + art + '" class="form-control" form="form_' + id + '">';
-   document.getElementById(nm_ln).innerHTML = '<input type="text" name="nm" value="' + nm +
-                                                '" class="form-control" style="font-size:80%;" form="form_' + id + '">';
-   document.getElementById(dt1_ln).innerHTML = '<input type="text" name="dt1" value="' + dt1 +
-                                                '" class="form-control" style="font-size:80%;" form="form_' + id + '">';
-   document.getElementById(dt2_ln).innerHTML = '<input type="text" name="dt2" value="' + dt2 +
-                                                '" class="form-control" style="font-size:80%;" form="form_' + id + '">';
-   document.getElementById(dt3_ln).innerHTML = '<input type="text" name="dt3" value="' +  dt3 +
-                                               '" class="form-control" style="font-size:80%;" form="form_' + id + '">';
-   document.getElementById(dt4_ln).innerHTML = '<input type="text" name="dt4" value="' +  dt4 +
-                                               '" class="form-control" style="font-size:80%;" form="form_' + id + '">';
-   document.getElementById(dt5_ln).innerHTML = '<input type="text" name="dt5" value="' + dt5 +
-                                               '" class="form-control" style="font-size:80%;" form="form_' + id + '">';
+   document.getElementById(art_ln).innerHTML = '<div class="row"><div class="col" style="max-width:40px;"><div class="m-1">' +
+    '<a href="javascript:upd_good_reverse(' + id + ", '" + cs + "', '" + pg + "', " + clr_scheme + ", "  + print_grp +
+    "" + ');"><button class="btn btn-sm btn-outline-secondary" type="button">' +
+    '<i class="bi bi-arrow-counterclockwise"></i></button></a></div>' +
+    '<div class="m-1"><button class="btn btn-sm btn-outline-primary" type="submit" form="form_' + id + '">' +
+    '<i class="bi bi-check2"></i></button></div></div><div class="col">' +
+    '<textarea type="text" name="art" style="max-width:60px; font-size:80%;"' +
+                                    ' class="form-control" form="form_' + id + '">' + art + '</textarea></div></div>';
+   document.getElementById(nm_ln).innerHTML = '<textarea type="text" name="nm"' +
+                        '" class="form-control" style="font-size:100%;" form="form_' + id + '">' + nm + '</textarea>';
+   document.getElementById(dt1_ln).innerHTML = '<textarea type="text" name="dt1"' +
+                        '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt1 + '</textarea>';
+   document.getElementById(dt2_ln).innerHTML = '<textarea type="text" name="dt2"' +
+                        '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt2 + '</textarea>';
+   document.getElementById(dt3_ln).innerHTML = '<textarea type="text" name="dt3"' +
+                        '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt3 + '</textarea>';
+   document.getElementById(dt4_ln).innerHTML = '<textarea type="text" name="dt4"' +
+                        '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt4 + '</textarea>';
+   document.getElementById(dt5_ln).innerHTML = '<textarea type="text" name="dt5"' +
+                        '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt5 + '</textarea>';
+}
 
+function upd_good_reverse(id, cs, pg, clr_schemes, print_group){
+   var clr_scheme ='[';
+   for(i=0; i<clr_schemes.length; i++){
+   clr_scheme += "'" + clr_schemes[i] +"',";
+   }
+   clr_scheme = clr_scheme.substring(0, clr_scheme.length - 1);
+   clr_scheme += ']';
+   var print_grp ='[';
+   for(i=0; i<print_group.length; i++){
+   print_grp += "'" + print_group[i] +"',";
+   }
+   print_grp = print_grp.substring(0, print_grp.length - 1);
+   print_grp += ']';
+   document.getElementById('row_'+id).setAttribute('onclick','javascript:upd_good(' + id + ', ' + clr_scheme +
+                            ', ' + print_grp + ');');
+   var art_ln = 'art_' + id;
+   var nm_ln = 'nm_' + id;
+   var cs_ln = 'cs_' + id;
+   var pg_ln = 'pg_' + id;
+   var dt1_ln = 'dt1_' + id;
+   var dt1c_ln = 'dt1c_' + id;
+   var dt2_ln = 'dt2_' + id;
+   var dt2c_ln = 'dt2c_' + id;
+   var dt3_ln = 'dt3_' + id;
+   var dt3c_ln = 'dt3c_' + id;
+   var dt4_ln = 'dt4_' + id;
+   var dt4c_ln = 'dt4c_' + id;
+   var dt5_ln = 'dt5_' + id;
+   var dt5c_ln = 'dt5c_' + id;
+   var art = document.getElementById(art_ln).textContent;
+   var nm = document.getElementById(nm_ln).textContent;
+   var dt1 = document.getElementById(dt1_ln).textContent;
+   var dt2 = document.getElementById(dt2_ln).textContent;
+   var dt3 = document.getElementById(dt3_ln).textContent;
+   var dt4 = document.getElementById(dt4_ln).textContent;
+   var dt5 = document.getElementById(dt5_ln).textContent;
+   var dt1c = document.getElementById(dt1c_ln).value;
+   var dt2c = document.getElementById(dt2c_ln).value;
+   var dt3c = document.getElementById(dt3c_ln).value;
+   var dt4c = document.getElementById(dt4c_ln).value;
+   var dt5c = document.getElementById(dt5c_ln).value;
+   document.getElementById(dt1c_ln).disabled = true;
+   document.getElementById(dt2c_ln).disabled = true;
+   document.getElementById(dt3c_ln).disabled = true;
+   document.getElementById(dt4c_ln).disabled = true;
+   document.getElementById(dt5c_ln).disabled = true;
+   if(dt1c=='True'){
+   document.getElementById(dt1c_ln).checked = true;}
+   else{document.getElementById(dt1c_ln).checked = false;};
+   if(dt2c=='True'){
+   document.getElementById(dt2c_ln).checked = true;}
+   else{document.getElementById(dt2c_ln).checked = false;};
+   if(dt3c=='True'){
+   document.getElementById(dt3c_ln).checked = true;}
+   else{document.getElementById(dt3c_ln).checked = false;};
+
+
+   document.getElementById(pg_ln).innerHTML = pg;
+   document.getElementById(cs_ln).innerHTML = cs;
+   document.getElementById(art_ln).innerHTML = art;
+   document.getElementById(nm_ln).innerHTML = nm;
+   document.getElementById(dt1_ln).innerHTML = dt1;
+   document.getElementById(dt2_ln).innerHTML = dt2;
+   document.getElementById(dt3_ln).innerHTML = dt3;
+   document.getElementById(dt4_ln).innerHTML = dt4;
+   document.getElementById(dt5_ln).innerHTML = dt5;
 }
