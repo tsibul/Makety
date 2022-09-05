@@ -5,6 +5,12 @@ class Color_scheme(models.Model):
     """ color scheme IV, Grant, Eco """
     scheme_name = models.CharField(max_length=13)
 
+    def __repr__(self):
+        return self.scheme_name
+
+    def __str__(self):
+        return str(self.scheme_name)
+
 
 class Print_place(models.Model):
     """ detail_name name of part of item
@@ -17,6 +23,12 @@ class Print_group(models.Model):
     """code for similar shapes of items"""
     code = models.CharField(max_length=6, default=0)
     name = models.CharField(max_length=255)
+
+    def __repr__(self):
+        return self.code
+
+    def __str__(self):
+        return str(self.code)
 
 
 class Detail_set(models.Model):
@@ -40,10 +52,19 @@ class Detail_set(models.Model):
     detail5_name = models.CharField(max_length=60, default='', null=True, blank=True)
     detail5_place = models.BooleanField(default=False)
 
+    def __repr__(self):
+        return self.name
+
+    def __str__(self):
+        return str(self.name)
+
 
 class Print_type(models.Model):
     """ Pad, screen, UW, soft_touch etc."""
     type_name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return str(self.type_name)
 
 
 class Print_position(models.Model):
@@ -64,6 +85,10 @@ class Item_color(models.Model):
     color_code = models.CharField(max_length=7)
     color_scheme = models.ForeignKey(Color_scheme, models.SET_NULL, null=True)
 
+    def __str__(self):
+        return str(self.color_id + ', ' + self.color_scheme.scheme_name)
+
+
 
 class Customer(models.Model):
     """type - agency, dealer, etc.
@@ -75,11 +100,24 @@ class Customer(models.Model):
     region = models.CharField(max_length=2, default='77')
     group = models.CharField(max_length=255)
 
+    def __repr__(self):
+        return self.name
+
+    def __str__(self):
+        return str(self.name)
+
+
 class Manger(models.Model):
     """Customer managers """
     manager = models.CharField(max_length=100, blank=True, null=True, default='')
     manager_phone= models.CharField(max_length=50, blank=True, null=True, default='')
     manager_mail = models.CharField(max_length=50, blank=True, null=True, default='')
+
+    def __repr__(self):
+        return self.manager
+
+    def __str__(self):
+        return str(self.manager)
 
 
 class Order_imports(models.Model):
@@ -108,6 +146,11 @@ class Order_imports(models.Model):
     status_choices = [(Ready, 'R'), (Partial, 'P'), (NotReady, 'N')]
     maket_status = models.CharField(max_length=1, choices=status_choices, default=NotReady)
 
+    def __repr__(self):
+        return self.order_id
+
+    def __str__(self):
+        return str(self.order_id + ' ' + self.customer.name)
 
 class Item_imports(models.Model):
     """item_color - total color code back part of item code(after Item series)
@@ -130,6 +173,12 @@ class Item_imports(models.Model):
     item_price = models.FloatField(default=0)
     print_price = models.FloatField(default=0)
     num_prints = models.IntegerField(default=0)
+
+    def __repr__(self):
+        return self.code + ' ' + self.print_name
+
+    def __str__(self):
+        return str(self.code + ' ' + self.print_name)
 
 
 class Print_imports(models.Model):
@@ -165,6 +214,12 @@ class Makety(models.Model):
     order_num = models.CharField(max_length=18, blank=True, null=True)
     order_date = models.DateField(default='1000-01-01')
 
+    def __repr__(self):
+        return self.order.order_id
+
+    def __str__(self):
+        return str(self.order.order_id + ' ' + self.order.customer.name)
+
 
 class Itemgroup_in_Maket(models.Model):
     """If item from order exists in Maket"""
@@ -172,7 +227,6 @@ class Itemgroup_in_Maket(models.Model):
     maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
     checked = models.BooleanField(default=True)
     print_name = models.CharField(max_length=50,  null=True, blank=True)
-
 
 
 class Print_in_Maket(models.Model):
@@ -187,6 +241,13 @@ class Films(models.Model):
     date = models.DateField(default='')
     format = models.CharField(max_length=3, default='A5')
     item_group = models.ForeignKey(Itemgroup_in_Maket, models.SET_NULL, null=True)
+
+    def __repr__(self):
+        return str(self.film_id + ' от ' + self.date)
+
+    def __str__(self):
+        return str(self.film_id + ' от ' + self.date)
+
 
 
 class Item_in_Film(models.Model):
