@@ -724,10 +724,8 @@ def prt_imports(id, print_import):
         clr_sch = item.color_scheme
         clr_hex = Item_color.objects.get(color_scheme=clr_sch, color_id=clr)
         clr_hex = clr_hex.color_code
-        prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code,
-                       'svg' + print_item.item.item.print_group.code + '.html'])
-        prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 'svg' +
-                       print_item.item.item.print_group.code + '.html'])
+        prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code])
+        prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code])
         context.update({'prt_0': prt_0})
         context.update({'prt_0_': prt_0_})
 
@@ -788,8 +786,8 @@ def prt_imports(id, print_import):
         items_prt = len(Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group)))
         len_prt = len(Print_imports.objects.filter(Q(item__order=order_id) & Q(item__item__print_group=print_group)))
         if items_prt != 0:
-            product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt])
-
+            product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt, 'maket/svg/svg' +
+                       print_group.code + '.html'])
     if len(prt_34) != 0:
         context.update({'prt_34': prt_34})
         context.update({'prt_34_': prt_34_})
@@ -841,7 +839,7 @@ def prt_imports(id, print_import):
     if len(prt_703) != 0:
         context.update({'prt_703': prt_703})
         context.update({'prt_703_': prt_703_})
-
+    context.update({'print_groups': print_groups})
     return [context, product_range]
 
 
