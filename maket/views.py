@@ -12,7 +12,7 @@ from django.template import loader
 from django.urls import reverse
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
-    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket
+    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group
 
 
 def main_maket(request):
@@ -498,7 +498,18 @@ def delete_order(request, id):
 
 
 def add_detail(request):
-    item_code = request.POST['dt_it_nm']
+    item_code = request.POST['dt_it_art']
+    name = request.POST['dt_it_nm']
+    cs = request.POST['dt_it_clr']
+    pg = request.POST['dt_it_pg']
+    try:
+        color_scheme = Color_scheme.objects.get(scheme_name=cs)
+    except:
+        color_scheme = None
+    try:
+        print_group = Print_group.objects.get(code=pg)
+    except:
+        print_group = None
     detail1_name = request.POST['dt1_nm']
     try:
         detail1_place = request.POST['flexCheck_det1']
@@ -541,17 +552,15 @@ def add_detail(request):
     else:
         detail5_place = False
 
-    det_set = Detail_set(item_name=item_code,
+    det_set = Detail_set(item_name=item_code, name=name, color_scheme=color_scheme, print_group=print_group,
                          detail1_name=detail1_name, detail1_place=detail1_place,
                          detail2_name=detail2_name, detail2_place=detail2_place,
                          detail3_name=detail3_name, detail3_place=detail3_place,
                          detail4_name=detail4_name, detail4_place=detail4_place,
                          detail5_name=detail5_name, detail5_place=detail5_place)
     det_set.save()
-    return HttpResponseRedirect(reverse('maket:dicts'))
+    return HttpResponseRedirect(reverse('maket:goods'))
 
-
-# TODO change add_detail
 
 
 def upd_detail(request, id):
@@ -917,3 +926,67 @@ def update_maket(request, id):
     return HttpResponse()
 
 
+def goods(request):
+    navi = 'customers'
+    goods = Detail_set.objects.all().order_by('item_name')
+    clr_scheme = Color_scheme.objects.all()
+    color_scheme = []
+    for clr in clr_scheme:
+        color_scheme.append(clr.scheme_name)
+    print_group = []
+    prt_group = Print_group.objects.all()
+    for prt in prt_group:
+        print_group.append(prt.code)
+
+    context = {'navi': navi, 'goods': goods, 'active6': 'active', 'color_scheme': color_scheme, 'print_group': print_group}
+    return render(request, 'maket/goods.html', context)
+
+def upd_goods(request, id):
+    item = Detail_set.objects.get(id=id)
+    item_code = request.POST['art']
+    item.item_name = item_code
+    item_name = request.POST['nm']
+    item.name = item_name
+    item_clr = request.POST['ColorSelect']
+    if item_clr != 'None':
+        item.color_scheme = Color_scheme.objects.get(scheme_name=item_clr)
+    prt_group = request.POST['PrtSelect']
+    if prt_group != 'None':
+        item.print_group = Print_group.objects.get(code=prt_group)
+    detail1_name = request.POST['dt1']
+    item.detail1_name = detail1_name
+    try:
+        detail1_place = request.POST['dt1_chck']
+    except:
+        detail1_place = False
+    item.detail1_place = detail1_place
+    detail2_name = request.POST['dt2']
+    item.detail2_name = detail2_name
+    try:
+        detail2_place = request.POST['dt2_chck']
+    except:
+        detail2_place = False
+    item.detail2_place = detail2_place
+    detail3_name = request.POST['dt3']
+    item.detail3_name = detail3_name
+    try:
+        detail3_place = request.POST['dt3_chck']
+    except:
+        detail3_place = False
+    item.detail3_place = detail3_place
+    detail4_name = request.POST['dt4']
+    item.detail4_name = detail4_name
+    try:
+        detail4_place = request.POST['dt4_chck']
+    except:
+        detail4_place = False
+    item.detail4_place = detail4_place
+    detail5_name = request.POST['dt5']
+    item.detail5_name = detail5_name
+    try:
+        detail5_place = request.POST['dt5_chck']
+    except:
+        detail5_place = False
+    item.detail5_place = detail5_place
+    item.save()
+    return HttpResponseRedirect(reverse('maket:goods'))

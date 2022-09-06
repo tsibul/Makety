@@ -16,97 +16,6 @@ function add_ln(new_ln){
 function add_ln_reverse(new_ln){
     document.getElementById(new_ln).style.display='none';}
 
-function upd_detail(detail_id, dt1_place, dt2_place, dt3_place, dt4_place, dt5_place, dt1_name,
-        dt2_name, dt3_name, dt4_name, dt5_name, dt_code, dt_name, dt_color){
-    var line_number = 'dtl_id_' + detail_id;
-
-    var html_code0 = ('<input type="hidden" class="form-control" name="detail_id" value="{{ detail.id }}"><td>' +
-        '<a href="javascript:upd_detail_reverse(' + detail_id + ',' +
-        "'" + dt1_place + "', '" + dt2_place + "', '" + dt3_place + "', '" + dt4_place + "', '" +
-        dt5_place + "', '" + dt1_name + "', '" + dt2_name + "', '" + dt3_name + "', '" +
-        dt4_name + "', '" + dt5_name + "', '" + dt_code + "', '" + dt_name + "', '" + dt_color + "'" +
-         ');"><button type="button" class="btn-sm btn-outline-secondary">Отм.</button></a></td>' +
-         '<td style="width:10px"><input name="dt_it_nm" placeholder="Арт." value="' +  dt_code + '"></td>' +
-         '<td><input name="dt_nm" placeholder="Название" value="' + dt_name + '"></td>' +
-         '<td><input name="dt_clr" placeholder="Цвет" value="' + dt_color + '"></td>');
-
-    if (dt1_place == 'True'){var checked = 'checked'} else {var checked = ''}
-    var html_code1 = (''+
-         '<td><input class="form-check-input" type="checkbox"' + checked + ' value="' + dt1_place +
-         '" name="flexCheck_det1_k"></td>'+
-         '<td><input name="dt1_nm" placeholder="Деталь 1" value="' + dt1_name + '"></td>');
-
-    if (dt2_place == 'True'){var checked = 'checked'} else {var checked = ''}
-    var html_code2 = (''+
-         '<td><input class="form-check-input" type="checkbox"' + checked + ' value="' + dt2_place +
-         '" name="flexCheck_det2_"></td>' +
-         '<td><input name="dt2_nm" placeholder="Деталь 2" value="' + dt2_name + '"></td>');
-
-    if (dt3_place == 'True'){var checked = 'checked'} else {var checked = ''}
-    var html_code3 = (''+
-         '<td><input class="form-check-input" type="checkbox"' + checked + ' value="' + dt3_place +
-         '" name="flexCheck_det3_"></td>' +
-         '<td><input name="dt3_nm" placeholder="Деталь 3" value="' + dt3_name + '"></td>');
-
-    if (dt4_place == 'True'){var checked = 'checked'} else {var checked = ''}
-    var html_code4 = (''+
-         '<td><input class="form-check-input" type="checkbox"' + checked + ' value="' + dt4_place +
-         '" name="flexCheck_det4_"></td>' +
-         '<td><input name="dt4_nm" placeholder="Деталь 4" value="' + dt4_name + '"></td>');
-
-    if (dt5_place == 'True'){var checked = 'checked'} else {var checked = ''}
-    var html_code5 = (''+
-         '<td><input class="form-check-input" type="checkbox"' + checked + ' value="' + dt5_place +
-         '" name="flexCheck_det5_"></td>' +
-         '<td><input name="dt5_nm" placeholder="Деталь 5" value="' + dt5_name + '"></td>');
-
-    var html_code6 = ('<td><button type="submit" class="btn-sm btn-outline-primary">' +
-    'Записать</button></td>');
-    var html_code = html_code0 + html_code1 + html_code2 + html_code3 + html_code4 + html_code5 +html_code6;
-
-    document.getElementById(line_number).innerHTML = html_code;
-}
-
-function upd_detail_reverse(detail_id, dt1_place, dt2_place, dt3_place, dt4_place, dt5_place, dt1_name,
-        dt2_name, dt3_name, dt4_name, dt5_name, dt_code, dt_name, dt_color){
-    var line_number = 'dtl_id_' + detail_id;
-    var html_code0 = ('<input type="hidden" class="form-control" name="detail_id" value="' + detail_id + '"><td>' +
-        '<a href="javascript:upd_detail(' +
-         + detail_id + ", '" + dt1_place + "', '" + dt2_place + "', '" + dt3_place +
-        "', '" + dt4_place + "', '" + dt5_place + "', '" + dt1_name + "', '" + dt2_name + "', '" + dt3_name +
-        "', '" + dt4_name + "', '" + dt5_name + "', '" + dt_code + "', '" + dt_name + "', '" + dt_color + "'" +
-        ');">' +
-        '<button type="button" class="btn-sm btn-outline-primary">Ред.</button></a></td>' +
-        '<td>' + dt_code + '</td>' +
-        '<td>' + dt_name + '</td>' +
-        '<td>' + dt_color + '</td>');
-    if (dt1_place == 'True'){var checked = 'checked'} else {var checked = ''}
-    var html_code1 = ('' +
-        '<td><input class="form-check-input" type="checkbox"  disabled ' + checked + ' value="'+
-        dt1_place + '"' + ' name="flexCheck_det1_"><td>' + dt1_name + '</td>');
-    if (dt2_place == 'True'){var checked = 'checked'} else {var checked = ''}
-    var html_code2 = ('' +
-        '<td><input class="form-check-input" type="checkbox"  disabled value="'+ dt2_place + '"' +
-        checked + ' name="flexCheck_det2_"><td>' + dt2_name + '</td>');
-    if (dt3_place == 'True'){var checked = 'checked'} else {var checked = ''}
-    var html_code3 = ('' +
-        '<td><input class="form-check-input" type="checkbox"  disabled value="'+ dt3_place + '"' +
-        checked + ' name="flexCheck_det3_"><td>' + dt3_name + '</td>');
-    if (dt4_place == 'True'){var checked = 'checked'} else {var checked = ''}
-    var html_code4 = ('' +
-        '<td><input class="form-check-input" type="checkbox"  disabled value="'+ dt4_place + '"' +
-        checked + ' name="flexCheck_det4_"><td>' + dt4_name + '</td>');
-    if (dt5_place == 'True'){var checked = 'checked'} else {var checked = ''}
-    var html_code5 = ('' +
-        '<td><input class="form-check-input" type="checkbox"  disabled value="'+ dt5_place + '"' +
-        checked + ' name="flexCheck_det5_"><td>' + dt5_name + '</td>');
-    var html_code6 = '';
-    var html_code = html_code0 +html_code1 + html_code2 + html_code3 + html_code4 + html_code5 +html_code6;
-
-    document.getElementById(line_number).innerHTML = html_code;
-
-}
-
 function upd_dtl(detail_id, clr_in){
     var red = 'red_' + detail_id;
     var it_nm = 'it_nm_' + detail_id;
@@ -422,4 +331,155 @@ function pen_position(id, pen_pos){
     document.getElementById(i+'_'+id).style.display = 'none';
     document.getElementById(i+'_big_'+id).style.display = 'none';}
     }
+}
+
+function upd_good(id, clr_schemes, print_group){
+   document.getElementById('row_' + id).onclick = "";
+   var clr_scheme ='[';
+   for(i=0; i<clr_schemes.length; i++){
+   clr_scheme += "'" + clr_schemes[i] +"',";
+   }
+   clr_scheme = clr_scheme.substring(0, clr_scheme.length - 1);
+   clr_scheme += ']';
+   var print_grp ='[';
+   for(i=0; i<print_group.length; i++){
+   print_grp += "'" + print_group[i] +"',";
+   }
+   print_grp = print_grp.substring(0, print_grp.length - 1);
+   print_grp += ']';
+   var art_ln = 'art_' + id;
+   var nm_ln = 'nm_' + id;
+   var cs_ln = 'cs_' + id;
+   var pg_ln = 'pg_' + id;
+   var dt1_ln = 'dt1_' + id;
+   var dt1c_ln = 'dt1c_' + id;
+   var dt2_ln = 'dt2_' + id;
+   var dt2c_ln = 'dt2c_' + id;
+   var dt3_ln = 'dt3_' + id;
+   var dt3c_ln = 'dt3c_' + id;
+   var dt4_ln = 'dt4_' + id;
+   var dt4c_ln = 'dt4c_' + id;
+   var dt5_ln = 'dt5_' + id;
+   var dt5c_ln = 'dt5c_' + id;
+   var art = document.getElementById(art_ln).textContent;
+   var nm = document.getElementById(nm_ln).textContent;
+   var cs = document.getElementById(cs_ln).textContent;
+   var pg = document.getElementById(pg_ln).textContent;
+   var dt1 = document.getElementById(dt1_ln).textContent;
+   var dt2 = document.getElementById(dt2_ln).textContent;
+   var dt3 = document.getElementById(dt3_ln).textContent;
+   var dt4 = document.getElementById(dt4_ln).textContent;
+   var dt5 = document.getElementById(dt5_ln).textContent;
+   document.getElementById(dt1c_ln).disabled=false;
+   document.getElementById(dt2c_ln).disabled=false;
+   document.getElementById(dt3c_ln).disabled=false;
+   document.getElementById(dt4c_ln).disabled=false;
+   document.getElementById(dt5c_ln).disabled=false;
+
+   var clr_numb = clr_schemes.length;
+   var clr_html = ('<div class="input-group"><select class="form-select" style="font-size:80%" id="ColorSelect_' + id
+                   + '" name="ColorSelect" form="form_' + id + '">');
+
+   for (var i = 0; i < clr_numb; i++){
+   if (clr_schemes[i] == cs){var selected = 'selected'}else{var selected = ''};
+   clr_html +=('<option value="' + clr_schemes[i] + '" ' + selected + ' name="ColorSelect_">' +
+   clr_schemes[i] + '</option>');
+   }
+   clr_html += '</select></div>';
+   document.getElementById(cs_ln).innerHTML = clr_html;
+
+   var prt_numb = print_group.length;
+   var prt_html = ('<div class="input-group"><select class="form-select" style="font-size:80%" id="PrtSelect_' + id
+                   + '" name="PrtSelect" form="form_' + id + '">');
+
+   for (var i = 0; i < prt_numb; i++){
+   if (print_group[i] == pg){var selected = 'selected'}else{var selected = ''};
+   prt_html +=('<option value="' + print_group[i] + '" ' + selected + ' name="PrtSelect_">' +
+   print_group[i] + '</option>');
+   }
+   prt_html += '</select></div>';
+   document.getElementById(pg_ln).innerHTML = prt_html;
+
+   document.getElementById(art_ln).innerHTML = '<div class="row"><div class="col" style="max-width:40px;"><div class="m-1">' +
+    '<a href="javascript:upd_good_reverse(' + id + ", '" + cs + "', '" + pg + "', " + clr_scheme + ", "  + print_grp +
+    "" + ');"><button class="btn btn-sm btn-outline-secondary" type="button">' +
+    '<i class="bi bi-arrow-counterclockwise"></i></button></a></div>' +
+    '<div class="m-1"><button class="btn btn-sm btn-outline-primary" type="submit" form="form_' + id + '">' +
+    '<i class="bi bi-check2"></i></button></div></div><div class="col">' +
+    '<textarea type="text" name="art" style="max-width:60px; font-size:80%;"' +
+                                    ' class="form-control" form="form_' + id + '">' + art + '</textarea></div></div>';
+   document.getElementById(nm_ln).innerHTML = '<textarea type="text" name="nm"' +
+                        '" class="form-control" style="font-size:100%;" form="form_' + id + '">' + nm + '</textarea>';
+   document.getElementById(dt1_ln).innerHTML = '<textarea type="text" name="dt1"' +
+                        '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt1 + '</textarea>';
+   document.getElementById(dt2_ln).innerHTML = '<textarea type="text" name="dt2"' +
+                        '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt2 + '</textarea>';
+   document.getElementById(dt3_ln).innerHTML = '<textarea type="text" name="dt3"' +
+                        '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt3 + '</textarea>';
+   document.getElementById(dt4_ln).innerHTML = '<textarea type="text" name="dt4"' +
+                        '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt4 + '</textarea>';
+   document.getElementById(dt5_ln).innerHTML = '<textarea type="text" name="dt5"' +
+                        '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt5 + '</textarea>';
+}
+
+function upd_good_reverse(id, cs, pg, clr_schemes, print_group){
+   var clr_scheme ='[';
+   for(i=0; i<clr_schemes.length; i++){
+   clr_scheme += "'" + clr_schemes[i] +"',";
+   }
+   clr_scheme = clr_scheme.substring(0, clr_scheme.length - 1);
+   clr_scheme += ']';
+   var print_grp ='[';
+   for(i=0; i<print_group.length; i++){
+   print_grp += "'" + print_group[i] +"',";
+   }
+   print_grp = print_grp.substring(0, print_grp.length - 1);
+   print_grp += ']';
+   document.getElementById('row_'+id).setAttribute('onclick','javascript:upd_good(' + id + ', ' + clr_scheme +
+                            ', ' + print_grp + ');');
+   var art_ln = 'art_' + id;
+   var nm_ln = 'nm_' + id;
+   var cs_ln = 'cs_' + id;
+   var pg_ln = 'pg_' + id;
+   var dt1_ln = 'dt1_' + id;
+   var dt1c_ln = 'dt1c_' + id;
+   var dt2_ln = 'dt2_' + id;
+   var dt2c_ln = 'dt2c_' + id;
+   var dt3_ln = 'dt3_' + id;
+   var dt3c_ln = 'dt3c_' + id;
+   var dt4_ln = 'dt4_' + id;
+   var dt4c_ln = 'dt4c_' + id;
+   var dt5_ln = 'dt5_' + id;
+   var dt5c_ln = 'dt5c_' + id;
+   var art = document.getElementById(art_ln).textContent;
+   var nm = document.getElementById(nm_ln).textContent;
+   var dt1 = document.getElementById(dt1_ln).textContent;
+   var dt2 = document.getElementById(dt2_ln).textContent;
+   var dt3 = document.getElementById(dt3_ln).textContent;
+   var dt4 = document.getElementById(dt4_ln).textContent;
+   var dt5 = document.getElementById(dt5_ln).textContent;
+   var dt1c = document.getElementById(dt1c_ln).checked;
+   var dt2c = document.getElementById(dt2c_ln).checked;
+   var dt3c = document.getElementById(dt3c_ln).checked;
+   var dt4c = document.getElementById(dt4c_ln).checked;
+   var dt5c = document.getElementById(dt5c_ln).checked;
+   document.getElementById(dt1c_ln).disabled = true;
+   document.getElementById(dt2c_ln).disabled = true;
+   document.getElementById(dt3c_ln).disabled = true;
+   document.getElementById(dt4c_ln).disabled = true;
+   document.getElementById(dt5c_ln).disabled = true;
+   document.getElementById(dt1c_ln).checked = dt1c;
+   document.getElementById(dt2c_ln).checked = dt2c;
+   document.getElementById(dt3c_ln).checked = dt3c;
+   document.getElementById(dt4c_ln).checked = dt4c;
+   document.getElementById(dt5c_ln).checked = dt5c;
+   document.getElementById(pg_ln).innerHTML = pg;
+   document.getElementById(cs_ln).innerHTML = cs;
+   document.getElementById(art_ln).innerHTML = art;
+   document.getElementById(nm_ln).innerHTML = nm;
+   document.getElementById(dt1_ln).innerHTML = dt1;
+   document.getElementById(dt2_ln).innerHTML = dt2;
+   document.getElementById(dt3_ln).innerHTML = dt3;
+   document.getElementById(dt4_ln).innerHTML = dt4;
+   document.getElementById(dt5_ln).innerHTML = dt5;
 }
