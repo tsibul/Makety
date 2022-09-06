@@ -714,6 +714,8 @@ def prt_imports(id, print_import):
     prt_115 = []
     prt_120 = []
     prt_121 = []
+    prt_0 = []
+    prt_0_ = []
     for print_item in print_import:
         item = print_item.item
         clr = item.detail1_color
@@ -722,6 +724,13 @@ def prt_imports(id, print_import):
         clr_sch = item.color_scheme
         clr_hex = Item_color.objects.get(color_scheme=clr_sch, color_id=clr)
         clr_hex = clr_hex.color_code
+        prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code,
+                       'svg' + print_item.item.item.print_group.code + '.html'])
+        prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 'svg' +
+                       print_item.item.item.print_group.code + '.html'])
+        context.update({'prt_0': prt_0})
+        context.update({'prt_0_': prt_0_})
+
         if '34' in item_code or '350' in item_code:
             prt_34_.append([print_item.id, clr_hex, clr])
             prt_34.append([print_item, clr_hex])
