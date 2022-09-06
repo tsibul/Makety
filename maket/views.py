@@ -678,6 +678,7 @@ def order_imports(id):
 def prt_imports(id, print_import):
     context = {}
     order_id = id
+    print_groups = Print_group.objects.all().order_by('code')
 
     prt_34_ = []
     prt_310_ = []
@@ -772,95 +773,65 @@ def prt_imports(id, print_import):
         elif ('701' in item_code) or ('702' in item_code) or ('711' in item_code) or ('712' in item_code):
             prt_701.append([print_item, clr_hex])
             prt_701_.append([print_item.id, clr_hex, clr])
-    items_34 = len(Item_imports.objects.filter(Q(order=order_id) & (Q(item_group__icontains='34') |
-                                                                    Q(item_group__icontains='350'))))
-    items_37 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='37')))
-    items_310 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='310')))
-    items_311 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='311')))
-    items_312 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='312')))
-    items_3A6 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3A6')))
-    items_3A5 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3A5')))
-    items_3A4 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3A4')))
-    items_3D5 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='3D5')))
-    items_101 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='101')))
-    items_102 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='102')))
-    items_105 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='105')))
-    items_115 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='115')))
-    items_120 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='120')))
-    items_121 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='121')))
-    items_703 = len(Item_imports.objects.filter(Q(order=order_id) & Q(item_group__icontains='703')))
-    items_701 = len(Item_imports.objects.filter(Q(order=order_id) & (Q(item_group__icontains='701') |
-                                                                     Q(item_group__icontains='702') | Q(
-                item_group__icontains='711') | Q(item_group__icontains='712'))))
+
     product_range = []
+    for print_group in print_groups:
+        items_prt = len(Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group)))
+        len_prt = len(Print_imports.objects.filter(Q(item__order=order_id) & Q(item__item__print_group=print_group)))
+        if items_prt != 0:
+            product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt])
+
     if len(prt_34) != 0:
         context.update({'prt_34': prt_34})
         context.update({'prt_34_': prt_34_})
-        product_range.append(['ProEcoPen', len(prt_34), 'prt_34', items_34])
     if len(prt_310) != 0:
         context.update({'prt_310': prt_310})
         context.update({'prt_310_': prt_310_})
-        product_range.append(['Зажим 65мм', len(prt_310), 'prt_310', items_310])
     if len(prt_311) != 0:
         context.update({'prt_311': prt_311})
         context.update({'prt_311_': prt_311_})
-        product_range.append(['Зажим 105мм', len(prt_311), 'prt_311', items_311])
     if len(prt_312) != 0:
         context.update({'prt_312': prt_312})
         context.update({'prt_312_': prt_312_})
-        product_range.append(['Зажим с ложкой', len(prt_312), 'prt_312', items_312])
     if len(prt_37) != 0:
         context.update({'prt_37': prt_37})
         context.update({'prt_37_': prt_37_})
-        product_range.append(['Чехол', len(prt_37), 'prt_37', items_37])
     if len(prt_3A6) != 0:
         context.update({'prt_3A6': prt_3A6})
         context.update({'prt_3A6_': prt_3A6_})
-        product_range.append(['Блокнот А6', len(prt_3A6), 'prt_3A6', items_3A6])
     if len(prt_3A5) != 0:
         context.update({'prt_3A5': prt_3A5})
         context.update({'prt_3A5_': prt_3A5_})
-        product_range.append(['Блокнот А5', len(prt_3A5), 'prt_3A5', items_3A5])
     if len(prt_3A4) != 0:
         context.update({'prt_3A4': prt_3A4})
         context.update({'prt_3A4_': prt_3A4_})
-        product_range.append(['Блокнот А4', len(prt_3A4), 'prt_3A5', items_3A4])
     if len(prt_3D5) != 0:
         context.update({'prt_3D5': prt_3D5})
         context.update({'prt_3D5_': prt_3D5_})
-        product_range.append(['Блокнот на дисках', len(prt_3D5), 'prt_3D5', items_3D5])
     if len(prt_101) != 0:
         context.update({'prt_101': prt_101})
         context.update({'prt_101_': prt_101_})
-        product_range.append(['Автомат', len(prt_101), 'prt_101', items_101])
     if len(prt_102) != 0:
         context.update({'prt_102': prt_102})
         context.update({'prt_102_': prt_102_})
-        product_range.append(['Эрроу', len(prt_102), 'prt_102', items_102])
     if len(prt_105) != 0:
         context.update({'prt_105': prt_105})
         context.update({'prt_105_': prt_105_})
-        product_range.append(['Болид', len(prt_105), 'prt_105', items_105])
     if len(prt_115) != 0:
         context.update({'prt_115': prt_115})
         context.update({'prt_115_': prt_115_})
-        product_range.append(['Прима', len(prt_115), 'prt_115', items_115])
     if len(prt_120) != 0:
         context.update({'prt_120': prt_120})
         context.update({'prt_120_': prt_120_})
-        product_range.append(['Спот', len(prt_120), 'prt_120', items_120])
     if len(prt_121) != 0:
         context.update({'prt_121': prt_121})
         context.update({'prt_121_': prt_121_})
-        product_range.append(['Спот Люкс', len(prt_121), 'prt_121', items_121])
     if len(prt_701) != 0:
         context.update({'prt_701': prt_701})
         context.update({'prt_701_': prt_701_})
-        product_range.append(['Каролина', len(prt_701), 'prt_701', items_701])
     if len(prt_703) != 0:
         context.update({'prt_703': prt_703})
         context.update({'prt_703_': prt_703_})
-        product_range.append(['Краваттоне', len(prt_703), 'prt_703', items_703])
 
     return [context, product_range]
 
