@@ -3,15 +3,17 @@
 {% block content %}
 <h5>Номенклатура</h5>
 <table class="table table-sm table-hover ms-1">
+<div class="fixed-top">
 <thead>
     <tr  class="table-primary">
     <th><h6>Арт</h6></th>
     <th style="min-width:480px;"><h6>Название</h6></th>
-    <th><h6>Цветовая группа</h6></th>
-    <th><h6>Группа печати</h6></th>
+    <th style="max-width:100px;"><h6>Цветовая группа</h6></th>
+    <th style="max-width:100px;"><h6>Группа печати</h6></th>
     <th colspan="10" class="text-center"><h6>Детали</h6></th>
     </tr>
 </thead>
+</div>
 <tbody>
 {% for good in goods %}
     <form action="update_goods/{{good.id}}" method="post" id="form_{{good.id}}">

@@ -925,7 +925,7 @@ def goods(request):
     for clr in clr_scheme:
         color_scheme.append(clr.scheme_name)
     print_group = []
-    prt_group = Print_group.objects.all()
+    prt_group = Print_group.objects.all().order_by('code')
     for prt in prt_group:
         print_group.append(prt.code)
 
