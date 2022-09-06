@@ -104,10 +104,6 @@
         <th scope="col" class="col-1" style="font-size:60%;"> Кол-во </th>
         <th scope="col" class="col-1" style="font-size:60%;"> Место  </th>
         <th colspan="4" scope="col" class="col-5" style="font-size:60%;">Тип / Цветов / 2-й проход / Положение </th>
-<!--          <th scope="col" class="col-2" style="font-size:60%;"> Тип </th>
-        <th colspan="2"  style="font-size:60%;"> Цветов / 2-й проход </th>
-        <th scope="col" class="col-1" style="font-size:60%;"> Положение </th> <--->
-
     </tr>
     </thead>
     <tbody>
@@ -148,154 +144,10 @@
 </table>
 </div>
 
-
 {% for product in product_range %}
-<div class="d-flex">
-    {% include product.4 %}
-</div>
-
-
-
-{% if 'prt_34' == product.2 %}
-<div class="d-flex">
-    {% include 'maket/svg/svg34.html' %}
-</div><!--340/350--->
-{% endif %}
-
-{% if 'prt_3A6' == product.2 %}
-<div class="d-flex">
-    {% include 'maket/svg/svg3A6.html' %}
-</div><!--Block Note A6--->
-{% endif %}
-
-{% if 'prt_3A5' == product.2 %}
-<div class="d-flex">
-    {% include 'maket/svg/svg3A5.html' %}
-</div><!--Block Note A5--->
-{% endif %}
-
-
-{% if 'prt_3D5' == product.2 %}
-<div class="d-flex">
-    {% include 'maket/svg/svg3D5.html' %}
-</div><!--Block Note D5--->
-{% endif %}
-
-{% if 'prt_701' == product.2 %}
-<div class="d-flex">
-    {% include 'maket/svg/svg701.html' %}
-</div><!--701, 702, 710, 711--->
-{% endif %}
-
-{% if 'prt_703' == product.2 %}
-<div class="d-flex">
-    {% include 'maket/svg/svg703.html' %}
-</div><!--703--->
-{% endif %}
-
-
-{% if 'prt_310' == product.2 %}
-<div class="d-flex">
-    {% include 'maket/svg/svg310.html' %}
-</div><!--Clip 65 mm--->
-{% endif %}
-
-{% if 'prt_311' == product.2 %}
-<div class="d-flex">
-    {% include 'maket/svg/svg311.html' %}
-</div><!--Clip 105 mm--->
-{% endif %}
-
-
-{% if 'prt_312' == product.2 %}
-<div class="d-flex">
-    {% include 'maket/svg/svg312.html' %}
-</div><!--Clip 140 mm--->
-{% endif %}
-
-{% if 'prt_37' == product.2 %}
-<div class="d-flex">
-    {% include 'maket/svg/svg37.html' %}
-</div><!--PhoneCase--->
-{% endif %}
-
-{% if 'prt_101' == product.2 %}
-<div class="d-flex">
-    {% include 'maket/svg/svg101.html' %}
-</div><!--Automat--->
-{% endif %}
-
-{% if 'prt_102' == product.2 %}
-<div class="d-flex">
-<div class="col p-1 m-1" id="prt_102">
-    <div class="m-2"><img src="{% static 'maket/img/Ruler.svg' %}" /></div>
-{% for prt in prt_102 %}
-    <div class="row lh-1 p-1 m-1">
-    <div class="col p-1 m-1" style="max-width:8mm;">{{prt.0.print_id}}</div>
-    <div class="col p-1 m-1">
-
+    <div class="d-flex">
+        {% include product.4 %}
     </div>
-    </div>
-{% endfor %}
-</div>
-</div><!--Arrow--->
-{% endif %}
-
-{% if 'prt_105' == product.2 %}
-<div class="d-flex">
-<div class="col p-1 m-1" id="prt_105">
-    <div class="m-2"><img src="{% static 'maket/img/Ruler.svg' %}" /></div>
-{% for prt in prt_105 %}
-    <div class="row lh-1 p-1 m-1">
-    <div class="col p-1 m-1" style="max-width:8mm;">{{prt.0.print_id}}</div>
-    <div class="col p-1 m-1">
-
-    </div>
-    </div>
-{% endfor %}
-</div>
-</div><!--Bolid--->
-{% endif %}
-
-{% if 'prt_115' == product.2 %}
-<div class="d-flex">
-    {% include 'maket/svg/svg115.html' %}
-</div><!--Prima--->
-{% endif %}
-
-{% if 'prt_120' == product.2 %}
-<div class="d-flex">
-<div class="col p-1 m-1" id="prt_120">
-    <div class="m-2"><img src="{% static 'maket/img/Ruler.svg' %}" /></div>
-{% for prt in prt_120 %}
-    <div class="row lh-1 p-1 m-1">
-    <div class="col p-1 m-1" style="max-width:8mm;">{{prt.0.print_id}}</div>
-    <div class="col p-1 m-1">
-
-    </div>
-    </div>
-{% endfor %}
-</div>
-</div><!--Spot--->
-{% endif %}
-
-{% if 'prt_121' == product.2 %}
-<div class="d-flex">
-<div class="col p-1 m-1" id="prt_121">
-    <div class="m-2"><img src="{% static 'maket/img/Ruler.svg' %}" /></div>
-{% for prt in prt_121 %}
-    <div class="row lh-1 p-1 m-1">
-    <div class="col p-1 m-1" style="max-width:8mm;">{{prt.0.print_id}}</div>
-    <div class="col p-1 m-1">
-
-    </div>
-    </div>
-{% endfor %}
-</div>
-</div><!--Spot Lux--->
-{% endif %}
-
-
 {% endfor %}
 </div>
 
