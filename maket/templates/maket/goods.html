@@ -22,12 +22,23 @@
           <div class="col p-1">
               <input type="text" class="form-control" name="dt_it_nm" placeholder="Наименование"></div>
           <div class="row p-1">
-              <div class="col-4"><label for="dt_it_art">Цветовая схема</label></div>
+              <div class="col-4"><label for="dt_it_clr">Цветовая схема</label></div>
               <div class="col-8">
-              <select class="form-select" name="dt_it_art" id="dt_it_art"  aria-label="select color">
+              <select class="form-select" name="dt_it_clr" id="dt_it_clr"  aria-label="select color">
                   <option value="blank" selected></option>
               {% for clr in color_scheme %}
                   <option value="{{clr}}">{{clr}}</option>
+              {% endfor %}
+              </select>
+              </div>
+          </div>
+          <div class="row p-1">
+              <div class="col-4"><label for="dt_it_pg">Группа печати</label></div>
+              <div class="col-8">
+              <select class="form-select" name="dt_it_pg" id="dt_it_pg"  aria-label="select print group">
+                  <option value="blank" selected></option>
+              {% for pr_g in print_group %}
+                  <option value="{{pr_g}}">{{pr_g}}</option>
               {% endfor %}
               </select>
               </div>
