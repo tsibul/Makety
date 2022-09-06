@@ -458,27 +458,21 @@ function upd_good_reverse(id, cs, pg, clr_schemes, print_group){
    var dt3 = document.getElementById(dt3_ln).textContent;
    var dt4 = document.getElementById(dt4_ln).textContent;
    var dt5 = document.getElementById(dt5_ln).textContent;
-   var dt1c = document.getElementById(dt1c_ln).value;
-   var dt2c = document.getElementById(dt2c_ln).value;
-   var dt3c = document.getElementById(dt3c_ln).value;
-   var dt4c = document.getElementById(dt4c_ln).value;
-   var dt5c = document.getElementById(dt5c_ln).value;
+   var dt1c = document.getElementById(dt1c_ln).checked;
+   var dt2c = document.getElementById(dt2c_ln).checked;
+   var dt3c = document.getElementById(dt3c_ln).checked;
+   var dt4c = document.getElementById(dt4c_ln).checked;
+   var dt5c = document.getElementById(dt5c_ln).checked;
    document.getElementById(dt1c_ln).disabled = true;
    document.getElementById(dt2c_ln).disabled = true;
    document.getElementById(dt3c_ln).disabled = true;
    document.getElementById(dt4c_ln).disabled = true;
    document.getElementById(dt5c_ln).disabled = true;
-   if(dt1c=='True'){
-   document.getElementById(dt1c_ln).checked = true;}
-   else{document.getElementById(dt1c_ln).checked = false;};
-   if(dt2c=='True'){
-   document.getElementById(dt2c_ln).checked = true;}
-   else{document.getElementById(dt2c_ln).checked = false;};
-   if(dt3c=='True'){
-   document.getElementById(dt3c_ln).checked = true;}
-   else{document.getElementById(dt3c_ln).checked = false;};
-
-
+   document.getElementById(dt1c_ln).checked = dt1c;
+   document.getElementById(dt2c_ln).checked = dt2c;
+   document.getElementById(dt3c_ln).checked = dt3c;
+   document.getElementById(dt4c_ln).checked = dt4c;
+   document.getElementById(dt5c_ln).checked = dt5c;
    document.getElementById(pg_ln).innerHTML = pg;
    document.getElementById(cs_ln).innerHTML = cs;
    document.getElementById(art_ln).innerHTML = art;
