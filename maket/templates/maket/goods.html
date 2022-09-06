@@ -7,6 +7,101 @@
               Добавить Номенклатуру
 </button></div>
 </div>
+<!-- Modal --> <form id="add_detail" action="{% url 'maket:add_detail' %}" method="post">
+{% csrf_token %}
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Добавление состава</h5>
+      </div>
+      <div class="modal-body">
+         <!--  --->
+          <div class="col p-1">
+              <input type="text" class="form-control" name="dt_it_art" placeholder="Артикул"></div>
+          <div class="col p-1">
+              <input type="text" class="form-control" name="dt_it_nm" placeholder="Наименование"></div>
+          <div class="row p-1">
+              <div class="col-4"><label for="dt_it_art">Цветовая схема</label></div>
+              <div class="col-8">
+              <select class="form-select" name="dt_it_art" id="dt_it_art"  aria-label="select color">
+                  <option value="blank" selected></option>
+              {% for clr in color_scheme %}
+                  <option value="{{clr}}">{{clr}}</option>
+              {% endfor %}
+              </select>
+              </div>
+          </div>
+          <div class="row p-1">
+            <div class="col-8">
+                <input type="text" class="form-control" name="dt1_nm" placeholder="Деталь 1"></div>
+            <div class="col align-right">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det1"  name="flexCheck_det1">
+              <label class="form-check-label" for="flexCheck_det1" >
+                нанесение
+              </label>
+            </div>
+            </div>
+          </div>
+          <div class="row p-1">
+            <div class="col-8">
+                <input type="text" class="form-control" name="dt2_nm" placeholder="Деталь 2"></div>
+            <div class="col align-right">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det2" name="flexCheck_det2">
+              <label class="form-check-label" for="flexCheck_det2">
+                нанесение
+              </label>
+            </div>
+            </div>
+          </div>
+           <div class="row p-1">
+            <div class="col-8">
+                <input type="text" class="form-control" name="dt3_nm" placeholder="Деталь 3"></div>
+            <div class="col align-right">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="True"  id="flexCheck_det3" name="flexCheck_det3">
+              <label class="form-check-label" for="flexCheck_det3">
+                нанесение
+              </label>
+            </div>
+            </div>
+           </div>
+           <div class="row p-1">
+            <div class="col-8">
+                <input type="text" class="form-control" name="dt4_nm" placeholder="Деталь 4"></div>
+            <div class="col align-right">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det4" name="flexCheck_det4">
+              <label class="form-check-label" for="flexCheck_det4">
+                нанесение
+              </label>
+            </div>
+            </div>
+            </div>
+           <div class="row p-1">
+            <div class="col-8">
+                <input type="text" class="form-control" name="dt5_nm" placeholder="Деталь 5"></div>
+            <div class="col align-right">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det5"  name="flexCheck_det5">
+              <label class="form-check-label" for="flexCheck_det5">
+                нанесение
+              </label>
+            </div>
+            </div>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+
 <table class="table table-sm table-hover ms-1">
 <thead>
     <tr  class="table-primary">
