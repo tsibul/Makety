@@ -112,15 +112,7 @@
     </thead>
     <tbody>
 {% for item in item_import %}
-    {% if '34' in item.item_group or '350' in item.item_group %}
-    <tr class="lh-1" id="prt_34_">
-    {% elif '37' in item.item_group %}
-    <tr class="lh-1" id="prt_37_">
-    {% elif '711' in item.item_group or '712' in item.item_group or '702' in item.item_group %}
-    <tr class="lh-1" id="prt_701_">
-    {% else %}
-    <tr class="lh-1" id="prt_{{item.item_group}}_">
-    {% endif %}
+    <tr class="lh-1" id="prt_{{item.item.print_group}}_">
         <td scope="row" class="col text-center" style="max-width:4mm; font-size:60%;"> {{item.print_id}} </td>
         <td scope="col" class="col-1 text-center" style="font-size:60%;"> {{item.code}} </td>
         <td scope="col" class="col-3" style="font-size:60%;"> {{item.name}}</td>
