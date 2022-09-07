@@ -632,7 +632,7 @@ def prt_imports(id, print_import):
         len_prt = len(Print_imports.objects.filter(Q(item__order=order_id) & Q(item__item__print_group=print_group)))
         if items_prt != 0:
             product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
-                                  'maket/svg/svg' +йprint_group.code + '.html', print_group.code])
+                                  'maket/svg/svg' +print_group.code + '.html', print_group.code])
     context.update({'print_groups': print_groups})
     return [context, product_range]
 
