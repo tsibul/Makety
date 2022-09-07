@@ -60,7 +60,7 @@
     </th>
 </tr>
 </thead>
-<tbody id="collapse_5" >
+<tbody id="collapse_5" style="display:none;">
 {% for clr in color %}
 <form action="update_clr/{{ clr.id }}" method="post">
 {% csrf_token %}
