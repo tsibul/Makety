@@ -23,6 +23,7 @@ class Print_group(models.Model):
     """code for similar shapes of items"""
     code = models.CharField(max_length=6, default=0)
     name = models.CharField(max_length=255)
+    layout = models.CharField(max_length=120, blank=True, default='')
 
     def __repr__(self):
         return self.code
