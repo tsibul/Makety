@@ -10,17 +10,18 @@
     <!-- Bootstrap core CSS -->
     <link href="{% static 'maket/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
 
-    <title>Title</title>
+    <title>311</title>
 </head>
 <body>
 
-<div class="row p-1 m-1" id="prt_311">
+<div class="row p-1 m-1" id="prt_{{product.5}}">
 <div class="col lh-1 p-1 m-1"  >
     <div class="m-2"><img src="{% static 'maket/img/Ruler.svg' %}" /></div>
 
 <div>
-{% for prt in prt_311 %}
-    <div class="col p-1 m-1" id="itm_311_{{prt.0.id}}" style="display:none;">
+{% for prt in prt_0 %}
+{% if prt.2 ==  product.5 %}
+    <div class="col p-1 m-1" id="itm_{{product.5}}_{{prt.0.id}}" style="display:none;">
     <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="221mm" height="13mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
     viewBox="0 0 22100 1300" xmlns:xlink="http://www.w3.org/1999/xlink">
      <g id="Слой_x0020_1">
@@ -45,15 +46,17 @@
      </g>
     </svg>
     </div>
+{% endif %}
 {% endfor %}
 </div>
 </div>
 
 <div class="col p-1 m-1">
-{% for prt in prt_311 %}
+{% for prt in prt_0 %}
+{% if prt.2 ==  product.5 %}
     <div class="d-flex flex-row lh-1">
       <div class="col" style="font-size:60%;">
-        <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_311_{{prt.0.id}}"
+        <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_{{product.5}}_{{prt.0.id}}"
                 form="form_maket_{{ord_imp.id}}">
       </div>
       <div class="col" style="font-size:60%;">&nbsp{{prt.0.print_id}}&nbsp</div>
@@ -84,18 +87,18 @@
     </svg>
       </div>
     </div>
-
+{% endif %}
 {% endfor %}
     <div class="d-flex flex-row lh-1">
      <div class="col d-print-none" style="font-size:60%;">
-        <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_311_all"
+        <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_{{product.5}}_all"
                 form="form_maket_{{ord_imp.id}}">
       </div>
       <div class="col" style="font-size:60%;">выбрать все</div>
     </div>
 
     <div class="d-print-none p-1 m-1">
-        <a href="javascript:chs_note({{prt_0_}},'311');">
+        <a href="javascript:chs_note({{prt_0_}},'{{product.5}}');">
             <button type="button" class="btn-sm btn-outline-primary">в макет</button> </a>
     </div>
 </div>

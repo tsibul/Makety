@@ -14,12 +14,12 @@
 </head>
 <body>
 
-<div class="col p-1 m-1" id="prt_3A6">
+<div class="col p-1 m-1" id="prt_{{product.5}}">
 <div class="d-flex flex-row justify-content-start">
     <div class="p-1 m-1">
     <div class="row">
     <div class="col" style="font-size:60%;">
-        <input  class="form-check-input" type="checkbox" name="chck_3A6_0" id="chck_3A6_0"
+        <input  class="form-check-input" type="checkbox" name="chck_{{product.5}}_0" id="chck_{{product.5}}_0"
                 form="form_maket_{{ord_imp.id}}">
     </div>
       <div class="col" style="font-size:60%;">блок</div></div>
@@ -1696,11 +1696,12 @@
      </g>
     </svg>
     </div>
-{% for prt in prt_3A6 %}
+{% for prt in prt_0 %}
+{% if prt.2 ==  product.5 %}
     <div class="p-1 m-1">
     <div class="d-flex flex-row justify-content-around">
       <div class="col" style="font-size:60%;">
-        <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_3A6_{{prt.0.id}}"
+        <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_{{product.5}}_{{prt.0.id}}"
                 form="form_maket_{{ord_imp.id}}">
       </div>
       <div class="col" style="font-size:60%;">{{prt.0.print_id}}</div>
@@ -1749,15 +1750,16 @@
         </svg>
      </div>
     </div>
+{% endif %} 
 {% endfor %}
     <div class="d-print-none">
-        <a href="javascript:chs_note({{prt_0_}},'3A6');">
+        <a href="javascript:chs_note({{prt_0_}},'{{product.5}}');">
             <button type="button" class="btn-sm btn-outline-primary">в макет</button> </a>
     </div>
 </div>
     <div class="m-2"><img src="{% static 'maket/img/Ruler.svg' %}" /></div>
 <div class="d-flex flex-row lh-1 mb-3">
-    <div class="p-1 m-1" style="display:none;" id="itm_3A6_0">
+    <div class="p-1 m-1" style="display:none;" id="itm_{{product.5}}_0">
       <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="105mm" height="148mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
     viewBox="0 0 10500 15000"
      xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -3431,9 +3433,9 @@
      </g>
     </svg>
     </div>
-{% for prt in prt_3A6 %}
-<!--    <div class="col p-1 m-1" style="max-width:8mm;">{{prt.0.print_id}}</div><--->
-    <div class="p-1 m-1" style="display:none;" id="itm_3A6_{{prt.0.id}}">
+{% for prt in prt_0 %}
+{% if prt.2 ==  product.5 %}
+    <div class="p-1 m-1" style="display:none;" id="itm_{{product.5}}_{{prt.0.id}}">
         <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="105mm" height="150mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
              viewBox="0 0 10500 15000" xmlns:xlink="http://www.w3.org/1999/xlink">
          <g id="Слой_x0020_1">
@@ -3475,6 +3477,7 @@
          </g>
         </svg>
     </div>
+{% endif %} 
 {% endfor %}
 </div>
 </div>
