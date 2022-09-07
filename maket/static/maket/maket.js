@@ -272,7 +272,11 @@ function split_maket(print_range){
     }
 }}
 
-function chs_note(prt_3A6, note){
+function chs_note(prt_0_, note){
+    const prt_3A6 = [];
+    for(i=0; i<prt_0_.length; i++){
+    if(prt_0_[i][3]==note){prt_3A6.push(prt_0_[i])}
+    }
     var number_items = prt_3A6.length;
     try{if(document.getElementById(('chck_'+ note + '_all')).checked){
     for(i=0; i<number_items; i++){var itm_id = 'itm_' + note + '_' + prt_3A6[i][0];
