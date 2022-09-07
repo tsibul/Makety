@@ -648,7 +648,7 @@ def maket_print(request, id):
     product_range = prt_imports(order_id, print_import)[1]
     context_imp = prt_imports(order_id, print_import)[0]
     context.update({'product_range': product_range})
-    context = context | context_imp
+    context.update(context_imp)
 
     return render(request, 'maket/maket_print.html', context)
 
