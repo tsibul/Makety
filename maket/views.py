@@ -778,7 +778,7 @@ def upd_pg(request, id):
 
 def add_pg(request):
     cd = request.POST['cd']
-    nm = request.POST['nm']
+    nm = request.POST['pg']
     ly = request.POST['ly']
     pg = Print_group(code=cd, name=nm, layout=ly)
     pg.save()
