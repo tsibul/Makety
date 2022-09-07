@@ -36,5 +36,7 @@ urlpatterns = [
     path('maket_print/update_maket/<int:id>', views.update_maket, name='update_maket'),
     path('goods', views.goods, name='goods'),
     path('update_goods/<int:id>', views.upd_goods, name='update_goods'),
+    path('update_pg/<int:id>', views.upd_pg, name='update_pg'),
+    path('add_pg', views.add_pg, name='add_pg'),
 
 ]

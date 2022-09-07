@@ -75,9 +75,10 @@ def dicts(request):
     print_type = Print_type.objects.all()
     print_place = Print_place.objects.all()
     print_position = Print_position.objects.all()
+    print_group = Print_group.objects.all()
 
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
-               'print_position': print_position, 'color': color, 'active2': 'active'}
+               'print_position': print_position, 'color': color, 'active2': 'active', 'print_group': print_group}
     return render(request, 'maket/dicts.html', context)
 
 
@@ -762,3 +763,23 @@ def upd_goods(request, id):
     item.detail5_place = detail5_place
     item.save()
     return HttpResponseRedirect(reverse('maket:goods'))
+
+
+def upd_pg(request, id):
+    pg = Print_group.objects.get(id=id)
+    cd = request.POST['pg_cd']
+    pg.code = cd
+    nm = request.POST['pg_nm']
+    pg.name = nm
+    ly = request.POST['pg_ly']
+    pg.layout = ly
+    pg.save()
+    return HttpResponseRedirect(reverse('maket:dicts'))
+
+def add_pg(request):
+    cd = request.POST['cd']
+    nm = request.POST['nm']
+    ly = request.POST['ly']
+    pg = Print_group(code=cd, name=nm, layout=ly)
+    pg.save()
+    return HttpResponseRedirect(reverse('maket:dicts'))
