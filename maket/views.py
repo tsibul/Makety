@@ -669,7 +669,7 @@ def update_maket(request, id):
                        order_date=ord_imp.order_date, date_modified=datetime.date.today())
     maket.save()
     for pr_rg in product_range:
-        prt = 'chck_' + pr_rg[5]
+        prt = 'chck_prt_' + pr_rg[5]
         itemgroup = pr_rg[5]
         for item in item_import:
             if itemgroup == item.item.print_group.code:
@@ -677,9 +677,9 @@ def update_maket(request, id):
                 break
         itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first()
         try:
-            item_checked = Itemgroup_in_Maket.objects.get(item=itemgroup)
+            item_checked = Itemgroup_in_Maket.objects.get(Q(item=itemgroup) & Q(maket=maket))
         except:
-            item_checked = Itemgroup_in_Maket(item=itemgroup)
+            item_checked = Itemgroup_in_Maket(item=itemgroup, maket=maket)
         item_checked.print_name = print_name
         try:
             sel_item = request.POST[prt]
@@ -690,12 +690,23 @@ def update_maket(request, id):
             all_checked = False
         item_checked.maket = maket
         item_checked.save()
-
     if all_checked:
         ord_imp.maket_status = 'R'
     else:
         ord_imp.maket_status = 'P'
     ord_imp.save()
+    for pi in print_import:
+        try:
+            pr_in_maket = Print_in_Maket.objects.get(Q(print_item=pi)&Q(maket=maket))
+        except:
+            pr_in_maket = Print_in_Maket(print_item=pi, maket=maket)
+        chck = 'chck_' + str(pi.id)
+        try:
+            pi_maket = request.POST['chck']
+            pr_in_maket.checked = True
+        except:
+            pr_in_maket.checked = False
+        pr_in_maket.save()
     return HttpResponseRedirect(reverse('maket:maket_print', args=[id]))
 
 
