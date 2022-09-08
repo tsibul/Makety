@@ -3,12 +3,12 @@
 {% block content %}
 {% include 'maket/reload.html' %}
 
-<div class="p-1 m-1"> <h5>
+<div class="p-1 m-1"> <h5>Список Заказов &nbsp;
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
     Загрузить заказ
 </button><!-- Button trigger modal -->
-&nbsp Список Заказов</h5></div>
+</h5></div>
 
 <!-- Modal -->
 <form id="import_order" action="{% url 'maket:import_order' %}" method="post" enctype="multipart/form-data">
@@ -40,7 +40,16 @@
     <tbody >
     {% for ord in orders %}
     <tr onclick="window.location.href='{{ord.id}}'" class="align-middle" >
-
+        <td class="text-end fw-bold" style="font-size:120%">
+            <div
+            {%  if ord.maket_status == 'R' %}
+                   class="text-success">R
+            {% elif ord.maket_status == 'P' %}
+                    >P
+            {% elif ord.maket_status == 'N' %}
+                    class="text-danger">N
+            {% endif %}
+            </div>
         <td >{{ord.order_id}}</td>
         <td>{{ord.order_date|date:'d.m.Y'}}</td>
 {% if 'Сувенир' in ord.supplier %}
@@ -62,17 +71,7 @@
         {% else %}
             <td class="align-middle"><input class="form-check-input" type="checkbox" checked disabled></td>
         {% endif %}--->
-        <td class="text-end fw-bold" style="font-size:120%">
-            <div
-            {%  if ord.maket_status == 'R' %}
-                   class="text-success">R
-            {% elif ord.maket_status == 'P' %}
-                    >P
-            {% elif ord.maket_status == 'N' %}
-                    class="text-danger">N
-            {% endif %}
-            </div>
-        </td>
+         </td>
         <td class="align-middle"><a href="delete_order/{{ ord.id }}">
             <button type="submit" class="btn btn-sm btn-outline-danger" style="font-size:80%;">Удалить</button>
         </a></td>
