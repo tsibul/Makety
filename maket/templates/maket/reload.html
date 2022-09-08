@@ -25,7 +25,7 @@
         <form action="maket_print/{{ord_imp.id}}" method="post">
         {% csrf_token %}
         <button class="btn btn-sm btn-outline-primary d-print-none" type="submit" formtarget="_blank">
-            <i class="bi bi-printer-fill" style="currentColor"></i>Печатать макет</button>
+            <i class="bi bi-printer-fill" style="currentColor"></i>Шаблон макета</button>
         </form>
     </div>
     <div class="fw-bold m-2">ЗАКАЗ {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
@@ -40,11 +40,8 @@
     <div class="m-2" style="font-size:80%;"></div>
     <div class="text-center m-2" style="font-size:80%;">
     <label for="filmstatus" style="font-size:80%;">без ошибок</label>
-    {% if ord_imp.film_status %}
-    <input class="form-check-input align-middle" type="checkbox" checked disabled name="filmstatus">
-    {% else %}
-    <input class="form-check-input align-middle" type="checkbox" disabled name="filmstatus">
-    {% endif %}
+    <input class="form-check-input align-middle" type="checkbox"
+           {% if ord_imp.film_status %} checked {% endif %} disabled name="filmstatus" id="filmstatus">
     </div>
     </div>
 
