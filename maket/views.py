@@ -75,7 +75,7 @@ def dicts(request):
     print_type = Print_type.objects.all()
     print_place = Print_place.objects.all()
     print_position = Print_position.objects.all()
-    print_group = Print_group.objects.all()
+    print_group = Print_group.objects.all().order_by('code')
 
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
                'print_position': print_position, 'color': color, 'active2': 'active', 'print_group': print_group}
@@ -702,7 +702,7 @@ def update_maket(request, id):
             pr_in_maket = Print_in_Maket(print_item=pi, maket=maket)
         chck = 'chck_' + str(pi.id)
         try:
-            pi_maket = request.POST['chck']
+            pi_maket = request.POST[chck]
             pr_in_maket.checked = True
         except:
             pr_in_maket.checked = False
@@ -724,6 +724,7 @@ def goods(request):
 
     context = {'navi': navi, 'goods': goods, 'active6': 'active', 'color_scheme': color_scheme, 'print_group': print_group}
     return render(request, 'maket/goods.html', context)
+
 
 def upd_goods(request, id):
     item = Detail_set.objects.get(id=id)
@@ -782,15 +783,19 @@ def upd_pg(request, id):
     pg.code = cd
     nm = request.POST['pg_nm']
     pg.name = nm
+    op = request.POST['pg_op']
+    pg.options = op
     ly = request.POST['pg_ly']
     pg.layout = ly
     pg.save()
     return HttpResponseRedirect(reverse('maket:dicts'))
 
+
 def add_pg(request):
     cd = request.POST['cd']
     nm = request.POST['pg']
+    op = request.POST['op']
     ly = request.POST['ly']
-    pg = Print_group(code=cd, name=nm, layout=ly)
+    pg = Print_group(code=cd, name=nm, layout=ly, options=op)
     pg.save()
     return HttpResponseRedirect(reverse('maket:dicts'))
