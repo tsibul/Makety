@@ -669,13 +669,13 @@ def update_maket(request, id):
                        order_date=ord_imp.order_date, date_modified=datetime.date.today())
     maket.save()
     for pr_rg in product_range:
-        prt = 'chck_' + pr_rg[2]
-        itemgroup = pr_rg[2][4:len(prt)+1]
+        prt = 'chck_' + pr_rg[5]
+        itemgroup = pr_rg[5]
         for item in item_import:
-            if itemgroup in item.code:
+            if itemgroup == item.item.print_group.code:
                 print_name = item.print_name
                 break
-        itemgroup = Detail_set.objects.filter(item_name__icontains=itemgroup).first()
+        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first()
         try:
             item_checked = Itemgroup_in_Maket.objects.get(item=itemgroup)
         except:
@@ -696,7 +696,7 @@ def update_maket(request, id):
     else:
         ord_imp.maket_status = 'P'
     ord_imp.save()
-    return HttpResponse()
+    return HttpResponseRedirect(reverse('maket:maket_print', args=[id]))
 
 
 def goods(request):
