@@ -236,6 +236,7 @@ class Print_in_Maket(models.Model):
     print_item = models.ForeignKey(Print_imports, models.SET_NULL, null=True, blank=True)
     maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
     checked = models.BooleanField(default=True)
+    option = models.SmallIntegerField(default=1)
 
 
 class Films(models.Model):
