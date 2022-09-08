@@ -706,6 +706,12 @@ def update_maket(request, id):
             pr_in_maket.checked = True
         except:
             pr_in_maket.checked = False
+        if pi.item.item.print_group.options > 1:
+            pen_pos = 'pen_pos_' + str(pi.id)
+            option = request.POST[pen_pos]
+            pr_in_maket.option = option
+        else:
+            pr_in_maket.option = 0
         pr_in_maket.save()
     return HttpResponseRedirect(reverse('maket:maket_print', args=[id]))
 
