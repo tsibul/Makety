@@ -26,9 +26,10 @@
     <label for="maket_id_{{ord_imp.id}}">номер макета</label>
     </div>
     <div class="col">
-    <select class="form-select" id="maket_id_{{ord_imp.id}}">
+    <select class="form-select" id="maket_id_{{ord_imp.id}}" onchange="location = this.options[this.selectedIndex].value;">
         {% for mk_id_l in maket_id_list %}
-        <option value="{{mk_id_l}}">{{mk_id_l}}</option>
+        <option value="{% url 'maket:maket_print' id=ord_imp.id mk_id=mk_id_l %}"
+                {% if mk_id == mk_id_l %} selected {% endif %}>{{mk_id_l}}</option>
         {% endfor %}
     </select>
     </div>
@@ -116,7 +117,9 @@
     </thead>
     <tbody>
 {% for item in item_import %}
-    <tr class="lh-1" id="prt_{{item.item.print_group}}_">
+    <tr class="lh-1" id="prt_{{item.item.print_group.code}}_"
+        {% for prod in product_range %}{% if prod.5 == item.item.print_group.code and prod.6 == 0 %}
+         style="display:none;" {% endif %}{% endfor %}>
         <td scope="row" class="col text-center" style="max-width:4mm; font-size:60%;"> {{item.print_id}} </td>
         <td scope="col" class="col-1 text-center" style="font-size:60%;"> {{item.code}} </td>
         <td scope="col" class="col-3" style="font-size:60%;"> {{item.name}}</td>
