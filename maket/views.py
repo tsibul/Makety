@@ -668,9 +668,9 @@ def maket_print(request, id, mk_id):
     maket_id_list = []
     for mk in mkt:
       maket_id_list.append(mk.maket_id)
-    if len(maket_id_list) == 0:
-        maket_id_list = [1]
-    context.update({'maket_id_list': maket_id_list})
+#    if len(maket_id_list) == 0:
+#       maket_id_list = [1]
+    context.update({'maket_id_list': maket_id_list, 'len_maket': len(maket_id_list)+1})
     try:
         maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
         itemgroup_in_maket = Itemgroup_in_Maket.objects.filter(maket=maket)

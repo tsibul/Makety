@@ -31,6 +31,8 @@
         <option value="{% url 'maket:maket_print' id=ord_imp.id mk_id=mk_id_l %}"
                 {% if mk_id == mk_id_l %} selected {% endif %}>{{mk_id_l}}</option>
         {% endfor %}
+        <option value="{% url 'maket:maket_print' id=ord_imp.id mk_id=len_maket %}"
+                {% if len_maket == 1 %} selected {% endif %}> новый </option>
     </select>
     </div>
     <div class="col text-nowrap">
