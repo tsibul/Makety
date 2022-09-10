@@ -256,8 +256,7 @@ function split_maket(print_range){
     var number_items = print_range.length;
     for(i=0; i<number_items; i++){
     var line = 'chck_' + print_range[i][2]
-    if(document.getElementById(line).checked){if (print_range[i][2] == 'prt_3A6' ||
-     print_range[i][2] == 'prt_3A5' || print_range[i][2] == 'prt_3D5' || print_range[i][2] == 'prt_37'){
+    if(document.getElementById(line).checked){if (print_range[i][8] == 'note'){
     document.getElementById(print_range[i][2]).style.display='block';}
     else{document.getElementById(print_range[i][2]).style.display='inherit';};
     var hd_line = print_range[i][2] + '_';

@@ -641,10 +641,12 @@ def prt_imports(id, print_import, ord_imp, mk_id):
                 else:
                     ig_ch = 0
                 product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
-                              'maket/svg/svg' + print_group.code + '.html', print_group.code, ig_ch])
+                                    'maket/svg/svg' + print_group.code + '.html', print_group.code, ig_ch,
+                                      print_group.options, print_group.layout])
             except:
                 product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
-                                      'maket/svg/svg' + print_group.code + '.html', print_group.code, 1])
+                                      'maket/svg/svg' + print_group.code + '.html', print_group.code, 1,
+                                      print_group.options, print_group.layout])
 
     context.update({'print_groups': print_groups})
     return [context, product_range]
@@ -685,11 +687,12 @@ def maket_print(request, id, mk_id):
 
 
 def update_maket(request, id):
+    maket_id = request.POST['maket_id']
     ord_imp = order_imports(id)[0]
     item_import = order_imports(id)[1]
     print_import = order_imports(id)[2]
     order_id = ord_imp.id
-    product_range = prt_imports(order_id, print_import)[1]
+    product_range = prt_imports(order_id, print_import, ord_imp, maket_id)[1]
     maket_id = request.POST['maket_id']
     all_checked = True
     try:
@@ -744,7 +747,7 @@ def update_maket(request, id):
         else:
             pr_in_maket.option = 0
         pr_in_maket.save()
-    return HttpResponseRedirect(reverse('maket:maket_print', args=[id, mk_id]))
+    return HttpResponseRedirect(reverse('maket:maket_print', args=[id, maket_id]))
 
 
 def goods(request):
