@@ -626,7 +626,7 @@ def prt_imports(id, print_import, ord_imp, mk_id):
         try:
             maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
             try:
-                pt = Print_in_Maket.objects.get(Q(maket__id=mk_id)&Q(print_item=print_item))
+                pt = Print_in_Maket.objects.get(Q(maket=maket) & Q(print_item=print_item))
                 if pt.checked:
                     pt_0 = 1
                 else:
