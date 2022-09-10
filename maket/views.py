@@ -623,8 +623,23 @@ def prt_imports(id, print_import, ord_imp, mk_id):
         clr_sch = item.color_scheme
         clr_hex = Item_color.objects.get(color_scheme=clr_sch, color_id=clr)
         clr_hex = clr_hex.color_code
-        prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code])
-        prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code])
+        try:
+            maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
+            try:
+                pt = Print_in_Maket.objects.get(Q(maket__id=mk_id)&Q(print_item=print_item))
+                if pt.checked:
+                    pt_0 = 1
+                else:
+                    pt_0 = 0
+                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, pt_0, pt.option])
+                prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, pt_0, pt.option])
+            except:
+                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1])
+                prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1])
+        except:
+            prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1])
+            prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1])
+
         context.update({'prt_0': prt_0})
         context.update({'prt_0_': prt_0_})
     product_range = []
