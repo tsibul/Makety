@@ -91,7 +91,6 @@ class Item_color(models.Model):
         return str(self.color_id + ', ' + self.color_scheme.scheme_name)
 
 
-
 class Customer(models.Model):
     """type - agency, dealer, etc.
         number of Region"""
@@ -153,6 +152,7 @@ class Order_imports(models.Model):
 
     def __str__(self):
         return str(self.order_id + ' ' + self.customer.name)
+
 
 class Item_imports(models.Model):
     """item_color - total color code back part of item code(after Item series)
@@ -223,12 +223,29 @@ class Makety(models.Model):
         return str(self.order.order_id + ' ' + self.order.customer.name)
 
 
+class Films(models.Model):
+    film_id = models.IntegerField(default=0)
+    date = models.DateField(default='')
+    format = models.CharField(max_length=3, default='A5')
+
+    def __repr__(self):
+        return str(self.film_id + ' от ' + self.date)
+
+    def __str__(self):
+        return str(self.film_id + ' от ' + self.date)
+
+
 class Itemgroup_in_Maket(models.Model):
     """If item from order exists in Maket"""
     item = models.ForeignKey(Detail_set, models.SET_NULL, null=True, blank=True)
     maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
     checked = models.BooleanField(default=True)
     print_name = models.CharField(max_length=50,  null=True, blank=True)
+    film = models.ForeignKey(Films, models.SET_NULL, blank=True, null=True)
+    film_error = models.BooleanField(default=True)
+
+    def __str__(self):
+        return str(self.maket.order_num + ' ' + self.item.item.print_group.name)
 
 
 class Print_in_Maket(models.Model):
@@ -237,20 +254,6 @@ class Print_in_Maket(models.Model):
     maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
     checked = models.BooleanField(default=True)
     option = models.SmallIntegerField(default=1)
-
-
-class Films(models.Model):
-    film_id = models.IntegerField(default=0)
-    date = models.DateField(default='')
-    format = models.CharField(max_length=3, default='A5')
-    item_group = models.ForeignKey(Itemgroup_in_Maket, models.SET_NULL, null=True)
-
-    def __repr__(self):
-        return str(self.film_id + ' от ' + self.date)
-
-    def __str__(self):
-        return str(self.film_id + ' от ' + self.date)
-
 
 
 class Item_in_Film(models.Model):
