@@ -661,7 +661,7 @@ def maket_print(request, id, mk_id):
     order_id = ord_imp.id
     product_range = prt_imports(order_id, print_import, ord_imp, mk_id)[1]
     context_imp = prt_imports(order_id, print_import, ord_imp, mk_id)[0]
-    context.update({'product_range': product_range})
+    context.update({'product_range': product_range, 'mk_id': mk_id})
     context.update(context_imp)
 
     mkt = Makety.objects.filter(order=ord_imp).order_by('maket_id')
