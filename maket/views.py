@@ -609,7 +609,7 @@ def order_imports(id):
     return [ord_imp, item_import, print_import]
 
 
-def prt_imports(id, print_import):
+def prt_imports(id, print_import, ord_imp, mk_id):
     context = {}
     order_id = id
     print_groups = Print_group.objects.all().order_by('code')
@@ -632,23 +632,54 @@ def prt_imports(id, print_import):
         items_prt = len(Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group)))
         len_prt = len(Print_imports.objects.filter(Q(item__order=order_id) & Q(item__item__print_group=print_group)))
         if items_prt != 0:
-            product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
-                                  'maket/svg/svg' +print_group.code + '.html', print_group.code])
+            try:
+                maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
+                itemgroup_in_maket = Itemgroup_in_Maket.objects.get(Q(maket=maket)&Q(item__print_group=print_group))
+                context.update({'maket': maket})
+                if itemgroup_in_maket.checked:
+                    ig_ch = 1
+                else:
+                    ig_ch = 0
+                product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
+                              'maket/svg/svg' + print_group.code + '.html', print_group.code, ig_ch])
+            except:
+                product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
+                                      'maket/svg/svg' + print_group.code + '.html', print_group.code, 1])
+
     context.update({'print_groups': print_groups})
     return [context, product_range]
 
 
-def maket_print(request, id):
+def maket_print(request, id, mk_id):
     ord_imp = order_imports(id)[0]
     item_import = order_imports(id)[1]
     print_import = order_imports(id)[2]
     context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import}
 
     order_id = ord_imp.id
-    product_range = prt_imports(order_id, print_import)[1]
-    context_imp = prt_imports(order_id, print_import)[0]
+    product_range = prt_imports(order_id, print_import, ord_imp, mk_id)[1]
+    context_imp = prt_imports(order_id, print_import, ord_imp, mk_id)[0]
     context.update({'product_range': product_range})
     context.update(context_imp)
+
+    mkt = Makety.objects.filter(order=ord_imp).order_by('maket_id')
+    maket_id_list = []
+    for mk in mkt:
+      maket_id_list.append(mk.maket_id)
+    if len(maket_id_list) == 0:
+        maket_id_list = [1]
+    context.update({'maket_id_list': maket_id_list})
+    try:
+        maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
+        itemgroup_in_maket = Itemgroup_in_Maket.objects.filter(maket=maket)
+        print_in_maket = Print_in_Maket.objects.filter(maket=maket)
+        context.update({'maket': maket})
+        for ig in itemgroup_in_maket:
+            ig_id = ig.item.print_group.code
+            ig_ch = ig.checked
+            context.update({ig_id: ig_ch})
+    except:
+        pass
 
     return render(request, 'maket/maket_print.html', context)
 
@@ -713,7 +744,7 @@ def update_maket(request, id):
         else:
             pr_in_maket.option = 0
         pr_in_maket.save()
-    return HttpResponseRedirect(reverse('maket:maket_print', args=[id]))
+    return HttpResponseRedirect(reverse('maket:maket_print', args=[id, mk_id]))
 
 
 def goods(request):

@@ -17,15 +17,18 @@
     <button onclick="window.close();return false;" class="btn btn-outline-secondary">Назад</button>
 </div>
 
-<form action="update_maket/{{ord_imp.id}}" id="form_maket_{{ord_imp.id}}" method="post">
+<form action="/maket/maket_print/update_maket/{{ord_imp.id}}" id="form_maket_{{ord_imp.id}}" method="post">
 {% csrf_token %}
 <div class="row">
     <div class="col text-end text-primary" style="font-size:80%;">
     <label for="maket_id_{{ord_imp.id}}">номер макета</label>
     </div>
     <div class="col">
-    <input class="form-control" type="number" name="maket_id" id="maket_id_{{ord_imp.id}}" value="1"
-           form="form_maket_{{ord_imp.id}}">
+    <select class="form-select" form="form_maket_{{ord_imp.id}}" name="maket_id" id="maket_id_{{ord_imp.id}}">
+        {% for mk_id_l in maket_id_list %}
+        <option value="{{mk_id_l}}">{{mk_id_l}}</option>
+        {% endfor %}
+    </select>
     </div>
     <div class="col text-nowrap">
     <button type="submit" class="btn btn-outline-primary" ><i class="bi bi-check-lg"></i>Сохранить шаблон</button>
@@ -79,7 +82,10 @@
     <div class="col" style="font-size:60%" >{{prd.0}}</div>
     <div class="col" style="font-size:60%" >{{prd.3}}/{{prd.1}} шт.</div>
     <div class="col form-check" style="font-size:60%" >
-        <input  class="form-check-input" type="checkbox" name="chck_{{prd.2}}" id="chck_{{prd.2}}" checked
+        <input  class="form-check-input" type="checkbox" name="chck_{{prd.2}}" id="chck_{{prd.2}}"
+                {% if prd.6  %}
+                checked
+                {% endif %}
                 form="form_maket_{{ord_imp.id}}">
         <label class="form-check-label" for="chck_{{prd.2}}"> в макет </label>
     </div>
