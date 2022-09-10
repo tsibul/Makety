@@ -19,22 +19,24 @@
 
 <form action="/maket/maket_print/update_maket/{{ord_imp.id}}" id="form_maket_{{ord_imp.id}}" method="post">
 {% csrf_token %}
+    <input type="number" form="form_maket_{{ord_imp.id}}" value="{{mk_id}}" name="maket_id" hidden>
+</form>
 <div class="row">
     <div class="col text-end text-primary" style="font-size:80%;">
     <label for="maket_id_{{ord_imp.id}}">номер макета</label>
     </div>
     <div class="col">
-    <select class="form-select" form="form_maket_{{ord_imp.id}}" name="maket_id" id="maket_id_{{ord_imp.id}}">
+    <select class="form-select" id="maket_id_{{ord_imp.id}}">
         {% for mk_id_l in maket_id_list %}
         <option value="{{mk_id_l}}">{{mk_id_l}}</option>
         {% endfor %}
     </select>
     </div>
     <div class="col text-nowrap">
-    <button type="submit" class="btn btn-outline-primary" ><i class="bi bi-check-lg"></i>Сохранить шаблон</button>
+    <button type="submit" class="btn btn-outline-primary" form="form_maket_{{ord_imp.id}}">
+        <i class="bi bi-check-lg"></i>Сохранить шаблон</button>
     </div>
 </div>
-</form>
 </div>
 <!-- Buttons -->
 
