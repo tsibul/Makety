@@ -854,3 +854,9 @@ def add_pg(request):
     pg = Print_group(code=cd, name=nm, layout=ly, options=op)
     pg.save()
     return HttpResponseRedirect(reverse('maket:dicts'))
+
+def maket_status(request, id, status):
+    order = Order_imports.objects.get(id=id)
+    order.maket_status = status
+    order.save()
+    return HttpResponseRedirect(reverse('maket:index'))

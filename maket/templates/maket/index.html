@@ -39,17 +39,20 @@
 <table class="table table-info table-hover" style="font-size:80%;">
     <tbody >
     {% for ord in orders %}
-    <tr onclick="window.location.href='{{ord.id}}'" class="align-middle" >
-        <td class="text-end fw-bold" style="font-size:120%">
-            <div
-            {%  if ord.maket_status == 'R' %}
-                   class="text-success">R
-            {% elif ord.maket_status == 'P' %}
-                    >P
-            {% elif ord.maket_status == 'N' %}
-                    class="text-danger">N
-            {% endif %}
-            </div>
+    <tr ondblclick="window.location.href='{{ord.id}}'" class="align-middle
+           {%  if ord.maket_status == 'R' %} text-success{% elif ord.maket_status == 'N' %} text-danger {% endif %}">
+        <td class="fw-bold" >
+            <select class="form-select bg-light {% if ord.maket_status == 'R' %}text-success"
+                    {% elif ord.maket_status == 'N' %}text-danger {% endif %}" style="font-size:100%;"
+                    id="status_{{ord.id}}" onchange="location = this.options[this.selectedIndex].value;">
+                <option value="{% url 'maket:maket_status' id=ord.id status='N' %}"
+                {% if ord.maket_status == 'N' %} selected {% endif %}><button class="btn btn-sm btn-outline-danger"> не готово </button></option>
+                <option value="{% url 'maket:maket_status' id=ord.id status='P' %}"
+                {% if ord.maket_status == 'P' %} selected {% endif %}> частично </option>
+                <option value="{% url 'maket:maket_status' id=ord.id status='R' %}"
+                {% if ord.maket_status == 'R' %} selected {% endif %}><div class="text-success"> готово&nbsp;&nbsp; </div></option>
+            </select>
+        </td>
         <td >{{ord.order_id}}</td>
         <td>{{ord.order_date|date:'d.m.Y'}}</td>
 {% if 'Сувенир' in ord.supplier %}
@@ -59,7 +62,7 @@
 {% else %}
         <td> ВВ </td>
 {% endif %}
-        <td class="text-wrap"> {{ord.customer_name}}</td>
+        <td class="text-wrap" style="max-width:440px"> {{ord.customer_name}}</td>
         <td> {{ord.manager.manager}}</td>
         <td class="text-break"> {{ord.manager.manager_mail}}</td>
         <td class="text-end"> {{ord.order_sum}}</td>
