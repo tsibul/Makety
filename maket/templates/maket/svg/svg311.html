@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<div class="row p-1 m-1" id="prt_{{product.5}}">
+<div class="row p-1 m-1" id="prt_{{product.5}}" {% if not product.6 %} style="display:none" {% endif %}>
 <div class="col lh-1 p-1 m-1"  >
     <div class="m-2"><img src="{% static 'maket/img/Ruler.svg' %}" /></div>
 
