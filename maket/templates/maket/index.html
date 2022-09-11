@@ -45,11 +45,11 @@
             <select class="form-select bg-light {% if ord.maket_status == 'R' %}text-success"
                     {% elif ord.maket_status == 'N' %}text-danger {% endif %}" style="font-size:100%;"
                     id="status_{{ord.id}}" onchange="location = this.options[this.selectedIndex].value;">
-                <option value="{% url 'maket:maket_status' id=ord.id status='N' %}"
+                <option value="{% url 'maket:maket_status' id=ord.id status='N' source='order' %}"
                 {% if ord.maket_status == 'N' %} selected {% endif %}><button class="btn btn-sm btn-outline-danger"> не готово </button></option>
-                <option value="{% url 'maket:maket_status' id=ord.id status='P' %}"
+                <option value="{% url 'maket:maket_status' id=ord.id status='P' source='order' %}"
                 {% if ord.maket_status == 'P' %} selected {% endif %}> частично </option>
-                <option value="{% url 'maket:maket_status' id=ord.id status='R' %}"
+                <option value="{% url 'maket:maket_status' id=ord.id status='R' source='order' %}"
                 {% if ord.maket_status == 'R' %} selected {% endif %}><div class="text-success"> готово&nbsp;&nbsp; </div></option>
             </select>
         </td>
