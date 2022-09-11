@@ -89,7 +89,21 @@ def admin(request):
 
 def maket_base(request):
     navi = 'maket_base'
-    context = {'navi': navi, 'active5': 'active'}
+    maket = Makety.objects.all().order_by('-order_date', 'maket_id')
+    item_group = Itemgroup_in_Maket.objects.all().order_by('item')
+    f_group = {}
+    for i in item_group:
+        if i.maket not in f_group:
+            f_group[i.maket] = []
+        if i.checked:
+            f_group[i.maket].append(i)
+    f_maket = {}
+    for m in maket:
+        if m.order_num not in f_maket:
+            f_maket[m.order_num] = {}
+        f_maket[m.order_num].update({m: f_group.get(m)})
+
+    context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket}
     return render(request, 'maket/maket_base.html', context)
 
 
