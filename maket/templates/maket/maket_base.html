@@ -11,7 +11,7 @@
     <tr class="{% if ord.maket_status != 'R' %} text-danger {% endif %}">
         <td ><a href="javascript:colapse_({{ord.id}});"><i class="bi bi-plus-square"></i></a></td>
         <td class="fw-bold" style="max-width:110px; font-size:80%;">
-            <select class="form-select form-select-sm bg-light {% if ord.maket_status != 'R' %}
+            <select class="form-select form-select-sm {% if ord.maket_status != 'R' %}
                     text-danger {% endif %}" style="font-size:100%;"
                     id="status_{{ord.id}}" onchange="location = this.options[this.selectedIndex].value;">
                 <option value="{% url 'maket:maket_status' id=ord.id status='N' source='maket' %}"
