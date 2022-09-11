@@ -99,9 +99,9 @@ def maket_base(request):
             f_group[i.maket].append(i)
     f_maket = {}
     for m in maket:
-        if m.order_num not in f_maket:
-            f_maket[m.order_num] = {}
-        f_maket[m.order_num].update({m: f_group.get(m)})
+        if m.order not in f_maket:
+            f_maket[m.order] = {}
+        f_maket[m.order].update({m: f_group.get(m)})
 
     context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket}
     return render(request, 'maket/maket_base.html', context)
