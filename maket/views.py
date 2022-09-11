@@ -883,4 +883,4 @@ def films(request):
     films = Films.objects.all().order_by('-date', '-film_id')
 
     context = {'navi': navi, 'films': films, 'active7': 'active'}
-    return render(request, 'maket/goods.html', context)
+    return render(request, 'maket/films.html', context)
