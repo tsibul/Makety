@@ -2,4 +2,60 @@
 {% block title %}макеты{% endblock %}
 {% block content %}
 
+<table class="table table-hover lh-1">
+<thead>
+
+</thead>
+<tbody>
+{% for ord, maket in f_maket.items %}
+    <tr style="font-size:100%;">
+        <td><i class="bi bi-plus-square"></i> </td>
+        <td>{{ord.order_id}}</td>
+        <td>{{ord.order_date|date:'d.m.Y'}}</td>
+        <td>{% if 'Сувенир' in ord.supplier %}ВВС{% elif 'Студия' in ord.supplier %}ССП{% else %}ВВ{% endif %}</td>
+        <td class="text-wrap" style="max-width:400px"> {{ord.customer_name}}</td>
+        <td> {{ord.manager.manager}}</td>
+        <td class="text-break"> {{ord.manager.manager_mail}}</td>
+        <td class="text-end"> {{ord.order_sum}}</td>
+    </tr>
+    <tr style="font-size:90%;">
+        <td colspan="9" class="p-0 lh-0 m-0">
+            <table class="table table-sm table-hover table-info lh-1 mb-0">
+                {% for mkt, itemgr in maket.items %}
+                <tr>
+                <td></td>
+                <td><i class="bi bi-plus-square"></i></td>
+                <td># {{mkt.maket_id}}</td>
+                <td style="max-width:120px;">создан {{mkt.date_create|date:'d.m.Y'}}</td>
+                <td style="max-width:120px;">изменен {{mkt.date_modified|date:'d.m.Y'}}</td>
+                <td style="max-width:120px;">файл загружен {% if mkt.uploaded %}ДА{% else %}НЕТ{% endif %}</td>
+                <td>файл {{mkt.maket_file}}</td>
+                <td style="min-width:400px;">комментарий {{mkt.comment}}</td>
+                <td></td>
+                </tr>
+    <tr style="font-size:90%;">
+        <td colspan="9" class="p-0 lh-0 m-0">
+            <table class="table table-sm table-hover table-success lh-1 text-start mb-0">
+            {% for itm in itemgr %}
+                <tr>
+                <td></td>
+                <td></td>
+                <td>{{itm.item.print_group.name}}</td>
+                <td>{{itm.print_name}}</td>
+
+                <td></td>
+                </tr>
+            {% endfor %}
+            </table>
+        </td>
+    </tr>
+    {% endfor %}
+            </table>
+        </td>
+    </tr>
+
+{% endfor %}
+</tbody>
+</table>
+
 {% endblock %}
