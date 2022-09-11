@@ -869,8 +869,11 @@ def add_pg(request):
     pg.save()
     return HttpResponseRedirect(reverse('maket:dicts'))
 
-def maket_status(request, id, status):
+def maket_status(request, id, status, source):
     order = Order_imports.objects.get(id=id)
     order.maket_status = status
     order.save()
-    return HttpResponseRedirect(reverse('maket:index'))
+    if source == 'order':
+        return HttpResponseRedirect(reverse('maket:index'))
+    if source == 'maket':
+        return HttpResponseRedirect(reverse('maket:maket_base'))
