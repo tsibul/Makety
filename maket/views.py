@@ -878,7 +878,7 @@ def maket_status(request, id, status, source):
     if source == 'maket':
         return HttpResponseRedirect(reverse('maket:maket_base'))
 
-def goods(request):
+def films(request):
     navi = 'customers'
     films = Films.objects.all().order_by('-date', '-film_id')
 
