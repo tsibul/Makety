@@ -39,5 +39,6 @@ urlpatterns = [
     path('update_pg/<int:id>', views.upd_pg, name='update_pg'),
     path('add_pg', views.add_pg, name='add_pg'),
     path('maket_status/<int:id>/<str:status>/<str:source>', views.maket_status, name='maket_status'),
+    path('films', views.films, name='films'),
 
 ]

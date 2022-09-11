@@ -877,3 +877,10 @@ def maket_status(request, id, status, source):
         return HttpResponseRedirect(reverse('maket:index'))
     if source == 'maket':
         return HttpResponseRedirect(reverse('maket:maket_base'))
+
+def goods(request):
+    navi = 'customers'
+    films = Films.objects.all().order_by('-date', '-film_id')
+
+    context = {'navi': navi, 'films': films, 'active7': 'active'}
+    return render(request, 'maket/goods.html', context)
