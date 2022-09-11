@@ -227,6 +227,7 @@ class Films(models.Model):
     film_id = models.IntegerField(default=0)
     date = models.DateField(default='')
     format = models.CharField(max_length=3, default='A5')
+    status = models.BooleanField(default=False)
 
     def __repr__(self):
         return str(self.film_id + ' от ' + self.date)
