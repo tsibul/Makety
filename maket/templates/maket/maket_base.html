@@ -57,13 +57,15 @@
             {% for itm in itemgr %}
                 <tr class="align-middle {% if not itm.film.status %} text-danger{% endif %}">
                 <td></td>
-                <td> группа {{itm.item.item.print_group.name}}</td>
-                <td> нанесение {{itm.print_name}}</td>
-                <td> пленка {{itm.film.id}}</td>
-                <td> от  {{itm.film.date}}</td>
-                <td>{% if itm.film_error %}без ошибок {% else %}ошибки{% endif %} </td>
-                <td>{% if itm.film.status %}выведена {% else %}подготовка{% endif %} </td>
-                <td></td>
+                <td> группа {{itm.0.item.item.print_group.name}}</td>
+                <td> нанесение {{itm.0.print_name}}</td>
+                <td> пленка {{itm.0.film.id}}</td>
+                <td> от  {{itm.0.film.date}}</td>
+                <td>{% if itm.0.film_error %}без ошибок {% else %}ошибки{% endif %} </td>
+                <td>{% if itm.0.film.status %}выведена {% else %}подготовка{% endif %} </td>
+                <td>количество {{itm.1}}</td>
+                <td>сумма {{itm.2}}</td>
+                <td>сумма нанесение {{itm.3}}</td>
                 <td class="text-end"><button type="button" class="btn btn-sm btn-outline-primary">на пленку</button> </td>
                 </tr>
             {% endfor %}

@@ -92,17 +92,20 @@ def maket_base(request):
     maket = Makety.objects.all().order_by('-order_date', 'maket_id')
     item_group = Itemgroup_in_Maket.objects.all().order_by('item')
     f_group = {}
-    ig_q = 0
-    ig_p = 0
-    ig_pp = 0
     for i in item_group:
-        ig_q = ig_q + i.item.quantity
-        ig_p = ig_p + i.item.quantity * i.item.item_price
-        ig_pp = ig_pp + i.item.quantity * i.item.print_price
         if i.maket not in f_group:
             f_group[i.maket] = []
         if i.checked:
+            ig_q = 0
+            ig_p = 0
+            ig_pp = 0
+            itms = Item_imports.objects.filter(Q(order=i.maket.order) & Q(item__print_group=i.item.item.print_group))
+            for it in itms:
+                ig_q = ig_q + it.quantity
+                ig_p = ig_p + it.quantity * it.item_price
+                ig_pp = ig_pp + it.quantity * it.print_price
             f_group[i.maket].append([i, ig_q, ig_p, ig_pp])
+
     f_maket = {}
     for m in maket:
         if m.order not in f_maket:
@@ -615,10 +618,10 @@ def update_clr(request, id):
 
 def order_imports(id):
     ord_i = id
-    try:
-        ord_imp = Order_imports.objects.get(pk=int(ord_i))
-    except:
-        ord_imp = Order_imports.objects.order_by('-order_date', '-id').first()
+#    try:
+    ord_imp = Order_imports.objects.get(pk=int(ord_i))
+#    except:
+#        ord_imp = Order_imports.objects.order_by('-order_date', '-id').first()
     order_id = ord_imp.id
     item_import = list(Item_imports.objects.filter(order=order_id).order_by('code'))
 
@@ -745,7 +748,7 @@ def update_maket(request, id):
                 print_name = item.print_name
                 break
 #        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first
-        itm_checked = Item_imports.objects.filter(item__print_group__code=itemgroup).first()
+        itm_checked = Item_imports.objects.filter(Q(item__print_group__code=itemgroup)&Q(order=ord_imp)).first()
         try:
             item_checked = Itemgroup_in_Maket.objects.get(Q(item=itm_checked) & Q(maket=maket))
         except:
