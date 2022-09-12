@@ -738,11 +738,12 @@ def update_maket(request, id):
             if itemgroup == item.item.print_group.code:
                 print_name = item.print_name
                 break
-        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first()
+#        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first
+        itm_checked = Item_imports.objects.filter(item__print_group__code=itemgroup).first()
         try:
-            item_checked = Itemgroup_in_Maket.objects.get(Q(item=itemgroup) & Q(maket=maket))
+            item_checked = Itemgroup_in_Maket.objects.get(Q(item=itm_checked) & Q(maket=maket))
         except:
-            item_checked = Itemgroup_in_Maket(item=itemgroup, maket=maket)
+            item_checked = Itemgroup_in_Maket(item=itm_checked, maket=maket)
         item_checked.print_name = print_name
         try:
             sel_item = request.POST[prt]
@@ -769,7 +770,7 @@ def update_maket(request, id):
             pr_in_maket.checked = True
         except:
             pr_in_maket.checked = False
-        if pi.item.item.item.print_group.options > 1:
+        if pi.item.item.print_group.options > 1:
             pen_pos = 'pen_pos_' + str(pi.id)
             option = request.POST[pen_pos]
             pr_in_maket.option = option
