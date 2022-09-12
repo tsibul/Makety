@@ -645,20 +645,20 @@ def prt_imports(id, print_import, ord_imp, mk_id):
                     pt_0 = 1
                 else:
                     pt_0 = 0
-                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.item.print_group.code, pt_0, pt.option])
-                prt_0.append([print_item, clr_hex, print_item.item.item.item.print_group.code, pt_0, pt.option])
+                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, pt_0, pt.option])
+                prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, pt_0, pt.option])
             except:
-                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.item.print_group.code, 0, 1])
-                prt_0.append([print_item, clr_hex, print_item.item.item.item.print_group.code, 0, 1])
+                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1])
+                prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1])
         except:
-            prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.item.print_group.code, 0, 1])
-            prt_0.append([print_item, clr_hex, print_item.item.item.item.print_group.code, 0, 1])
+            prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1])
+            prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1])
 
         context.update({'prt_0': prt_0})
         context.update({'prt_0_': prt_0_})
     product_range = []
     for print_group in print_groups:
-        items_prt = len(Item_imports.objects.filter(Q(order=order_id) & Q(item__item__print_group=print_group)))
+        items_prt = len(Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group)))
         len_prt = len(Print_imports.objects.filter(Q(item__order=order_id) & Q(item__item__print_group=print_group)))
         if items_prt != 0:
             try:
