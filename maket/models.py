@@ -238,7 +238,7 @@ class Films(models.Model):
 
 class Itemgroup_in_Maket(models.Model):
     """If item from order exists in Maket"""
-    item = models.ForeignKey(Detail_set, models.SET_NULL, null=True, blank=True)
+    item = models.ForeignKey(Item_imports, models.SET_NULL, null=True, blank=True)
     maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
     checked = models.BooleanField(default=True)
     print_name = models.CharField(max_length=50,  null=True, blank=True)

@@ -57,7 +57,7 @@
             {% for itm in itemgr %}
                 <tr class="align-middle {% if not itm.film.status %} text-danger{% endif %}">
                 <td></td>
-                <td> группа {{itm.item.print_group.name}}</td>
+                <td> группа {{itm.item.item.print_group.name}}</td>
                 <td> нанесение {{itm.print_name}}</td>
                 <td> пленка {{itm.film.id}}</td>
                 <td> от  {{itm.film.date}}</td>

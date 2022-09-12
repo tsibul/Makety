@@ -645,25 +645,25 @@ def prt_imports(id, print_import, ord_imp, mk_id):
                     pt_0 = 1
                 else:
                     pt_0 = 0
-                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, pt_0, pt.option])
-                prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, pt_0, pt.option])
+                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.item.print_group.code, pt_0, pt.option])
+                prt_0.append([print_item, clr_hex, print_item.item.item.item.print_group.code, pt_0, pt.option])
             except:
-                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1])
-                prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1])
+                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.item.print_group.code, 0, 1])
+                prt_0.append([print_item, clr_hex, print_item.item.item.item.print_group.code, 0, 1])
         except:
-            prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1])
-            prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1])
+            prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.item.print_group.code, 0, 1])
+            prt_0.append([print_item, clr_hex, print_item.item.item.item.print_group.code, 0, 1])
 
         context.update({'prt_0': prt_0})
         context.update({'prt_0_': prt_0_})
     product_range = []
     for print_group in print_groups:
-        items_prt = len(Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group)))
+        items_prt = len(Item_imports.objects.filter(Q(order=order_id) & Q(item__item__print_group=print_group)))
         len_prt = len(Print_imports.objects.filter(Q(item__order=order_id) & Q(item__item__print_group=print_group)))
         if items_prt != 0:
             try:
                 maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
-                itemgroup_in_maket = Itemgroup_in_Maket.objects.get(Q(maket=maket)&Q(item__print_group=print_group))
+                itemgroup_in_maket = Itemgroup_in_Maket.objects.get(Q(maket=maket)&Q(item__item__print_group=print_group))
                 context.update({'maket': maket})
                 if itemgroup_in_maket.checked:
                     ig_ch = 1
@@ -706,7 +706,7 @@ def maket_print(request, id, mk_id):
         print_in_maket = Print_in_Maket.objects.filter(maket=maket)
         context.update({'maket': maket})
         for ig in itemgroup_in_maket:
-            ig_id = ig.item.print_group.code
+            ig_id = ig.item.item.print_group.code
             ig_ch = ig.checked
             context.update({ig_id: ig_ch})
     except:
@@ -769,7 +769,7 @@ def update_maket(request, id):
             pr_in_maket.checked = True
         except:
             pr_in_maket.checked = False
-        if pi.item.item.print_group.options > 1:
+        if pi.item.item.item.print_group.options > 1:
             pen_pos = 'pen_pos_' + str(pi.id)
             option = request.POST[pen_pos]
             pr_in_maket.option = option
