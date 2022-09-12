@@ -92,11 +92,17 @@ def maket_base(request):
     maket = Makety.objects.all().order_by('-order_date', 'maket_id')
     item_group = Itemgroup_in_Maket.objects.all().order_by('item')
     f_group = {}
+    ig_q = 0
+    ig_p = 0
+    ig_pp = 0
     for i in item_group:
+        ig_q = ig_q + i.item.quantity
+        ig_p = ig_p + i.item.quantity * i.item.item_price
+        ig_pp = ig_pp + i.item.quantity * i.item.print_price
         if i.maket not in f_group:
             f_group[i.maket] = []
         if i.checked:
-            f_group[i.maket].append(i)
+            f_group[i.maket].append([i, ig_q, ig_p, ig_pp])
     f_maket = {}
     for m in maket:
         if m.order not in f_maket:
