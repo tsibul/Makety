@@ -21,7 +21,7 @@ class Print_place(models.Model):
 
 class Print_group(models.Model):
     """code for similar shapes of items"""
-    code = models.CharField(max_length=6, default=0)
+    code = models.CharField(max_length=7, default=0)
     name = models.CharField(max_length=255)
     options = models.SmallIntegerField(default=1)
     layout = models.CharField(max_length=120, blank=True, default='')
