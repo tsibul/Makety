@@ -84,8 +84,29 @@ def dicts(request):
 
 def admin(request):
     navi = 'admin'
-    context = {'navi': navi, 'active4': 'active'}
+    lost_imports = []
+    l_imports = Item_imports.objects.filter(item=None).order_by('code')
+    for l_imp in l_imports:
+        try:
+            l_det = Detail_set.objects.get(item_name=l_imp.item_group)
+            lost_imports.append([l_imp, l_det])
+        except:
+            pass
+    lost_imports_len = len(lost_imports)
+    context = {'navi': navi, 'active4': 'active', 'lost_imports': lost_imports, 'lost_imports_len': lost_imports_len}
     return render(request, 'maket/admin.html', context)
+
+def lost_imports(request, id):
+    l_import = Item_imports.objects.get(id=id)
+    try:
+        detail_id = request.POST['l_det']
+        l_import.item = Detail_set.objects.get(id=detail_id)
+        l_import.save()
+    except:
+#        context = {'l_import': l_import}
+#        render(request, 'maket/item_totally_lost.html', context)
+        pass
+    return HttpResponseRedirect(reverse('maket:admin'))
 
 def maket_base(request):
     navi = 'maket_base'
