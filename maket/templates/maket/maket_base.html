@@ -1,17 +1,13 @@
 {% extends 'maket/main.html' %}
 {% block title %}макеты{% endblock %}
 {% block content %}
-
-<div hidden id="film_select">
-<select class="form-select" aria-label="film_select">
-  <option selected>выбрать пленку</option>
-  {% for film in films %}
-  <option value="{{film.id}}">{{film.film_id}} от {{film.date}}</option>
-  {% endfor %}
-  <option value="0">новая пленка</option>
-</select>
+<br><br>
+<div class=" fixed-top mt-5 text-end" >
+    <br>
+    <button type="button" class="btn btn-outline-primary">
+        <i class="bi bi-plus-lg"></i> Скрыть/показать
+    </button>
 </div>
-
 <!-- Modal -->
 <div class="modal fade" id="selectFilm" tabindex="-1" aria-labelledby="selectFilmLabel" aria-hidden="true">
   <div class="modal-dialog">
