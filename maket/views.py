@@ -137,7 +137,7 @@ def maket_base(request):
     films = Films.objects.filter(status=False).order_by('-date')
     current_date = datetime.date.today()
     try:
-        last_film = films.first.film_id + 1
+        last_film = films.first().film_id + 1
     except:
         last_film = 1
 

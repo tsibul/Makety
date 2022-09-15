@@ -26,7 +26,7 @@
         <div>
         <select class="form-select" aria-label="film_select" id="select_film">
           {% for film in films %}
-          <option value="{{film.id}}" name="{{film.film_id}}.{{film.date}}">{{film.film_id}} от {{film.date}}</option>
+          <option value="{{film.id}}|{{film.film_id}}|{{film.date|date:'d.m.Y'}}">{{film.film_id}} от {{film.date|date:'d.m.Y'}}</option>
           {% endfor %}
           <option value="0">новая пленка</option>
         </select>

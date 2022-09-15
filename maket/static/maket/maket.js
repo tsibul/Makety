@@ -498,12 +498,13 @@ function select_film(id){
 }
 
 function save_to_film(){
+    var film_data = document.getElementById('select_film').value;
+    var flm_data = film_data.split('|');
     var id = document.getElementById('modal_pg_id').value;
-    var film = document.getElementById('select_film').value;
+    var film = flm_data[0];
     if(film!=0){
-    var film_data = document.getElementById('select_film').name.split('.');
-    var film_date = film_data[1];
-    var film_id = film_data[0]
+    var film_date = flm_data[2];
+    var film_id = flm_data[1]
     }else{
     var film_date = document.getElementById('current_date').value;
     var film_id = document.getElementById('last_film').value
