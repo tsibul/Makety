@@ -496,3 +496,24 @@ function select_film(id){
    document.getElementById('modal_pg_1').innerHTML = pg_text_1;
    document.getElementById('modal_pg_2').innerHTML = pg_text_2;
 }
+
+function save_to_film(){
+    var id = document.getElementById('modal_pg_id').value;
+    var film = document.getElementById('select_film').value;
+    if(film!=0){
+    var film_data = document.getElementById('select_film').name.split('.');
+    var film_date = film_data[1];
+    var film_id = film_data[0]
+    }else{
+    var film_date = document.getElementById('current_date').value;
+    var film_id = document.getElementById('last_film').value
+    }
+    var filmout = 'filmout_' + id;
+    var html_code = 'пленка: ' + film_id + ' от ' + film_date;
+    document.getElementById(filmout).innerHTML = html_code;
+    var xhr = new XMLHttpRequest();
+    var url = 'save_to_film/' + id + '/' + film;
+    xhr.open("GET", url, true);
+    xhr.send();
+
+}

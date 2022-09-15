@@ -41,5 +41,6 @@ urlpatterns = [
     path('maket_status/<int:id>/<str:status>/<str:source>', views.maket_status, name='maket_status'),
     path('films', views.films, name='films'),
     path('lost_imports/<int:id>', views.lost_imports, name='lost_imports'),
+    path('save_to_film/<int:id>/<int:film>', views.save_to_film, name='save_to_film'),
 
 ]

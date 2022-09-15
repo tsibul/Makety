@@ -24,18 +24,22 @@
         <div id="modal_pg_1"></div>
         <div id="modal_pg_2"></div>
         <div>
-        <select class="form-select" aria-label="film_select">
+        <select class="form-select" aria-label="film_select" id="select_film">
           {% for film in films %}
-          <option value="{{film.id}}">{{film.film_id}} от {{film.date}}</option>
+          <option value="{{film.id}}" name="{{film.film_id}}.{{film.date}}">{{film.film_id}} от {{film.date}}</option>
           {% endfor %}
           <option value="0">новая пленка</option>
         </select>
          </div>
         <input type="number" id="modal_pg_id" value="" name="modal_pg_id" hidden>
+        <input type="text" id="current_date" value="{{current_date|date:'d.m.Y'}}" hidden>
+        <input type="number" id="last_film" value="{{last_film}}" hidden>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-        <button type="button" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn btn-primary"  data-bs-dismiss="modal"
+                onclick="javascript:save_to_film();">Сохранить</button>
       </div>
     </div>
   </div>
@@ -102,8 +106,8 @@
                            value="нанесение {{itm.0.print_name}}" hidden></td>
                 <td> группа {{itm.0.item.item.print_group.name}}</td>
                 <td> нанесение {{itm.0.print_name}}</td>
-                <td> пленка:
-                    {% if itm.0.film.id == None %} нет {% else %}{{itm.0.film.film_id}} от  {{itm.0.film.date}}{% endif %}
+                <td id="filmout_{{itm.0.id}}"> пленка: {% if itm.0.film.id == None %} нет {% else %}
+                    {{itm.0.film.film_id}} от {{itm.0.film.date|date:'d.m.Y.'}}{% endif %}
                 </td>
                 <td>{% if itm.0.film.id != None %}{% if itm.0.film_error %}без ошибок {% else %}ошибки{% endif %}{% endif %} </td>
                 <td>{% if itm.0.film.id != None %}{% if itm.0.film.status %}выведена {% else %}подготовка{% endif %}{% endif %} </td>

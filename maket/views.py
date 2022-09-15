@@ -13,6 +13,7 @@ from django.urls import reverse
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
     Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group, Print_in_Maket
+from django.views.decorators.csrf import csrf_exempt
 
 
 def main_maket(request):
@@ -133,9 +134,15 @@ def maket_base(request):
             f_maket[m.order] = {}
         f_maket[m.order].update({m: f_group.get(m)})
 
-    films = Films.objects.filter(status=False).order_by('film_id')
+    films = Films.objects.filter(status=False).order_by('-date')
+    current_date = datetime.date.today()
+    try:
+        last_film = films.first.film_id + 1
+    except:
+        last_film = 1
 
-    context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'films': films}
+    context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'films': films,
+               'current_date': current_date, 'last_film': last_film}
     return render(request, 'maket/maket_base.html', context)
 
 
@@ -917,3 +924,20 @@ def films(request):
 
     context = {'navi': navi, 'films': films, 'active7': 'active'}
     return render(request, 'maket/films.html', context)
+
+@csrf_exempt
+def save_to_film(request, id, film):
+    item_group = Itemgroup_in_Maket.objects.get(id=id)
+    try:
+        film = Films.objects.get(id=film)
+    except:
+        try:
+            flm = Films.objects.all().order_by('-date').first.film_id
+            flm = flm + 1
+        except:
+            flm = 1
+        film = Films(date=datetime.date.today(), film_id=flm)
+        film.save()
+    item_group.film = film
+    item_group.save()
+    return HttpResponse()
