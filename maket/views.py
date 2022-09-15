@@ -133,7 +133,9 @@ def maket_base(request):
             f_maket[m.order] = {}
         f_maket[m.order].update({m: f_group.get(m)})
 
-    context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket}
+    films = Films.objects.filter(status=False).order_by('film_id')
+
+    context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'films': films}
     return render(request, 'maket/maket_base.html', context)
 
 

@@ -2,6 +2,46 @@
 {% block title %}макеты{% endblock %}
 {% block content %}
 
+<div hidden id="film_select">
+<select class="form-select" aria-label="film_select">
+  <option selected>выбрать пленку</option>
+  {% for film in films %}
+  <option value="{{film.id}}">{{film.film_id}} от {{film.date}}</option>
+  {% endfor %}
+  <option value="0">новая пленка</option>
+</select>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="selectFilm" tabindex="-1" aria-labelledby="selectFilmLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Выбрать пленку</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="modal_pg_1"></div>
+        <div id="modal_pg_2"></div>
+        <div>
+        <select class="form-select" aria-label="film_select">
+          {% for film in films %}
+          <option value="{{film.id}}">{{film.film_id}} от {{film.date}}</option>
+          {% endfor %}
+          <option value="0">новая пленка</option>
+        </select>
+         </div>
+        <input type="number" id="modal_pg_id" value="" name="modal_pg_id" hidden>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <table class="table table-hover lh-1">
 <thead>
 
@@ -56,17 +96,24 @@
 
             {% for itm in itemgr %}
                 <tr class="align-middle {% if not itm.film.status %} text-danger{% endif %}">
-                <td></td>
+                <td><input type="text" id="pg_{{itm.0.id}}_1"
+                           value="группа {{itm.0.item.item.print_group.name}}" hidden></td>
+                <td><input type="text" id="pg_{{itm.0.id}}_2"
+                           value="нанесение {{itm.0.print_name}}" hidden></td>
                 <td> группа {{itm.0.item.item.print_group.name}}</td>
                 <td> нанесение {{itm.0.print_name}}</td>
-                <td> пленка {{itm.0.film.id}}</td>
-                <td> от  {{itm.0.film.date}}</td>
-                <td>{% if itm.0.film_error %}без ошибок {% else %}ошибки{% endif %} </td>
-                <td>{% if itm.0.film.status %}выведена {% else %}подготовка{% endif %} </td>
+                <td> пленка:
+                    {% if itm.0.film.id == None %} нет {% else %}{{itm.0.film.film_id}} от  {{itm.0.film.date}}{% endif %}
+                </td>
+                <td>{% if itm.0.film.id != None %}{% if itm.0.film_error %}без ошибок {% else %}ошибки{% endif %}{% endif %} </td>
+                <td>{% if itm.0.film.id != None %}{% if itm.0.film.status %}выведена {% else %}подготовка{% endif %}{% endif %} </td>
                 <td>количество {{itm.1}}</td>
                 <td>сумма {{itm.2}}</td>
                 <td>сумма нанесение {{itm.3}}</td>
-                <td class="text-end"><button type="button" class="btn btn-sm btn-outline-primary">на пленку</button> </td>
+                <td class="text-end"><button type="button" class="btn btn-sm btn-outline-primary"
+                                             data-bs-toggle="modal" data-bs-target="#selectFilm"
+                                             onclick="javascript:select_film({{itm.0.id}});">
+                    на пленку</button> </td>
                 </tr>
             {% endfor %}
             </tbody>

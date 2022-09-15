@@ -486,3 +486,13 @@ function upd_good_reverse(id, cs, pg, clr_schemes, print_group){
    document.getElementById(dt4_ln).innerHTML = dt4;
    document.getElementById(dt5_ln).innerHTML = dt5;
 }
+
+function select_film(id){
+   var pg_id_1 = 'pg_' + id + '_1';
+   var pg_text_1 = document.getElementById(pg_id_1).value;
+   var pg_id_2 = 'pg_' + id + '_2';
+   var pg_text_2 = document.getElementById(pg_id_2).value;
+   document.getElementById('modal_pg_id').value = id;
+   document.getElementById('modal_pg_1').innerHTML = pg_text_1;
+   document.getElementById('modal_pg_2').innerHTML = pg_text_2;
+}
