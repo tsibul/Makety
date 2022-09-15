@@ -10,6 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import loader
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
     Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group, Print_in_Maket
@@ -141,8 +142,24 @@ def maket_base(request):
     except:
         last_film = 1
 
-    context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'films': films,
-               'current_date': current_date, 'last_film': last_film}
+    f_maket2 = list(f_maket.items())
+    paginator = Paginator(f_maket2, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    f_maket = dict(page_obj.object_list)
+
+    date_range = []
+    for i in range(page_obj.paginator.num_pages):
+        page_obj2 = paginator.get_page(i + 1)
+        try:
+            date_tmp = str(page_obj2.object_list[0][0])
+            date_range.append([i + 1, 'до ' + date_tmp])
+        except:
+            date_range.append(['нет данных'])
+
+
+    context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'page_obj': page_obj, 'films': films,
+               'current_date': current_date, 'last_film': last_film, 'date_range': date_range}
     return render(request, 'maket/maket_base.html', context)
 
 
