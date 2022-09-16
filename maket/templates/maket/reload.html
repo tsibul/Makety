@@ -1,21 +1,4 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" href="{% static 'maket/style.css' %}">
-    <link href="{% static 'maket/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
-
-    <title>Title</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
-
-
-</head>
-<body>
-
-<div class="border border-3 border-primary">
+<div class="border border-3 border-primary ms-1 p-1">
 <div class="d-flex flex-row lh-1">
     <div class="d-flex justify-content-md-end">
         <form action="order_edit/{{ord_imp.id}}" method="post">
@@ -44,23 +27,19 @@
            {% if ord_imp.film_status %} checked {% endif %} disabled name="filmstatus" id="filmstatus">
     </div>
     </div>
-
 </div><!-- Order -->
-
 <div class="d-flex flex-rowlh-1">
     <div class="fw-bold m-1">Поставщик </div>
     <div class="m-1">{{ord_imp.supplier}},</div>
     <div class="m-1"> менеджер </div>
     <div class="m-1"> {{ord_imp.our_manager}}</div>
 </div><!-- Supplier -->
-
 <div class="d-flex flex-row lh-1">
     <div class="fw-bold m-1">Покупатель </div>
     <div class="m-1">{{ord_imp.customer_name}},</div>
     <div class="m-1">ИНН {{ord_imp.customer_INN}},</div>
     <div class="m-1">{{ord_imp.customer_address}}</div>
 </div><!-- Customer -->
-
 <div class="row justify-content-between">
 <div class="col">
 <div class="d-flex flex-row">
@@ -76,7 +55,7 @@
     Cостав заказа
 </button></div></div>
 </div><!-- Manager with collapse button -->
-
+</div>
 <div >
 <div class="border border-4" >
 <table class="table-sm" id="collapse_{{ord_imp.id}}" style="display:none;">
@@ -129,8 +108,3 @@
 </div><!-- Collapse table -->
 </div>
 
-<script src="{% static 'maket/maket.js' %}"></script>
-<script src="{% static 'maket/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
-
-</body>
-</html>

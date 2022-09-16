@@ -41,10 +41,26 @@ def index(request):
 
     try:
         orders = Order_imports.objects.all().order_by('-order_date', '-id')
+        f_maket2 = list(orders)
+        paginator = Paginator(f_maket2, 20)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        orders = list(page_obj.object_list)
+
+        date_range = []
+        for i in range(page_obj.paginator.num_pages):
+            page_obj2 = paginator.get_page(i + 1)
+            try:
+                date_tmp = str(page_obj2.object_list[0])
+                date_range.append([i + 1, 'до ' + date_tmp])
+            except:
+                date_range.append(['нет данных'])
         context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
-               'orders': orders, 'active1': 'active'}
+               'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range}
+
     except:
         context = {'navi': navi}
+
     return render(request, 'maket/index.html', context)
 
 
@@ -63,9 +79,23 @@ def reload(request, id):
     print_import = list(print_import)
 
     orders = Order_imports.objects.all().order_by('-order_date', '-id')
+    f_maket2 = list(orders)
+    paginator = Paginator(f_maket2, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    orders = list(page_obj.object_list)
 
+    date_range = []
+    for i in range(page_obj.paginator.num_pages):
+        page_obj2 = paginator.get_page(i + 1)
+        try:
+            date_tmp = str(page_obj2.object_list[0])
+            date_range.append([i + 1, 'до ' + date_tmp])
+        except:
+            date_range.append(['нет данных'])
     context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
-               'orders': orders, 'active1': 'active'}
+               'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range}
+
     return render(request, 'maket/index.html', context)
 
 

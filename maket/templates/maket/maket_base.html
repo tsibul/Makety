@@ -1,10 +1,9 @@
 {% extends 'maket/main.html' %}
 {% block title %}макеты{% endblock %}
 {% block content %}
-<br><br>
-<div class="row fixed-top mt-5 bg-white" >
-    <br><br><br>
-    <div class="col-9 mt-3 text-start">
+<div class="row fixed-bottom bg-light p-2" >
+
+    <div class="col-9 text-start">
 <div class="pagination" xmlns="http://www.w3.org/1999/html">
     <span class="step-links">
         {% if page_obj.has_previous %}
@@ -32,7 +31,7 @@
     </span>
 </div><!-- pagination -->
     </div>
-    <div class="col mt-3 text-end">
+    <div class="col text-end">
     <button type="button" class="btn btn-outline-primary">
         <i class="bi bi-plus-lg"></i> Скрыть/показать
     </button></div>

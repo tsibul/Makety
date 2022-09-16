@@ -2,13 +2,42 @@
 {% block title %}Макеты{% endblock %}
 {% block content %}
 {% include 'maket/reload.html' %}
+<div class="row fixed-bottom bg-light p-1 mb-0 pb-0 align-items-center" >
+<br><br>
+    <div class="col-9 text-start">
+<div class="pagination" xmlns="http://www.w3.org/1999/html">
+    <span class="step-links dropup">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
+        {% endif %}
+        <span class="current btn btn-sm btn-outline-secondary">
+           {{ page_obj.object_list.21.0|date:"d.m.y" }} - {{ page_obj.object_list.0.0|date:"d.m.y" }} (страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }})
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
+        {% endif %}
+        &nbsp
+            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="_ChooseClient"
+                    data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+                Выбрать даты
+            </button>
+              <ul class="dropdown-menu fw-bold" aria-labelledby="ChooseClient">
+                {% for dt_range in date_range %}
+              <li><a class="dropdown-item" href="?page={{ dt_range.0 }}"> {{ dt_range.1 }}</a></li>
+                {% endfor %}
+              </ul>
 
-<div class="p-1 m-1"> <h5>Список Заказов &nbsp;
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Загрузить заказ
-</button><!-- Button trigger modal -->
-</h5></div>
+    </span>
+</div><!-- pagination -->
+    </div>
+    <div class="col text-end">
+        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Загрузить заказ
+        </button><!-- Button trigger modal -->
+    </div>
+</div>
 
 <!-- Modal -->
 <form id="import_order" action="{% url 'maket:import_order' %}" method="post" enctype="multipart/form-data">
@@ -35,7 +64,7 @@
 </div>
 </form><!-- Modal Import order -->
 
-<div class="overflow-auto" style="max-height: 600px">
+<div>
 <table class="table table-info table-hover" style="font-size:90%;">
     <tbody >
     {% for ord in orders %}
@@ -66,15 +95,6 @@
         <td> {{ord.manager.manager}}</td>
         <td class="text-break"> {{ord.manager.manager_mail}}</td>
         <td class="text-end"> {{ord.order_sum}}</td>
-<!--        <td> {{ord.customer_INN}}</td><--->
-<!--        <td> {{ord.film.film_id}}</td>
-        <td> {{ord.film.date}}</td>
-        {% if ord_imp.film_status %}
-            <td class="align-middle"><input class="form-check-input" type="checkbox" checked disabled></td>
-        {% else %}
-            <td class="align-middle"><input class="form-check-input" type="checkbox" checked disabled></td>
-        {% endif %}--->
-         </td>
         <td class="align-middle"><a href="delete_order/{{ ord.id }}">
             <button type="submit" class="btn btn-sm btn-outline-danger" style="font-size:80%;">Удалить</button>
         </a></td>
@@ -83,14 +103,6 @@
     </tbody>
 </table>
 </div><!-- Table of orders -->
-
-
-
-
-
-
-
 <div>
 </div>
-
 {% endblock %}
