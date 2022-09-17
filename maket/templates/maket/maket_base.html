@@ -115,7 +115,8 @@
                 <td class="text-end">
                     <button type="button" class="btn btn-sm btn-outline-primary">
                         <i class="bi bi-upload"></i> загрузить</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <button type="button" {% if not mkt.uploaded %}disabled{% endif %}
+                            class="btn btn-sm btn-outline-secondary">
                         <i class="bi bi-download"></i> открыть</button>
                 </td>
                 </tr>

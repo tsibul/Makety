@@ -77,7 +77,8 @@
             </button>
         </td>
         <td>
-            <button type="button" class="btn btn-sm btn-outline-secondary  text-nowrap" style="font-size:80%">
+            <button type="button" class="btn btn-sm btn-outline-secondary  text-nowrap"
+                    style="font-size:80%" {% if not ord.order_upload %}disabled{% endif %}>
                 <i class="bi bi-download"></i> открыть
             </button>
         </td>
