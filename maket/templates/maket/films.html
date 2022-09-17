@@ -23,15 +23,15 @@
      <th class="fw-normal">Группа товара</th>
      <th class="fw-normal">Нанесение</th>
      <th class="fw-normal">Данные по нанесению</th>
-     <th class="fw-normal text-end">{{item_group.0.0}}</th>
-     <th class="fw-normal text-end">{{item_group.0.1}}</th>
-     <th class="fw-normal text-end">{{item_group.0.2}}</th>
-     <th class="fw-normal text-end">{{item_group.0.3}}</th>
+     <th class="fw-normal text-end" style="font-size:90%">{{item_group.0.0}}</th>
+     <th class="fw-normal text-end" style="font-size:90%">{{item_group.0.1}}</th>
+     <th class="fw-normal text-end" style="font-size:90%">{{item_group.0.2}}</th>
+     <th class="fw-normal text-end" style="font-size:90%">{{item_group.0.3}}</th>
     </tr>
     </thead>
     {% for itm in item_group %}
     {% if  itm != item_group.0 %}
-    <tbody>
+    <tbody >
     <tr style="font-size:90%">
       <td ondblclick="window.open('/maket/vieworder/{{itm.0.maket.order.id}}',
                      'newwindow',
