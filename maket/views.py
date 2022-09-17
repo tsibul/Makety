@@ -1043,3 +1043,20 @@ def vieworder(request, id):
     context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import}
     return render(request, 'maket/vieworder.html', context)
 
+@csrf_exempt
+def update_to_film(request, data_to_film):
+    data = data_to_film.split('_')
+    id = data[0]
+    date = data[1]
+    format = data[2]
+    sent = data[3]
+    film = Films.objects.get(id=id)
+    film.date = date
+    film.format = format
+    if sent == '':
+        film.status = False
+    else:
+        film.status = True
+        film.date_sent = sent
+    film.save()
+    return HttpResponse()

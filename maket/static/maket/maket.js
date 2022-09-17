@@ -537,4 +537,26 @@ function update_film(id){
 }
 
 function update_to_film(){
+   var id = document.getElementById('id').value;
+   var film_id = document.getElementById('#').value;
+   var date = document.getElementById('date').value;
+   var arrDate = date.split("-");
+   var date_s = arrDate[2] + "." +arrDate[1] + "." + arrDate[0];
+   var format = document.getElementById('format').value;
+   var sent = document.getElementById('sent').value;
+   var output = 'output_' + id;
+   var textout = 'Пленка: ' + film_id + ' от ' + date_s + ' формат ' + format;
+   if(sent==''){
+   textout += ' в работе ';
+   }else{
+   var arrDate2 = sent.split("-");
+   textout += ' выведена ' + arrDate2[2] + "." +arrDate2[1] + "." + arrDate2[0];
+   }
+   var data_to_film = id + '_' + date + '_' + format + '_' + sent;
+   document.getElementById(output).innerHTML = textout;
+   var xhr = new XMLHttpRequest();
+   var url = 'update_to_film/' + data_to_film;
+   xhr.open("GET", url, true);
+   xhr.send();
+
 }

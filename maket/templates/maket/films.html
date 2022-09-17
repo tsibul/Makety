@@ -43,7 +43,7 @@
 {% for film, item_group in f_group.items %}
     <thead class="table-info">
     <tr>
-     <th colspan="2">Пленка: {{film.film_id}} от {{film.date|date:'d.m.Y'}} формат {{film.format}}
+     <th colspan="2" id="output_{{film.id}}">Пленка: {{film.film_id}} от {{film.date|date:'d.m.Y'}} формат {{film.format}}
          {% if film.status %} выведена {% else %} в работе {% endif %}{{film.date_sent|date:'d.m.Y'}}
      </th>
      <th colspan="2">нанесений {{item_group.0.4}}</th>
