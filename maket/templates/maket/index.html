@@ -71,6 +71,16 @@
     <tr ondblclick="window.location.href='{{ord.id}}'" class="align-middle
            {%  if ord.maket_status == 'R' %} text-success{% elif ord.maket_status == 'N' %} text-danger {% endif %}">
         <td class="fw-bold" >{{ord.maket_status}}</td>
+        <td >
+            <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" style="font-size:80%">
+                <i class="bi bi-upload"></i> загрузить
+            </button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-sm btn-outline-secondary  text-nowrap" style="font-size:80%">
+                <i class="bi bi-download"></i> открыть
+            </button>
+        </td>
         <td >{{ord.order_id}}</td>
         <td>{{ord.order_date|date:'d.m.Y'}}</td>
 {% if 'Сувенир' in ord.supplier %}
