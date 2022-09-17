@@ -7,18 +7,18 @@
 <div class="pagination" xmlns="http://www.w3.org/1999/html">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page=1" class="btn btn-outline-primary">&laquo; первая</a>
-            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">предыдущая</a>
+            <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
         {% endif %}
-        <span class="current btn btn-outline-secondary">
+        <span class="current btn btn-sm btn-outline-secondary">
            {{ page_obj.object_list.13.0|date:"d.m.y" }} - {{ page_obj.object_list.0.0|date:"d.m.y" }} (страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }})
         </span>
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">следующая</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-primary">последняя &raquo;</a>
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
         {% endif %}
         &nbsp
-            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="_ChooseClientAdd"
+            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="_ChooseClientAdd"
                     data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
                 Выбрать даты
             </button>
@@ -32,7 +32,7 @@
 </div><!-- pagination -->
     </div>
     <div class="col text-end">
-    <button type="button" class="btn btn-outline-primary">
+    <button type="button" class="btn btn-sm btn-outline-primary">
         <i class="bi bi-plus-lg"></i> Скрыть/показать
     </button></div>
 </div>
@@ -113,8 +113,10 @@
                 <td>файл {{mkt.maket_file}}</td>
                 <td style="min-width:400px;">комментарий {{mkt.comment}}</td>
                 <td class="text-end">
-                    <button type="button" class="btn btn-sm btn-outline-primary">загрузить</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">открыть</button>
+                    <button type="button" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-upload"></i> загрузить</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-download"></i> открыть</button>
                 </td>
                 </tr>
     <tr style="font-size:100%;">
