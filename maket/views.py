@@ -1030,3 +1030,16 @@ def save_to_film(request, id, film):
     item_group.film = film
     item_group.save()
     return HttpResponse()
+
+def vieworder(request, id):
+    ord_i = id
+    ord_imp = Order_imports.objects.get(pk=int(ord_i))
+    order_id = ord_imp.id
+    item_import = list(Item_imports.objects.filter(order=order_id).order_by('code'))
+    print_import = ()
+    for item in item_import:
+        print_import = print_import + tuple(Print_imports.objects.filter(item=item))
+    print_import = list(print_import)
+    context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import}
+    return render(request, 'maket/vieworder.html', context)
+

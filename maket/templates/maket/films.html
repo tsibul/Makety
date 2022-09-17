@@ -33,14 +33,14 @@
     {% if  itm != item_group.0 %}
     <tbody>
     <tr style="font-size:90%">
-      <td ondblclick="window.open('reload.html',
-                         'newwindow',
-                         'width=300,height=250');
-              return false;">
-          {{itm.0.maket.order.order_id}}
-      </td>
-      <td>{{itm.0.maket.order.customer.name}}</td>
-      <div>
+      <td ondblclick="window.open('/maket/vieworder/{{itm.0.maket.order.id}}',
+                     'newwindow',
+                     'width=900,height=400');
+                      return false;">{{itm.0.maket.order.order_id}}</td>
+      <td ondblclick="window.open('/maket/vieworder/{{itm.0.maket.order.id}}',
+                     'newwindow',
+                     'width=900,height=400');
+                      return false;">{{itm.0.maket.order.customer.name}}</td>
       <td ondblclick="window.open('/maket/maket_print/{{itm.0.maket.order.id}}/{{itm.0.maket.maket_id}}', '_blank');  return false;">
           {{itm.0.maket.maket_id}}
       </td>

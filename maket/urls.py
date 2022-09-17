@@ -6,6 +6,7 @@ app_name = 'maket'
 urlpatterns = [
     path('', views.index, name='index'),
     path('reload', views.index, name='reload'),
+    path('vieworder/<int:id>', views.vieworder, name='vieworder'),
     path('<int:id>', views.reload, name='reload2'),
 
     path('main', views.main_maket, name='main_maket'),
