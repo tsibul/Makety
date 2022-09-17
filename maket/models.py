@@ -228,9 +228,10 @@ class Films(models.Model):
     date = models.DateField(default='')
     format = models.CharField(max_length=3, default='A5')
     status = models.BooleanField(default=False)
+    date_sent = models.DateField(default=None, null=True)
 
     def __repr__(self):
-        return str(self.film_id + ' от ' + self.date)
+        return str(self.film_id) + ' от ' + str(self.date)
 
     def __str__(self):
         return str(self.film_id + ' от ' + self.date)
