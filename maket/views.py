@@ -983,17 +983,33 @@ def films(request):
             ig_q = ig_q + it.quantity
             ig_p = ig_p + it.quantity * it.item_price
             ig_pp = ig_pp + it.quantity * it.print_price
-        f_group[i.film].append([i, ig_q, ig_p, ig_pp,ig_p + ig_pp])
+            prints = Print_imports.objects.filter(item=it)
+            pr = ''
+            len_pr = 0
+            for prt in prints:
+                if prt.second_pass:
+                    sec_pass = '2 пр., '
+                else:
+                    sec_pass = ''
+                if 'Станд' in prt.place:
+                    prt_place = 'Станд. ProEcoPen'
+                else:
+                    prt_place = prt.place
+                pr += (prt_place + ', ' + prt.type + ', ' + str(prt.colors) + ' цв., ' + sec_pass).ljust(42, '-')
+                len_pr += 1
+        f_group[i.film].append([i, ig_q, ig_p, ig_pp, ig_p + ig_pp, pr, len_pr])
 
     for fg in f_group:
         ig_q_all = 0
         ig_p_all = 0
         ig_pp_all = 0
+        len_it = 0
         for content in f_group[fg]:
             ig_q_all += content[1]
             ig_p_all += content[2]
             ig_pp_all += content[3]
-        f_group[fg].insert(0, [ig_q_all, ig_p_all, ig_pp_all, ig_pp_all + ig_p_all])
+            len_it += content[6]
+        f_group[fg].insert(0, [ig_q_all, ig_p_all, ig_pp_all, ig_pp_all + ig_p_all, len_it])
 
     context = {'navi': navi, 'films': films, 'active7': 'active', 'f_group': f_group}
     return render(request, 'maket/films.html', context)

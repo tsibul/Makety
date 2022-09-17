@@ -9,35 +9,49 @@
      <th colspan="2">Пленка: {{film.film_id}} от {{film.date|date:'d.m.Y'}} формат {{film.format}} </th>
      <th colspan="2">{% if film.status %} выведена {% else %} в работе {% endif %}</th>
      <th >{{film.date_sent}}</th>
-     <th class="text-end">Кол-во</th>
-     <th class="text-wrap text-end">Сумма товар</th>
-     <th class="text-wrap text-end">Сумма нанес.</th>
-     <th class="text-wrap text-end">Сумма </th>
+     <th>нанесений {{item_group.0.4}}</th>
+     <th class="text-end fw-normal" style="font-size:100%">К-во</th>
+     <th class="text-wrap text-end fw-normal" style="font-size:100%">Tовар</th>
+     <th class="text-wrap text-end fw-normal" style="font-size:100%">Нанес.</th>
+     <th class="text-wrap text-end fw-normal" style="font-size:100%">Сумма </th>
 
     </tr>
-    <tr>
+    <tr style="font-size:100%">
      <th class="fw-normal">Заказ</th>
      <th class="fw-normal">Клиент</th>
      <th class="fw-normal">Макет</th>
      <th class="fw-normal">Группа товара</th>
      <th class="fw-normal">Нанесение</th>
+     <th class="fw-normal">Данные по нанесению</th>
      <th class="fw-normal text-end">{{item_group.0.0}}</th>
      <th class="fw-normal text-end">{{item_group.0.1}}</th>
      <th class="fw-normal text-end">{{item_group.0.2}}</th>
      <th class="fw-normal text-end">{{item_group.0.3}}</th>
-
-
     </tr>
     </thead>
     {% for itm in item_group %}
     {% if  itm != item_group.0 %}
     <tbody>
-    <tr>
-      <td>{{itm.0.maket.order.order_id}}</td>
+    <tr style="font-size:90%">
+      <td ondblclick="window.open('reload.html',
+                         'newwindow',
+                         'width=300,height=250');
+              return false;">
+          {{itm.0.maket.order.order_id}}
+      </td>
       <td>{{itm.0.maket.order.customer.name}}</td>
-      <td>{{itm.0.maket.maket_id}}</td>
-      <td>{{itm.0.item.item.print_group.name}}</td>
-      <td>{{itm.0.print_name}}</td>
+      <div>
+      <td ondblclick="window.open('/maket/maket_print/{{itm.0.maket.order.id}}/{{itm.0.maket.maket_id}}', '_blank');  return false;">
+          {{itm.0.maket.maket_id}}
+      </td>
+      <td style="min-width:160px;"
+          ondblclick="window.open('/maket/maket_print/{{itm.0.maket.order.id}}/{{itm.0.maket.maket_id}}', '_blank');  return false;">
+          {{itm.0.item.item.print_group.name}}
+      </td>
+      <td ondblclick="window.open('/maket/maket_print/{{itm.0.maket.order.id}}/{{itm.0.maket.maket_id}}', '_blank');  return false;">
+          {{itm.0.print_name}}
+      </td>
+      <td style="max-width:300px;">{{itm.5}}</td>
       <td class="text-end">{{itm.1}}</td>
       <td class="text-end">{{itm.2}}</td>
       <td class="text-end">{{itm.3}}</td>
