@@ -445,7 +445,7 @@ def import_order(request):
                 itm_price = trstrings[i][2].split(',')
                 if itm_price != ['\xa0']:
                     try:
-                        item_price = float(itm_price[0])+int(itm_price[1])/10
+                        item_price = float(itm_price[0])+int(itm_price[1])/10**len(itm_price[1])
                     except:
                         item_price = float(itm_price[0])
                     itm_for_price = Item_imports.objects.get(id=prt_item.id)
@@ -453,7 +453,7 @@ def import_order(request):
                     itm_for_price.save()
                 prt_price = trstrings[i][7].split(',')
                 try:
-                    print_price = float(prt_price[0])+int(prt_price[1])/10
+                    print_price = float(prt_price[0])+int(prt_price[1])/10**len(prt_price[1])
                 except:
                     print_price = float(prt_price[0])
                 if trstrings[i][6] == '-':
@@ -966,10 +966,36 @@ def maket_status(request, id, status, source):
         return HttpResponseRedirect(reverse('maket:maket_base'))
 
 def films(request):
-    navi = 'customers'
+    navi = 'films'
     films = Films.objects.all().order_by('-date', '-film_id')
 
-    context = {'navi': navi, 'films': films, 'active7': 'active'}
+#    maket = Makety.objects.all().order_by('-order_date', 'maket_id')
+    item_group = Itemgroup_in_Maket.objects.filter(film__isnull=False).order_by('item')
+    f_group = {}
+    for i in item_group:
+        if i.film not in f_group:
+            f_group[i.film] = []
+        ig_q = 0
+        ig_p = 0
+        ig_pp = 0
+        itms = Item_imports.objects.filter(Q(order=i.maket.order) & Q(item__print_group=i.item.item.print_group))
+        for it in itms:
+            ig_q = ig_q + it.quantity
+            ig_p = ig_p + it.quantity * it.item_price
+            ig_pp = ig_pp + it.quantity * it.print_price
+        f_group[i.film].append([i, ig_q, ig_p, ig_pp,ig_p + ig_pp])
+
+    for fg in f_group:
+        ig_q_all = 0
+        ig_p_all = 0
+        ig_pp_all = 0
+        for content in f_group[fg]:
+            ig_q_all += content[1]
+            ig_p_all += content[2]
+            ig_pp_all += content[3]
+        f_group[fg].insert(0, [ig_q_all, ig_p_all, ig_pp_all, ig_pp_all + ig_p_all])
+
+    context = {'navi': navi, 'films': films, 'active7': 'active', 'f_group': f_group}
     return render(request, 'maket/films.html', context)
 
 @csrf_exempt
