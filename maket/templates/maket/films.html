@@ -2,14 +2,71 @@
 {% block title %}макеты{% endblock %}
 {% block content %}
 
+<!-- Modal -->
+<div class="modal fade" id="updateFilm" tabindex="-1" aria-labelledby="updateFilmLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Редактировать пленку</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="row m-1 p-1">
+              <input type="number" id="id" value="" name="id" class="form-control" hidden>
+              <div class="col">Номер</div>
+              <div class="col"><input type="number" id="#" value="" name="#" class="form-control"></div>
+              <div class="col"> от </div>
+              <div class="col"><input type="date" id="date" value="" name="date" class="form-control"></div>
+          </div>
+          <div class="row m-1 p-1">
+              <div class="col">Формат </div>
+              <div class="col"><input type="text" id="format" value="" name="format" class="form-control"></div>
+          </div>
+          <div class="row m-1 p-1">
+              <div class="col">Отправлено </div>
+              <div class="col"><input type="date" id="sent" value="" name="sent" class="form-control"></div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary"  data-bs-dismiss="modal"
+                onclick="javascript:update_to_film();">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 <table class="table table-sm table-hover table-borderless">
 {% for film, item_group in f_group.items %}
-    <thead class="table-primary">
+    <thead class="table-info">
     <tr>
-     <th colspan="2">Пленка: {{film.film_id}} от {{film.date|date:'d.m.Y'}} формат {{film.format}} </th>
-     <th colspan="2">{% if film.status %} выведена {% else %} в работе {% endif %}</th>
-     <th >{{film.date_sent}}</th>
-     <th>нанесений {{item_group.0.4}}</th>
+     <th colspan="2">Пленка: {{film.film_id}} от {{film.date|date:'d.m.Y'}} формат {{film.format}}
+         {% if film.status %} выведена {% else %} в работе {% endif %}{{film.date_sent|date:'d.m.Y'}}
+     </th>
+     <th colspan="2">нанесений {{item_group.0.4}}</th>
+     <th>
+         <input type="number" id="film_{{film.id}}" value="{{film.film_id}}" hidden>
+         <input type="date" id="date_{{film.id}}" value="{{film.date|date:'Y-m-d'}}" hidden>
+         <input type="text" id="format_{{film.id}}" value="{{film.format}}" hidden>
+         <input type="date" id="sent_{{film.id}}" value="{{film.date_sent|date:'Y-m_d'}}" hidden>
+         <button type="button" class="btn btn-sm btn-outline-primary"
+                 data-bs-toggle="modal" data-bs-target="#updateFilm"
+                 onclick="javascript:update_film({{film.id}});">
+             <i class="bi bi-pencil"></i> Редактировать
+         </button>
+     </th>
+     <th>
+         <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" style="font-size:90%">
+            <i class="bi bi-upload"></i> Загрузить
+         </button>
+         <button type="button" class="btn btn-sm btn-outline-secondary  text-nowrap"
+            style="font-size:90%" {% if not film.uploaded %}disabled{% endif %}>
+            <i class="bi bi-download"></i> Открыть
+         </button>
+     </th>
      <th class="text-end fw-normal" style="font-size:100%">К-во</th>
      <th class="text-wrap text-end fw-normal" style="font-size:100%">Tовар</th>
      <th class="text-wrap text-end fw-normal" style="font-size:100%">Нанес.</th>

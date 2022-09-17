@@ -518,3 +518,23 @@ function save_to_film(){
     xhr.send();
 
 }
+
+function update_film(id){
+   var flm_id = 'film_' + id;
+   var film_id = document.getElementById(flm_id).value;
+   var date_ = 'date_' + id;
+   var date = document.getElementById(date_).value;
+   var format_ = 'format_' + id;
+   var format = document.getElementById(format_).value;
+   var sent_ = 'sent_' + id;
+   var sent = document.getElementById(sent_).value;
+
+   document.getElementById('id').value = id;
+   document.getElementById('#').value = film_id;
+   document.getElementById('date').value = date;
+   document.getElementById('format').value = format;
+   document.getElementById('sent').value = sent;
+}
+
+function update_to_film(){
+}
