@@ -16,17 +16,6 @@
     <div class="m-2" style="font-size:80%;">Кол-во {{ord_imp.order_quantity}}</div>
     <div class="m-2" style="font-size:80%;">Сумма нанес. {{ord_imp.print_sum}}</div>
     <div class="m-2" style="font-size:80%;">Кол-во нанес. {{ord_imp.print_quantity}}</div>
-    <div class="d-flex flex-row border border-2">
-    <div class="fw-bold m-2"style="font-size:80%;">Пленка </div>
-    <div class="m-2" style="font-size:80%;"> номер {{ord_imp.film.film_id}}</div>
-    <div class="m-2" style="font-size:80%;"> от {{ord_imp.film.date}}</div>
-    <div class="m-2" style="font-size:80%;"></div>
-    <div class="text-center m-2" style="font-size:80%;">
-    <label for="filmstatus" style="font-size:80%;">без ошибок</label>
-    <input class="form-check-input align-middle" type="checkbox"
-           {% if ord_imp.film_status %} checked {% endif %} disabled name="filmstatus" id="filmstatus">
-    </div>
-    </div>
 </div><!-- Order -->
 <div class="d-flex flex-rowlh-1">
     <div class="fw-bold m-1">Поставщик </div>
