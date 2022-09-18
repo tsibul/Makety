@@ -1,4 +1,9 @@
 from django.db import models
+from django.core.files.storage import FileSystemStorage
+
+fs_orders = FileSystemStorage(location='files/orders')
+fs_makety = FileSystemStorage(location='files/makety')
+fs_films = FileSystemStorage(location='files/films')
 
 
 class Color_scheme(models.Model):
@@ -147,7 +152,7 @@ class Order_imports(models.Model):
     status_choices = [(Ready, 'R'), (Partial, 'P'), (NotReady, 'N')]
     maket_status = models.CharField(max_length=1, choices=status_choices, default=NotReady)
     order_upload = models.BooleanField(default=False)
-    order_file = models.FileField(null=True, blank=True)
+    order_file = models.FileField(storage=fs_orders, null=True, blank=True)
 
     def __repr__(self):
         return self.order_id

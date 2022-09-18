@@ -39,7 +39,35 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal upload_order -->
+<div class="modal fade" id="uploadOrder" tabindex="-1" aria-labelledby="uploadOrderLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadOrderLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="upload_order" method="post" id="upload_order_" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="modal-body m-1">
+         <!-- Выбор файла --->
+         <label class="custom-file-label" for="ChoseOrder"></label>
+         <input type="file" accept=".pdf" class="custom-file-input form-control col-auto border"
+                id="ChoseOrder" name="ChoseOrder" form="upload_order_">
+          <input type="number" name="upload_id" id="upload_id" form="upload_order_" hidden>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="submit" name="submit" class="btn btn-primary" form="upload_order_" >Загрузить</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Modal Upload order -->
+
+
+<!-- Modal import_order -->
 <form id="import_order" action="{% url 'maket:import_order' %}" method="post" enctype="multipart/form-data">
 {% csrf_token %}
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -72,17 +100,19 @@
            {%  if ord.maket_status == 'R' %} text-success{% elif ord.maket_status == 'N' %} text-danger {% endif %}">
         <td class="fw-bold" >{{ord.maket_status}}</td>
         <td >
-            <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" style="font-size:80%">
+            <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" style="font-size:80%"
+                    onclick="javascript:upload_order({{ord.id}});" data-bs-toggle="modal" data-bs-target="#uploadOrder">
                 <i class="bi bi-upload"></i> загрузить
             </button>
+        </form>
         </td>
         <td>
-            <button type="button" class="btn btn-sm btn-outline-secondary  text-nowrap"
+            <button type="button" class="btn btn-sm btn-outline-secondary  text-nowrap" id="but_upl_{{ord.id}}"
                     style="font-size:80%" {% if not ord.order_upload %}disabled{% endif %}>
                 <i class="bi bi-download"></i> открыть
             </button>
         </td>
-        <td >{{ord.order_id}}</td>
+        <td id="ord_id_{{ord.id}}">{{ord.order_id}}</td>
         <td>{{ord.order_date|date:'d.m.Y'}}</td>
 {% if 'Сувенир' in ord.supplier %}
         <td> ВВС </td>
@@ -91,7 +121,7 @@
 {% else %}
         <td> ВВ </td>
 {% endif %}
-        <td class="text-wrap" style="max-width:440px"> {{ord.customer_name}}</td>
+        <td class="text-wrap" style="max-width:440px" id="cust_nm_{{ord.id}}"> {{ord.customer.name}}</td>
         <td> {{ord.manager.manager}}</td>
         <td class="text-break"> {{ord.manager.manager_mail}}</td>
         <td class="text-end"> {{ord.order_sum}}</td>

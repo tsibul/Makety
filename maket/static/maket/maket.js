@@ -558,5 +558,12 @@ function update_to_film(){
    var url = 'update_to_film/' + data_to_film;
    xhr.open("GET", url, true);
    xhr.send();
+}
 
+function upload_order(id){
+    var cust_nm = document.getElementById('cust_nm_' + id).textContent;
+    var ord_id = document.getElementById('ord_id_' + id).textContent;
+    document.getElementById('upload_id').value = id;
+    document.getElementById('uploadOrderLabel').textContent = ord_id + ' ' + cust_nm;
+    document.getElementById('but_upl_' + id).disabled = false;
 }

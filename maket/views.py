@@ -11,6 +11,8 @@ from django.shortcuts import render
 from django.template import loader
 from django.urls import reverse
 from django.core.paginator import Paginator
+from django.core.files import File
+
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
     Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group, Print_in_Maket
@@ -1060,3 +1062,24 @@ def update_to_film(request, data_to_film):
         film.date_sent = sent
     film.save()
     return HttpResponse()
+
+
+def upload_order(request):
+    id = request.POST['upload_id']
+    order = Order_imports.objects.get(id=id)
+    try:
+        file = request.FILES['ChoseOrder']
+        try:
+            order.order_file.delete()
+        except:
+            pass
+        order.order_file.save(file.name, file)
+        order.order_upload = True
+        order.save()
+    except:
+        pass
+    return HttpResponseRedirect(reverse('maket:index'))
+
+
+def download_order(id):
+    return HttpResponse
