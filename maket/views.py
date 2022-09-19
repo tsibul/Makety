@@ -11,7 +11,8 @@ from django.shortcuts import render
 from django.template import loader
 from django.urls import reverse
 from django.core.paginator import Paginator
-from django.core.files import File
+from django.http import FileResponse, Http404
+
 
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
@@ -1081,5 +1082,27 @@ def upload_order(request):
     return HttpResponseRedirect(reverse('maket:index'))
 
 
-def download_order(id):
-    return HttpResponse
+def download_order(request, id):
+    order = Order_imports.objects.get(id=id)
+    return FileResponse(open(order.order_file.path, 'rb'), content_type='application/pdf')
+
+def upload_maket(request):
+    id = request.POST['upload_id']
+    maket = Makety.objects.get(id=id)
+    try:
+        file = request.FILES['ChoseMaket']
+        try:
+            maket.maket_file.delete()
+        except:
+            pass
+        maket.maket_file.save(file.name, file)
+        maket.uploaded = True
+        maket.save()
+    except:
+        pass
+    return HttpResponseRedirect(reverse('maket:maket_base'))
+
+
+def download_maket(request, id):
+    maket = Makety.objects.get(id=id)
+    return FileResponse(open(maket.maket_file.path, 'rb'), content_type='application/pdf')

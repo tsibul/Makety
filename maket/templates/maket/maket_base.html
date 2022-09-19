@@ -36,7 +36,7 @@
         <i class="bi bi-plus-lg"></i> Скрыть/показать
     </button></div>
 </div>
-<!-- Modal -->
+<!-- Modal select film-->
 <div class="modal fade" id="selectFilm" tabindex="-1" aria-labelledby="selectFilmLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -67,7 +67,35 @@
       </div>
     </div>
   </div>
+</div><!-- Modal select film -->
+
+<!-- Modal upload_maket -->
+<div class="modal fade" id="uploadMaket" tabindex="-1" aria-labelledby="uploadMaketLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title"><div id="uploadMaketLabel"></div>
+              <div id="uploadMaketLabel2"></div></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="upload_maket" method="post" id="upload_maket_" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="modal-body m-1">
+         <!-- Выбор файла --->
+         <label class="custom-file-label" for="ChoseMaket"></label>
+         <input type="file" accept=".pdf" class="custom-file-input form-control col-auto border"
+                id="ChoseMaket" name="ChoseMaket" form="upload_maket_">
+          <input type="number" name="upload_id" id="upload_id" form="upload_maket_" hidden>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="submit" name="submit" class="btn btn-primary" form="upload_maket_" >Загрузить</button>
+      </div>
+      </form>
+    </div>
+  </div>
 </div>
+<!-- Modal Upload maket -->
 
 
 <table class="table table-hover lh-1">
@@ -90,7 +118,7 @@
                 {% if ord.maket_status == 'R' %} selected {% endif %}><div class="text-success"> готово&nbsp;&nbsp; </div></option>
             </select>
         </td>
-        <td>{{ord.order_id}}</td>
+        <td >{{ord.order_id}}</td>
         <td>{{ord.order_date|date:'d.m.Y'}}</td>
         <td>{% if 'Сувенир' in ord.supplier %}ВВС{% elif 'Студия' in ord.supplier %}ССП{% else %}ВВ{% endif %}</td>
         <td class="text-wrap" style="max-width:400px"> {{ord.customer_name}}</td>
@@ -106,19 +134,23 @@
                 <tr class="align-middle" ondblclick="window.open('/maket/maket_print/{{ord.id}}/{{mkt.maket_id}}', '_blank');">
                 <td></td>
                 <td><a href="javascript:colapse_({{mkt.id}});"><i class="bi bi-plus-square"></i></a></td>
-                <td># {{mkt.maket_id}}</td>
+                <td id="mk_id_{{mkt.id}}"># {{mkt.maket_id}}</td>
                 <td style="max-width:120px;">создан {{mkt.date_create|date:'d.m.Y'}}</td>
                 <td style="max-width:120px;">изменен {{mkt.date_modified|date:'d.m.Y'}}</td>
-                <td style="max-width:120px;">файл загружен {% if mkt.uploaded %}ДА{% else %}НЕТ{% endif %}</td>
-                <td>файл {{mkt.maket_file}}</td>
-                <td style="min-width:400px;">комментарий {{mkt.comment}}</td>
+                <td style="max-width:320px;" class="fw-bold">
+                    {% if mkt.uploaded %}<a href="/maket/download_maket/{{mkt.id}}" target="_blank">
+                    {{mkt.maket_file}}</a>
+                    {% else %}файл не загружен{% endif %}</td>
+                <td style="min-width:320px;">комментарий {{mkt.comment}}</td>
                 <td class="text-end">
-                    <button type="button" class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-upload"></i> загрузить</button>
-                    <button type="button" {% if not mkt.uploaded %}disabled{% endif %}
-                            class="btn btn-sm btn-outline-secondary">
-                        <i class="bi bi-download"></i> открыть</button>
-                </td>
+                <input type="text" hidden id="ord_id_{{mkt.id}}" value="{{mkt.order.order_id}}">
+                <input type="text" hidden id="cust_nm_{{mkt.id}}" value="{{mkt.order.customer.name}}">
+                    <button type="button" class="btn btn-sm btn-outline-primary"
+                            onclick="javascript:upload_maket({{mkt.id}});" data-bs-toggle="modal"
+                            data-bs-target="#uploadMaket">
+                         <i class="bi bi-upload"></i> загрузить файл
+                    </button>
+                 </td>
                 </tr>
     <tr style="font-size:100%;">
         <td colspan="10" class="p-0 lh-0 m-0">

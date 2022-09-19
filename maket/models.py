@@ -217,7 +217,7 @@ class Makety(models.Model):
     date_modified = models.DateField(blank=True, null=True)
     maket_id = models.SmallIntegerField(default=0)
     uploaded = models.BooleanField(default=False)
-    maket_file = models.FileField(null=True, blank=True)
+    maket_file = models.FileField(storage=fs_makety, null=True, blank=True)
     comment = models.CharField(max_length=255, default='')
     order = models.ForeignKey(Order_imports, models.SET_NULL, null=True)
     order_num = models.CharField(max_length=18, blank=True, null=True)
@@ -237,7 +237,7 @@ class Films(models.Model):
     status = models.BooleanField(default=False)
     date_sent = models.DateField(default=None, null=True)
     film_upload = models.BooleanField(default=False)
-    film_file = models.FileField(null=True, blank=True)
+    film_file = models.FileField(storage=fs_films, null=True, blank=True)
 
     def __repr__(self):
         return str(self.film_id) + ' от ' + str(self.date)

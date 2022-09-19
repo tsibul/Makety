@@ -567,3 +567,14 @@ function upload_order(id){
     document.getElementById('uploadOrderLabel').textContent = ord_id + ' ' + cust_nm;
     document.getElementById('but_upl_' + id).disabled = false;
 }
+
+function upload_maket(id){
+    var cust_nm = document.getElementById('cust_nm_' + id).value;
+    var ord_id = document.getElementById('ord_id_' + id).value;
+    var mk_id = document.getElementById('mk_id_' + id).textContent;
+    document.getElementById('upload_id').value = id;
+    document.getElementById('uploadMaketLabel').textContent = ord_id + mk_id;
+    document.getElementById('uploadMaketLabel2').textContent = cust_nm;
+
+    document.getElementById('but_upl_' + id).disabled = false;
+}

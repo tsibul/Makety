@@ -45,6 +45,8 @@ urlpatterns = [
     path('save_to_film/<int:id>/<int:film>', views.save_to_film, name='save_to_film'),
     path('update_to_film/<str:data_to_film>', views.update_to_film, name='update_to_film'),
     path('upload_order', views.upload_order, name='upload_order'),
-    path('download_order<int:id>', views.download_order, name='download_order'),
+    path('download_order/<int:id>', views.download_order, name='download_order'),
+    path('upload_maket', views.upload_maket, name='maket_order'),
+    path('download_maket/<int:id>', views.download_maket, name='download_maket'),
 
 ]
