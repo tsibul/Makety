@@ -108,6 +108,7 @@
         </td>
         <td>
             <button type="button" class="btn btn-sm btn-outline-secondary  text-nowrap" id="but_upl_{{ord.id}}"
+                    onclick="window.open('/maket/download_order/{{ord.id}}', '_blank');"
                     style="font-size:80%" {% if not ord.order_upload %}disabled{% endif %}>
                 <i class="bi bi-download"></i> открыть
             </button>
