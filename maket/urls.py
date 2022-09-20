@@ -48,5 +48,7 @@ urlpatterns = [
     path('download_order/<int:id>', views.download_order, name='download_order'),
     path('upload_maket', views.upload_maket, name='maket_order'),
     path('download_maket/<int:id>', views.download_maket, name='download_maket'),
+    path('upload_film', views.upload_film, name='upload_film'),
+    path('download_film/<int:id>', views.download_film, name='download_film'),
 
 ]

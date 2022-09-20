@@ -1106,3 +1106,25 @@ def upload_maket(request):
 def download_maket(request, id):
     maket = Makety.objects.get(id=id)
     return FileResponse(open(maket.maket_file.path, 'rb'), content_type='application/pdf')
+
+
+def upload_film(request):
+    id = request.POST['upload_id']
+    film = Films.objects.get(id=id)
+    try:
+        file = request.FILES['ChoseFilm']
+        try:
+            film.maket_file.delete()
+        except:
+            pass
+        film.film_file.save(file.name, file)
+        film.film_upload = True
+        film.save()
+    except:
+        pass
+    return HttpResponseRedirect(reverse('maket:films'))
+
+
+def download_film(request, id):
+    film = Films.objects.get(id=id)
+    return FileResponse(open(film.film_file.path, 'rb'), content_type='application/force-download')

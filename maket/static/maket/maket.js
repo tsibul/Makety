@@ -578,3 +578,13 @@ function upload_maket(id){
 
     document.getElementById('but_upl_' + id).disabled = false;
 }
+
+function upload_film(id){
+    var film1 = document.getElementById('film1_' + id).value;
+    var film2 = document.getElementById('film2_' + id).value;
+    document.getElementById('upload_id').value = id;
+    document.getElementById('uploadFilmLabel').textContent = film1;
+    document.getElementById('uploadFilmLabel2').textContent = film2;
+
+    document.getElementById('but_upl_' + id).disabled = false;
+}
