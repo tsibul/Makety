@@ -45,7 +45,7 @@ function upd_dtl(detail_id, clr_in){
     var clr_html = ''
 
     for (var i = 0; i < clr_numb; i++){
-    if (clr_schemes[i] == clr_in){var selected = 'selected'}else{var selected = ''};
+    if (clr_schemes[i] === clr_in){var selected = 'selected'}else{var selected = ''};
     clr_html +=('<option value="' + clr_schemes[i] + '" ' + selected + ' name="ColorSelect">' +
     clr_schemes[i] + '</option>');
     }
@@ -146,7 +146,7 @@ function clr_edit(detail_id, clr_in){
     var clr_html = ''
 
     for (var i = 0; i < clr_numb; i++){
-    if (clr_schemes[i] == clr_in){var selected = 'selected'}else{var selected = ''};
+    if (clr_schemes[i] === clr_in){var selected = 'selected'}else{var selected = ''};
     clr_html +=('<option value="' + clr_schemes[i] + '" ' + selected + ' name="ColorSelect">' +
     clr_schemes[i] + '</option>');
     }
@@ -256,7 +256,7 @@ function split_maket(print_range){
     var number_items = print_range.length;
     for(i=0; i<number_items; i++){
     var line = 'chck_' + print_range[i][2]
-    if(document.getElementById(line).checked){if (print_range[i][8] == 'note'){
+    if(document.getElementById(line).checked){if (print_range[i][8] === 'note'){
     document.getElementById(print_range[i][2]).style.display='block';}
     else{document.getElementById(print_range[i][2]).style.display='inherit';};
     var hd_line = print_range[i][2] + '_';
@@ -274,7 +274,7 @@ function split_maket(print_range){
 function chs_note(prt_0_, note){
     const prt_3A6 = [];
     for(i=0; i<prt_0_.length; i++){
-    if(prt_0_[i][3]==note){prt_3A6.push(prt_0_[i])}
+    if(prt_0_[i][3]===note){prt_3A6.push(prt_0_[i])}
     }
     var number_items = prt_3A6.length;
     try{if(document.getElementById(('chck_'+ note + '_all')).checked){
@@ -312,14 +312,14 @@ function chs_note(prt_0_, note){
 
 function colapse(id){
     var area = 'collapse_' + id;
-    if (document.getElementById(area).style.display =='none'){
+    if (document.getElementById(area).style.display ==='none'){
     document.getElementById(area).style.display = 'initial';}
     else {document.getElementById(area).style.display = 'none';};
 }
 
 function colapse_(id){
     var area = 'collapse_' + id;
-    if (document.getElementById(area).style.display =='none'){
+    if (document.getElementById(area).style.display ==='none'){
     document.getElementById(area).style.display = 'table-row-group';}
     else {document.getElementById(area).style.display = 'none';};
 }
@@ -327,7 +327,7 @@ function colapse_(id){
 function pen_position(id, pen_pos){
     var pen_pos = document.getElementById('pen_pos_' + id).value;
     for(var i=1; i<5; i++){
-    if(pen_pos == i){
+    if(pen_pos === i){
     document.getElementById(i+'_'+id).style.display = 'inline';
     document.getElementById(i+'_big_'+id).style.display = 'inline';}
     else{
@@ -384,7 +384,7 @@ function upd_good(id, clr_schemes, print_group){
                    + '" name="ColorSelect" form="form_' + id + '">');
 
    for (var i = 0; i < clr_numb; i++){
-   if (clr_schemes[i] == cs){var selected = 'selected'}else{var selected = ''};
+   if (clr_schemes[i] === cs){var selected = 'selected'}else{var selected = ''};
    clr_html +=('<option value="' + clr_schemes[i] + '" ' + selected + ' name="ColorSelect_">' +
    clr_schemes[i] + '</option>');
    }
@@ -396,7 +396,7 @@ function upd_good(id, clr_schemes, print_group){
                    + '" name="PrtSelect" form="form_' + id + '">');
 
    for (var i = 0; i < prt_numb; i++){
-   if (print_group[i] == pg){var selected = 'selected'}else{var selected = ''};
+   if (print_group[i] === pg){var selected = 'selected'}else{var selected = ''};
    prt_html +=('<option value="' + print_group[i] + '" ' + selected + ' name="PrtSelect_">' +
    print_group[i] + '</option>');
    }
@@ -502,7 +502,7 @@ function save_to_film(){
     var flm_data = film_data.split('|');
     var id = document.getElementById('modal_pg_id').value;
     var film = flm_data[0];
-    if(film!=0){
+    if(film!==0){
     var film_date = flm_data[2];
     var film_id = flm_data[1]
     }else{
@@ -510,8 +510,7 @@ function save_to_film(){
     var film_id = document.getElementById('last_film').value
     }
     var filmout = 'filmout_' + id;
-    var html_code = 'пленка: ' + film_id + ' от ' + film_date;
-    document.getElementById(filmout).innerHTML = html_code;
+    document.getElementById(filmout).innerHTML = 'пленка: ' + film_id + ' от ' + film_date;
     var xhr = new XMLHttpRequest();
     var url = 'save_to_film/' + id + '/' + film;
     xhr.open("GET", url, true);
@@ -546,7 +545,7 @@ function update_to_film(){
    var sent = document.getElementById('sent').value;
    var output = 'output_' + id;
    var textout = 'Пленка: ' + film_id + ' от ' + date_s + ' формат ' + format;
-   if(sent==''){
+   if(sent===''){
    textout += ' в работе ';
    }else{
    var arrDate2 = sent.split("-");
