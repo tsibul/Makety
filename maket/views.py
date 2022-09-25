@@ -1141,7 +1141,8 @@ def look_up(request, navi):
         except:
             lookup = navi.split('_')[1]
         try:
-            orders = Order_imports.objects.filter(Q(order_id__icontains=lookup) | Q(customer__name__icontains=lookup)).order_by('-order_date')
+            orders = Order_imports.objects.filter(Q(order_id__icontains=lookup) | Q(customer__name__icontains=lookup) | \
+                                                  Q(manager__manager__icontains=lookup)).order_by('-order_date')
             ord_imp = orders.order_by('-order_date', '-id').first()
             item_import = list(Item_imports.objects.filter(order=ord_imp.id).order_by('code'))
             print_import = ()
@@ -1167,7 +1168,8 @@ def look_up(request, navi):
         for itm in item:
             if itm.order not in ord_s:
                 ord_s.append(itm.order)
-        maket = Makety.objects.filter(Q(order__order_id__icontains=lookup) | Q(order__customer__name__icontains=lookup) | Q(order__in=ord_s)).order_by('-order_date', 'maket_id')
+        maket = Makety.objects.filter(Q(order__order_id__icontains=lookup) | Q(order__customer__name__icontains=lookup) \
+                                      | Q(order__in=ord_s)).order_by('-order_date', 'maket_id')
 
         item_group = Itemgroup_in_Maket.objects.all().order_by('item')
         f_group = {}
@@ -1212,7 +1214,8 @@ def look_up(request, navi):
             return HttpResponseRedirect(reverse('maket:films'))
 
         item = Item_imports.objects.filter(print_name__icontains=lookup)
-        maket = Makety.objects.filter(Q(order__order_id__icontains=lookup) | Q(order__customer__name__icontains=lookup)).order_by('-order_date', 'maket_id')
+        maket = Makety.objects.filter(Q(order__order_id__icontains=lookup) | Q(order__customer__name__icontains=lookup))\
+            .order_by('-order_date', 'maket_id')
         itg_in = Itemgroup_in_Maket.objects.filter(Q(maket__in=maket) | Q(item__in=item))
         flm_s = []
         for itg in itg_in:
@@ -1263,6 +1266,21 @@ def look_up(request, navi):
         context = {'navi': navi, 'active7': 'active', 'f_group': f_group}
         return render(request, 'maket/films.html', context)
 
+    elif navi == 'customers':
+        try:
+            lookup = request.POST['look_up']
+        except:
+            pass
+        if lookup == '':
+            return HttpResponseRedirect(reverse('maket:customers'))
+        order = Order_imports.objects.filter(manager__manager__icontains=lookup)
+        cst_id = []
+        for ord in order:
+            cst_id.append(ord.customer.id)
+        customers = Customer.objects.filter(Q(name__icontains=lookup) | Q(address__icontains=lookup) | \
+                                            Q(id__in=cst_id)).order_by('name')
 
+        context = {'navi': navi, 'customers': customers, 'active3': 'active'}
+        return render(request, 'maket/customers.html', context)
 
     return

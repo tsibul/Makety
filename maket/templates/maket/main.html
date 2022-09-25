@@ -69,13 +69,15 @@
             <a class="nav-link {{active4}}" id="4" href="{% url 'maket:admin' %}"  aria-current="page">Починки</a>
           </li>
       </ul>
+      {% if active1 == 'active' or active5 == 'active' or active7 == 'active' or active3 == 'active' %}
       <form action="/maket/look_up/{% if active1 == 'active' %}orders{% elif active5 == 'active' %}maket_base{% elif active7 == 'active' %}films{% elif active3 == 'active' %}customers{% endif %}"
             id="form_lookup" method="post" class="d-flex">
       {% csrf_token %}
-        <input class="form-control me-2" type="search" placeholder="Поиск (нету)" aria-label="Search" name="look_up" id="look_up">
+        <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search" name="look_up" id="look_up">
         <button class="btn btn-primary" type="submit" >Поиск</button>
-      <div class="d-flex text-white m-1 pt-1"> v1.3.0</div>
       </form>
+      {% endif %}
+      <div class="d-flex text-white m-1 pt-1"> v1.3.0</div>
     </div>
   </div>
 </nav>
