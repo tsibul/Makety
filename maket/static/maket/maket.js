@@ -587,3 +587,22 @@ function upload_film(id){
 
     document.getElementById('but_upl_' + id).disabled = false;
 }
+
+function total_collapse(){
+    const ids=document.querySelectorAll('[id*="collapse"]')
+    for(var i in ids){
+    if (ids[i].style.display ==='none'){
+    ids[i].style.display = 'table-row-group';}
+    else {ids[i].style.display = 'none';};
+    }
+}
+
+function order_collapse(){
+    const ids=document.querySelectorAll('[id*="collapse_ord"]')
+    for(var i in ids){
+    if (ids[i].style.display ==='none'){
+    ids[i].style.display = 'table-row-group';}
+    else {ids[i].style.display = 'none';};
+    }
+}
+

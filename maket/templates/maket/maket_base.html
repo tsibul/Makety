@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row fixed-bottom bg-light p-2" >
 {% if look_up != True %}
-    <div class="col-9 text-start">
+    <div class="col text-start">
 <div class="pagination" xmlns="http://www.w3.org/1999/html">
     <span class="step-links">
         {% if page_obj.has_previous %}
@@ -33,9 +33,15 @@
     </div>
 {% endif %}
     <div class="col text-end">
-    <button type="button" class="btn btn-sm btn-outline-primary">
-        <i class="bi bi-plus-lg"></i> Скрыть/показать
-    </button></div>
+    <span class="text-nowrap">
+    <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" onclick="javascript:order_collapse();">
+        <i class="bi bi-plus-lg"></i> Скрыть/показать заказы
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" onclick="javascript:total_collapse();">
+        <i class="bi bi-plus-lg"></i> Скрыть/показать все
+    </button>
+    </span>
+    </div>
 </div>
 <!-- Modal select film-->
 <div class="modal fade" id="selectFilm" tabindex="-1" aria-labelledby="selectFilmLabel" aria-hidden="true">
@@ -106,7 +112,7 @@
 <tbody>
 {% for ord, maket in f_maket.items %}
     <tr class="{% if ord.maket_status != 'R' %} text-danger {% endif %}">
-        <td ><a href="javascript:colapse_({{ord.id}});"><i class="bi bi-plus-square"></i></a></td>
+        <td ><a href="javascript:colapse_('ord_{{ord.id}}');"><i class="bi bi-plus-square"></i></a></td>
         <td class="fw-bold" style="max-width:110px; font-size:80%;">
             <select class="form-select form-select-sm {% if ord.maket_status != 'R' %}
                     text-danger {% endif %}" style="font-size:100%;"
@@ -130,11 +136,11 @@
     <tr style="font-size:90%;">
         <td colspan="10" class="p-0 lh-0 m-0">
             <table class="table table-hover table-info lh-1 mb-0" >
-            <tbody id="collapse_{{ord.id}}" style="display:none">
+            <tbody id="collapse_ord_{{ord.id}}" style="display:none">
                 {% for mkt, itemgr in maket.items %}
                 <tr class="align-middle" ondblclick="window.open('/maket/maket_print/{{ord.id}}/{{mkt.maket_id}}', '_blank');">
                 <td></td>
-                <td><a href="javascript:colapse_({{mkt.id}});"><i class="bi bi-plus-square"></i></a></td>
+                <td><a href="javascript:colapse_('mkt_{{mkt.id}}');"><i class="bi bi-plus-square"></i></a></td>
                 <td id="mk_id_{{mkt.id}}"># {{mkt.maket_id}}</td>
                 <td style="max-width:120px;">создан {{mkt.date_create|date:'d.m.Y'}}</td>
                 <td style="max-width:120px;">изменен {{mkt.date_modified|date:'d.m.Y'}}</td>
@@ -156,7 +162,7 @@
     <tr style="font-size:100%;">
         <td colspan="10" class="p-0 lh-0 m-0">
             <table class="table table-hover table-light lh-1 text-start mb-0">
-            <tbody id="collapse_{{mkt.id}}" style="display:none">
+            <tbody id="collapse_mkt_{{mkt.id}}" style="display:none">
 
             {% for itm in itemgr %}
                 <tr class="align-middle {% if not itm.film.status %} text-danger{% endif %}">
