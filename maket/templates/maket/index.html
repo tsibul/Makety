@@ -2,6 +2,7 @@
 {% block title %}Макеты{% endblock %}
 {% block content %}
 {% include 'maket/reload.html' %}
+{% if look_up != True %}
 <div class="row fixed-bottom bg-light p-1 mb-0 pb-0 align-items-center" >
 <br><br>
     <div class="col-9 text-start">
@@ -38,6 +39,7 @@
         </button><!-- Button trigger modal -->
     </div>
 </div>
+{% endif %}
 
 <!-- Modal upload_order -->
 <div class="modal fade" id="uploadOrder" tabindex="-1" aria-labelledby="uploadOrderLabel" aria-hidden="true">
@@ -96,7 +98,7 @@
 <table class="table table-info table-hover" style="font-size:90%;">
     <tbody >
     {% for ord in orders %}
-    <tr ondblclick="window.location.href='{{ord.id}}'" class="align-middle
+    <tr ondblclick="window.location.href='/maket/order/{{ord.id}}_{{lookup}}'" class="align-middle
            {%  if ord.maket_status == 'R' %} text-success{% elif ord.maket_status == 'N' %} text-danger {% endif %}">
         <td class="fw-bold" >{{ord.maket_status}}</td>
         <td >

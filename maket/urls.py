@@ -4,10 +4,10 @@ from . import views
 app_name = 'maket'
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('order', views.index, name='index'),
     path('reload', views.index, name='reload'),
     path('vieworder/<int:id>', views.vieworder, name='vieworder'),
-    path('<int:id>', views.reload, name='reload2'),
+    path('order/<str:id_str>', views.reload, name='reload2'),
 
     path('main', views.main_maket, name='main_maket'),
 
@@ -50,5 +50,6 @@ urlpatterns = [
     path('download_maket/<int:id>', views.download_maket, name='download_maket'),
     path('upload_film', views.upload_film, name='upload_film'),
     path('download_film/<int:id>', views.download_film, name='download_film'),
+    path('look_up/<str:navi>', views.look_up, name='look_up'),
 
 ]

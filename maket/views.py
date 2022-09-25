@@ -67,9 +67,9 @@ def index(request):
     return render(request, 'maket/index.html', context)
 
 
-def reload(request, id):
+def reload(request, id_str):
     navi = 'orders'
-    ord_i = id
+    ord_i = id_str.split('_')[0]
     try:
         ord_imp = Order_imports.objects.get(pk=int(ord_i))
     except:
@@ -80,8 +80,12 @@ def reload(request, id):
     for item in item_import:
         print_import = print_import + tuple(Print_imports.objects.filter(item=item))
     print_import = list(print_import)
-
-    orders = Order_imports.objects.all().order_by('-order_date', '-id')
+    try:
+        orders = Order_imports.objects.order_by('-order_date', '-id').filter(
+            Q(order_id__icontains=id_str.split('_')[1]) | Q(customer__name__icontains=id_str.split('_')[1]))
+        context = {'lookup': id_str.split('_')[1]}
+    except:
+        orders = Order_imports.objects.all().order_by('-order_date', '-id')
     f_maket2 = list(orders)
     paginator = Paginator(f_maket2, 20)
     page_number = request.GET.get('page')
@@ -96,8 +100,8 @@ def reload(request, id):
             date_range.append([i + 1, 'до ' + date_tmp])
         except:
             date_range.append(['нет данных'])
-    context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
-               'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range}
+    context.update({'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
+               'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range})
 
     return render(request, 'maket/index.html', context)
 
@@ -1128,3 +1132,152 @@ def upload_film(request):
 def download_film(request, id):
     film = Films.objects.get(id=id)
     return FileResponse(open(film.film_file.path, 'rb'), content_type='application/force-download')
+
+
+def look_up(request, navi):
+    if navi == 'orders':
+        try:
+            lookup = request.POST['look_up']
+        except:
+            lookup = navi.split('_')[1]
+        try:
+            orders = Order_imports.objects.filter(Q(order_id__icontains=lookup) | Q(customer__name__icontains=lookup)).order_by('-order_date')
+            ord_imp = orders.order_by('-order_date', '-id').first()
+            item_import = list(Item_imports.objects.filter(order=ord_imp.id).order_by('code'))
+            print_import = ()
+            for item in item_import:
+                print_import = print_import + tuple(Print_imports.objects.filter(item=item))
+            print_import = list(print_import)
+
+            context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
+                       'orders': orders, 'active1': 'active', 'look_up': True, 'lookup': lookup }
+            return render(request, 'maket/index.html', context)
+        except:
+            return HttpResponseRedirect(reverse('maket:index'))
+    elif navi == 'maket_base':
+        try:
+            lookup = request.POST['look_up']
+        except:
+            pass
+        if lookup == '':
+            return HttpResponseRedirect(reverse('maket:maket_base'))
+
+        item = Item_imports.objects.filter(print_name__icontains=lookup)
+        ord_s = []
+        for itm in item:
+            if itm.order not in ord_s:
+                ord_s.append(itm.order)
+        maket = Makety.objects.filter(Q(order__order_id__icontains=lookup) | Q(order__customer__name__icontains=lookup) | Q(order__in=ord_s)).order_by('-order_date', 'maket_id')
+
+        item_group = Itemgroup_in_Maket.objects.all().order_by('item')
+        f_group = {}
+        for i in item_group:
+            if i.maket not in f_group:
+                f_group[i.maket] = []
+            if i.checked:
+                ig_q = 0
+                ig_p = 0
+                ig_pp = 0
+                itms = Item_imports.objects.filter(
+                    Q(order=i.maket.order) & Q(item__print_group=i.item.item.print_group))
+                for it in itms:
+                    ig_q = ig_q + it.quantity
+                    ig_p = ig_p + it.quantity * it.item_price
+                    ig_pp = ig_pp + it.quantity * it.print_price
+                f_group[i.maket].append([i, ig_q, ig_p, ig_pp])
+
+        f_maket = {}
+        for m in maket:
+            if m.order not in f_maket:
+                f_maket[m.order] = {}
+            f_maket[m.order].update({m: f_group.get(m)})
+
+        films = Films.objects.filter(status=False).order_by('-date')
+        current_date = datetime.date.today()
+        try:
+            last_film = films.first().film_id + 1
+        except:
+            last_film = 1
+
+        f_maket2 = list(f_maket.items())
+        paginator = Paginator(f_maket2, 12)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        f_maket = dict(page_obj.object_list)
+
+        date_range = []
+        for i in range(page_obj.paginator.num_pages):
+            page_obj2 = paginator.get_page(i + 1)
+            try:
+                date_tmp = str(page_obj2.object_list[0][0])
+                date_range.append([i + 1, 'до ' + date_tmp])
+            except:
+                date_range.append(['нет данных'])
+
+        context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'page_obj': page_obj, 'films': films,
+                   'current_date': current_date, 'last_film': last_film, 'date_range': date_range}
+        return render(request, 'maket/maket_base.html', context)
+
+    elif navi == 'films':
+        try:
+            lookup = request.POST['look_up']
+        except:
+            pass
+        if lookup == '':
+            return HttpResponseRedirect(reverse('maket:films'))
+
+        item = Item_imports.objects.filter(print_name__icontains=lookup)
+        maket = Makety.objects.filter(Q(order__order_id__icontains=lookup) | Q(order__customer__name__icontains=lookup)).order_by('-order_date', 'maket_id')
+        itg_in = Itemgroup_in_Maket.objects.filter(Q(maket__in=maket) | Q(item__in=item))
+        flm_s = []
+        for itg in itg_in:
+            if itg.film not in flm_s and itg.film is not None:
+                flm_s.append(itg.film)
+
+        item_group = Itemgroup_in_Maket.objects.filter(film__in=flm_s).order_by('item')
+        f_group = {}
+        for i in item_group:
+            if i.film not in f_group:
+                f_group[i.film] = []
+            ig_q = 0
+            ig_p = 0
+            ig_pp = 0
+            itms = Item_imports.objects.filter(Q(order=i.maket.order) & Q(item__print_group=i.item.item.print_group))
+            for it in itms:
+                ig_q = ig_q + it.quantity
+                ig_p = ig_p + it.quantity * it.item_price
+                ig_pp = ig_pp + it.quantity * it.print_price
+                prints = Print_imports.objects.filter(item=it)
+                pr = ''
+                len_pr = 0
+                for prt in prints:
+                    if prt.second_pass:
+                        sec_pass = '2 пр., '
+                    else:
+                        sec_pass = ''
+                    if 'Станд' in prt.place:
+                        prt_place = 'Станд. ProEcoPen'
+                    else:
+                        prt_place = prt.place
+                    pr += (prt_place + ', ' + prt.type + ', ' + str(prt.colors) + ' цв., ' + sec_pass).ljust(42, '-')
+                    len_pr += 1
+            f_group[i.film].append([i, ig_q, ig_p, ig_pp, ig_p + ig_pp, pr, len_pr])
+
+        for fg in f_group:
+            ig_q_all = 0
+            ig_p_all = 0
+            ig_pp_all = 0
+            len_it = 0
+            for content in f_group[fg]:
+                ig_q_all += content[1]
+                ig_p_all += content[2]
+                ig_pp_all += content[3]
+                len_it += content[6]
+            f_group[fg].insert(0, [ig_q_all, ig_p_all, ig_pp_all, ig_pp_all + ig_p_all, len_it])
+
+        context = {'navi': navi, 'active7': 'active', 'f_group': f_group}
+        return render(request, 'maket/films.html', context)
+
+
+
+    return
