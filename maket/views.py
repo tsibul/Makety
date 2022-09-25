@@ -974,9 +974,7 @@ def maket_status(request, id, status, source):
 
 def films(request):
     navi = 'films'
-    films = Films.objects.all().order_by('-date', '-film_id')
 
-#    maket = Makety.objects.all().order_by('-order_date', 'maket_id')
     item_group = Itemgroup_in_Maket.objects.filter(film__isnull=False).order_by('item')
     f_group = {}
     for i in item_group:
@@ -1018,7 +1016,22 @@ def films(request):
             len_it += content[6]
         f_group[fg].insert(0, [ig_q_all, ig_p_all, ig_pp_all, ig_pp_all + ig_p_all, len_it])
 
-    context = {'navi': navi, 'films': films, 'active7': 'active', 'f_group': f_group}
+        f_group2 = list(f_group.items())
+        paginator = Paginator(f_group2, 5)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        f_group = dict(page_obj.object_list)
+
+        date_range = []
+        for i in range(page_obj.paginator.num_pages):
+            page_obj2 = paginator.get_page(i + 1)
+            try:
+                date_tmp = repr(page_obj2.object_list[0][0])
+                date_range.append([i + 1, 'до ' + date_tmp])
+            except:
+                date_range.append(['нет данных'])
+
+    context = {'navi': navi, 'active7': 'active', 'f_group': f_group, 'page_obj': page_obj, 'date_range': date_range}
     return render(request, 'maket/films.html', context)
 
 @csrf_exempt
@@ -1202,7 +1215,7 @@ def look_up(request, navi):
             last_film = 1
 
         context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket,  'films': films,
-                   'current_date': current_date, 'last_film': last_film, 'look_up': True }
+                   'current_date': current_date, 'last_film': last_film, 'look_up': True}
         return render(request, 'maket/maket_base.html', context)
 
     elif navi == 'films':
@@ -1263,7 +1276,7 @@ def look_up(request, navi):
                 len_it += content[6]
             f_group[fg].insert(0, [ig_q_all, ig_p_all, ig_pp_all, ig_pp_all + ig_p_all, len_it])
 
-        context = {'navi': navi, 'active7': 'active', 'f_group': f_group}
+        context = {'navi': navi, 'active7': 'active', 'f_group': f_group, 'look_up': True}
         return render(request, 'maket/films.html', context)
 
     elif navi == 'customers':

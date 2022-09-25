@@ -2,6 +2,41 @@
 {% block title %}макеты{% endblock %}
 {% block content %}
 
+<div class="row fixed-bottom bg-light p-2" >
+{% if look_up != True %}
+    <div class="col text-start">
+<div class="pagination" xmlns="http://www.w3.org/1999/html">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
+        {% endif %}
+        <span class="current btn btn-sm btn-outline-secondary">
+           {{ page_obj.object_list.6.0|date:"d.m.y" }} - {{ page_obj.object_list.0.0|date:"d.m.y" }} (страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }})
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
+        {% endif %}
+        &nbsp
+            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="_ChooseClientAdd"
+                    data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+                Выбрать даты
+            </button>
+              <ul class="dropdown-menu fw-bold" aria-labelledby="ChooseClientAdd">
+                {% for dt_range in date_range %}
+              <li><a class="dropdown-item" href="?page={{ dt_range.0 }}"> {{ dt_range.1 }}</a></li>
+                {% endfor %}
+              </ul>
+
+    </span>
+</div><!-- pagination -->
+    </div>
+{% endif %}
+    <div class="col text-end">
+    </div>
+</div>
+
 <!-- Modal -->
 <div class="modal fade" id="updateFilm" tabindex="-1" aria-labelledby="updateFilmLabel" aria-hidden="true">
   <div class="modal-dialog">
