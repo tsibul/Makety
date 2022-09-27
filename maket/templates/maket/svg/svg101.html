@@ -11,10 +11,10 @@
     <div class="m-2"><img src="{% static 'maket/img/Ruler.svg' %}" /></div>
 <div>
 {% for prt in prt_0 %}
-{% if prt.2 ==  product.5 %}
+{% if prt.2 ==  product.5 and prt.5 == product.9 %}
     <div class="row lh-1 p-1 m-1">
     <div class="col">
-    <div class="col p-1 m-1" id="itm_{{product.5}}_{{prt.0.id}}" {% if prt.3 == 0 %} style="display:none;" {% endif %}>
+    <div class="col p-1 m-1" id="itm_{{product.5}}_{{product.9}}_{{prt.0.id}}" {% if prt.3 == 0 %} style="display:none;" {% endif %}>
         <div id="1_big_{{prt.0.id}}" {% if prt.4 != 1 %} style="display:none;" {% endif %}>
             <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="141.205mm" height="16.297mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
         viewBox="0 0 14121 1630" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -113,10 +113,10 @@
 </div>
 <div class="col p-1 m-1">
 {% for prt in prt_0 %}
-{% if prt.2 ==  product.5 %}
+{% if prt.2 ==  product.5 and prt.5 == product.9 %}
     <div class="d-flex flex-row lh-2">
       <div class="col" style="font-size:60%;">
-        <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_{{product.5}}_{{prt.0.id}}"
+        <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_{{product.5}}_{{product.9}}_{{prt.0.id}}"
                 form="form_maket_{{ord_imp.id}}"  {% if prt.3 == 1 %} checked {% endif %}>
       </div>
       <div class="col" style="font-size:60%;">&nbsp;{{prt.0.print_id}}&nbsp</div>
@@ -224,14 +224,14 @@
     <div class="d-flex flex-row lh-1">
 
      <div class="col d-print-none" style="font-size:60%;">
-        <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_{{product.5}}_all"
+        <input  class="form-check-input" type="checkbox" name="chck_{{product.5}}_{{product.9}}_{{prt.0.id}}" id="chck_{{product.5}}_{{product.9}}_all"
                 form="form_maket_{{ord_imp.id}}">
       </div>
       <div class="col" style="font-size:60%;">выбрать все</div>
     </div>
 
     <div class="d-print-none p-1 m-1">
-        <a href="javascript:chs_note({{prt_0_}},'{{product.5}}');">
+        <a href="javascript:chs_note({{prt_0_}},'{{product.5}}_{{product.9}}');">
             <button type="button" class="btn-sm btn-outline-primary">в макет</button> </a>
     </div>
 </div>

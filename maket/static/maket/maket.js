@@ -255,17 +255,17 @@ function upd_cst_reverse(id){
 function split_maket(print_range){
     var number_items = print_range.length;
     for(i=0; i<number_items; i++){
-    var line = 'chck_' + print_range[i][2]
+    var line = 'chck_' + print_range[i][2] + '_' + print_range[i][9]
     if(document.getElementById(line).checked){if (print_range[i][8] === 'note'){
-    document.getElementById(print_range[i][2]).style.display='block';}
-    else{document.getElementById(print_range[i][2]).style.display='inherit';};
-    var hd_line = print_range[i][2] + '_';
+    document.getElementById(print_range[i][2] + '_' + print_range[i][9]).style.display='block';}
+    else{document.getElementById(print_range[i][2] + '_' + print_range[i][9]).style.display='inherit';};
+    var hd_line = print_range[i][2] + '_' + print_range[i][9] + '_';
     var hd_line1 = document.querySelectorAll("[id=" + CSS.escape(hd_line) + "]");
     for(var j = 0; j < hd_line1.length; j++) {hd_line1[j].style.display='table-row';}
     }
     else{
-    document.getElementById(print_range[i][2]).style.display ='none';
-    var hd_line = print_range[i][2] + '_';
+    document.getElementById(print_range[i][2] + '_' + print_range[i][9] ).style.display ='none';
+    var hd_line = print_range[i][2] + '_' + print_range [i][9] + '_8';
     var hd_line1 = document.querySelectorAll("[id=" + CSS.escape(hd_line) + "]");
     for(var j = 0; j < hd_line1.length; j++) {hd_line1[j].style.display='none';}
     }
@@ -274,7 +274,7 @@ function split_maket(print_range){
 function chs_note(prt_0_, note){
     const prt_3A6 = [];
     for(i=0; i<prt_0_.length; i++){
-    if(prt_0_[i][3]===note){prt_3A6.push(prt_0_[i])}
+    if(prt_0_[i][3] + '_' + prt_0_[i][6] ===note){prt_3A6.push(prt_0_[i])}
     }
     var number_items = prt_3A6.length;
     try{if(document.getElementById(('chck_'+ note + '_all')).checked){

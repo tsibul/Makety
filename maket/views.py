@@ -730,6 +730,7 @@ def prt_imports(id, print_import, ord_imp, mk_id):
         clr_sch = item.color_scheme
         clr_hex = Item_color.objects.get(color_scheme=clr_sch, color_id=clr)
         clr_hex = clr_hex.color_code
+        pt_name = print_item.item.print_name
         try:
             maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
             try:
@@ -738,37 +739,52 @@ def prt_imports(id, print_import, ord_imp, mk_id):
                     pt_0 = 1
                 else:
                     pt_0 = 0
-                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, pt_0, pt.option])
-                prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, pt_0, pt.option])
+                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, pt_0, pt.option, \
+                               pt_name.replace(' ', '_').replace(',', '').replace('+', '_')])
+                prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, pt_0, pt.option, \
+                              pt_name.replace(' ', '_').replace(',', '').replace('+', '_')])
             except:
-                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1])
-                prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1])
+                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1, \
+                               pt_name.replace(' ', '_').replace(',', '').replace('+', '_')])
+                prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1, \
+                              pt_name.replace(' ', '_').replace(',', '').replace('+', '_')])
         except:
-            prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1])
-            prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1])
+            prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1, \
+                           pt_name.replace(' ', '_').replace(',', '').replace('+', '_')])
+            prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1, \
+                          pt_name.replace(' ', '_').replace(',', '').replace('+', '_')])
 
         context.update({'prt_0': prt_0})
         context.update({'prt_0_': prt_0_})
     product_range = []
     for print_group in print_groups:
-        items_prt = len(Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group)))
-        len_prt = len(Print_imports.objects.filter(Q(item__order=order_id) & Q(item__item__print_group=print_group)))
-        if items_prt != 0:
-            try:
-                maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
-                itemgroup_in_maket = Itemgroup_in_Maket.objects.get(Q(maket=maket)&Q(item__item__print_group=print_group))
-                context.update({'maket': maket})
-                if itemgroup_in_maket.checked:
-                    ig_ch = 1
-                else:
-                    ig_ch = 0
-                product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
-                                    'maket/svg/svg' + print_group.code + '.html', print_group.code, ig_ch,
-                                      print_group.options, print_group.layout])
-            except:
-                product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
-                                      'maket/svg/svg' + print_group.code + '.html', print_group.code, 1,
-                                      print_group.options, print_group.layout])
+        prt_names = Item_imports.objects.filter(Q(item__print_group=print_group)&Q(order=ord_imp))
+        prt_nms = []
+        for prt_nm in prt_names:
+            if prt_nm.print_name not in prt_nms:
+                prt_nms.append(prt_nm.print_name)
+        for prt_nm in prt_nms:
+            items_prt = len(Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group) & \
+                                                        Q(print_name=prt_nm)))
+            len_prt = len(Print_imports.objects.filter(Q(item__order=order_id) & Q(item__item__print_group=print_group) \
+                                                       & Q(item__print_name=prt_nm)))
+            if items_prt != 0:
+                try:
+                    maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
+                    itemgroup_in_maket = Itemgroup_in_Maket.objects.get(Q(maket=maket)&Q(item__item__print_group=print_group)\
+                                                                        &Q(item__print_name=prt_nm))
+                    context.update({'maket': maket})
+                    if itemgroup_in_maket.checked:
+                        ig_ch = 1
+                    else:
+                        ig_ch = 0
+                    product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
+                                        'maket/svg/svg' + print_group.code + '.html', print_group.code, ig_ch,
+                                          print_group.options, print_group.layout, prt_nm.replace(' ', '_').replace(',', '').replace('+', '_')])
+                except:
+                    product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
+                                          'maket/svg/svg' + print_group.code + '.html', print_group.code, 1,
+                                      print_group.options, print_group.layout, prt_nm.replace(' ', '_').replace(',', '').replace('+', '_')])
 
     context.update({'print_groups': print_groups})
     return [context, product_range]
@@ -825,14 +841,15 @@ def update_maket(request, id):
                        order_date=ord_imp.order_date, date_modified=datetime.date.today())
     maket.save()
     for pr_rg in product_range:
-        prt = 'chck_prt_' + pr_rg[5]
+        prt = 'chck_' + pr_rg[2] + '_' + pr_rg[9]
         itemgroup = pr_rg[5]
         for item in item_import:
             if itemgroup == item.item.print_group.code:
                 print_name = item.print_name
                 break
 #        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first
-        itm_checked = Item_imports.objects.filter(Q(item__print_group__code=itemgroup)&Q(order=ord_imp)).first()
+        itm_checked = Item_imports.objects.filter(Q(item__print_group__code=itemgroup) & Q(order=ord_imp) & \
+                                                  Q(print_name=print_name)).first()
         try:
             item_checked = Itemgroup_in_Maket.objects.get(Q(item=itm_checked) & Q(maket=maket))
         except:
@@ -854,10 +871,11 @@ def update_maket(request, id):
     ord_imp.save()
     for pi in print_import:
         try:
-            pr_in_maket = Print_in_Maket.objects.get(Q(print_item=pi)&Q(maket=maket))
+            pr_in_maket = Print_in_Maket.objects.get(Q(print_item=pi) & Q(maket=maket))
         except:
             pr_in_maket = Print_in_Maket(print_item=pi, maket=maket)
-        chck = 'chck_' + str(pi.id)
+        chck = 'chck_' + pi.item.item.print_group.code + '_' + \
+               pi.item.print_name.replace(' ', '_').replace(',', '').replace('+', '_') + '_' + str(pi.id)
         try:
             pi_maket = request.POST[chck]
             pr_in_maket.checked = True
