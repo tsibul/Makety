@@ -1148,7 +1148,12 @@ def upload_maket(request):
 
 def download_maket(request, id):
     maket = Makety.objects.get(id=id)
-    return FileResponse(open(maket.maket_file.path, 'rb'), content_type='application/pdf')
+    try:
+        return FileResponse(open(maket.maket_file.path, 'rb'), content_type='application/pdf')
+    except:
+        maket.uploaded = False
+        maket.save()
+        return HttpResponseRedirect(reverse('maket:maket_base'))
 
 
 def upload_film(request):
@@ -1170,8 +1175,12 @@ def upload_film(request):
 
 def download_film(request, id):
     film = Films.objects.get(id=id)
-    return FileResponse(open(film.film_file.path, 'rb'), content_type='application/force-download')
-
+    try:
+        return FileResponse(open(film.film_file.path, 'rb'), content_type='application/force-download')
+    except:
+        film.film_upload = False
+        film.save()
+        return HttpResponseRedirect(reverse('maket:films'))
 
 def look_up(request, navi):
     if navi == 'orders':
