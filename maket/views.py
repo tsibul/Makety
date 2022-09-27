@@ -1048,7 +1048,9 @@ def films(request):
                 date_range.append([i + 1, 'до ' + date_tmp])
             except:
                 date_range.append(['нет данных'])
-
+    if f_group == {}:
+        page_obj = ''
+        date_range = ''
     context = {'navi': navi, 'active7': 'active', 'f_group': f_group, 'page_obj': page_obj, 'date_range': date_range}
     return render(request, 'maket/films.html', context)
 
@@ -1119,7 +1121,13 @@ def upload_order(request):
 
 def download_order(request, id):
     order = Order_imports.objects.get(id=id)
-    return FileResponse(open(order.order_file.path, 'rb'), content_type='application/pdf')
+    try:
+        return FileResponse(open(order.order_file.path, 'rb'), content_type='application/pdf')
+    except:
+        order.order_upload = False
+        order.save()
+        return HttpResponseRedirect(reverse('maket:index'))
+
 
 def upload_maket(request):
     id = request.POST['upload_id']
