@@ -1126,7 +1126,7 @@ def download_order(request, id):
     except:
         order.order_upload = False
         order.save()
-        return HttpResponseRedirect(reverse('maket:index'))
+        return HttpResponse('<script type="text/javascript">window.close();</script>')
 
 
 def upload_maket(request):
@@ -1153,7 +1153,7 @@ def download_maket(request, id):
     except:
         maket.uploaded = False
         maket.save()
-        return HttpResponseRedirect(reverse('maket:maket_base'))
+        return HttpResponse('<script type="text/javascript">window.close();</script>')
 
 
 def upload_film(request):
@@ -1180,7 +1180,7 @@ def download_film(request, id):
     except:
         film.film_upload = False
         film.save()
-        return HttpResponseRedirect(reverse('maket:films'))
+        return HttpResponse('<script type="text/javascript">window.close();</script>')
 
 def look_up(request, navi):
     if navi == 'orders':
