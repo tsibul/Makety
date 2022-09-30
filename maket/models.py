@@ -132,6 +132,7 @@ class Order_imports(models.Model):
     order_sum — total amount
     print_quantity — number of prints
     print_sum — amount for prints only
+    to_check — possible import errors
     """
     order_id = models.CharField(max_length=18, blank=True, null=True)
     order_date = models.DateField(default='1000-01-01')
@@ -153,6 +154,7 @@ class Order_imports(models.Model):
     maket_status = models.CharField(max_length=1, choices=status_choices, default=NotReady)
     order_upload = models.BooleanField(default=False)
     order_file = models.FileField(storage=fs_orders, null=True, blank=True)
+    to_check = models.BooleanField(default=False)
 
     def __repr__(self):
         return self.order_id
