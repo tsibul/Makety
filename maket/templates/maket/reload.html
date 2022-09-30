@@ -61,27 +61,23 @@
     </thead>
     <tbody>
     <tr class="lh-1">
-        <td scope="row" class="col text-center" style="font-size:80%;"> {{item.print_id}} </td>
-        <td scope="col" class="col text-center" style="font-size:80%;"> {{item.code}} </td>
-        <td scope="col" class="col-3" style="font-size:80%;"> {{item.name}}</td>
-        <td scope="col" class="col-2 text-center" style="font-size:80%;"> {{item.print_name}}</td>
-        <td scope="col" class="col text-center" style="font-size:80%;"> {{item.quantity}}</td>
+        <td class="col text-center" style="font-size:80%;"> {{item.print_id}} </td>
+        <td class="col text-center" style="font-size:80%;"> {{item.code}} </td>
+        <td class="col-3" style="font-size:80%;"> {{item.name}}</td>
+        <td class="col-2 text-center" style="font-size:80%;"> {{item.print_name}}</td>
+        <td class="col text-center" style="font-size:80%;"> {{item.quantity}}</td>
     <td colspan="4">
     <table class="table-sm mb-0">
 
     {% for prt in print_import %}
     {% if prt.print_id == item.print_id %}
     <tr class="lh-1 align-top">
-        <td scope="col" colspan="5" > </td>
-        <td scope="col" class="col text-start" style="font-size:80%;"> {{prt.place}} /</td>
-        <td scope="col" class="col text-center" style="font-size:80%;"> {{prt.type}} /</td>
-        <td scope="col" class="col text-center" style="font-size:80%;"> {{prt.colors}} /</td>
-         <td scope="col" class="col text-center" style="font-size:80%;">
-        {% if prt.second_pass %}
-            <input class="form-check-input" type="checkbox" checked disabled>
-        {% else %}
-            <input class="form-check-input" type="checkbox" disabled>
-        {% endif %}
+        <td colspan="5" > </td>
+        <td class="col text-start" style="font-size:80%;"> {{prt.place}} /</td>
+        <td class="col text-center" style="font-size:80%;"> {{prt.type}} /</td>
+        <td class="col text-center" style="font-size:80%;"> {{prt.colors}} /</td>
+        <td class="col text-center" style="font-size:80%;">
+        <input class="form-check-input" type="checkbox" disabled {% if prt.second_pass %}checked{% endif %}>
         </td>
     </tr>
     {% else %}
