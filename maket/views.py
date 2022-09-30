@@ -353,7 +353,19 @@ def import_order(request):
     else:
         cust_manager = Manger(manager=customer_manager, manager_phone=customer_manager_phone)
     cust_manager.save()
-    ord_imp = Order_imports(order_id=order_no, supplier=supplier, customer_name=customer_name,
+    try:
+        ord_imp = Order_imports.objects.get(order_id=order_no)
+        ord_imp.supplier =supplier
+        ord_imp.customer_name = customer_name
+        ord_imp.customer_INN = customer_inn
+        ord_imp.customer_address = customer_address
+        ord_imp.order_date = order_date
+        ord_imp.order_quantity = order_quantity
+        ord_imp.order_sum = order_sum
+        ord_imp.our_manager = our_manager
+        ord_imp.manager = cust_manager
+    except:
+        ord_imp = Order_imports(order_id=order_no, supplier=supplier, customer_name=customer_name,
                             customer_INN=customer_inn, customer_address=customer_address, order_date=order_date,
                             order_quantity=order_quantity, order_sum=order_sum, our_manager=our_manager,
                             manager=cust_manager)
@@ -388,63 +400,74 @@ def import_order(request):
                             type=type)
         customer.save()
         ord_imp.customer = customer
-    try:
-        orderbase = Order_imports.objects.get(order_id=order_no)
-        orderbase.order_id = ord_imp.order_id
-        orderbase.customer_name = ord_imp.customer_name
-        orderbase.customer_INN = ord_imp.customer_INN
-        orderbase.customer_address = ord_imp.customer_address
-        orderbase.order_date = ord_imp.order_date
-        orderbase.customer = ord_imp.customer
-        orderbase.order_quantity = ord_imp.order_quantity
-        orderbase.order_sum = ord_imp.order_sum
-        orderbase.our_manager = ord_imp.our_manager
-        orderbase.customer_manager = ord_imp.customer_manager
-        orderbase.customer_manager_phone = ord_imp.customer_manager_phone
-        orderbase.customer_manager_mail = ord_imp.customer_manager_mail
-        orderbase.save()
-        ord_imp = orderbase
-    except:
-        ord_imp.save()
-#    order = []
-#    try:
-#        pk = ord_imp.id
-#    except:
-#        pk = orderbase.id
+    ord_imp.save()
     order_body = range(19, number_tr, 1)
     items_list = []
     print_list = []
-#    j = 0
+    prnt_list = {}
     for i in order_body:
         tr_len = len(trstrings[i])
         if trstrings[i][tr_len-1] == '1sec_endofline' and trstrings[i][3] != '\xa0':
             itm_clr = trstrings[i][2].split('.')
             itm_group = itm_clr[0]
+            prt_name = trstrings[i][3]
+            try:
+                itm_obj = Detail_set.objects.get(item_name=itm_group)
+            except:
+                pass
+
+            if len(prt_name) > 10:
+                pr_nm = prt_name[0: 5]
+            else:
+                pr_nm = prt_name[0: 3]
+            if itm_obj.print_group not in prnt_list:
+                prnt_list[itm_obj.print_group] = []
+            if len(prnt_list[itm_obj.print_group]) == 0:
+                prnt_list[itm_obj.print_group].append(prt_name)
+            else:
+                tmp = False
+                for pr in prnt_list[itm_obj.print_group]:
+                    if pr.find(pr_nm) == 0:
+                        prt_name = pr
+                        tmp = True
+                if not tmp:
+                    prnt_list[itm_obj.print_group].append(prt_name)
+                    tmp = False
             itm_clr.pop(0)
             clr = '.'.join(itm_clr)
             num_details = len(itm_clr)
             x = range(num_details)
             item = Item_imports(print_id=trstrings[i][0], code=trstrings[i][2], name=trstrings[i][1],
-                                quantity=trstrings[i][4], print_name=trstrings[i][3], order=ord_imp,
-                                item_group=itm_group, item_color=clr)
-            try:
-                itm_obj = Detail_set.objects.get(item_name=itm_group)
-                item.item = itm_obj
-            except:
-                pass
-
-            # TODO check if order exists, if no print_name, if no print details
+                                quantity=trstrings[i][4], print_name=prt_name, order=ord_imp,
+                                item_group=itm_group, item_color=clr, item=itm_obj)
+            # TODO check if no print_name, if no print details
             for n in x:
                 detail = 'detail' + str(n + 1) + '_color'
                 setattr(item, detail, itm_clr[n])
             item.save()
             items_list.append(item)
+
         elif trstrings[i][tr_len-1] == '2 sec_endofline':
-            for x in items_list:
-                if x.name == trstrings[i][1]:
-                    prt_item = x
-            if trstrings[i][0] != '':
-                print_id = prt_item.print_id
+            max_len = 0
+            for v in prnt_list.values():
+                if max_len < len(v):
+                    max_len = len(v)
+            if max_len == 1:
+                for x in items_list:
+                    if x.name == trstrings[i][1]:
+                        prt_item = x
+            elif items_list[len(items_list)-1].print_id == str(len(items_list)):
+                for x in items_list:
+                    if x.print_id == trstrings[i][0]:
+                        prt_item = x
+            else:
+                ord_imp.to_check = True
+                for x in items_list:
+                    if x.name == trstrings[i][1]:
+                        prt_item = x
+
+            #            if trstrings[i][0] != '':
+#                print_id = prt_item.print_id
             if tr_len == 9:
                 place = trstrings[i][3]
                 type = trstrings[i][4]
@@ -468,10 +491,10 @@ def import_order(request):
                 else:
                     second_pass = True
 
-            print_item = Print_imports(place=place, type=type, colors=colors, item=prt_item, print_id=print_id,
+            print_item = Print_imports(place=place, type=type, colors=colors, item=prt_item, print_id=prt_item.print_id,
                                        second_pass=second_pass, print_price=print_price)
             print_item.save()
-            print_list.append([place, type, colors, second_pass, print_item, print_id])
+            print_list.append([place, type, colors, second_pass, print_item, print_item.print_id])
     itms_for_price = Item_imports.objects.filter(order=ord_imp)
     gross_prt_quantity = 0
     gross_prt_price = 0
@@ -489,8 +512,39 @@ def import_order(request):
     ord_imp.print_quantity = gross_prt_quantity
     ord_imp.print_sum = gross_prt_price
     ord_imp.save()
+
     return HttpResponseRedirect(reverse('maket:index'))
 
+def prn_name_errors(id):
+    order = Order_imports.objects.get(id=id)
+    items_list = list(Item_imports.objects.filter(order__id=id))
+    prt_list = {}
+    itm_list = {}
+    for itm in items_list:
+        if itm.item_group not in prt_list:
+            prt_list[itm.item_group] = []
+        if itm.print_name not in prt_list[itm.item_group]:
+            prt_list[itm.item_group].append(str(itm.print_name))
+        index_prt = itm.item_group + '_' + itm.print_name
+        if index_prt not in itm_list:
+            itm_list[index_prt] = []
+        itm_list[index_prt].append(itm)
+
+    prt_red = []
+    for itm, pr_l in prt_list.items():
+        if len(prt_list[itm]) > 1:
+            min = prt_list[itm][0]
+        for prt in pr_l:
+            if (10 < len(prt) and prt[0:len(min)-7] == min[0:len(min)-7]) or \
+                    (10 >= len(prt) < len(min) and prt[0:4] == min[0:4]):
+                if prt != min:
+                    if len(prt) < len(min):
+                        prt_red.append([itm, prt, min])
+                        min = prt
+                    else:
+                        prt_red.append([itm, min, prt])
+
+    return
 
 def import_csv_order(request):
     try:
