@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load extras %}
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
@@ -157,7 +158,7 @@
 
 {% for product in product_range %}
     <div class="d-flex">
-        {% include 'maket/'|add:product.8 %}
+        {% include 'maket/**.html'|replace_value:product.8 %}
     </div>
 {% endfor %}
 </div>
