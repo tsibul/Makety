@@ -327,7 +327,7 @@ function colapse_(id){
 function pen_position(id, pen_pos){
     var pen_pos = document.getElementById('pen_pos_' + id).value;
     for(var i=1; i<5; i++){
-    if(pen_pos === i){
+    if(pen_pos === i.toString()){
     document.getElementById(i+'_'+id).style.display = 'inline';
     document.getElementById(i+'_big_'+id).style.display = 'inline';}
     else{
