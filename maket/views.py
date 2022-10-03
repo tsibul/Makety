@@ -371,10 +371,10 @@ def import_order(request):
                             order_quantity=order_quantity, order_sum=order_sum, our_manager=our_manager,
                             manager=cust_manager)
     try:
-        if customer_inn != '':
+        if len(customer_inn) >= 10:
             customer = Customer.objects.get(inn=customer_inn)
             ord_imp.customer = customer
-        elif customer_inn == '':
+        elif len(customer_inn) <= 10:
             customer = Customer.objects.get(name=customer_name)
             ord_imp.customer = customer
     except:
