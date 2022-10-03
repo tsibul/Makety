@@ -1144,9 +1144,11 @@ def update_to_film(request, data_to_film):
     date = data[1]
     format = data[2]
     sent = data[3]
+    film_id = data[4]
     film = Films.objects.get(id=id)
     film.date = date
     film.format = format
+    film.film_id = film_id
     if sent == '':
         film.status = False
     else:

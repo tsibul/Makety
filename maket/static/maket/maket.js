@@ -551,7 +551,7 @@ function update_to_film(){
    var arrDate2 = sent.split("-");
    textout += ' выведена ' + arrDate2[2] + "." +arrDate2[1] + "." + arrDate2[0];
    }
-   var data_to_film = id + '_' + date + '_' + format + '_' + sent;
+   var data_to_film = id + '_' + date + '_' + format + '_' + sent + '_' + film_id;
    document.getElementById(output).innerHTML = textout;
    var xhr = new XMLHttpRequest();
    var url = 'update_to_film/' + data_to_film;
