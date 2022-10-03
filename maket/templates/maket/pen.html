@@ -3,16 +3,20 @@
 
 <div class="row p-1 m-1" id="prt_{{product.5}}_{{product.9}}" {% if product.6 == 0 %} style="display:none" {% endif %}>
 <div class="col lh-1 p-1 m-1"  >
-    <div class="m-2"><img src="{% static 'maket/img/Ruler.svg' %}" /></div><!--- ruler --->
 <div>
 {% for prt in prt_0 %}
 {% if prt.2 ==  product.5 and prt.5 == product.9 %}
-    <div class="col p-1 m-1" id="itm_{{prt.2}}_{{product.9}}_{{prt.0.id}}"  {% if prt.3 == 0 %} style="display:none;" {% endif %}>
+    <div class="col p-1 ms-1 mt-1 mb-0" id="itm_{{prt.2}}_{{product.9}}_{{prt.0.id}}"  {% if prt.3 == 0 %} style="display:none;" {% endif %}>
 {% include 'maket/svg/**_b.html'|replace_value:product.5 %}
     </div>
 {% endif %}
 {% endfor %}
 </div>
+    {% if product.5 == '34' %}
+    <div class="ms-2 lh-1 mt-0"><img src="{% static 'maket/img/ruler_340.svg' %}" /></div><!--- ruler --->
+    {% elif product.5 == '35' %}
+    <div class="ms-2 lh-1 mt-0"><img src="{% static 'maket/img/ruler_350.svg' %}" /></div><!--- ruler --->
+    {% endif %}
 </div>
 
 <div class="col p-1 m-1">

@@ -833,11 +833,11 @@ def prt_imports(id, print_import, ord_imp, mk_id):
                         ig_ch = 1
                     else:
                         ig_ch = 0
-                    product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
+                    product_range.append([print_group.name, len_prt, '', items_prt,
                                         'maket/svg/svg' + print_group.code + '.html', print_group.code, ig_ch,
                                           print_group.options, print_group.layout, prt_nm.replace(' ', '_').replace(',', '').replace('+', '_')])
                 except:
-                    product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
+                    product_range.append([print_group.name, len_prt, '', items_prt,
                                           'maket/svg/svg' + print_group.code + '.html', print_group.code, 1,
                                       print_group.options, print_group.layout, prt_nm.replace(' ', '_').replace(',', '').replace('+', '_')])
 
