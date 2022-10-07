@@ -149,7 +149,7 @@ def lost_imports(request, id):
 
 def maket_base(request):
     navi = 'maket_base'
-    maket = Makety.objects.all().order_by('-order_date', 'maket_id')
+    maket = Makety.objects.all().order_by('-order_date', 'maket_id').filter(order__isnull=False)
     item_group = Itemgroup_in_Maket.objects.all().order_by('item')
     f_group = {}
     for i in item_group:
@@ -159,14 +159,16 @@ def maket_base(request):
             ig_q = 0
             ig_p = 0
             ig_pp = 0
-            itms = Item_imports.objects.filter(Q(order=i.maket.order) & Q(item__print_group=i.item.item.print_group)\
+            try:
+                itms = Item_imports.objects.filter(Q(order=i.maket.order) & Q(item__print_group=i.item.item.print_group)\
                                                & Q(print_name=i.print_name))
-            for it in itms:
-                ig_q = ig_q + it.quantity
-                ig_p = ig_p + it.quantity * it.item_price
-                ig_pp = ig_pp + it.quantity * it.print_price
-            f_group[i.maket].append([i, ig_q, ig_p, ig_pp])
-
+                for it in itms:
+                    ig_q = ig_q + it.quantity
+                    ig_p = ig_p + it.quantity * it.item_price
+                    ig_pp = ig_pp + it.quantity * it.print_price
+                f_group[i.maket].append([i, ig_q, ig_p, ig_pp])
+            except:
+                pass
     f_maket = {}
     for m in maket:
         if m.order not in f_maket:
