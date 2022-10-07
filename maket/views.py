@@ -513,8 +513,9 @@ def import_order(request):
     ord_imp.print_quantity = gross_prt_quantity
     ord_imp.print_sum = gross_prt_price
     ord_imp.save()
+    tmp = str(ord_imp.id) + '_'
 
-    return HttpResponseRedirect(reverse('maket:index'))
+    return HttpResponseRedirect(reverse('maket:reload2', kwargs={'id_str': tmp}))
 
 def prn_name_errors(id):
     order = Order_imports.objects.get(id=id)
