@@ -60,7 +60,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-        <button type="submit" name="submit" class="btn btn-primary" form="upload_order_" >Загрузить</button>
+        <button type="submit" name="submit" class="btn btn-primary" form="upload_order_">Загрузить</button>
       </div>
       </form>
     </div>
@@ -70,7 +70,8 @@
 
 
 <!-- Modal import_order -->
-<form id="import_order" action="{% url 'maket:import_order' %}" method="post" enctype="multipart/form-data">
+<form id="import_order" action="{% url 'maket:import_order' %}" method="post" enctype="multipart/form-data"
+      onsubmit="javascript:block_button();">
 {% csrf_token %}
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -87,7 +88,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-        <button type="submit" name="submit" class="btn btn-primary" >Загрузить</button>
+        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal" >Загрузить</button>
       </div>
     </div>
   </div>

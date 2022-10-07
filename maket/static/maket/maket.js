@@ -606,3 +606,6 @@ function order_collapse(){
     }
 }
 
+function  block_button(){
+    document.getElementById('but_imp_modal').disabled = true;
+}
