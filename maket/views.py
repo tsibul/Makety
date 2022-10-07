@@ -1058,27 +1058,29 @@ def films(request):
         ig_q = 0
         ig_p = 0
         ig_pp = 0
-        itms = Item_imports.objects.filter(Q(order=i.maket.order) & Q(item__print_group=i.item.item.print_group))
-        for it in itms:
-            ig_q = ig_q + it.quantity
-            ig_p = ig_p + it.quantity * it.item_price
-            ig_pp = ig_pp + it.quantity * it.print_price
-            prints = Print_imports.objects.filter(item=it)
-            pr = ''
-            len_pr = 0
-            for prt in prints:
-                if prt.second_pass:
-                    sec_pass = '2 пр., '
-                else:
-                    sec_pass = ''
-                if 'Станд' in prt.place:
-                    prt_place = 'Станд. ProEcoPen'
-                else:
-                    prt_place = prt.place
-                pr += (prt_place + ', ' + prt.type + ', ' + str(prt.colors) + ' цв., ' + sec_pass).ljust(42, '-')
-                len_pr += 1
-        f_group[i.film].append([i, ig_q, ig_p, ig_pp, ig_p + ig_pp, pr, len_pr])
-
+        try:
+            itms = Item_imports.objects.filter(Q(order=i.maket.order) & Q(item__print_group=i.item.item.print_group))
+            for it in itms:
+                ig_q = ig_q + it.quantity
+                ig_p = ig_p + it.quantity * it.item_price
+                ig_pp = ig_pp + it.quantity * it.print_price
+                prints = Print_imports.objects.filter(item=it)
+                pr = ''
+                len_pr = 0
+                for prt in prints:
+                    if prt.second_pass:
+                        sec_pass = '2 пр., '
+                    else:
+                        sec_pass = ''
+                    if 'Станд' in prt.place:
+                        prt_place = 'Станд. ProEcoPen'
+                    else:
+                        prt_place = prt.place
+                    pr += (prt_place + ', ' + prt.type + ', ' + str(prt.colors) + ' цв., ' + sec_pass).ljust(42, '-')
+                    len_pr += 1
+            f_group[i.film].append([i, ig_q, ig_p, ig_pp, ig_p + ig_pp, pr, len_pr])
+        except:
+            pass
     for fg in f_group:
         ig_q_all = 0
         ig_p_all = 0

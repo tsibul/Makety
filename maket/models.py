@@ -251,7 +251,7 @@ class Films(models.Model):
 class Itemgroup_in_Maket(models.Model):
     """If item from order exists in Maket"""
     item = models.ForeignKey(Item_imports, models.SET_NULL, null=True, blank=True)
-    maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
+    maket = models.ForeignKey(Makety, on_delete=models.CASCADE, null=True, blank=True)
     checked = models.BooleanField(default=True)
     print_name = models.CharField(max_length=50,  null=True, blank=True)
     film = models.ForeignKey(Films, models.SET_NULL, blank=True, null=True)
@@ -264,7 +264,7 @@ class Itemgroup_in_Maket(models.Model):
 class Print_in_Maket(models.Model):
     """If print item shows big in Maket"""
     print_item = models.ForeignKey(Print_imports, models.SET_NULL, null=True, blank=True)
-    maket = models.ForeignKey(Makety, models.SET_NULL, null=True, blank=True)
+    maket = models.ForeignKey(Makety, on_delete=models.CASCADE, null=True, blank=True)
     checked = models.BooleanField(default=True)
     option = models.SmallIntegerField(default=1)
 
