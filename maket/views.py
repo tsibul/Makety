@@ -108,7 +108,6 @@ def reload(request, id_str):
 def dicts(request):
     navi = 'dicts'
     color_scheme = Color_scheme.objects.all()
-    color = Item_color.objects.all().order_by('-color_scheme', 'color_id')
 
     print_type = Print_type.objects.all()
     print_place = Print_place.objects.all()
@@ -116,8 +115,22 @@ def dicts(request):
     print_group = Print_group.objects.all().order_by('code')
 
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
-               'print_position': print_position, 'color': color, 'active2': 'active', 'print_group': print_group}
+               'print_position': print_position, 'active2': 'active', 'print_group': print_group}
     return render(request, 'maket/dicts.html', context)
+
+
+def print_group(request):
+    navi = 'print_group'
+    print_group = Print_group.objects.all().order_by('code')
+    context = {'navi': navi, 'active2': 'active', 'print_group': print_group}
+    return render(request, 'maket/print_group.html', context)
+
+
+def colors(request):
+    navi = 'colors'
+    color = Item_color.objects.all().order_by('-color_scheme', 'color_id')
+    context = {'navi': navi, 'color': color, 'active2': 'active'}
+    return render(request, 'maket/colors.html', context)
 
 
 def admin(request):
@@ -291,7 +304,7 @@ def customers(request):
     navi = 'customers'
     customers = Customer.objects.all().order_by('name')
 
-    context = {'navi': navi, 'customers': customers, 'active3': 'active'}
+    context = {'navi': navi, 'customers': customers, 'active2': 'active'}
     return render(request, 'maket/customers.html', context)
 
 
@@ -979,7 +992,7 @@ def goods(request):
     for prt in prt_group:
         print_group.append(prt.code)
 
-    context = {'navi': navi, 'goods': goods, 'active6': 'active', 'color_scheme': color_scheme,
+    context = {'navi': navi, 'goods': goods, 'active2': 'active', 'color_scheme': color_scheme,
                'print_group': print_group}
     return render(request, 'maket/goods.html', context)
 

@@ -12,6 +12,7 @@ urlpatterns = [
     path('main', views.main_maket, name='main_maket'),
 
     path('dicts', views.dicts, name='dicts'),
+    path('colors', views.colors, name='colors'),
     path('update_clr_sch/<int:id>', views.update_clr_sch, name='update_clr_sch'),
     path('add_clr_sch', views.add_clr_sch, name='add_clr_sch'),
     path('update_prt_typ/<int:id>', views.update_prt_typ, name='update_prt_typ'),
@@ -36,6 +37,7 @@ urlpatterns = [
     path('update_cst/<int:id>', views.update_cst, name='update_cst'),
     path('maket_print/update_maket/<int:id>', views.update_maket, name='update_maket'),
     path('goods', views.goods, name='goods'),
+    path('print_group', views.print_group, name='print_group'),
     path('update_goods/<int:id>', views.upd_goods, name='update_goods'),
     path('update_pg/<int:id>', views.upd_pg, name='update_pg'),
     path('add_pg', views.add_pg, name='add_pg'),

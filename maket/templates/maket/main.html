@@ -56,14 +56,16 @@
           <li class="nav-item">
             <a class="nav-link {{active7}}" id="7" aria-current="page"  href="{% url 'maket:films' %}">Пленки</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link {{active6}}" id="6" aria-current="page"  href="{% url 'maket:goods' %}">Номенклатура</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {{active2}}" id="2" aria-current="page"  href="{% url 'maket:dicts' %}">Справочники</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {{active3}}" id="3" aria-current="page"  href="{% url 'maket:customers' %}">Клиенты</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link {{active2}} dropdown-toggle" id="2" aria-current="page" class="nav-link dropdown-toggle"
+               href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Справочники</a>
+               <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'maket:goods' %}">Номенклатура</a></li>
+                <li><a class="dropdown-item" href="{% url 'maket:customers' %}">Клиенты</a></li>
+                <li><a class="dropdown-item" href="{% url 'maket:colors' %}">Цвета</a></li>
+                <li><a class="dropdown-item" href="{% url 'maket:print_group' %}">Группы печати</a></li>
+                <li><a class="dropdown-item" href="{% url 'maket:dicts' %}">Прочие справочники</a></li>
+               </ul>
           </li>
           <li class="nav-item">
             <a class="nav-link {{active4}}" id="4" href="{% url 'maket:admin' %}"  aria-current="page">Починки</a>

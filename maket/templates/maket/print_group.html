@@ -1,0 +1,78 @@
+{% extends 'maket/main.html' %}
+{% block title %}Справочники{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between">
+  <h5 onclick="javascript:colapse('1');">Группа печати</h5>
+<a href="javascript:add_ln('new_ln2');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
+</div>
+<ul class="list-group list-group-flush" id="collapse_1" >
+<li class="list-group-item" id="new_ln2" style="display:none">
+    <form action="add_pg" method="post">
+    {% csrf_token %}
+    <div class="d-flex justify-content-between">
+        <div class="col m-1" style="max-width:80px;">
+            <input type="text" class="form-control" name="cd" value="{{ pg.code }}" placeholder="артикул">
+        </div>
+        <div class="col m-1">
+            <input type="text" class="form-control" name="pg" value="{{ pg.name }}" placeholder="наименование">
+        </div>
+        <div class="col m-1"  style="max-width:60px;">
+            <input type="number" class="form-control" name="op" value="{{ pg.options }}" placeholder="опции">
+        </div>
+        <div class="col m-1">
+            <input type="text" class="form-control" name="ly" value="{{ pg.layout }}" placeholder="шаблон">
+        </div>
+        <div class="col m-1" style="max-width:70px;">
+        <div class="d-flex justify-content-end">
+        <a href="javascript:add_ln_reverse('new_ln2');"><button type="button" class="btn btn-sm btn-outline-danger">
+            <i class="bi bi-arrow-counterclockwise"></i></button></a>
+        &nbsp
+        <button type="submit" class="btn btn-sm btn-outline-success" ><i class="bi bi-check-lg"></i></button>
+        </div>
+        </div>
+    </div>
+    </form>
+</li>
+{% for pg in print_group %}
+<li class="list-group-item" id="cst_id_{{pg.id}}_pg" onclick="javascript:upd_ln({{pg.id}}+'_pg');">
+<div class="d-flex justify-content-between" >
+<div class="col m-1" style="max-width:80px;"> {{ pg.code }}</div>
+<div class="col m-1" >{{ pg.name }}</div>
+<div class="col m-1" style="max-width:60px;">{{ pg.options }}</div>
+<div class="col m-1">{{ pg.layout }}</div>
+</div>
+</li>
+<li class="list-group-item" id="cst_id2_{{pg.id}}_pg" style="display:none;">
+    <form action="update_pg/{{ pg.id }}" method="post">
+    {% csrf_token %}
+    <div class="d-flex justify-content-between" >
+        <div class="col m-1" style="max-width:80px;">
+        <input type="text" class="form-control" name="pg_cd" value="{{ pg.code }}">
+        </div>
+        <div class="col m-1">
+        <input type="text" class="form-control" name="pg_nm" value="{{ pg.name }}">
+        <input type="hidden" class="form-control" name="pg_id" value="{{ pg.id }}">
+        </div>
+        <div class="col m-1" style="max-width:60px;">
+        <input type="number" class="form-control" name="pg_op" value="{{ pg.options }}">
+        </div>
+        <div class="col m-1">
+        <input type="text" class="form-control" name="pg_ly" value="{{ pg.layout }}">
+        </div>
+        <div class="col" style="max-width:70px;">
+        <div class="d-flex justify-content-end">
+        <a href="javascript:upd_ln_reverse({{pg.id}}+'_pg');"><button type="button"
+                  class="btn btn-sm btn-outline-danger"><i class="bi bi-arrow-counterclockwise"></i></button></a>
+        &nbsp
+        <button type="submit" class="btn btn-sm btn-outline-success" ><i class="bi bi-check-lg"></i></button>
+        </div>
+        </div>
+    </div>
+    </form>
+</li>
+{% endfor %}
+</ul>
+<!-- Print groups><--->
+
+{% endblock %}
