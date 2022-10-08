@@ -670,7 +670,8 @@ def import_csv_order(request):
     return HttpResponseRedirect(reverse('maket:index'))
 
 
-def delete_order(request, id):
+def delete_order(request):
+    id = request.POST['object_to_delete']
     order_d = Order_imports.objects.get(id=id)
     order_d.delete()
     return HttpResponseRedirect(reverse('maket:index'))

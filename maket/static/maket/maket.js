@@ -612,7 +612,7 @@ function  block_button(){
 
 function delete_object_modal(id){
     document.getElementById('object_to_delete').value = id
-    document.getElementById('object_no').textContent = document.getElementById('order_num_' + id).textContent
+    document.getElementById('object_no').textContent = document.getElementById('ord_id_' + id).textContent
     document.getElementById('object_date').textContent = document.getElementById('order_date_' + id).textContent
-    document.getElementById('object_customer').textContent = document.getElementById('customer_name_' + id).textContent
+    document.getElementById('object_customer').textContent = document.getElementById('cust_nm_' + id).textContent
 }

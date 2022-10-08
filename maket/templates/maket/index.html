@@ -42,15 +42,18 @@
 {% endif %}
 
 <!-- Modal delete Order-->
-<div class="modal fade" id="deleteMaketModal" tabindex="-1" aria-labelledby="deleteMaketModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteOrderModal" tabindex="-1" aria-labelledby="deleteOrderModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="deleteMaketModalLabel">Вы удаляете заказ</h1>
+        <h1 class="modal-title fs-5" id="deleteOrderModalLabel">Вы удаляете заказ</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+      <form action="delete_order" method="post" id="form_delete_order">
+      {% csrf_token %}
         <input type="hidden" name="object_to_delete" value="" id="object_to_delete">
+      </form>
         <div class="row">
             <div class="col" id="object_no"></div>
             <div class="col" id="object_date"></div>
@@ -59,7 +62,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-        <button type="button" class="btn btn-danger">Все равно удалить</button>
+        <button type="submit" class="btn btn-danger" form="form_delete_order">Все равно удалить</button>
       </div>
     </div>
   </div>
@@ -143,7 +146,7 @@
             </button>
         </td>
         <td id="ord_id_{{ord.id}}">{{ord.order_id}}</td>
-        <td>{{ord.order_date|date:'d.m.Y'}}</td>
+        <td id="order_date_{{ord.id}}">{{ord.order_date|date:'d.m.Y'}}</td>
 {% if 'Сувенир' in ord.supplier %}
         <td> ВВС </td>
 {% elif 'Студия' in ord.supplier %}
@@ -155,9 +158,12 @@
         <td> {{ord.manager.manager}}</td>
         <td class="text-break"> {{ord.manager.manager_mail}}</td>
         <td class="text-end"> {{ord.order_sum}}</td>
-        <td class="align-middle"><a href="/maket/delete_order/{{ord.id}}">
-            <button type="submit" class="btn btn-sm btn-outline-danger" style="font-size:80%;">Удалить</button>
-        </a></td>
+        <td class="align-middle">
+            <button type="button"  class="btn btn-sm btn-outline-danger text-nowrap" data-bs-toggle="modal"
+                    data-bs-target="#deleteOrderModal" onclick="javascript:delete_object_modal({{ord.id}});"
+                    style="font-size:80%;">
+                <i class="bi bi-x-lg"></i> удалить макет</button>
+        </td>
     </tr>
     {% endfor %}
     </tbody>
