@@ -10,12 +10,12 @@
      {% csrf_token %}
         <input type="hidden" name="object_to_delete" value="" id="object_to_delete" form="form_delete_maket">
       </form>
-        <div class="row pe-3 justify-content-evenly">
-            <div class="col-3" id="object_no"></div>
-            <div class="col-1 text-start "> от </div>
-            <div class="col-2 text-start" id="object_date"></div>
+        <div class="row pe-3">
+            <div class="col text-start" id="object_no"></div>
+            <div class="col"> от </div>
+            <div class="col text-start" id="object_date"></div>
         </div>
-            <div class="row ps-2" id="object_customer"></div>
+            <div class="row ps-3 fw-bolder" id="object_customer"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>

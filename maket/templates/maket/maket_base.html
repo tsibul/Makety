@@ -150,16 +150,21 @@
                     {% if mkt.uploaded %}<a href="/maket/download_maket/{{mkt.id}}" target="_blank">
                     {{mkt.maket_file}}</a>
                     {% else %}файл не загружен{% endif %}</td>
-                <td style="min-width:320px;">комментарий {{mkt.comment}}</td>
+                <td style="min-width:120px;">комментарий {{mkt.comment}}</td>
                 <td class="text-end">
-                <input type="text" hidden id="ord_id_{{mkt.id}}" value="{{mkt.order.order_id}}">
-                <input type="text" hidden id="cust_nm_{{mkt.id}}" value="{{mkt.order.customer.name}}">
+                    <div hidden id="ord_id_{{mkt.id}}">{{mkt.order.order_id}}</div>
+                    <div hidden id="order_date_{{mkt.id}}">{{mkt.order.order_date|date:'d.m.Y'}}</div>
+                    <div hidden id="cust_nm_{{mkt.id}}">{{mkt.order.customer.name}}</div>
+                    <button type="button"  class="btn btn-sm btn-outline-danger text-nowrap" data-bs-toggle="modal"
+                        data-bs-target="#deleteMaketModal" onclick="javascript:delete_object_modal({{mkt.id}});">
+                        <i class="bi bi-x-lg"></i> удалить макет
+                     </button>
                     <button type="button" class="btn btn-sm btn-outline-primary"
                             onclick="javascript:upload_maket({{mkt.id}});" data-bs-toggle="modal"
                             data-bs-target="#uploadMaket">
                          <i class="bi bi-upload"></i> загрузить файл
                     </button>
-                 </td>
+                </td>
                 </tr>
     <tr style="font-size:100%;">
         <td colspan="10" class="p-0 lh-0 m-0">

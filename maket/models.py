@@ -221,7 +221,7 @@ class Makety(models.Model):
     uploaded = models.BooleanField(default=False)
     maket_file = models.FileField(storage=fs_makety, null=True, blank=True)
     comment = models.CharField(max_length=255, default='')
-    order = models.ForeignKey(Order_imports, models.SET_NULL, null=True)
+    order = models.ForeignKey(Order_imports, on_delete=models.CASCADE, null=True)
     order_num = models.CharField(max_length=18, blank=True, null=True)
     order_date = models.DateField(default='1000-01-01')
 
@@ -250,7 +250,7 @@ class Films(models.Model):
 
 class Itemgroup_in_Maket(models.Model):
     """If item from order exists in Maket"""
-    item = models.ForeignKey(Item_imports, models.SET_NULL, null=True, blank=True)
+    item = models.ForeignKey(Item_imports, on_delete=models.CASCADE, null=True, blank=True)
     maket = models.ForeignKey(Makety, on_delete=models.CASCADE, null=True, blank=True)
     checked = models.BooleanField(default=True)
     print_name = models.CharField(max_length=50,  null=True, blank=True)
