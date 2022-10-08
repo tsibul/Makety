@@ -51,5 +51,7 @@ urlpatterns = [
     path('upload_film', views.upload_film, name='upload_film'),
     path('download_film/<int:id>', views.download_film, name='download_film'),
     path('look_up/<str:navi>', views.look_up, name='look_up'),
+    path('delete_maket', views.delete_maket, name='delete_maket'),
+    path('lost_maket/<int:id>', views.lost_maket, name='lost_maket'),
 
 ]

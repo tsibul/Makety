@@ -13,10 +13,9 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 from django.http import FileResponse, Http404
 
-
-
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
-    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group, Print_in_Maket
+    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group, \
+    Print_in_Maket
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -59,7 +58,7 @@ def index(request):
             except:
                 date_range.append(['нет данных'])
         context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
-               'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range}
+                   'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range}
 
     except:
         context = {'navi': navi}
@@ -101,7 +100,7 @@ def reload(request, id_str):
         except:
             date_range.append(['нет данных'])
     context.update({'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
-               'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range})
+                    'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range})
 
     return render(request, 'maket/index.html', context)
 
@@ -132,8 +131,21 @@ def admin(request):
         except:
             pass
     lost_imports_len = len(lost_imports)
-    context = {'navi': navi, 'active4': 'active', 'lost_imports': lost_imports, 'lost_imports_len': lost_imports_len}
+
+    lost_makets = []
+    l_makets = Makety.objects.filter(order=None).order_by('-order_date')
+    for l_mak in l_makets:
+        try:
+            l_order = Order_imports.objects.get(Q(order_id=l_mak.order_num) & Q(order_date=l_mak.order_date))
+            lost_makets.append([l_mak, l_order])
+        except:
+            lost_makets.append([l_mak, ])
+    lost_makets_len = len(lost_makets)
+
+    context = {'navi': navi, 'active4': 'active', 'lost_imports': lost_imports, 'lost_imports_len': lost_imports_len,
+               'lost_makets': lost_makets, 'lost_makets_len': lost_makets_len}
     return render(request, 'maket/admin.html', context)
+
 
 def lost_imports(request, id):
     l_import = Item_imports.objects.get(id=id)
@@ -142,10 +154,11 @@ def lost_imports(request, id):
         l_import.item = Detail_set.objects.get(id=detail_id)
         l_import.save()
     except:
-#        context = {'l_import': l_import}
-#        render(request, 'maket/item_totally_lost.html', context)
+        #        context = {'l_import': l_import}
+        #        render(request, 'maket/item_totally_lost.html', context)
         pass
     return HttpResponseRedirect(reverse('maket:admin'))
+
 
 def maket_base(request):
     navi = 'maket_base'
@@ -160,8 +173,8 @@ def maket_base(request):
             ig_p = 0
             ig_pp = 0
             try:
-                itms = Item_imports.objects.filter(Q(order=i.maket.order) & Q(item__print_group=i.item.item.print_group)\
-                                               & Q(print_name=i.print_name))
+                itms = Item_imports.objects.filter(Q(order=i.maket.order) & Q(item__print_group=i.item.item.print_group) \
+                                                   & Q(print_name=i.print_name))
                 for it in itms:
                     ig_q = ig_q + it.quantity
                     ig_p = ig_p + it.quantity * it.item_price
@@ -196,7 +209,6 @@ def maket_base(request):
             date_range.append([i + 1, 'до ' + date_tmp])
         except:
             date_range.append(['нет данных'])
-
 
     context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'page_obj': page_obj, 'films': films,
                'current_date': current_date, 'last_film': last_film, 'date_range': date_range}
@@ -338,7 +350,7 @@ def import_order(request):
     ord_sum = str(trstrings[12][0])
     order_sum = ord_sum.replace(',', '.')
     our_manager = str(trstrings[13][0])
-#    our_manager_phone = str(trstrings[14][0])
+    #    our_manager_phone = str(trstrings[14][0])
     customer_manager = str(trstrings[15][0])
     customer_manager_phone = str(trstrings[17][0])
     customer_manager_mail = str(trstrings[16][0])
@@ -358,7 +370,7 @@ def import_order(request):
     cust_manager.save()
     try:
         ord_imp = Order_imports.objects.get(order_id=order_no)
-        ord_imp.supplier =supplier
+        ord_imp.supplier = supplier
         ord_imp.customer_name = customer_name
         ord_imp.customer_INN = customer_inn
         ord_imp.customer_address = customer_address
@@ -369,9 +381,9 @@ def import_order(request):
         ord_imp.manager = cust_manager
     except:
         ord_imp = Order_imports(order_id=order_no, supplier=supplier, customer_name=customer_name,
-                            customer_INN=customer_inn, customer_address=customer_address, order_date=order_date,
-                            order_quantity=order_quantity, order_sum=order_sum, our_manager=our_manager,
-                            manager=cust_manager)
+                                customer_INN=customer_inn, customer_address=customer_address, order_date=order_date,
+                                order_quantity=order_quantity, order_sum=order_sum, our_manager=our_manager,
+                                manager=cust_manager)
     try:
         if len(customer_inn) >= 10:
             customer = Customer.objects.get(inn=customer_inn)
@@ -410,7 +422,7 @@ def import_order(request):
     prnt_list = {}
     for i in order_body:
         tr_len = len(trstrings[i])
-        if trstrings[i][tr_len-1] == '1sec_endofline' and trstrings[i][3] != '\xa0':
+        if trstrings[i][tr_len - 1] == '1sec_endofline' and trstrings[i][3] != '\xa0':
             itm_clr = trstrings[i][2].split('.')
             itm_group = itm_clr[0]
             prt_name = trstrings[i][3]
@@ -450,7 +462,7 @@ def import_order(request):
             item.save()
             items_list.append(item)
 
-        elif trstrings[i][tr_len-1] == '2 sec_endofline':
+        elif trstrings[i][tr_len - 1] == '2 sec_endofline':
             max_len = 0
             for v in prnt_list.values():
                 if max_len < len(v):
@@ -459,7 +471,7 @@ def import_order(request):
                 for x in items_list:
                     if x.name == trstrings[i][1]:
                         prt_item = x
-            elif items_list[len(items_list)-1].print_id == str(len(items_list)):
+            elif items_list[len(items_list) - 1].print_id == str(len(items_list)):
                 for x in items_list:
                     if x.print_id == trstrings[i][0]:
                         prt_item = x
@@ -470,7 +482,7 @@ def import_order(request):
                         prt_item = x
 
             #            if trstrings[i][0] != '':
-#                print_id = prt_item.print_id
+            #                print_id = prt_item.print_id
             if tr_len == 9:
                 place = trstrings[i][3]
                 type = trstrings[i][4]
@@ -478,7 +490,7 @@ def import_order(request):
                 itm_price = trstrings[i][2].split(',')
                 if itm_price != ['\xa0']:
                     try:
-                        item_price = float(itm_price[0])+int(itm_price[1])/10**len(itm_price[1])
+                        item_price = float(itm_price[0]) + int(itm_price[1]) / 10 ** len(itm_price[1])
                     except:
                         item_price = float(itm_price[0])
                     itm_for_price = Item_imports.objects.get(id=prt_item.id)
@@ -486,7 +498,7 @@ def import_order(request):
                     itm_for_price.save()
                 prt_price = trstrings[i][7].split(',')
                 try:
-                    print_price = float(prt_price[0])+int(prt_price[1])/10**len(prt_price[1])
+                    print_price = float(prt_price[0]) + int(prt_price[1]) / 10 ** len(prt_price[1])
                 except:
                     print_price = float(prt_price[0])
                 if trstrings[i][6] == '-':
@@ -519,6 +531,7 @@ def import_order(request):
 
     return HttpResponseRedirect(reverse('maket:reload2', kwargs={'id_str': tmp}))
 
+
 def prn_name_errors(id):
     order = Order_imports.objects.get(id=id)
     items_list = list(Item_imports.objects.filter(order__id=id))
@@ -539,7 +552,7 @@ def prn_name_errors(id):
         if len(prt_list[itm]) > 1:
             min = prt_list[itm][0]
         for prt in pr_l:
-            if (10 < len(prt) and prt[0:len(min)-7] == min[0:len(min)-7]) or \
+            if (10 < len(prt) and prt[0:len(min) - 7] == min[0:len(min) - 7]) or \
                     (10 >= len(prt) < len(min) and prt[0:4] == min[0:4]):
                 if prt != min:
                     if len(prt) < len(min):
@@ -549,6 +562,7 @@ def prn_name_errors(id):
                         prt_red.append([itm, min, prt])
 
     return
+
 
 def import_csv_order(request):
     try:
@@ -602,8 +616,8 @@ def import_csv_order(request):
                             type=type)
         customer.save()
     ord_imp.save()
-#    order = []
-#    pk = ord_imp.id
+    #    order = []
+    #    pk = ord_imp.id
     order_body = range(3, number_strings, 1)
     items_list = []
     print_list = []
@@ -760,10 +774,10 @@ def update_clr(request, id):
 
 def order_imports(id):
     ord_i = id
-#    try:
+    #    try:
     ord_imp = Order_imports.objects.get(pk=int(ord_i))
-#    except:
-#        ord_imp = Order_imports.objects.order_by('-order_date', '-id').first()
+    #    except:
+    #        ord_imp = Order_imports.objects.order_by('-order_date', '-id').first()
     order_id = ord_imp.id
     item_import = list(Item_imports.objects.filter(order=order_id).order_by('code'))
 
@@ -816,7 +830,7 @@ def prt_imports(id, print_import, ord_imp, mk_id):
         context.update({'prt_0_': prt_0_})
     product_range = []
     for print_group in print_groups:
-        prt_names = Item_imports.objects.filter(Q(item__print_group=print_group)&Q(order=ord_imp))
+        prt_names = Item_imports.objects.filter(Q(item__print_group=print_group) & Q(order=ord_imp))
         prt_nms = []
         for prt_nm in prt_names:
             if prt_nm.print_name not in prt_nms:
@@ -829,20 +843,23 @@ def prt_imports(id, print_import, ord_imp, mk_id):
             if items_prt != 0:
                 try:
                     maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
-                    itemgroup_in_maket = Itemgroup_in_Maket.objects.get(Q(maket=maket)&Q(item__item__print_group=print_group)\
-                                                                        &Q(item__print_name=prt_nm))
+                    itemgroup_in_maket = Itemgroup_in_Maket.objects.get(
+                        Q(maket=maket) & Q(item__item__print_group=print_group) \
+                        & Q(item__print_name=prt_nm))
                     context.update({'maket': maket})
                     if itemgroup_in_maket.checked:
                         ig_ch = 1
                     else:
                         ig_ch = 0
                     product_range.append([print_group.name, len_prt, '', items_prt,
-                                        'maket/svg/svg' + print_group.code + '.html', print_group.code, ig_ch,
-                                          print_group.options, print_group.layout, prt_nm.replace(' ', '_').replace(',', '').replace('+', '_')])
+                                          'maket/svg/svg' + print_group.code + '.html', print_group.code, ig_ch,
+                                          print_group.options, print_group.layout,
+                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_')])
                 except:
                     product_range.append([print_group.name, len_prt, '', items_prt,
                                           'maket/svg/svg' + print_group.code + '.html', print_group.code, 1,
-                                      print_group.options, print_group.layout, prt_nm.replace(' ', '_').replace(',', '').replace('+', '_')])
+                                          print_group.options, print_group.layout,
+                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_')])
 
     context.update({'print_groups': print_groups})
     return [context, product_range]
@@ -863,10 +880,10 @@ def maket_print(request, id, mk_id):
     mkt = Makety.objects.filter(order=ord_imp).order_by('maket_id')
     maket_id_list = []
     for mk in mkt:
-      maket_id_list.append(mk.maket_id)
-#    if len(maket_id_list) == 0:
-#       maket_id_list = [1]
-    context.update({'maket_id_list': maket_id_list, 'len_maket': len(maket_id_list)+1})
+        maket_id_list.append(mk.maket_id)
+    #    if len(maket_id_list) == 0:
+    #       maket_id_list = [1]
+    context.update({'maket_id_list': maket_id_list, 'len_maket': len(maket_id_list) + 1})
     try:
         maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
         itemgroup_in_maket = Itemgroup_in_Maket.objects.filter(maket=maket)
@@ -903,15 +920,16 @@ def update_maket(request, id):
         for item in item_import:
             if itemgroup == item.item.print_group.code:
                 print_name = item.print_name
-#                break
-#        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first
+                #                break
+                #        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first
                 itm_checked = Item_imports.objects.filter(Q(item__print_group__code=itemgroup) & Q(order=ord_imp) & \
-                                                  Q(print_name=print_name)).first()
+                                                          Q(print_name=print_name)).first()
                 try:
-                    item_checked = Itemgroup_in_Maket.objects.get(Q(item=itm_checked) & Q(maket=maket) & Q(print_name=item.print_name))
+                    item_checked = Itemgroup_in_Maket.objects.get(
+                        Q(item=itm_checked) & Q(maket=maket) & Q(print_name=item.print_name))
                 except:
                     item_checked = Itemgroup_in_Maket(item=itm_checked, maket=maket, print_name=print_name)
-#        item_checked.print_name = print_name
+                #        item_checked.print_name = print_name
                 try:
                     sel_item = request.POST[prt]
                     if sel_item == 'on':
@@ -960,7 +978,8 @@ def goods(request):
     for prt in prt_group:
         print_group.append(prt.code)
 
-    context = {'navi': navi, 'goods': goods, 'active6': 'active', 'color_scheme': color_scheme, 'print_group': print_group}
+    context = {'navi': navi, 'goods': goods, 'active6': 'active', 'color_scheme': color_scheme,
+               'print_group': print_group}
     return render(request, 'maket/goods.html', context)
 
 
@@ -1038,6 +1057,7 @@ def add_pg(request):
     pg.save()
     return HttpResponseRedirect(reverse('maket:dicts'))
 
+
 def maket_status(request, id, status, source):
     order = Order_imports.objects.get(id=id)
     order.maket_status = status
@@ -1046,6 +1066,7 @@ def maket_status(request, id, status, source):
         return HttpResponseRedirect(reverse('maket:index'))
     if source == 'maket':
         return HttpResponseRedirect(reverse('maket:maket_base'))
+
 
 def films(request):
     navi = 'films'
@@ -1113,6 +1134,7 @@ def films(request):
     context = {'navi': navi, 'active7': 'active', 'f_group': f_group, 'page_obj': page_obj, 'date_range': date_range}
     return render(request, 'maket/films.html', context)
 
+
 @csrf_exempt
 def save_to_film(request, id, film):
     item_group = Itemgroup_in_Maket.objects.get(id=id)
@@ -1130,6 +1152,7 @@ def save_to_film(request, id, film):
     item_group.save()
     return HttpResponse()
 
+
 def vieworder(request, id):
     ord_i = id
     ord_imp = Order_imports.objects.get(pk=int(ord_i))
@@ -1141,6 +1164,7 @@ def vieworder(request, id):
     print_import = list(print_import)
     context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import}
     return render(request, 'maket/vieworder.html', context)
+
 
 @csrf_exempt
 def update_to_film(request, data_to_film):
@@ -1243,6 +1267,7 @@ def download_film(request, id):
         film.save()
         return HttpResponse('<script type="text/javascript">window.close();</script>')
 
+
 def look_up(request, navi):
     if navi == 'orders':
         try:
@@ -1260,7 +1285,7 @@ def look_up(request, navi):
             print_import = list(print_import)
 
             context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
-                       'orders': orders, 'active1': 'active', 'look_up': True, 'lookup': lookup }
+                       'orders': orders, 'active1': 'active', 'look_up': True, 'lookup': lookup}
             return render(request, 'maket/index.html', context)
         except:
             return HttpResponseRedirect(reverse('maket:index'))
@@ -1310,7 +1335,7 @@ def look_up(request, navi):
         except:
             last_film = 1
 
-        context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket,  'films': films,
+        context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'films': films,
                    'current_date': current_date, 'last_film': last_film, 'look_up': True}
         return render(request, 'maket/maket_base.html', context)
 
@@ -1323,7 +1348,7 @@ def look_up(request, navi):
             return HttpResponseRedirect(reverse('maket:films'))
 
         item = Item_imports.objects.filter(print_name__icontains=lookup)
-        maket = Makety.objects.filter(Q(order__order_id__icontains=lookup) | Q(order__customer__name__icontains=lookup))\
+        maket = Makety.objects.filter(Q(order__order_id__icontains=lookup) | Q(order__customer__name__icontains=lookup)) \
             .order_by('-order_date', 'maket_id')
         itg_in = Itemgroup_in_Maket.objects.filter(Q(maket__in=maket) | Q(item__in=item))
         flm_s = []
@@ -1393,3 +1418,23 @@ def look_up(request, navi):
         return render(request, 'maket/customers.html', context)
 
     return
+
+
+def delete_maket(request):
+    id = request.POST['object_to_delete']
+    maket = Makety.objects.get(id=id)
+    maket.delete()
+    return HttpResponseRedirect(reverse('maket:admin'))
+
+
+def lost_maket (request, id):
+    maket_id = id
+    order_id = request.POST['l_order']
+    order = Order_imports.objects.get(id=order_id)
+    maket = Makety.objects.get(id=maket_id)
+    maket.order = order
+    other_makets_number = max(Makety.objects.filter(order=order).values_list('maket_id'))[0]
+    maket.maket_id = other_makets_number + 1
+    maket.save()
+    return HttpResponseRedirect(reverse('maket:admin'))
+
