@@ -1,6 +1,8 @@
 {% extends 'maket/main.html' %}
 {% block title %}макеты{% endblock %}
 {% block content %}
+<!-- Modal delete Maket-->
+{% include 'maket/deleteMaketModal.html' %}
 <div class="row fixed-bottom bg-light p-2" >
 {% if look_up != True %}
     <div class="col text-start">
