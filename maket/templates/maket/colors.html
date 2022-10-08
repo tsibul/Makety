@@ -1,9 +1,13 @@
 {% extends 'maket/main.html' %}
 {% block title %}Справочники{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between ms-2 me-3">
       <div><h5>Цвета</h5></div>
-
+<div class="text-end">
+    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#addclrModal">
+      Добавить</button>
+</div>
+</div>
 <!-- Modal --> <form id="add_clr" action="{% url 'maket:add_clr' %}" method="post">
       {% csrf_token %}
         <div class="modal fade" id="addclrModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -44,7 +48,7 @@
           </div>
         </div>
     </form>
-    </div>
+
 <table class="table table-sm table-hover m2">
 <thead>
 <tr class="table-primary">
@@ -55,8 +59,7 @@
     <th class="text-center" onclick="javascript:colapse_('5');">#HEX</th>
     <th class="text-center" onclick="javascript:colapse_('5');">Цветовая группа</th>
     <th colspan="2" class="text-end">
-<!-- Button trigger modal --><button type="button" class="btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addclrModal">
-      Добавить</button>
+<!-- Button trigger modal -->
     </th>
 </tr>
 </thead>
@@ -65,7 +68,7 @@
 <form action="update_clr/{{ clr.id }}" method="post">
 {% csrf_token %}
 <tr >
-    <td class="col-1"><a href="javascript:clr_edit({{clr.id}}, '{{clr.color_scheme.scheme_name}}');">
+    <td class="col"><a href="javascript:clr_edit({{clr.id}}, '{{clr.color_scheme.scheme_name}}');">
         <button type="button" class="btn-sm btn-outline-primary" id="red_{{clr.id}}">Ред.</button>
     </a> </td>
     <td class="col-1">
@@ -86,8 +89,6 @@
     <td class="col-1 text-end">
         <a href="javascript:clr_edit_reverse({{clr.id}}, '{{ clr.color_scheme.scheme_name}}');">
         <button type="button" class="btn-sm btn-outline-danger" id="otmclr_{{clr.id}}" disabled>Отм.</button></a>
-    </td>
-    <td class="col-1 text-end">
         <button type="submit" class="btn-sm btn-outline-primary" id="okclr_{{clr.id}}" disabled>OK</button>
     </td>
 </tr>
