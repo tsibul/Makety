@@ -265,7 +265,7 @@ function split_maket(print_range){
     }
     else{
     document.getElementById(print_range[i][2] + '_' + print_range[i][9] ).style.display ='none';
-    var hd_line = print_range[i][2] + '_' + print_range [i][9] + '_8';
+    var hd_line = print_range[i][2] + '_' + print_range [i][9] + '_';
     var hd_line1 = document.querySelectorAll("[id=" + CSS.escape(hd_line) + "]");
     for(var j = 0; j < hd_line1.length; j++) {hd_line1[j].style.display='none';}
     }

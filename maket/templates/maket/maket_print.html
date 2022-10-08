@@ -118,8 +118,9 @@
     </thead>
     <tbody>
 {% for item in item_import %}
-    <tr class="lh-1" id="prt_{{item.item.print_group.code}}_"
-        {% for prod in product_range %}{% if prod.5 == item.item.print_group.code and prod.6 == 0 %}
+    <tr class="lh-1" id="prt_{{item.item.print_group.code}}_{{ '**'|print_name_to_string_:item.print_name }}_"
+        {% for prod in product_range %}
+        {% if prod.5 == item.item.print_group.code and prod.6 == 0  and prod.9 == '**'|print_name_to_string_:item.print_name %}
          style="display:none;" {% endif %}{% endfor %}>
         <td class="col text-center" style="max-width:4mm; font-size:60%;"> {{item.print_id}} </td>
         <td class="col-1 text-center" style="font-size:60%;"> {{item.code}} </td>
