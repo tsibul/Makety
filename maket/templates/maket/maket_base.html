@@ -150,7 +150,7 @@
                     {% if mkt.uploaded %}<a href="/maket/download_maket/{{mkt.id}}" target="_blank">
                     {{mkt.maket_file}}</a>
                     {% else %}файл не загружен{% endif %}</td>
-                <td style="min-width:120px;">комментарий {{mkt.comment}}</td>
+                <td>{{mkt.comment}}</td>
                 <td class="text-end">
                     <div hidden id="ord_id_{{mkt.id}}">{{mkt.order.order_id}}</div>
                     <div hidden id="order_date_{{mkt.id}}">{{mkt.order.order_date|date:'d.m.Y'}}</div>
