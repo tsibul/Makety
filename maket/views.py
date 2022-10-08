@@ -855,12 +855,12 @@ def prt_imports(id, print_import, ord_imp, mk_id):
                     product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
                                           'maket/svg/svg' + print_group.code + '.html', print_group.code, ig_ch,
                                           print_group.options, print_group.layout,
-                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_')])
+                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_'), prt_nm])
                 except:
                     product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
                                           'maket/svg/svg' + print_group.code + '.html', print_group.code, 1,
                                           print_group.options, print_group.layout,
-                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_')])
+                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_'), prt_nm])
 
     context.update({'print_groups': print_groups})
     return [context, product_range]
@@ -918,28 +918,28 @@ def update_maket(request, id):
     for pr_rg in product_range:
         prt = 'chck_' + pr_rg[2] + '_' + pr_rg[9]
         itemgroup = pr_rg[5]
-        for item in item_import:
-            if itemgroup == item.item.print_group.code:
-                print_name = item.print_name
-                #                break
-                #        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first
-                itm_checked = Item_imports.objects.filter(Q(item__print_group__code=itemgroup) & Q(order=ord_imp) & \
-                                                          Q(print_name=print_name)).first()
-                try:
-                    item_checked = Itemgroup_in_Maket.objects.get(
-                        Q(item=itm_checked) & Q(maket=maket) & Q(print_name=item.print_name))
-                except:
-                    item_checked = Itemgroup_in_Maket(item=itm_checked, maket=maket, print_name=print_name)
-                #        item_checked.print_name = print_name
-                try:
-                    sel_item = request.POST[prt]
-                    if sel_item == 'on':
-                        item_checked.checked = True
-                except:
-                    item_checked.checked = False
-                    all_checked = False
-                item_checked.maket = maket
-                item_checked.save()
+        items_checked = []
+        itm_checked = Item_imports.objects.filter(Q(item__print_group__code=itemgroup) & Q(order=ord_imp) & \
+                                                          Q(print_name=pr_rg[10])).first()
+#                print_name = item.print_name
+        #                break
+        #        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first
+        try:
+            item_checked = Itemgroup_in_Maket.objects.get(
+                Q(item=itm_checked) & Q(maket=maket) & Q(print_name=item.pr_rg[10]))
+        except:
+            item_checked = Itemgroup_in_Maket(item=itm_checked, maket=maket, print_name=pr_rg[10])
+        #        item_checked.print_name = print_name
+        try:
+            sel_item = request.POST[prt]
+            if sel_item == 'on':
+                item_checked.checked = True
+        except:
+            item_checked.checked = False
+            all_checked = False
+        item_checked.maket = maket
+        item_checked.save()
+        items_checked.append(item_checked) #////
     if all_checked:
         ord_imp.maket_status = 'R'
     else:
@@ -1425,7 +1425,7 @@ def delete_maket(request):
     id = request.POST['object_to_delete']
     maket = Makety.objects.get(id=id)
     maket.delete()
-    return HttpResponseRedirect(reverse('maket:admin'))
+    return HttpResponseRedirect(reverse('maket:maket_base'))
 
 
 def lost_maket (request, id):
