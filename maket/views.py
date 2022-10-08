@@ -1428,10 +1428,14 @@ def delete_maket(request):
 
 
 def lost_maket (request, id):
-    maket_id = id
     order_id = request.POST['l_order']
-    order = Order_imports.objects.get(id=order_id)
+    try:
+        order = Order_imports.objects.get(id=order_id)
+    except:
+        return HttpResponseRedirect(reverse('maket:admin'))
+    maket_id = id
     maket = Makety.objects.get(id=maket_id)
+
     maket.order = order
     other_makets_number = max(Makety.objects.filter(order=order).values_list('maket_id'))[0]
     maket.maket_id = other_makets_number + 1
