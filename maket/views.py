@@ -116,21 +116,21 @@ def dicts(request):
 
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
                'print_position': print_position, 'active2': 'active', 'print_group': print_group}
-    return render(request, 'maket/dicts.html', context)
+    return render(request, 'maket/dictionarys/dicts.html', context)
 
 
 def print_group(request):
     navi = 'print_group'
     print_group = Print_group.objects.all().order_by('code')
     context = {'navi': navi, 'active2': 'active', 'print_group': print_group}
-    return render(request, 'maket/print_group.html', context)
+    return render(request, 'maket/dictionarys//print_group.html', context)
 
 
 def colors(request):
     navi = 'colors'
     color = Item_color.objects.all().order_by('-color_scheme', 'color_id')
     context = {'navi': navi, 'color': color, 'active2': 'active'}
-    return render(request, 'maket/colors.html', context)
+    return render(request, 'maket/dictionarys/colors.html', context)
 
 
 def admin(request):
@@ -305,7 +305,7 @@ def customers(request):
     customers = Customer.objects.all().order_by('name')
 
     context = {'navi': navi, 'customers': customers, 'active2': 'active'}
-    return render(request, 'maket/customers.html', context)
+    return render(request, 'maket/dictionarys/customers.html', context)
 
 
 def update_cst(request, id):
@@ -765,7 +765,7 @@ def add_clr(request):
     color = Item_color(color_id=color_id, color_name=color_name, pantone=pantone,
                        color_code=color_code, color_scheme=color_scheme)
     color.save()
-    return HttpResponseRedirect(reverse('maket:dicts'))
+    return HttpResponseRedirect(reverse('maket:colors'))
 
 
 def update_clr(request, id):
@@ -783,7 +783,7 @@ def update_clr(request, id):
     color.color_scheme = color_scheme
 
     color.save()
-    return HttpResponseRedirect(reverse('maket:dicts'))
+    return HttpResponseRedirect(reverse('maket:colors'))
 
 
 def order_imports(id):
@@ -994,7 +994,7 @@ def goods(request):
 
     context = {'navi': navi, 'goods': goods, 'active2': 'active', 'color_scheme': color_scheme,
                'print_group': print_group}
-    return render(request, 'maket/goods.html', context)
+    return render(request, 'maket/dictionarys/goods.html', context)
 
 
 def upd_goods(request, id):
@@ -1059,7 +1059,7 @@ def upd_pg(request, id):
     ly = request.POST['pg_ly']
     pg.layout = ly
     pg.save()
-    return HttpResponseRedirect(reverse('maket:dicts'))
+    return HttpResponseRedirect(reverse('maket:print_group'))
 
 
 def add_pg(request):
@@ -1069,7 +1069,7 @@ def add_pg(request):
     ly = request.POST['ly']
     pg = Print_group(code=cd, name=nm, layout=ly, options=op)
     pg.save()
-    return HttpResponseRedirect(reverse('maket:dicts'))
+    return HttpResponseRedirect(reverse('maket:print_group'))
 
 
 def maket_status(request, id, status, source):
