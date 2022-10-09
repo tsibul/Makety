@@ -204,16 +204,6 @@ class Print_imports(models.Model):
     print_price = models.FloatField(default=0)
 
 
-class Order_item_print(models.Model):
-    """quantity - number of colors
-        shots - number of shots 1 or 2"""
-    order_item = models.ForeignKey(Item_imports, on_delete=models.CASCADE)
-    place = models.ForeignKey(Print_place, models.SET_NULL, null=True)
-    position = models.ForeignKey(Print_position, models.SET_NULL, null=True)
-    quantity = models.SmallIntegerField(default=1)
-    shots = models.SmallIntegerField(default=1)
-
-
 class Makety(models.Model):
     date_create = models.DateField(blank=True)
     date_modified = models.DateField(blank=True, null=True)
