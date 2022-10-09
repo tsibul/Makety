@@ -129,7 +129,8 @@ def print_group(request):
 def colors(request):
     navi = 'colors'
     color = Item_color.objects.all().order_by('-color_scheme', 'color_id')
-    context = {'navi': navi, 'color': color, 'active2': 'active'}
+    color_scheme = Color_scheme.objects.all()
+    context = {'navi': navi, 'color': color, 'active2': 'active', 'color_scheme': color_scheme}
     return render(request, 'maket/dictionarys/colors.html', context)
 
 
