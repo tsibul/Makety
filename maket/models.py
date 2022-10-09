@@ -196,7 +196,7 @@ class Print_imports(models.Model):
     """quantity - number of colors
         shots - number of shots 1 or 2"""
     place = models.CharField(max_length=30, blank=True, null=True)
-    type = models.CharField(max_length=20, blank=True, null=True)
+    type = models.CharField(max_length=30, blank=True, null=True)
     colors = models.SmallIntegerField(default=1)
     second_pass = models.BooleanField(default=False)
     item = models.ForeignKey(Item_imports, on_delete=models.CASCADE, null=True)
