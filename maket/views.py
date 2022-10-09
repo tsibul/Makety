@@ -505,10 +505,13 @@ def import_order(request):
             for n in x:
                 detail = 'detail' + str(n + 1) + '_color'
                 detail_hex = 'detail' + str(n + 1) + '_hex'
-                hex_color = Item_color.objects.get(
-                    Q(color_id=itm_clr[n]) & Q(color_scheme=item.item.color_scheme)).color_code
                 setattr(item, detail, itm_clr[n])
-                setattr(item, detail_hex, hex_color)
+                try:
+                    hex_color = Item_color.objects.get(
+                        Q(color_id=itm_clr[n]) & Q(color_scheme=item.item.color_scheme)).color_code
+                    setattr(item, detail_hex, hex_color)
+                except:
+                    pass
             item.save()
             items_list.append(item)
 
