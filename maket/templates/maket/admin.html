@@ -1,10 +1,40 @@
 {% extends 'maket/main.html' %}
 {% block title %}Администрирование{% endblock %}
 {% block content %}
-
 <!-- Modal delete Maket-->
 {% include 'maket/deleteMaketModal.html' %}
 
+<!--Заполнение HEX цветов><--->
+<table class="table table-hover lh-1">
+    <thead>
+    <tr class="table-primary">
+        <th colspan="2"  onclick="javascript:colapse_('hex_colors');">Заполнение HEX цветов</th>
+        <th colspan="2" class="text-danger text-end"  onclick="javascript:colapse_('hex_colors');">всего</th>
+        <th colspan="1" class="text-danger text-start"  onclick="javascript:colapse_('hex_colors');">{{lost_hex_len}}</th>
+        <th class="text-end">
+            <form action="lost_hex">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-primary">искать соответствия</button>
+            </form>
+        </th>
+    </tr>
+    </thead>
+    <tbody id="collapse_hex_colors" style="font-size:80%;">
+{% for l_hex in lost_hex %}
+    <tr>
+        <td>{{l_hex.item.name}}</td>
+        <td>{{l_hex.item.item_name}}</td>
+        <td>{{l_hex.code}}</td>
+        <td>{{l_hex.print_name}}</td>
+        <td>{{l_hex.order.order_id}}</td>
+        <td>{{l_hex.order.customer.name}}</td>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+
+
+<!-- несвязанные товарные позиции><--->
 <table class="table table-hover">
     <thead>
     <tr onclick="javascript:colapse_('item_imports');" class="table-primary">
@@ -38,6 +68,7 @@
     </tbody>
 </table>
 
+<!-- несвязанные макеты><--->
 <table class="table table-hover">
     <thead>
     <tr onclick="javascript:colapse_('lost_makets');" class="table-primary">

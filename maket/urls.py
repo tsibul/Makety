@@ -55,5 +55,6 @@ urlpatterns = [
     path('look_up/<str:navi>', views.look_up, name='look_up'),
     path('delete_maket', views.delete_maket, name='delete_maket'),
     path('lost_maket/<int:id>', views.lost_maket, name='lost_maket'),
+    path('lost_hex', views.lost_hex, name='lost_hex'),
 
 ]

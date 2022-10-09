@@ -155,9 +155,42 @@ def admin(request):
             lost_makets.append([l_mak, ])
     lost_makets_len = len(lost_makets)
 
+    items = list(Item_imports.objects.filter(Q(detail1_hex='') & ~Q(detail1_color='') | \
+                                        Q(detail2_hex='') & ~Q(detail2_color='') | \
+                                        Q(detail3_hex='') & ~Q(detail3_color='') | \
+                                        Q(detail4_hex='') & ~Q(detail4_color='') | \
+                                        Q(detail5_hex='') & ~Q(detail5_color='') | \
+                                        Q(detail6_hex='') & ~Q(detail6_color='')))
+    lost_hex_len = len(items)
+
     context = {'navi': navi, 'active4': 'active', 'lost_imports': lost_imports, 'lost_imports_len': lost_imports_len,
-               'lost_makets': lost_makets, 'lost_makets_len': lost_makets_len}
+               'lost_makets': lost_makets, 'lost_makets_len': lost_makets_len, 'lost_hex': items,
+               'lost_hex_len': lost_hex_len}
     return render(request, 'maket/admin.html', context)
+
+
+def lost_hex(request):
+    items = Item_imports.objects.filter(Q(detail1_hex='') & ~Q(detail1_color='') | \
+                                        Q(detail2_hex='') & ~Q(detail2_color='') | \
+                                        Q(detail3_hex='') & ~Q(detail3_color='') | \
+                                        Q(detail4_hex='') & ~Q(detail4_color='') | \
+                                        Q(detail5_hex='') & ~Q(detail5_color='') | \
+                                        Q(detail6_hex='') & ~Q(detail6_color=''))
+    for item in items:
+        itm_clr = item.item_color.split('.')
+        num_details = len(itm_clr)
+        x = range(num_details)
+        for n in x:
+            detail = 'detail' + str(n + 1) + '_color'
+            detail_color = getattr(item, detail)
+            detail_hex = 'detail' + str(n + 1) + '_hex'
+            try:
+                hex_color = Item_color.objects.get(Q(color_id=detail_color) & Q(color_scheme=item.item.color_scheme)).color_code
+                setattr(item, detail_hex, hex_color)
+            except:
+                pass
+        item.save()
+    return HttpResponseRedirect(reverse('maket:admin'))
 
 
 def lost_imports(request, id):
@@ -472,7 +505,8 @@ def import_order(request):
             for n in x:
                 detail = 'detail' + str(n + 1) + '_color'
                 detail_hex = 'detail' + str(n + 1) + '_hex'
-                hex_color = Item_color.objects.get(Q(color_id=itm_clr[n]) & Q(color_scheme=item.item.color_scheme)).color_code
+                hex_color = Item_color.objects.get(
+                    Q(color_id=itm_clr[n]) & Q(color_scheme=item.item.color_scheme)).color_code
                 setattr(item, detail, itm_clr[n])
                 setattr(item, detail_hex, hex_color)
             item.save()
@@ -946,8 +980,8 @@ def update_maket(request, id):
         itemgroup = pr_rg[5]
         items_checked = []
         itm_checked = Item_imports.objects.filter(Q(item__print_group__code=itemgroup) & Q(order=ord_imp) & \
-                                                          Q(print_name=pr_rg[10])).first()
-#                print_name = item.print_name
+                                                  Q(print_name=pr_rg[10])).first()
+        #                print_name = item.print_name
         #                break
         #        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first
         try:
@@ -965,7 +999,7 @@ def update_maket(request, id):
             all_checked = False
         item_checked.maket = maket
         item_checked.save()
-        items_checked.append(item_checked) #////
+        items_checked.append(item_checked)  # ////
     if all_checked:
         ord_imp.maket_status = 'R'
     else:
@@ -1461,7 +1495,7 @@ def delete_maket(request):
     return HttpResponseRedirect(reverse('maket:maket_base'))
 
 
-def lost_maket (request, id):
+def lost_maket(request, id):
     order_id = request.POST['l_order']
     try:
         order = Order_imports.objects.get(id=order_id)
@@ -1475,4 +1509,3 @@ def lost_maket (request, id):
     maket.maket_id = other_makets_number + 1
     maket.save()
     return HttpResponseRedirect(reverse('maket:admin'))
-
