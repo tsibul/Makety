@@ -103,6 +103,18 @@
             </div>
             </div>
             </div>
+           <div class="row p-1">
+            <div class="col-8">
+                <input type="text" class="form-control" name="dt6_nm" placeholder="Деталь 6"></div>
+            <div class="col align-right">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det6"  name="flexCheck_det6">
+              <label class="form-check-label" for="flexCheck_det6">
+                нанесение
+              </label>
+            </div>
+            </div>
+            </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -120,7 +132,7 @@
     <th style="min-width:480px;"><h6>Название</h6></th>
     <th><h6>Цветовая группа</h6></th>
     <th><h6>Группа печати</h6></th>
-    <th colspan="10" class="text-center"><h6>Детали</h6></th>
+    <th colspan="12" class="text-center"><h6>Детали</h6></th>
     </tr>
 </thead>
 <tbody>
@@ -159,6 +171,11 @@
                {% if good.detail5_place %} checked {%endif%} value="True" form="form_{{good.id}}">
     </td>
     <td id="dt5_{{good.id}}">{{good.detail5_name}}</td>
+    <td>
+        <input type="checkbox" class="form-check-input" name="dt6_chck" disabled id="dt6c_{{good.id}}"
+               {% if good.detail6_place %} checked {%endif%} value="True" form="form_{{good.id}}">
+    </td>
+    <td id="dt6_{{good.id}}">{{good.detail6_name}}</td>
 
     </tr>
     </form>

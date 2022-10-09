@@ -745,12 +745,22 @@ def add_detail(request):
     else:
         detail5_place = False
 
+    detail6_name = request.POST['dt6_nm']
+    if detail5_name != '':
+        try:
+            detail6_place = request.POST['flexCheck_det6']
+        except:
+            detail6_place = False
+    else:
+        detail6_place = False
+
     det_set = Detail_set(item_name=item_code, name=name, color_scheme=color_scheme, print_group=print_group,
                          detail1_name=detail1_name, detail1_place=detail1_place,
                          detail2_name=detail2_name, detail2_place=detail2_place,
                          detail3_name=detail3_name, detail3_place=detail3_place,
                          detail4_name=detail4_name, detail4_place=detail4_place,
-                         detail5_name=detail5_name, detail5_place=detail5_place)
+                         detail5_name=detail5_name, detail5_place=detail5_place,
+                         detail6_name=detail6_name, detail6_place=detail6_place)
     det_set.save()
     return HttpResponseRedirect(reverse('maket:goods'))
 
@@ -1044,6 +1054,13 @@ def upd_goods(request, id):
     except:
         detail5_place = False
     item.detail5_place = detail5_place
+    detail6_name = request.POST['dt6']
+    item.detail6_name = detail6_name
+    try:
+        detail6_place = request.POST['dt6_chck']
+    except:
+        detail6_place = False
+    item.detail6_place = detail6_place
     item.save()
     return HttpResponseRedirect(reverse('maket:goods'))
 

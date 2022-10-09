@@ -364,6 +364,8 @@ function upd_good(id, clr_schemes, print_group){
    var dt4c_ln = 'dt4c_' + id;
    var dt5_ln = 'dt5_' + id;
    var dt5c_ln = 'dt5c_' + id;
+   var dt6_ln = 'dt6_' + id;
+   var dt6c_ln = 'dt6c_' + id;
    var art = document.getElementById(art_ln).textContent;
    var nm = document.getElementById(nm_ln).textContent;
    var cs = document.getElementById(cs_ln).textContent;
@@ -373,11 +375,13 @@ function upd_good(id, clr_schemes, print_group){
    var dt3 = document.getElementById(dt3_ln).textContent;
    var dt4 = document.getElementById(dt4_ln).textContent;
    var dt5 = document.getElementById(dt5_ln).textContent;
+   var dt6 = document.getElementById(dt6_ln).textContent;
    document.getElementById(dt1c_ln).disabled=false;
    document.getElementById(dt2c_ln).disabled=false;
    document.getElementById(dt3c_ln).disabled=false;
    document.getElementById(dt4c_ln).disabled=false;
    document.getElementById(dt5c_ln).disabled=false;
+   document.getElementById(dt6c_ln).disabled=false;
 
    var clr_numb = clr_schemes.length;
    var clr_html = ('<div class="input-group"><select class="form-select" style="font-size:80%" id="ColorSelect_' + id
@@ -423,6 +427,8 @@ function upd_good(id, clr_schemes, print_group){
                         '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt4 + '</textarea>';
    document.getElementById(dt5_ln).innerHTML = '<textarea type="text" name="dt5"' +
                         '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt5 + '</textarea>';
+   document.getElementById(dt6_ln).innerHTML = '<textarea type="text" name="dt6"' +
+                        '" class="form-control" style="font-size:80%;" form="form_' + id + '">' + dt6 + '</textarea>';
 }
 
 function upd_good_reverse(id, cs, pg, clr_schemes, print_group){
@@ -454,6 +460,8 @@ function upd_good_reverse(id, cs, pg, clr_schemes, print_group){
    var dt4c_ln = 'dt4c_' + id;
    var dt5_ln = 'dt5_' + id;
    var dt5c_ln = 'dt5c_' + id;
+   var dt6_ln = 'dt6_' + id;
+   var dt6c_ln = 'dt6c_' + id;
    var art = document.getElementById(art_ln).textContent;
    var nm = document.getElementById(nm_ln).textContent;
    var dt1 = document.getElementById(dt1_ln).textContent;
@@ -461,21 +469,25 @@ function upd_good_reverse(id, cs, pg, clr_schemes, print_group){
    var dt3 = document.getElementById(dt3_ln).textContent;
    var dt4 = document.getElementById(dt4_ln).textContent;
    var dt5 = document.getElementById(dt5_ln).textContent;
+   var dt6 = document.getElementById(dt6_ln).textContent;
    var dt1c = document.getElementById(dt1c_ln).checked;
    var dt2c = document.getElementById(dt2c_ln).checked;
    var dt3c = document.getElementById(dt3c_ln).checked;
    var dt4c = document.getElementById(dt4c_ln).checked;
    var dt5c = document.getElementById(dt5c_ln).checked;
+   var dt6c = document.getElementById(dt6c_ln).checked;
    document.getElementById(dt1c_ln).disabled = true;
    document.getElementById(dt2c_ln).disabled = true;
    document.getElementById(dt3c_ln).disabled = true;
    document.getElementById(dt4c_ln).disabled = true;
    document.getElementById(dt5c_ln).disabled = true;
+   document.getElementById(dt6c_ln).disabled = true;
    document.getElementById(dt1c_ln).checked = dt1c;
    document.getElementById(dt2c_ln).checked = dt2c;
    document.getElementById(dt3c_ln).checked = dt3c;
    document.getElementById(dt4c_ln).checked = dt4c;
    document.getElementById(dt5c_ln).checked = dt5c;
+   document.getElementById(dt6c_ln).checked = dt6c;
    document.getElementById(pg_ln).innerHTML = pg;
    document.getElementById(cs_ln).innerHTML = cs;
    document.getElementById(art_ln).innerHTML = art;
@@ -485,6 +497,7 @@ function upd_good_reverse(id, cs, pg, clr_schemes, print_group){
    document.getElementById(dt3_ln).innerHTML = dt3;
    document.getElementById(dt4_ln).innerHTML = dt4;
    document.getElementById(dt5_ln).innerHTML = dt5;
+   document.getElementById(dt6_ln).innerHTML = dt6;
 }
 
 function select_film(id){
