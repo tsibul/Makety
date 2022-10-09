@@ -58,6 +58,8 @@ class Detail_set(models.Model):
     detail4_place = models.BooleanField(default=False)
     detail5_name = models.CharField(max_length=60, default='', null=True, blank=True)
     detail5_place = models.BooleanField(default=False)
+    detail6_name = models.CharField(max_length=60, default='', null=True, blank=True)
+    detail6_place = models.BooleanField(default=False)
 
     def __repr__(self):
         return self.name
@@ -181,6 +183,13 @@ class Item_imports(models.Model):
     detail3_color = models.CharField(max_length=10, default='', blank=True, null=True)
     detail4_color = models.CharField(max_length=10, default='', blank=True, null=True)
     detail5_color = models.CharField(max_length=10, default='', blank=True, null=True)
+    detail6_color = models.CharField(max_length=10, default='', blank=True, null=True)
+    detail1_hex = models.CharField(max_length=7, default='', blank=True, null=True)
+    detail2_hex = models.CharField(max_length=7, default='', blank=True, null=True)
+    detail3_hex = models.CharField(max_length=7, default='', blank=True, null=True)
+    detail4_hex = models.CharField(max_length=7, default='', blank=True, null=True)
+    detail5_hex = models.CharField(max_length=7, default='', blank=True, null=True)
+    detail6_hex = models.CharField(max_length=7, default='', blank=True, null=True)
     item_price = models.FloatField(default=0)
     print_price = models.FloatField(default=0)
     num_prints = models.IntegerField(default=0)
