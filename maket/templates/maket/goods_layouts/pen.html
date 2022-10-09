@@ -90,7 +90,7 @@ viewBox="0 0 14480 1600"
                 form="form_maket_{{ord_imp.id}}"  {% if prt.3 == 1 %} checked {% endif %}>
       </div>
       <div class="col" style="font-size:60%;">&nbsp{{prt.0.print_id}}&nbsp</div>
-      <div class="col" style="font-size:60%;">&nbsp{{prt.0.item.item_group}}.{{prt.0.item.detail1_color}}&nbsp</div>
+      <div class="col" style="font-size:60%;">&nbsp{{prt.0.item.item_group}}.{{prt.0.item.item_color}}&nbsp</div>
       {% include 'maket/svg/**_s.html'|replace_value:product.5 %}
     </div>
 {% endif %}
