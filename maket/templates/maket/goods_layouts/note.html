@@ -22,7 +22,7 @@
                 form="form_maket_{{ord_imp.id}}" {% if prt.3 == 1 %} checked {% endif %}>
       </div>
       <div class="col" style="font-size:60%;">{{prt.0.print_id}}</div>
-      <div class="col" style="font-size:60%;">{{prt.0.item.item_group}}.{{prt.0.item.detail1_color}} </div>
+      <div class="col" style="font-size:60%;">{{prt.0.item.item_group}}.{{prt.0.item.item_color}} </div>
     </div>
      {% include 'maket/svg/**_s.html'|replace_value:product.5 %}
     </div>
