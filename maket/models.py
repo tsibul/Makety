@@ -139,7 +139,7 @@ class Order_imports(models.Model):
     supplier = models.CharField(max_length=50, blank=True, null=True)
     customer_name = models.CharField(max_length=255, blank=True, null=True)
     customer_INN = models.CharField(max_length=12, blank=True, null=True)
-    customer_address = models.CharField(max_length=120, blank=True, null=True)
+    customer_address = models.CharField(max_length=255, blank=True, null=True)
     customer = models.ForeignKey(Customer, models.SET_NULL, null=True)
     order_quantity = models.IntegerField(default=0)
     order_sum = models.FloatField(default=0)
