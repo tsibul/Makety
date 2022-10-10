@@ -813,26 +813,17 @@ def add_clr(request):
     pantone = request.POST['dt1_ptn']
     color_scheme = request.POST['ColorSelect_add']
     color_scheme = Color_scheme.objects.get(id=color_scheme)
-    color = Item_color(color_id=color_id, color_name=color_name, pantone=pantone,
-                       color_code=color_code, color_scheme=color_scheme)
-    color.save()
-    return HttpResponseRedirect(reverse('maket:colors'))
-
-
-def update_clr(request, id):
-    color = Item_color.objects.get(id=id)
-    color_id = request.POST['clrid']
-    color.color_id = color_id
-    color_name = request.POST['clr_nm']
-    color.color_name = color_name
-    color_code = request.POST['dt1_hex']
-    color.color_code = color_code
-    pantone = request.POST['dt1_ptn']
-    color.pantone = pantone
-    color_scheme = request.POST['ColorSelect2']
-    color_scheme = Color_scheme.objects.get(scheme_name=color_scheme)
-    color.color_scheme = color_scheme
-
+    try:
+        id = request.POST['id_id']
+        color = Item_color.objects.get(id=id)
+        color.color_id = color_id
+        color.color_name = color_name
+        color.color_code = color_code
+        color.pantone = pantone
+        color.color_scheme = color_scheme
+    except:
+        color = Item_color(color_id=color_id, color_name=color_name, pantone=pantone,
+                           color_code=color_code, color_scheme=color_scheme)
     color.save()
     return HttpResponseRedirect(reverse('maket:colors'))
 

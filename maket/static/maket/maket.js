@@ -123,70 +123,22 @@ function upd_dtl_reverse(detail_id, color){
 
 }
 
-function clr_edit(detail_id, clr_in){
-    var red = 'red_' + detail_id;
-    var clrid = 'clrid_' + detail_id;
-    var clrnm = 'clrnm_' + detail_id;
-    var clrpnt = 'clrpnt_' + detail_id;
-    var clrhex = 'clrhex_' + detail_id;
-    var clr = 'ColorSelect2_' + detail_id;
-    var ok = 'okclr_' + detail_id;
-    var otmclr = 'otmclr_' + detail_id;
-    var okclr = 'okclr_' + detail_id;
-
-
-    var clr_schemes = []
-    for (var i=1; i<100; i++) {
-    var clr_id = 'clr_sr_' + i;
-    try {var clr_schm = document.getElementById(clr_id).value;
-    clr_schemes.push(clr_schm);}
-    catch(err){break}};
-
-    var clr_numb = clr_schemes.length;
-    var clr_html = ''
-
-    for (var i = 0; i < clr_numb; i++){
-    if (clr_schemes[i] === clr_in){var selected = 'selected'}else{var selected = ''};
-    clr_html +=('<option value="' + clr_schemes[i] + '" ' + selected + ' name="ColorSelect">' +
-    clr_schemes[i] + '</option>');
-    }
-
-    document.getElementById(red).disabled = true;
-    document.getElementById(clrid).disabled = false;
-    document.getElementById(clrnm).disabled = false;
-    document.getElementById(clrpnt).disabled = false;
-    document.getElementById(clrhex).disabled = false;
-    document.getElementById(clr).disabled = false;
-    document.getElementById(clr).innerHTML = clr_html;
-
-    document.getElementById(otmclr).disabled = false;
-    document.getElementById(okclr).disabled = false;
+function clr_edit(clr_id){
+    document.getElementById('clr_id').value = document.getElementById('clrid_' + clr_id).textContent;
+    document.getElementById('clr_nm').value = document.getElementById('clrnm_' + clr_id).textContent;
+    document.getElementById('dt1_ptn').value = document.getElementById('clrpnt_' + clr_id).textContent;
+    document.getElementById('dt1_hex').value = document.getElementById('clrhex_' + clr_id).textContent;
+    var chosen = document.getElementById('option_' + clr_id).value;
+    document.getElementById('id_id').value = clr_id;
+    document.getElementById('sch_id_' + chosen).selected = true;
 }
 
-function clr_edit_reverse(detail_id, color){
-    var red = 'red_' + detail_id;
-    var clrid = 'clrid_' + detail_id;
-    var clrnm = 'clrnm_' + detail_id;
-    var clrpnt = 'clrpnt_' + detail_id;
-    var clrhex = 'clrhex_' + detail_id;
-    var clr = 'ColorSelect2_' + detail_id;
-    var ok = 'okclr_' + detail_id;
-    var otmclr = 'otmclr_' + detail_id;
-    var okclr = 'okclr_' + detail_id;
-
-    clr_html = '<option value="' + color + '" name="color" disabled selected>' + color + '</option>';
-
-    document.getElementById(red).disabled = false;
-    document.getElementById(clrid).disabled = true;
-    document.getElementById(clrnm).disabled = true;
-    document.getElementById(clrpnt).disabled = true;
-    document.getElementById(clrhex).disabled = true;
-    document.getElementById(clr).disabled = true;
-    document.getElementById(clr).innerHTML = clr_html;
-
-    document.getElementById(otmclr).disabled = true;
-    document.getElementById(okclr).disabled = true;
-
+function clear_color_modal(){
+    document.getElementById('clr_id').value = null;
+    document.getElementById('clr_nm').value = null;
+    document.getElementById('dt1_ptn').value = null;
+    document.getElementById('dt1_hex').value = null;
+    document.getElementById('id_id').value = null;
 }
 
 function upd_cst(id){

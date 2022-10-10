@@ -5,35 +5,39 @@
       <div><h5>Цвета</h5></div>
 <div class="text-end">
     <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#addclrModal">
-      Добавить</button>
+      Добавить цвет</button>
 </div>
 </div>
-<!-- Modal --> <form id="add_clr" action="{% url 'maket:add_clr' %}" method="post">
+<!-- Modal -->
+    <form id="add_clr" action="{% url 'maket:add_clr' %}" method="post">
       {% csrf_token %}
         <div class="modal fade" id="addclrModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="addclrModalLabel">Добавление Цвета</h5>
+                <h5 class="modal-title" id="addclrModalLabel">Добавление/Изменение Цвета</h5>
               </div>
               <div class="modal-body">
                  <!--  --->
+               <input hidden type="text" class="form-control" id="id_id" name="id_id" >
+
               <div class="row p-1">
-                  <div class="col-2">
-                      <input type="text" class="form-control" name="clr_id" placeholder="Цвет"></div>
                   <div class="col-4">
-                      <input type="text" class="form-control" name="clr_nm" placeholder="Название"></div>
-                  <div class="col-3">
-                        <input type="text" class="form-control" name="dt1_ptn" placeholder="Pantone"></div>
+                      <input type="text" class="form-control" name="clr_id" placeholder="Цвет" id="clr_id"></div>
+                  <div class="col-8">
+                      <input type="text" class="form-control" name="clr_nm" placeholder="Название" id="clr_nm"></div>
+
               </div>
               <div class="row p-1">
-                    <div class="col">
-                        <input type="text" class="form-control" name="dt1_hex" placeholder="#HEX"></div>
-                    <div class="col">
+                    <div class="col-4">
+                        <input type="text" class="form-control" name="dt1_ptn" placeholder="Pantone" id="dt1_ptn"></div>
+                    <div class="col-3">
+                        <input type="text" class="form-control" name="dt1_hex" placeholder="#HEX" id="dt1_hex"></div>
+                    <div class="col-5">
                     <div class="input-group" >
                     <select class="form-select" id="ColorSelect_add" name="ColorSelect_add">
                     {% for clr_sch in color_scheme %}
-                         <option value="{{ clr_sch.id}}" >{{ clr_sch.scheme_name}}</option>
+                         <option id="sch_id_{{ clr_sch.id}}" value="{{ clr_sch.id}}" >{{ clr_sch.scheme_name}}</option>
                     {% endfor %}
                     </select>
                     </div>
@@ -41,7 +45,8 @@
               </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        onclick="javascript:clear_color_modal();">Закрыть</button>
                 <button type="submit" class="btn btn-primary">Сохранить</button>
               </div>
             </div>
@@ -49,50 +54,31 @@
         </div>
     </form>
 
-<table class="table table-sm table-hover m2">
+<table class="table table-sm table-hover">
 <thead>
-<tr class="table-primary">
+<tr class="table-primary" onclick="javascript:colapse_('5');">
+    <th class="ps-3">ID</th>
+    <th >Название</th>
+    <th >Pantone С</th>
+    <th >#HEX</th>
+    <th >Цветовая группа</th>
     <th></th>
-    <th class="text-center" onclick="javascript:colapse_('5');">ID</th>
-    <th class="text-center" onclick="javascript:colapse_('5');">Название</th>
-    <th class="text-center" onclick="javascript:colapse_('5');">Pantone С</th>
-    <th class="text-center" onclick="javascript:colapse_('5');">#HEX</th>
-    <th class="text-center" onclick="javascript:colapse_('5');">Цветовая группа</th>
-    <th colspan="2" class="text-end">
-<!-- Button trigger modal -->
-    </th>
 </tr>
 </thead>
 <tbody id="collapse_5">
 {% for clr in color %}
-<form action="update_clr/{{ clr.id }}" method="post">
-{% csrf_token %}
 <tr >
-    <td class="col"><a href="javascript:clr_edit({{clr.id}}, '{{clr.color_scheme.scheme_name}}');">
-        <button type="button" class="btn-sm btn-outline-primary" id="red_{{clr.id}}">Ред.</button>
-    </a> </td>
-    <td class="col-1">
-        <input class="form-control" value="{{clr.color_id}}" disabled id="clrid_{{clr.id}}" name="clrid"></td>
-    <td class="col">
-        <input class="form-control" value="{{clr.color_name}}"  id="clrnm_{{clr.id}}" disabled name="clr_nm"></td>
-    <td class="col-2">
-        <input class="form-control" value="{{clr.pantone}}" disabled id="clrpnt_{{clr.id}}" name="dt1_ptn"></td>
-    <td class="col-2">
-        <input class="form-control" value="{{clr.color_code}}" disabled  id="clrhex_{{clr.id}}" name="dt1_hex"></td>
-    <td class="col-2">
-        <div class="input-group" >
-        <select class="form-select" id="ColorSelect2_{{clr.id}}" name="ColorSelect2" disabled>
-            <option value="0" selected>{{ clr.color_scheme.scheme_name}}</option>
-        </select>
-        </div>
-    </td>
-    <td class="col-1 text-end">
-        <a href="javascript:clr_edit_reverse({{clr.id}}, '{{ clr.color_scheme.scheme_name}}');">
-        <button type="button" class="btn-sm btn-outline-danger" id="otmclr_{{clr.id}}" disabled>Отм.</button></a>
-        <button type="submit" class="btn-sm btn-outline-primary" id="okclr_{{clr.id}}" disabled>OK</button>
+    <td id="clrid_{{clr.id}}" class="ps-3">{{clr.color_id}}</td>
+    <td id="clrnm_{{clr.id}}">{{clr.color_name}}</td>
+    <td id="clrpnt_{{clr.id}}">{{clr.pantone}}</td>
+    <td id="clrhex_{{clr.id}}">{{clr.color_code}}</td>
+    <td id="ColorSelect2_{{clr.id}}">{{ clr.color_scheme.scheme_name}}</td>
+    <input type="hidden" id="option_{{clr.id}}" value="{{ clr.color_scheme.id}}">
+    <td class="text-end">
+        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addclrModal"
+                onclick="javascript:clr_edit({{clr.id}});">Редактировать</button>
     </td>
 </tr>
-</form>
 {% endfor %}
 </tbody>
 </table>

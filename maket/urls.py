@@ -32,7 +32,6 @@ urlpatterns = [
     path('delete_order', views.delete_order, name='delete order'),
     path('add_detail', views.add_detail, name='add_detail'),
     path('add_clr', views.add_clr, name='add_clr'),
-    path('update_clr/<int:id>', views.update_clr, name='update_clr'),
     path('maket_print/<int:id>/<int:mk_id>', views.maket_print, name='maket_print'),
     path('update_cst/<int:id>', views.update_cst, name='update_cst'),
     path('maket_print/update_maket/<int:id>', views.update_maket, name='update_maket'),
