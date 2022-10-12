@@ -130,7 +130,7 @@
         <td >{{ord.order_id}}</td>
         <td>{{ord.order_date|date:'d.m.Y'}}</td>
         <td>{% if 'Сувенир' in ord.supplier %}ВВС{% elif 'Студия' in ord.supplier %}ССП{% else %}ВВ{% endif %}</td>
-        <td class="text-wrap" style="max-width:400px"> {{ord.customer_name}}</td>
+        <td class="text-wrap" style="max-width:400px"> {{ord.customer.name}}</td>
         <td> {{ord.manager.manager}}</td>
         <td class="text-break"> {{ord.manager.manager_mail}}</td>
         <td class="text-end"> {{ord.order_sum}}</td>
