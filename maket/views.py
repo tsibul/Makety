@@ -164,10 +164,26 @@ def admin(request):
                                         Q(detail6_hex='') & ~Q(detail6_color='')))
     lost_hex_len = len(items)
 
+    orders = Order_imports.objects.all().order_by('-order_date')
+    changed_customers = []
+    for order in orders:
+        if order.customer_name != order.customer.name:
+            changed_customers.append(order)
+    changed_customers_len = len(changed_customers)
+
+
     context = {'navi': navi, 'active4': 'active', 'lost_imports': lost_imports, 'lost_imports_len': lost_imports_len,
                'lost_makets': lost_makets, 'lost_makets_len': lost_makets_len, 'lost_hex': items,
-               'lost_hex_len': lost_hex_len}
+               'lost_hex_len': lost_hex_len, 'changed_customers': changed_customers,
+               'changed_customers_len': changed_customers_len}
     return render(request, 'maket/admin.html', context)
+
+
+def changed_customers(request, id):
+    order = Order_imports.objects.get(id=id)
+    order.customer_name = order.customer.name
+    order.save()
+    return HttpResponseRedirect(reverse('maket:admin'))
 
 
 def lost_hex(request):
