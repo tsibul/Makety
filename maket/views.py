@@ -171,11 +171,15 @@ def admin(request):
             changed_customers.append(order)
     changed_customers_len = len(changed_customers)
 
+    lost_deleted_items = list(Item_imports.objects.filter(order=None))
+    lost_deleted_prints = list(Print_imports.objects.filter(item=None))
+
 
     context = {'navi': navi, 'active4': 'active', 'lost_imports': lost_imports, 'lost_imports_len': lost_imports_len,
                'lost_makets': lost_makets, 'lost_makets_len': lost_makets_len, 'lost_hex': items,
                'lost_hex_len': lost_hex_len, 'changed_customers': changed_customers,
-               'changed_customers_len': changed_customers_len}
+               'changed_customers_len': changed_customers_len, 'lost_deleted_prints': lost_deleted_prints,
+               'lost_deleted_items': lost_deleted_items}
     return render(request, 'maket/admin.html', context)
 
 
