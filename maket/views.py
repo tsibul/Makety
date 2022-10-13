@@ -546,6 +546,7 @@ def import_order(request):
                     if x.name == trstrings[i][1]:
                         prt_item = x
             elif items_list[len(items_list) - 1].print_id == str(len(items_list)):
+                ord_imp.to_check = True
                 for x in items_list:
                     if x.print_id == trstrings[i][0]:
                         prt_item = x

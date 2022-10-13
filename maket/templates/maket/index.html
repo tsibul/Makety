@@ -50,7 +50,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      <form action="delete_order" method="post" id="form_delete_order">
+      <form action="{% url 'maket:delete_order' %}" method="post" id="form_delete_order">
       {% csrf_token %}
         <input type="hidden" name="object_to_delete" value="" id="object_to_delete">
       </form>
