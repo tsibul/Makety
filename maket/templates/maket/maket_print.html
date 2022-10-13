@@ -48,7 +48,8 @@
 <div class="d-flex border border-3 border-primary p-2 m-2" style="width:190mm;">
 <div class="col">
     <div class="row">
-        <div class="col m-1 fw-bold  lh-1">Макет к заказу {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
+        <div class="col-auto m-1 fw-bold  lh-1">Макет к заказу {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
+        <div class="col-auto m-1 lh-1 text-end">дата макета {{maket.date_modified|date:'d.m.Y'}}</div>
     </div>
 <table class="table-sm mb-0">
     <tbody>
