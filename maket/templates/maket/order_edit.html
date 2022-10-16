@@ -13,70 +13,62 @@
 </head>
 <body>
 
-<div class="border border-3 border-primary ms-1 p-1">
+<div class="border border-3 border-primary ms-1 p-1 fixed-bottom bg-primary text-white">
 <div class="d-flex flex-row lh-1">
+    <input type="hidden" name="order_id" value="{{ord_imp.id}}" form="order_save">
     <div class="fw-bold m-2">ЗАКАЗ {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
-    <div class="m-2" style="font-size:80%;">Сумма {{ord_imp.order_sum}}</div>
-    <div class="m-2" style="font-size:80%;">Кол-во {{ord_imp.order_quantity}}</div>
-    <div class="m-2" style="font-size:80%;">Сумма нанес. {{ord_imp.print_sum}}</div>
-    <div class="m-2" style="font-size:80%;">Кол-во нанес. {{ord_imp.print_quantity}}</div>
+    <div class="m-2 fw-bold">{{ord_imp.customer.name}},</div>
+    <div class="align-middle m-2">менеджер</div>
+    <div class="align-middle m-2">{{ord_imp.manager.manager}},</div>
+    <div class="align-middle m-2">E-mail: {{ord_imp.manager.manager_mail}},</div>
+    <div class="align-middle m-2">тел. {{ord_imp.manager.manager_phone}}</div>
+    <div class="col text-end">
+    <button class="btn btn-sm btn-primary" type="submit" form="order_save">
+    Cохранить изменения
+    </button></div>
 </div><!-- Order -->
-<div class="d-flex flex-rowlh-1">
-    <div class="fw-bold m-1">Поставщик </div>
-    <div class="m-1">{{ord_imp.supplier}},</div>
-    <div class="m-1"> менеджер </div>
-    <div class="m-1"> {{ord_imp.our_manager}}</div>
-</div><!-- Supplier -->
-<div class="d-flex flex-row lh-1">
-    <div class="fw-bold m-1">Покупатель </div>
-    <div class="m-1">{{ord_imp.customer.name}},</div>
-    <div class="m-1">ИНН {{ord_imp.customer_INN}},</div>
-    <div class="m-1">{{ord_imp.customer_address}}</div>
-</div><!-- Customer -->
-<div class="row justify-content-between">
-<div class="col">
-<div class="d-flex flex-row">
-    <div class="fw-bold align-middle m-1">Менеджер клиента</div>
-    <div class="align-middle m-1">{{ord_imp.manager.manager}},</div>
-    <div class="align-middle m-1">E-mail: {{ord_imp.manager.manager_mail}},</div>
-    <div class="align-middle m-1">тел. {{ord_imp.manager.manager_phone}}</div>
-</div><!-- Customer manager -->
 </div>
-<div class="col-2">
-<div class="m-1 row align-self-end">
-<button class="btn btn-sm btn-outline-secondary" type="button" onclick="javascript:colapse({{ord_imp.id}});">
-    Cостав заказа
-</button></div></div>
-</div><!-- Manager with collapse button -->
-</div>
-<div >
-<div class="border border-4" >
-<table class="table-sm" id="collapse_{{ord_imp.id}}" >
-    <thead>
-    <tr class="text-center lh-1">
+<tr class="" >
+<table class="table table-hover lh-1 " id="collapse_{{ord_imp.id}}">
+    <thead class="sticky-top bg-white">
+    <tr class="text-center lh-1 sticky-top">
         <th scope="col" class="col" style="font-size:80%;"> # </th>
         <th scope="col" class="col" style="font-size:80%;"> Арт. </th>
         <th scope="col" class="col-3" style="font-size:80%;"> Наименование </th>
         <th scope="col" class="col-2" style="font-size:80%;"> Нанесение </th>
         <th scope="col" class="col" style="font-size:80%;"> Кол-во </th>
-        <th scope="col" class="col-4" style="font-size:80%;"> Место / Тип / Цветов / 2-й проход </th>
+        <th colspan="5" scope="col" class="col" style="font-size:80%;"> Место / Тип / Цветов / 2-й проход </th>
     </tr>
-    {% for item in item_import %}
     </thead>
-    <tbody>
-    <tr class="lh-1">
+    {% for item in item_import %}
+    <form action="{% url 'maket:order_save' %}" method="post" id="order_save">
+    {% csrf_token %}
+    <tbody class="border-bottom-0">
+    <tr class="lh-1" id="row_{{item.print_id}}">
         <td class="col text-center" style="font-size:80%;"> {{item.print_id}} </td>
         <td class="col text-center" style="font-size:80%;"> {{item.code}} </td>
         <td class="col-3" style="font-size:80%;"> {{item.name}}</td>
         <td class="col-2 text-center" style="font-size:80%;"> {{item.print_name}}</td>
         <td class="col text-center" style="font-size:80%;"> {{item.quantity}}</td>
-    <td colspan="4">
-    <table class="table-sm mb-0">
-
+<!--    <td colspan="4">
+    <table class="table-sm mb-0"><--->
+        <td colspan="4">
+            <select class="form-select" aria-label="print_select" style="font-size:80%;" form="order_save"
+                    onchange="javascript:replace_print_rows({{item.print_id}});" name="{{item.print_id}}" id="select_{{item.print_id}}">
+              {% for print_id in print_ids %}
+                <option value="{{print_id.0.print_id}}" {% if print_id.0.print_id == item.print_id %}selected{% endif %}
+                        id="option_{{item.print_id}}_{{print_id.0.print_id}}">{{print_id.0.print_id}}.&nbsp; {{print_id.0.code}} &nbsp;нанесений: {{print_id.1}} &nbsp; нанесение: {{print_id.0.print_name}} </option>
+              {% endfor %}
+            </select>
+        </td>
+    </tr>
+    </tbody>
+    <tbody class="border-top-0 lh-1 align-top"  id="print_row_{{item.print_id}}">
     {% for prt in print_import %}
     {% if prt.print_id == item.print_id %}
-    <tr class="lh-1 align-top">
+    <tr >
         <td colspan="5" > </td>
+        <td class="col text-start" style="font-size:80%;"> {{prt.print_id}}.</td>
         <td class="col text-start" style="font-size:80%;"> {{prt.place}} /</td>
         <td class="col text-center" style="font-size:80%;"> {{prt.type}} /</td>
         <td class="col text-center" style="font-size:80%;"> {{prt.colors}} /</td>
@@ -84,14 +76,12 @@
         <input class="form-check-input" type="checkbox" disabled {% if prt.second_pass %}checked{% endif %}>
         </td>
     </tr>
-    {% else %}
     {% endif %}
     {% endfor %}
-    </table>
-    </td>
     </tr>
     {% endfor %}
     </tbody>
+</form>
 </table>
 </div><!-- Table border -->
 </div><!-- Collapse table -->

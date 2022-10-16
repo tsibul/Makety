@@ -1531,9 +1531,37 @@ def order_edit(request, id):
     ord_imp = Order_imports.objects.get(id=id)
     item_import = list(Item_imports.objects.filter(order=id).order_by('code'))
     print_import = ()
+    print_ids = []
     for item in item_import:
+        print_count = Print_imports.objects.filter(item=item).count()
         print_import = print_import + tuple(Print_imports.objects.filter(item=item))
+        print_ids.append([item, print_count])
     print_import = list(print_import)
-    context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import}
+    context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
+               'print_ids': print_ids}
 
     return render(request, 'maket/order_edit.html', context)
+
+def order_save(request):
+    id = request.POST['order_id']
+    item_import = Item_imports.objects.filter(order=id)
+    print_change_list = []
+    for item in item_import:
+        tmp_print_id = request.POST[str(item.print_id)]
+        if item.print_id != int(tmp_print_id) and [int(tmp_print_id), item.print_id] not in print_change_list:
+            print_change_list.append([item.print_id, int(tmp_print_id)])
+    for print_change in print_change_list:
+        item_old = Item_imports.objects.get(Q(order_id=id) & Q(print_id=print_change[0]))
+        prt_old = Print_imports.objects.filter(Q(print_id=print_change[0]) & Q(item=item_old))
+        item_new = Item_imports.objects.get(Q(order_id=id) & Q(print_id=print_change[1]))
+        prt_new = Print_imports.objects.filter(Q(print_id=print_change[1]) & Q(item=item_new))
+        for prt_o in prt_old:
+            prt_o.item = item_new
+            prt_o.print_id = item_new.print_id
+            prt_o.save()
+        for prt_n in prt_new:
+            prt_n.item = item_old
+            prt_n.print_id = item_old.print_id
+            prt_n.save()
+
+    return HttpResponseRedirect(reverse('maket:order_edit', kwargs={'id': id}))

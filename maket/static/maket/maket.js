@@ -581,3 +581,24 @@ function delete_object_modal(id){
     document.getElementById('object_date').textContent = document.getElementById('order_date_' + id).textContent
     document.getElementById('object_customer').textContent = document.getElementById('cust_nm_' + id).textContent
 }
+
+function replace_print_rows(id){
+    var id_old = 'print_row_' + id;
+    var select = 'select_' + id
+    var id_n = document.getElementById(select).value;
+    var id_new = 'print_row_' + id_n;
+    var content_old = document.getElementById(id_old).innerHTML;
+    var content_new = document.getElementById(id_new).innerHTML;
+    document.getElementById(id_old).innerHTML = content_new;
+    document.getElementById(id_new).innerHTML = content_old;
+    document.getElementById(id_old).classList.add("bg-secondary", "text-white");
+    document.getElementById(id_new).classList.add("bg-secondary", "text-white");
+    document.getElementById('row_' + id).classList.add("bg-secondary", "text-white");
+    document.getElementById('row_' + id_n).classList.add("bg-secondary", "text-white");
+    var opt_old = 'option_'+ id_n +'_' + id_n;
+    var opt_new = 'option_'+ id_n + '_' + id;
+    document.getElementById(opt_old).selected = false;
+    document.getElementById(opt_new).selected = true;
+    document.getElementById(opt_old).disabled = true;
+    document.getElementById('option_' + id + '_' + id).disabled = true;
+}
