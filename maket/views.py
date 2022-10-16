@@ -1525,3 +1525,15 @@ def lost_maket(request, id):
     maket.maket_id = other_makets_number + 1
     maket.save()
     return HttpResponseRedirect(reverse('maket:admin'))
+
+
+def order_edit(request, id):
+    ord_imp = Order_imports.objects.get(id=id)
+    item_import = list(Item_imports.objects.filter(order=id).order_by('code'))
+    print_import = ()
+    for item in item_import:
+        print_import = print_import + tuple(Print_imports.objects.filter(item=item))
+    print_import = list(print_import)
+    context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import}
+
+    return render(request, 'maket/order_edit.html', context)
