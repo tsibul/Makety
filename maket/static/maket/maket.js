@@ -587,8 +587,6 @@ function replace_print_rows(selectObj){
     var id = selectObj.dataset.id;
     var id_n_current = selectObj.value;
     var id_n = document.querySelector('[data-id_current="' + id_n_current + '"]').dataset.id;
-
-
     var print_row_old = 'print_row_' + id;
     var print_row_new = 'print_row_' + id_n;
     var select_old = 'select_' + id;
@@ -597,38 +595,7 @@ function replace_print_rows(selectObj){
     var content_new = document.querySelector('[data-id="' + print_row_new + '"]').innerHTML;
     document.getElementById(print_row_old).innerHTML = content_new;
     document.getElementById(print_row_new).innerHTML = content_old;
-
     document.getElementById(select_new).value = id_current;
-
-
-
     var temp = document.querySelector('[data-id_current="' + id_n_current + '"]');
     temp.dataset.id_current = id_current;
-    selectObj.dataset.id_current = id_n_current;
-//    document.getElementById(id_old).classList.add("bg-secondary", "text-white");
-//    document.getElementById(id_new).classList.add("bg-secondary", "text-white");
-//    document.getElementById('row_' + id).classList.add("bg-secondary", "text-white");
-//    document.getElementById('row_' + id_n).classList.add("bg-secondary", "text-white");
-//    var opt_old_child = 'option_'+ document.getElementById(select_new).name +'_' + id_n;
-//    var opt_new_child = 'option_'+ document.getElementById(select_new).name + '_' + id;
-//   document.getElementById(select_old).value = id_n_current;
-//    document.getElementById(opt_old_child).selected = false;
-//    document.getElementById(opt_new_child).selected = true;
-//    var opt_old_parent = 'option_'+ document.getElementById(select_old).name +'_' + id_n;
-//    var opt_new_parent = 'option_'+ document.getElementById(select_old).name + '_' + id;
-//    document.getElementById(opt_old_parent).selected = true;
-//    document.getElementById(opt_new_parent).selected = false;
-
-    //    document.getElementById(opt_old).disabled = true;
-//    document.getElementById(print_row_new).id='tmp_old';
-//    document.getElementById(print_row_old).id= 'tmp_new';
-//    document.getElementById('tmp_new').id = print_row_new;
-//    document.getElementById('tmp_old').id = print_row_old;
-//    document.getElementById(select_old).id = 'temp_new';
-//    document.getElementById(select_new).id = 'temp_old';
-//    document.getElementById('temp_new').id = select_new;
-//    document.getElementById('temp_old').id = select_old;
-//    document.getElementById(select_new).setAttribute('onchange',  'javascript:replace_print_rows(' + id_n +')');
-//    document.getElementById(select_old).setAttribute('onchange', 'javascript:replace_print_rows(' + id +')');
-//    document.getElementById('option_' + id + '_' + id).disabled = true;
-}
+    selectObj.dataset.id_current = id_n_current;}
