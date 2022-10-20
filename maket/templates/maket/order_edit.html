@@ -54,7 +54,8 @@
     <table class="table-sm mb-0"><--->
         <td colspan="4">
             <select class="form-select" aria-label="print_select" style="font-size:80%;" form="order_save"
-                    onchange="javascript:replace_print_rows({{item.print_id}});" name="{{item.print_id}}" id="select_{{item.print_id}}">
+                    onchange="javascript:replace_print_rows(this);" name="{{item.print_id}}"
+                    data-id={{item.print_id}} data-id_current={{item.print_id}} id="select_{{item.print_id}}" >
               {% for print_id in print_ids %}
                 <option value="{{print_id.0.print_id}}" {% if print_id.0.print_id == item.print_id %}selected{% endif %}
                         id="option_{{item.print_id}}_{{print_id.0.print_id}}">{{print_id.0.print_id}}.&nbsp; {{print_id.0.code}} &nbsp;нанесений: {{print_id.1}} &nbsp; нанесение: {{print_id.0.print_name}} </option>
@@ -63,7 +64,7 @@
         </td>
     </tr>
     </tbody>
-    <tbody class="border-top-0 lh-1 align-top"  id="print_row_{{item.print_id}}">
+    <tbody class="border-top-0 lh-1 align-top"  id="print_row_{{item.print_id}}" data-id="print_row_{{item.print_id}}">
     {% for prt in print_import %}
     {% if prt.print_id == item.print_id %}
     <tr >

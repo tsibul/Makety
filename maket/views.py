@@ -1552,9 +1552,9 @@ def order_save(request):
             print_change_list.append([item.print_id, int(tmp_print_id)])
     for print_change in print_change_list:
         item_old = Item_imports.objects.get(Q(order_id=id) & Q(print_id=print_change[0]))
-        prt_old = Print_imports.objects.filter(Q(print_id=print_change[0]) & Q(item=item_old))
+        prt_old = list(Print_imports.objects.filter(Q(print_id=print_change[0]) & Q(item=item_old)))
         item_new = Item_imports.objects.get(Q(order_id=id) & Q(print_id=print_change[1]))
-        prt_new = Print_imports.objects.filter(Q(print_id=print_change[1]) & Q(item=item_new))
+        prt_new = list(Print_imports.objects.filter(Q(print_id=print_change[1]) & Q(item=item_new)))
         for prt_o in prt_old:
             prt_o.item = item_new
             prt_o.print_id = item_new.print_id
