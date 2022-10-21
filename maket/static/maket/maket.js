@@ -554,7 +554,7 @@ function upload_film(id){
 }
 
 function total_collapse(){
-    const ids=document.querySelectorAll('[id*="collapse"]')
+    const ids=document.querySelectorAll('[id*="collapse_mkt"]')
     for(var i in ids){
     if (ids[i].style.display ==='none'){
     ids[i].style.display = 'table-row-group';}
