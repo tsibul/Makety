@@ -1565,3 +1565,13 @@ def order_save(request):
             prt_n.save()
 
     return HttpResponseRedirect(reverse('maket:order_edit', kwargs={'id': id}))
+
+@csrf_exempt
+def maket_check_status(request, id):
+    order = Order_imports.objects.get(id=id)
+    if order.to_check:
+        order.to_check = False
+    else:
+        order.to_check = True
+    order.save()
+    return HttpResponse()

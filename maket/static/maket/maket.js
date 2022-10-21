@@ -599,3 +599,11 @@ function replace_print_rows(selectObj){
     var temp = document.querySelector('[data-id_current="' + id_n_current + '"]');
     temp.dataset.id_current = id_current;
     selectObj.dataset.id_current = id_n_current;}
+
+function order_repaired(id){
+    var xhr = new XMLHttpRequest();
+    var url = '/maket/maket_check_status/' + id;
+    xhr.open("GET", url, true);
+    xhr.send();
+
+}

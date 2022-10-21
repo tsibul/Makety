@@ -23,7 +23,7 @@
     <div class="align-middle m-2">E-mail: {{ord_imp.manager.manager_mail}},</div>
     <div class="align-middle m-2">тел. {{ord_imp.manager.manager_phone}}</div>
     <div class="col text-end">
-    <button class="btn btn-sm btn-primary" type="button" onclick="order_repared(ord_imp.id);">
+    <button class="btn btn-sm btn-primary" type="button" onclick="order_repaired({{ord_imp.id}});">
     {% if ord_imp.to_check %}<i class="bi bi-check-lg"></i>Исправить{% else %}
     <i class="bi bi-question-lg"></i>Проверить{% endif %}
     </button></div>

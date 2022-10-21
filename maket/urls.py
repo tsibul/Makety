@@ -58,5 +58,6 @@ urlpatterns = [
     path('changed_customers/<int:id>', views.changed_customers, name='changed_customers'),
     path('order_edit/<int:id>', views.order_edit, name='order_edit'),
     path('order_save', views.order_save, name='order_save'),
+    path('maket_check_status/<int:id>', views.maket_check_status, name='maket_check_status')
 
 ]
