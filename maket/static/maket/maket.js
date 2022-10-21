@@ -586,15 +586,15 @@ function replace_print_rows(selectObj){
     var id_current = selectObj.dataset.id_current;
     var id = selectObj.dataset.id;
     var id_n_current = selectObj.value;
-    var id_n = document.querySelector('[data-id_current="' + id_n_current + '"]').dataset.id;
-    var print_row_old = 'print_row_' + id;
-    var print_row_new = 'print_row_' + id_n;
-    var select_old = 'select_' + id;
+    var parentSelect = selectObj.parentNode.parentNode.parentNode
+    var newObj = document.querySelector('[data-id_current="' + id_n_current + '"]')
+    var parentNew = newObj.parentNode.parentNode.parentNode
+    var id_n = newObj.dataset.id;
     var select_new = 'select_' + id_n;
-    var content_old = document.querySelector('[data-id="' + print_row_old + '"]').innerHTML;
-    var content_new = document.querySelector('[data-id="' + print_row_new + '"]').innerHTML;
-    document.getElementById(print_row_old).innerHTML = content_new;
-    document.getElementById(print_row_new).innerHTML = content_old;
+    var rowNew = parentNew.nextElementSibling
+    var rowOld = parentSelect.nextElementSibling
+    parentSelect.parentNode.insertBefore(rowNew,parentSelect.nextSibling);
+    parentNew.parentNode.insertBefore(rowOld,parentNew.nextSibling);
     document.getElementById(select_new).value = id_current;
     var temp = document.querySelector('[data-id_current="' + id_n_current + '"]');
     temp.dataset.id_current = id_current;
