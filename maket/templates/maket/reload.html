@@ -1,10 +1,6 @@
 <div class="border border-3 border-primary ms-1 p-1">
 <div class="d-flex flex-row lh-1">
     <div class="d-flex justify-content-md-end">
-        <form action="order_edit/{{ord_imp.id}}" method="post">
-        {% csrf_token %}
-        <button class="btn btn-sm btn-outline-primary d-print-none" type="submit" >Редактировать</button>
-        </form>&nbsp
         <form action="/maket/maket_print/{{ord_imp.id}}/1" method="post">
         {% csrf_token %}
         <button class="btn btn-sm btn-outline-primary d-print-none" type="submit" formtarget="_blank">
