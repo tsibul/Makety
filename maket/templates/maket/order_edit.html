@@ -16,13 +16,17 @@
 <div class="border border-3 border-primary ms-1 p-1 fixed-bottom bg-primary text-white">
 <div class="d-flex flex-row lh-1">
     <input type="hidden" name="order_id" value="{{ord_imp.id}}" form="order_save">
-    <div class="fw-bold m-2">ЗАКАЗ {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
-    <div class="m-2 fw-bold">{{ord_imp.customer.name}},</div>
+    <div class="m-2">ЗАКАЗ {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
+    <div class="m-2">{{ord_imp.customer.name}},</div>
     <div class="align-middle m-2">менеджер</div>
     <div class="align-middle m-2">{{ord_imp.manager.manager}},</div>
     <div class="align-middle m-2">E-mail: {{ord_imp.manager.manager_mail}},</div>
     <div class="align-middle m-2">тел. {{ord_imp.manager.manager_phone}}</div>
     <div class="col text-end">
+    <button class="btn btn-sm btn-primary" type="button" onclick="order_repared(ord_imp.id);">
+    {% if ord_imp.to_check %}<i class="bi bi-check-lg"></i>Исправить{% else %}
+    <i class="bi bi-question-lg"></i>Проверить{% endif %}
+    </button></div>
     <button class="btn btn-sm btn-primary" type="submit" form="order_save">
     Cохранить изменения
     </button></div>
@@ -54,7 +58,7 @@
     <table class="table-sm mb-0"><--->
         <td colspan="4">
             <select class="form-select" aria-label="print_select" style="font-size:80%;" form="order_save"
-                    onchange="javascript:replace_print_rows(this);" name="{{item.print_id}}"
+                    onchange="replace_print_rows(this);" name="{{item.print_id}}"
                     data-id={{item.print_id}} data-id_current={{item.print_id}} id="select_{{item.print_id}}" >
               {% for print_id in print_ids %}
                 <option value="{{print_id.0.print_id}}" {% if print_id.0.print_id == item.print_id %}selected{% endif %}
