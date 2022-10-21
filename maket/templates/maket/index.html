@@ -130,9 +130,9 @@
     <tr ondblclick="window.location.href='/maket/order/{{ord.id}}_{{lookup}}'" class="align-middle
            {%  if ord.maket_status == 'R' %} text-success{% elif ord.maket_status == 'N' %} text-danger {% endif %}">
         <td class="{% if ord.to_check %}text-danger{% else %}text-success{% endif %}"
-            style="font-size: 100%;" onclick="window.open ('/maket/order_edit/{{ord.id}}', '_blank');">
-            {% if ord.to_check %}<i class="bi bi-exclamation-diamond-fill"></i>{% else %}
-            <i class="bi bi-check-lg"></i>{% endif %}</td>
+            style="font-size: 140%;" onclick="window.open ('/maket/order_edit/{{ord.id}}', '_blank');">
+            {% if ord.to_check %}<i class="bi bi-exclamation-square"></i></i>{% else %}
+            <i class="bi bi-check-square"></i>{% endif %}</td>
         <td class="fw-bold" >{{ord.maket_status}}</td>
         <td >
             <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" style="font-size:80%"
