@@ -171,11 +171,12 @@
 <div class="row border-1">
     <div class="col mt-2 ms-2">
         <div class="text-start">Поставщик <strong>{{ord_imp.supplier}}</strong></div>
-        <div class="text-start">менеджер {{ord_imp.our_manager}}</div>
+        <div class="text-start">от поставщика {{ord_imp.our_manager}}</div>
+        <div class="text-start">office@vikivostok.ru, info@proecopen.ru, +7(495)640425</div>
     </div>
     <div class="col mt-2">
         <div class="text-start">Заказчик <strong>{{ord_imp.customer_name}}</strong></div>
-        <div class="text-start">менеджер {{ord_imp.manager.manager}}</div>
+        <div class="text-start">от заказчика: {{ord_imp.manager.manager}}</div>
         <div class="text-start">{{ord_imp.manager.manager_mail}}, {{ord_imp.manager.manager_phone}}</div>
         <div class="mt-6 text-end">______________________________________________</div>
         <div style="font-size: 60%;" class="text-end">подпись</div>
