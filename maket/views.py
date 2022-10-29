@@ -976,6 +976,40 @@ def maket_print(request, id, mk_id):
     return render(request, 'maket/maket_print.html', context)
 
 
+def maket_print_empty(request, id, mk_id):
+    ord_imp = order_imports(id)[0]
+    item_import = order_imports(id)[1]
+    print_import = order_imports(id)[2]
+    context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import}
+
+    order_id = ord_imp.id
+    product_range = prt_imports(order_id, print_import, ord_imp, mk_id)[1]
+    context_imp = prt_imports(order_id, print_import, ord_imp, mk_id)[0]
+    context.update({'product_range': product_range, 'mk_id': mk_id})
+    context.update(context_imp)
+
+    mkt = Makety.objects.filter(order=ord_imp).order_by('maket_id')
+    maket_id_list = []
+    for mk in mkt:
+        maket_id_list.append(mk.maket_id)
+    #    if len(maket_id_list) == 0:
+    #       maket_id_list = [1]
+    context.update({'maket_id_list': maket_id_list, 'len_maket': len(maket_id_list) + 1})
+    try:
+        maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
+        itemgroup_in_maket = Itemgroup_in_Maket.objects.filter(maket=maket)
+        print_in_maket = Print_in_Maket.objects.filter(maket=maket)
+        context.update({'maket': maket})
+        for ig in itemgroup_in_maket:
+            ig_id = ig.item.item.print_group.code
+            ig_ch = ig.checked
+            context.update({ig_id: ig_ch})
+    except:
+        pass
+
+    return render(request, 'maket/maket_print_empty.html', context)
+
+
 def update_maket(request, id):
     maket_id = request.POST['maket_id']
     ord_imp = order_imports(id)[0]
@@ -1575,3 +1609,8 @@ def maket_check_status(request, id):
         order.to_check = True
     order.save()
     return HttpResponse()
+
+
+def patterns(request):
+    context = {'active8': 'active'}
+    return render(request, 'maket/patterns.html', context)

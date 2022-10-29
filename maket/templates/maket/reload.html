@@ -6,6 +6,11 @@
         <button class="btn btn-sm btn-outline-primary d-print-none" type="submit" formtarget="_blank">
             <i class="bi bi-printer-fill" ></i> Шаблон макета</button>
         </form>
+        <form action="/maket/maket_print_empty/{{ord_imp.id}}/1" method="post">
+        {% csrf_token %}
+        <button class="btn btn-sm btn-outline-secondary d-print-none ms-1" type="submit" formtarget="_blank">
+            <i class="bi bi-printer-fill" ></i> Пустой шаблон макета</button>
+        </form>
     </div>
     <div class="fw-bold m-2">ЗАКАЗ {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
     <div class="m-2" style="font-size:80%;">Сумма {{ord_imp.order_sum}}</div>

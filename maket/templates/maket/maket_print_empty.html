@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+{% load static %}
+{% load extras %}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'maket/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'maket/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
+    <title>Макет {{ord_imp.order_id}} от {{ord_imp.order_date|date:'d.m.Y'}} &nbsp {{ord_imp.customer.name}}</title>
+</head>
+<body>
+<div class="d-grid gap-2 d-md-flex justify-content-md-between d-print-none">
+<div>
+    <button onclick="window.print()" class="btn btn-outline-primary"><i class="bi bi-printer-fill" style="currentColor"></i> Печать</button>
+    <button onclick="window.close();return false;" class="btn btn-outline-secondary">Закрыть</button>
+</div>
+
+<form action="/maket/maket_print/update_maket/{{ord_imp.id}}" id="form_maket_{{ord_imp.id}}" method="post">
+{% csrf_token %}
+    <input type="number" form="form_maket_{{ord_imp.id}}" value="{{mk_id}}" name="maket_id" hidden>
+</form>
+<div class="row">
+    <div class="col text-end text-primary" style="font-size:80%;">
+    <label for="maket_id_{{ord_imp.id}}">номер макета</label>
+    </div>
+    <div class="col">
+    <select class="form-select" id="maket_id_{{ord_imp.id}}" onchange="location = this.options[this.selectedIndex].value;">
+        {% for mk_id_l in maket_id_list %}
+        <option value="{% url 'maket:maket_print' id=ord_imp.id mk_id=mk_id_l %}"
+                {% if mk_id == mk_id_l %} selected {% endif %}>{{mk_id_l}}</option>
+        {% endfor %}
+        <option value="{% url 'maket:maket_print' id=ord_imp.id mk_id=len_maket %}"
+                {% if len_maket == 1 %} selected {% endif %}> новый </option>
+    </select>
+    </div>
+    <div class="col text-nowrap">
+    <button type="submit" class="btn btn-outline-primary" form="form_maket_{{ord_imp.id}}">
+        <i class="bi bi-check-lg"></i>Сохранить шаблон</button>
+    </div>
+</div>
+</div>
+<!-- Buttons -->
+<div class="row ms-1">
+
+<div class="d-flex border border-3 border-primary p-2 m-2" style="width:190mm;">
+<div class="col">
+    <div class="row">
+        <div class="col-auto m-1 fw-bold  lh-1">Макет к заказу {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
+        <div class="col-auto m-1 lh-1 text-end">дата макета {{maket.date_modified|date:'d.m.Y'}}</div>
+    </div>
+<table class="table-sm mb-0">
+    <tbody>
+        <tr class="lh-1">
+            <td class="fw-bold">Поставщик </td>
+            <td >{{ord_imp.supplier}}</td>
+        </tr>
+        <tr class="lh-1">
+            <td class="fw-bold">Покупатель </td>
+            <td>{{ord_imp.customer_name}}</td>
+        </tr>
+    </tbody>
+
+<div class=" row d-print-none">
+    <div class="col">
+    Пленка {{ord_imp.film.film_id}} от {{ord_imp.film.date}}
+    {% if ord_imp.film_status %}
+    <input class="form-check-input" type="checkbox" checked disabled name="filmstatus" id="filmstatus">
+    <label for="filmstatus">без ошибок</label>
+    {% else %}
+    <input class="form-check-input" type="checkbox" disabled name="filmstatus" id="filmstatus_">
+    <label for="filmstatus_"> ошибки </label>
+    {% endif %}
+    </div>
+</div>
+</table>
+</div>
+</div>
+
+<div class="d-flex flex-row border p-2 m-2  d-print-none" style="width:140mm;">
+<div class="col align-end">
+    {% for prd in product_range %}
+    <div class="row align-end">
+    <div class="col" style="font-size:60%" >{{prd.0}}</div>
+    <div class="col" style="font-size:60%" >{{prd.9}}</div>
+    <div class="col" style="font-size:60%" >{{prd.3}}/{{prd.1}} шт.</div>
+    <div class="col form-check" style="font-size:60%" >
+        <input  class="form-check-input" type="checkbox" name="chck_{{prd.2}}_{{prd.9}}" id="chck_{{prd.2}}_{{prd.9}}"
+                {% if prd.6  %}
+                checked
+                {% endif %}
+                form="form_maket_{{ord_imp.id}}">
+        <label class="form-check-label" for="chck_{{prd.2}}_{{prd.9}}"> в макет </label>
+    </div>
+    </div>
+    {% endfor %}
+</div>
+    <div class="col-2">
+    <a href="javascript:split_maket({{product_range}});"><button class="btn-sm btn-outline-primary">Выбрать</button> </a>
+    </div>
+</div><!-- chose items for show -->
+</div>
+<div class="d-flex align-content-start flex-wrap">
+
+<div class="d-flex p-1 m-1" style="width:192mm;">
+<table class="table-sm border border-2 border-success" style="width:190mm;">
+    <thead>
+    <tr class="text-center lh-1">
+        <th scope="col" class="col" style="max-width:4mm; font-size:60%;"> # </th>
+        <th scope="col" class="col-1" style="font-size:60%;"> Арт. </th>
+        <th scope="col" class="col-3" style="font-size:60%;"> Наименование </th>
+        <th scope="col" class="col-2" style="font-size:60%;"> Нанесение </th>
+        <th scope="col" class="col-1" style="font-size:60%;"> Кол-во </th>
+        <th scope="col" class="col-1" style="font-size:60%;"> Место  </th>
+        <th colspan="4" scope="col" class="col-5" style="font-size:60%;">Тип / Цветов / 2-й проход / Положение </th>
+    </tr>
+    </thead>
+    <tbody>
+{% for item in item_import %}
+    <tr class="lh-1" id="prt_{{item.item.print_group.code}}_{{ '**'|print_name_to_string_:item.print_name }}_"
+        {% for prod in product_range %}
+        {% if prod.5 == item.item.print_group.code and prod.6 == 0  and prod.9 == '**'|print_name_to_string_:item.print_name %}
+         style="display:none;" {% endif %}{% endfor %}>
+        <td class="col text-center" style="max-width:4mm; font-size:60%;"> {{item.print_id}} </td>
+        <td class="col-1 text-center" style="font-size:60%;"> {{item.code}} </td>
+        <td class="col-3" style="font-size:60%;"> {{item.name}}</td>
+        <td class="col-2 text-center" style="font-size:60%;"> {{item.print_name}}</td>
+        <td class="col-1 text-center" style="font-size:60%;"> {{item.quantity}}</td>
+    <td colspan="4">
+    <table class="table-sm mb-0">
+
+    {% for prt in print_import %}
+    {% if prt.print_id == item.print_id %}
+    <tr class="lh-1 align-top">
+<!--        <td scope="col" colspan="4" style="font-size:60%;"> </td> <--->
+        <td class="col-4 text-start" style="min-width:20mm; font-size:60%;"> {{prt.place}} </td>
+        <td class="col-2 text-center" style="font-size:60%;"> {{prt.type}}</td>
+        <td class="col-1 text-center" style="min-width:5mm; font-size:60%;"> {{prt.colors}} /</td>
+         <td class="col-1 text-center" style="font-size:60%;">
+        {% if prt.second_pass %}
+            <input class="form-check-input" type="checkbox" checked disabled>
+        {% else %}
+            <input class="form-check-input" type="checkbox" disabled>
+        {% endif %}
+        </td>
+        <td class="text-center" style="font-size:60%;"> {{prt.position}} </td>
+    </tr>
+    {% else %}
+    {% endif %}
+    {% endfor %}
+    </table>
+    </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+</div>
+
+<div class="ms-2 mt-3 text-center" style="max-width: 190mm;">
+<h6>Пожалуйста,<strong> ВНИМАТЕЛЬНО ПРОВЕРЯЙТЕ МАКЕТ! </strong></h6><h6> Найденная в готовом изделии ошибка, в случае если макет утвержден,
+не может быть основанием для переделки заказа за счет исполнителя. После утверждения макета изменения не принимаются!</h6>
+<div class="row border-1">
+    <div class="col mt-2 ms-2">
+        <div class="text-start">Поставщик <strong>{{ord_imp.supplier}}</strong></div>
+        <div class="text-start">от поставщика {{ord_imp.our_manager}}</div>
+        <div class="text-start">office@vikivostok.ru, info@proecopen.ru, +7(495)6404825</div>
+    </div>
+    <div class="col mt-2">
+        <div class="text-start">Заказчик <strong>{{ord_imp.customer_name}}</strong></div>
+        <div class="text-start">от заказчика: {{ord_imp.manager.manager}}</div>
+        <div class="text-start">{{ord_imp.manager.manager_mail}}, {{ord_imp.manager.manager_phone}}</div>
+        <div class="mt-6 text-end">______________________________________________</div>
+        <div style="font-size: 60%;" class="text-end">подпись</div>
+        <div style="font-size: 60%;" class="text-end mt-2">М.П.</div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<script src="{% static 'maket/maket.js' %}"></script>
+<script src="{% static 'maket/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
+
+</body>
+</html>
