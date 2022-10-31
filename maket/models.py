@@ -5,7 +5,7 @@ fs_orders = FileSystemStorage(location='files/orders')
 fs_makety = FileSystemStorage(location='files/makety')
 fs_films = FileSystemStorage(location='files/films')
 fs_patterns = FileSystemStorage(location='files/patterns')
-
+fs_additional = FileSystemStorage(location='files/additional')
 
 class Color_scheme(models.Model):
     """ color scheme IV, Grant, Eco """
@@ -277,4 +277,10 @@ class Item_in_Film(models.Model):
     status = models.BooleanField(default=True)
 
 
+class Additional_Files(models.Model):
+    """Additional files"""
+    additional_file = models.FileField(storage=fs_additional, null=True, blank=True)
+    additional_file_name = models.FilePathField(max_length=120)
+    comment = models.CharField(max_length=255, null=True, blank=True)
+    order_id = models.ForeignKey(Order_imports, on_delete=models.CASCADE)
 
