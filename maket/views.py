@@ -437,19 +437,12 @@ def import_order(request):
     cust_manager.save()
     try:
         ord_imp = Order_imports.objects.get(order_id=order_no)
-        ord_imp.supplier = supplier
-        ord_imp.customer_name = customer_name
-        ord_imp.customer_INN = customer_inn
-        ord_imp.customer_address = customer_address
-        ord_imp.order_date = order_date
-        ord_imp.order_quantity = order_quantity
-        ord_imp.order_sum = order_sum
-        ord_imp.our_manager = our_manager
-        ord_imp.manager = cust_manager
+        ord_imp.delete()
     except:
-        ord_imp = Order_imports(order_id=order_no, supplier=supplier, customer_name=customer_name,
-                                customer_INN=customer_inn, customer_address=customer_address, order_date=order_date,
-                                order_quantity=order_quantity, order_sum=order_sum, our_manager=our_manager,
+        pass
+    ord_imp = Order_imports(order_id=order_no, supplier=supplier, customer_name=customer_name,
+                            customer_INN=customer_inn, customer_address=customer_address, order_date=order_date,
+                            order_quantity=order_quantity, order_sum=order_sum, our_manager=our_manager,
                                 manager=cust_manager)
     try:
         if len(customer_inn) >= 10:
