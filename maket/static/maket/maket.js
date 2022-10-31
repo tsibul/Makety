@@ -618,3 +618,13 @@ function order_repaired(id){
     xhr.send();
 
 }
+
+
+function upload_pattern(buttonObj){
+    document.getElementById('upload_id').value = buttonObj.parentElement
+                                                                   .parentElement
+                                                                   .dataset.id;
+    document.getElementById('uploadPatternLabel').textContent = buttonObj.parentElement
+                                                                                  .parentElement
+                                                                                  .dataset.name;
+}

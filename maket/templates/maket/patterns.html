@@ -2,5 +2,69 @@
 {% block title %}макеты{% endblock %}
 {% block content %}
 
+<!-- Modal upload_maket -->
+<div class="modal fade" id="uploadPattern" tabindex="-1" aria-labelledby="uploadPatternLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title">
+              <div id="uploadPatternLabel"></div>
+          </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="upload_pattern" method="post" id="upload_pattern_" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="modal-body m-1">
+         <!-- Выбор файла --->
+         <label class="custom-file-label" for="ChosePattern"></label>
+         <input type="file" accept=".pdf" class="custom-file-input form-control col-auto border"
+                id="ChosePattern" name="ChosePattern" form="upload_pattern_" required>
+          <input type="number" name="upload_id" id="upload_id" form="upload_pattern_" hidden >
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="submit" name="submit" class="btn btn-primary" form="upload_pattern_" >Загрузить</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Modal Upload maket -->
+
+
+
+<div class="ms-3 me-5 col-9">
+<table class="table table-sm table-hover m-3">
+<thead class="table-secondary">
+<tr class="m-3">
+    <th>группа</th>
+    <th>название</th>
+    <th>шаблон</th>
+    <th></th>
+
+</tr>
+
+</thead>
+<tbody class="m-3">
+{% for pg in print_group %}
+<tr class="lh-1" data-id="{{pg.id}}" data-name="{{pg.code}} {{pg.name}}" >
+    <td class="m-1 fw-bold" > {{ pg.code }}</td>
+    <td class="m-1" >{{ pg.name }}</td>
+    <td class="m-1" >
+        <a href="/maket/download_pattern/{{pg.id}}" target="_blank">
+            {{ pg.pattern_file }}</a>
+    </td>
+    <td class="text-end">
+        <button type="button" class="btn btn-sm btn-outline-secondary"
+                onclick="javascript:upload_pattern(this);" data-bs-toggle="modal"
+                data-bs-target="#uploadPattern">
+            <i class="bi bi-upload"></i>&nbsp; Загрузить шаблон
+        </button>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
 
 {% endblock %}

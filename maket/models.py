@@ -4,6 +4,7 @@ from django.core.files.storage import FileSystemStorage
 fs_orders = FileSystemStorage(location='files/orders')
 fs_makety = FileSystemStorage(location='files/makety')
 fs_films = FileSystemStorage(location='files/films')
+fs_patterns = FileSystemStorage(location='files/patterns')
 
 
 class Color_scheme(models.Model):
@@ -30,6 +31,7 @@ class Print_group(models.Model):
     name = models.CharField(max_length=255)
     options = models.SmallIntegerField(default=1)
     layout = models.CharField(max_length=120, blank=True, default='')
+    pattern_file = models.FileField(storage=fs_patterns, null=True, blank=True)
 
     def __repr__(self):
         return self.code
