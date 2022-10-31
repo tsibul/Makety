@@ -207,20 +207,31 @@ function upd_cst_reverse(id){
 function split_maket(print_range){
     var number_items = print_range.length;
     for(i=0; i<number_items; i++){
-    var line = 'chck_' + print_range[i][2] + '_' + print_range[i][9]
-    if(document.getElementById(line).checked){if (print_range[i][8] === 'note'){
-    document.getElementById(print_range[i][2] + '_' + print_range[i][9]).style.display='block';}
-    else{document.getElementById(print_range[i][2] + '_' + print_range[i][9]).style.display='inherit';};
-    var hd_line = print_range[i][2] + '_' + print_range[i][9] + '_';
-    var hd_line1 = document.querySelectorAll("[id=" + CSS.escape(hd_line) + "]");
-    for(var j = 0; j < hd_line1.length; j++) {hd_line1[j].style.display='table-row';}
-    }
-    else{
-    document.getElementById(print_range[i][2] + '_' + print_range[i][9] ).style.display ='none';
-    var hd_line = print_range[i][2] + '_' + print_range [i][9] + '_';
-    var hd_line1 = document.querySelectorAll("[id=" + CSS.escape(hd_line) + "]");
-    for(var j = 0; j < hd_line1.length; j++) {hd_line1[j].style.display='none';}
-    }
+        var line = 'chck_' + print_range[i][2] + '_' + print_range[i][9]
+        if(document.getElementById(line).checked){
+            if (print_range[i][8] === 'note'){
+                try {
+                    document.getElementById(print_range[i][2] + '_' + print_range[i][9]).style.display='block';
+                    }
+                catch {};
+                }
+            else{
+                try{
+                    document.getElementById(print_range[i][2] + '_' + print_range[i][9]).style.display='inherit';}
+                catch {}
+            };
+            var hd_line = print_range[i][2] + '_' + print_range[i][9] + '_';
+            var hd_line1 = document.querySelectorAll("[id=" + CSS.escape(hd_line) + "]");
+            for(var j = 0; j < hd_line1.length; j++) {hd_line1[j].style.display='table-row';}
+        }
+        else{
+            try{
+                document.getElementById(print_range[i][2] + '_' + print_range[i][9] ).style.display ='none';}
+            catch{};
+            var hd_line = print_range[i][2] + '_' + print_range [i][9] + '_';
+            var hd_line1 = document.querySelectorAll("[id=" + CSS.escape(hd_line) + "]");
+            for(var j = 0; j < hd_line1.length; j++) {hd_line1[j].style.display='none';}
+        }
 }}
 
 function chs_note(prt_0_, note){
