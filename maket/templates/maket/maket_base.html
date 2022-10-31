@@ -114,7 +114,10 @@
 <tbody>
 {% for ord, maket in f_maket.items %}
     <tr class="{% if ord.maket_status != 'R' %} text-danger {% endif %}">
-        <td ><a href="javascript:colapse_('ord_{{ord.id}}');"><i class="bi bi-plus-square"></i></a></td>
+        <td ><button type="button" onclick="colapse_('ord_{{ord.id}}');" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-list"></i>
+            </button>
+        </td>
         <td class="fw-bold" style="max-width:110px; font-size:80%;">
             <select class="form-select form-select-sm {% if ord.maket_status != 'R' %}
                     text-danger {% endif %}" style="font-size:100%;"
@@ -134,9 +137,9 @@
         <td> {{ord.manager.manager}}</td>
         <td class="text-break"> {{ord.manager.manager_mail}}</td>
         <td class="text-end"> {{ord.order_sum}}</td>
-        <td>
+        <td class="text-end">
             <button type="button" class="btn btn-sm btn-outline-secondary" >
-                <i class="bi bi-folder2-open"></i>&nbsp;посмотреть все связанные файлы
+                <i class="bi bi-folder2-open"></i>&nbsp;&nbsp;посмотреть все связанные файлы&nbsp;
             </button>
         </td>
     </tr>
@@ -146,8 +149,11 @@
             <tbody id="collapse_ord_{{ord.id}}">
                 {% for mkt, itemgr in maket.items %}
                 <tr class="align-middle" ondblclick="window.open('/maket/maket_print/{{ord.id}}/{{mkt.maket_id}}', '_blank');">
-                <td></td>
-                <td><a href="javascript:colapse_('mkt_{{mkt.id}}');"><i class="bi bi-plus-square"></i></a></td>
+                <td >&nbsp;<i class="bi bi-arrow-return-right" style="font-size: 120%;"></i>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="colapse_('mkt_{{mkt.id}}');">
+                        <i class="bi bi-list"></i>
+                    </button>
+                </td>
                 <td id="mk_id_{{mkt.id}}"># {{mkt.maket_id}}</td>
                 <td style="max-width:120px;">создан {{mkt.date_create|date:'d.m.Y'}}</td>
                 <td style="max-width:120px;">изменен {{mkt.date_modified|date:'d.m.Y'}}</td>
