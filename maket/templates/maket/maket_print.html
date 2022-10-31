@@ -91,15 +91,15 @@
                 {% if prd.6  %}
                 checked
                 {% endif %}
-                form="form_maket_{{ord_imp.id}}">
+                form="form_maket_{{ord_imp.id}}" onclick="split_maket({{product_range}});">
         <label class="form-check-label" for="chck_{{prd.2}}_{{prd.9}}"> в макет </label>
     </div>
     </div>
     {% endfor %}
 </div>
-    <div class="col-2">
+<!--    <div class="col-2">
     <a href="javascript:split_maket({{product_range}});"><button class="btn-sm btn-outline-primary">Выбрать</button> </a>
-    </div>
+    </div><--->
 </div><!-- chose items for show -->
 </div>
 <div class="d-flex align-content-start flex-wrap">
