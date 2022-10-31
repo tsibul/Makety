@@ -498,8 +498,8 @@ def import_order(request):
             except:
                 pass
 
-            if len(prt_name) > 10:
-                pr_nm = prt_name[0: 5]
+            if len(prt_name) > 11:
+                pr_nm = prt_name[0: 6]
             else:
                 pr_nm = prt_name[0: 3]
             if itm_obj.print_group not in prnt_list:
