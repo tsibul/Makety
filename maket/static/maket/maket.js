@@ -209,7 +209,7 @@ function split_maket(print_range){
     for(i=0; i<number_items; i++){
         var line = 'chck_' + print_range[i][2] + '_' + print_range[i][9]
         if(document.getElementById(line).checked){
-            if (print_range[i][8] === 'note'){
+            if (print_range[i][8] === 'note' | print_range[i][8] === 'cover'){
                 try {
                     document.getElementById(print_range[i][2] + '_' + print_range[i][9]).style.display='block';
                     }
