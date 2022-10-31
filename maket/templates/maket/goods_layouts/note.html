@@ -4,22 +4,13 @@
 <div class="col p-1 m-1" id="prt_{{product.5}}_{{product.9}}" {% if product.6 == 0 %} style="display:none" {% endif %}>
 <div class="col" style="font-size:60%;"><h6>{{product.9}}</h6></div>
     <div class="d-flex flex-row justify-content-start">
-    <div class="p-1 m-1">
-    <div class="row">
-    <div class="col" style="font-size:60%;">
-        <input  class="form-check-input" type="checkbox" name="chck_{{product.5}}_{{product.9}}_0" id="chck_{{product.5}}_{{product.9}}_0"
-                form="form_maket_{{ord_imp.id}}">
-    </div>
-      <div class="col" style="font-size:60%;">блок</div></div>
-      {% include 'maket/svg/**_bs.html'|replace_value:product.5 %}
-    </div>
 {% for prt in prt_0 %}
 {% if prt.2 ==  product.5 and prt.5 == product.9 %}
     <div class="p-1 m-1">
     <div class="d-flex flex-row justify-content-around">
       <div class="col" style="font-size:60%;">
         <input  class="form-check-input" type="checkbox" name="chck_{{product.5}}_{{product.9}}_{{prt.0.id}}" id="chck_{{product.5}}_{{product.9}}_{{prt.0.id}}"
-                form="form_maket_{{ord_imp.id}}" {% if prt.3 == 1 %} checked {% endif %}>
+                form="form_maket_{{ord_imp.id}}" {% if prt.3 == 1 %} checked {% endif %} onclick="chs_note({{prt_0_}},'{{product.5}}_{{product.9}}');">
       </div>
       <div class="col" style="font-size:60%;">{{prt.0.print_id}}</div>
       <div class="col" style="font-size:60%;">{{prt.0.item.item_group}}.{{prt.0.item.item_color}} </div>
@@ -28,16 +19,17 @@
     </div>
 {% endif %}
 {% endfor %}
-    <div class="d-print-none">
-        <a href="javascript:chs_note({{prt_0_}},'{{product.5}}_{{product.9}}');">
-            <button type="button" class="btn-sm btn-outline-primary">в макет</button> </a>
+    <div class="p-1 m-1">
+    <div class="row">
+    <div class="col" style="font-size:60%;">
+        <input  class="form-check-input" type="checkbox" name="chck_{{product.5}}_{{product.9}}_0" id="chck_{{product.5}}_{{product.9}}_0"
+                form="form_maket_{{ord_imp.id}}" onclick="chs_note({{prt_0_}},'{{product.5}}_{{product.9}}');">
+    </div>
+      <div class="col" style="font-size:60%;">блок</div></div>
+      {% include 'maket/svg/**_bs.html'|replace_value:product.5 %}
     </div>
     </div>
-<!--    <div class="m-2"><img src="{% static 'maket/img/Ruler.svg' %}" /></div><--->
     <div class="d-flex flex-row lh-1 mb-3">
-    <div class="p-1 m-1" style="display:none;" id="itm_{{product.5}}_{{product.9}}_0">
-     {% include 'maket/svg/**_bb.html'|replace_value:product.5 %}
-    </div>
 {% for prt in prt_0 %}
 {% if prt.2 ==  product.5 and prt.5 == product.9 %}
     <div class="p-1 m-1" {% if prt.3 == 0 %} style="display:none;" {% endif %} id="itm_{{product.5}}_{{product.9}}_{{prt.0.id}}">
@@ -45,5 +37,8 @@
     </div>
 {% endif %}
 {% endfor %}
+    <div class="p-1 m-1" style="display:none;" id="itm_{{product.5}}_{{product.9}}_0">
+     {% include 'maket/svg/**_bb.html'|replace_value:product.5 %}
+    </div>
 </div>
 </div>

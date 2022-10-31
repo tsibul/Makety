@@ -152,7 +152,7 @@ viewBox="0 0 14480 1600"
     <div class="d-flex flex-row lh-1">
       <div class="col" style="font-size:60%;">
         <input  class="form-check-input" type="checkbox" name="chck_{{prt.2}}_{{product.9}}_{{prt.0.id}}" id="chck_{{prt.2}}_{{product.9}}_{{prt.0.id}}"
-                form="form_maket_{{ord_imp.id}}"  {% if prt.3 == 1 %} checked {% endif %}>
+                form="form_maket_{{ord_imp.id}}"  {% if prt.3 == 1 %} checked {% endif %} onclick="chs_note({{prt_0_}},'{{product.5}}_{{product.9}}');">
       </div>
       <div class="col" style="font-size:60%;">&nbsp{{prt.0.print_id}}&nbsp</div>
       <div class="col" style="font-size:60%;">&nbsp{{prt.0.item.item_group}}.{{prt.0.item.item_color}}&nbsp</div>
@@ -164,14 +164,9 @@ viewBox="0 0 14480 1600"
 
      <div class="col d-print-none" style="font-size:60%;">
         <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_{{product.5}}_{{product.9}}_all"
-                form="form_maket_{{ord_imp.id}}">
+                form="form_maket_{{ord_imp.id}}" onclick="chs_note({{prt_0_}},'{{product.5}}_{{product.9}}');">
       </div>
       <div class="col" style="font-size:60%;">выбрать все</div>
-    </div>
-
-    <div class="d-print-none p-1 m-1">
-        <a href="javascript:chs_note({{prt_0_}},'{{product.5}}_{{product.9}}');">
-            <button type="button" class="btn-sm btn-outline-primary">в макет</button> </a>
     </div>
 </div>
 </div>
