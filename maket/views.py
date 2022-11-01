@@ -15,7 +15,7 @@ from django.http import FileResponse, Http404
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
     Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group, \
-    Print_in_Maket
+    Print_in_Maket, Additional_Files
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -491,7 +491,9 @@ def import_order(request):
             except:
                 pass
 
-            if len(prt_name) > 11:
+            if len(prt_name) >= 15:
+                pr_nm = prt_name[0: 10]
+            elif 14 > len(prt_name) > 11:
                 pr_nm = prt_name[0: 6]
             else:
                 pr_nm = prt_name[0: 3]
@@ -1612,9 +1614,9 @@ def patterns(request):
 
 
 def download_pattern(request, id):
-    priny_group = Print_group.objects.get(id=id)
+    print_group = Print_group.objects.get(id=id)
     try:
-        return FileResponse(open(priny_group.pattern_file.path, 'rb'), content_type='application/pdf')
+        return FileResponse(open(print_group.pattern_file.path, 'rb'), content_type='application/pdf')
     except:
         pass
     return HttpResponse('<script type="text/javascript">window.close();</script>')
@@ -1638,6 +1640,38 @@ def upload_pattern(request):
 
 def additional_files(request, id):
     order = Order_imports.objects.get(id=id)
-    context = {'order': order}
+    maket = list(Makety.objects.filter(order=order))
+    additional_files = list(Additional_Files.objects.filter(order_id=order))
+    context = {'order': order, 'maket': maket, 'additional_files': additional_files}
     return render(request, 'maket/additional_files.html', context)
 
+
+def download_add_file(request, id):
+    add_file = Additional_Files.objects.get(id=id)
+    if add_file.file_type == 'pdf':
+        try:
+            return FileResponse(open(add_file.additional_file.path, 'rb'), content_type='application/pdf')
+        except:
+            return HttpResponse('<script type="text/javascript">window.close();</script>')
+    else:
+        try:
+            return FileResponse(open(add_file.additional_file.path, 'rb'), content_type='application/force-download')
+        except:
+            return HttpResponse('<script type="text/javascript">window.close();</script>')
+
+
+def add_file(request, id):
+    order = Order_imports.objects.get(id=id)
+    comment = request.POST['comment']
+    type = request.POST['file_type']
+    a_file = request.FILES['file']
+    add_file = Additional_Files(order_id=order, comment=comment, file_type=type)
+    add_file.additional_file.save(a_file.name, a_file)
+    add_file.save()
+    return HttpResponseRedirect(reverse('maket:additional_files', args=[id]))
+
+def delete_additional_file(request, id):
+    add_file = Additional_Files.objects.get(id=id)
+    new_id = add_file.order_id.id
+    add_file.delete()
+    return HttpResponseRedirect(reverse('maket:additional_files', args=[new_id]))

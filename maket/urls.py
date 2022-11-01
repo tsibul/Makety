@@ -63,6 +63,9 @@ urlpatterns = [
     path('maket_check_status/<int:id>', views.maket_check_status, name='maket_check_status'),
     path('upload_pattern', views.upload_pattern, name='upload_pattern'),
     path('download_pattern/<int:id>', views.download_pattern, name='download_pattern'),
-    path('additional_files/<int:id>', views.additional_files, name='additional_files')
+    path('additional_files/<int:id>', views.additional_files, name='additional_files'),
+    path('add_file/<int:id>', views.add_file, name='add_file'),
+    path('download_add_file/<int:id>', views.download_add_file, name='download_add_file'),
+    path('delete_additional_file/<int:id>', views.delete_additional_file, name='delete_additional_file')
 
 ]
