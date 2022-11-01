@@ -1665,7 +1665,7 @@ def add_file(request, id):
     comment = request.POST['comment']
     type = request.POST['file_type']
     a_file = request.FILES['file']
-    add_file = Additional_Files(order_id=order, comment=comment, file_type=type)
+    add_file = Additional_Files(order_id=order, comment=comment, file_type=type, additional_file_name=a_file.name)
     add_file.additional_file.save(a_file.name, a_file)
     add_file.save()
     return HttpResponseRedirect(reverse('maket:additional_files', args=[id]))
