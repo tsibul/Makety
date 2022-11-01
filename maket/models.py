@@ -281,6 +281,7 @@ class Additional_Files(models.Model):
     """Additional files"""
     additional_file = models.FileField(storage=fs_additional, null=True, blank=True)
     additional_file_name = models.FilePathField(max_length=120)
+    file_type = models.CharField(max_length=3, null=True, blank=True, default='pdf')
     comment = models.CharField(max_length=255, null=True, blank=True)
     order_id = models.ForeignKey(Order_imports, on_delete=models.CASCADE)
 
