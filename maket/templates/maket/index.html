@@ -142,7 +142,8 @@
                     макет сделан частично{% else %}макет готов{% endif %}">{{ord.maket_status}}</td>
         <td>
             <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
-                    data-bs-title="посмотреть все связанные файлы">
+                    data-bs-title="посмотреть все связанные файлы"
+                    onclick="window.open('/maket/additional_files/{{ord.id}}', '_blank');">
                 <i class="bi bi-folder2-open"></i>
             </button>
         </td>

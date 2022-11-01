@@ -1634,3 +1634,10 @@ def upload_pattern(request):
     except:
         pass
     return HttpResponseRedirect(reverse('maket:patterns'))
+
+
+def additional_files(request, id):
+    order = Order_imports.objects.get(id=id)
+    context = {'order': order}
+    return render(request, 'maket/additional_files.html', context)
+
