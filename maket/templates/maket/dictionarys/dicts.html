@@ -118,11 +118,11 @@
     {% for prt_plc in print_place %}
     <li class="list-group-item" id="cst_id_{{prt_plc.id}}_pl">
     <div class="d-flex justify-content-between" >
-    <div class="col">
+    <div class="col m-1">
         <a href="javascript:upd_ln({{prt_plc.id}}+'_pl');" class="form-control">{{ prt_plc.detail_name }}</a></div>
-    <div class="col">
+    <div class="col m-1">
         <a href="javascript:upd_ln({{prt_plc.id}}+'_pl');" class="form-control">{{ prt_plc.place_name }}</a></div>
-    <div class="m-2">
+    <div class="m-1">
         <form action="delete_print_place/{{prt_plc.id}}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></button>
