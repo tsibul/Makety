@@ -110,7 +110,7 @@ def dicts(request):
     color_scheme = Color_scheme.objects.all()
 
     print_type = Print_type.objects.all()
-    print_place = Print_place.objects.all()
+    print_place = Print_place.objects.all().order_by('detail_name', 'place_name')
     print_position = Print_position.objects.all()
     print_group = Print_group.objects.all().order_by('code')
 
@@ -180,6 +180,8 @@ def admin(request):
                'lost_hex_len': lost_hex_len, 'changed_customers': changed_customers,
                'changed_customers_len': changed_customers_len, 'lost_deleted_prints': lost_deleted_prints,
                'lost_deleted_items': lost_deleted_items}
+    print_objects = Print_imports.objects.filter(print_place__isnull=True).order_by('-place')
+    context.update({'print_objects': print_objects})
     return render(request, 'maket/admin.html', context)
 
 
@@ -1675,3 +1677,23 @@ def delete_additional_file(request, id):
     new_id = add_file.order_id.id
     add_file.delete()
     return HttpResponseRedirect(reverse('maket:additional_files', args=[new_id]))
+
+
+def print_place_connect(request):
+    print_objects = Print_imports.objects.filter(print_place__isnull=True).order_by('-place')
+    for prt_obj in print_objects:
+        if prt_obj.place != 'Стандартное ProEcoPen':
+            print_place_tmp = prt_obj.place.split(' ')
+        else:
+            print_place_tmp = [prt_obj.place]
+        try:
+            place = Print_place.objects.get(Q(detail_name__iexact=print_place_tmp[0]) & Q(place_name__iexact=print_place_tmp[1]))
+        except:
+            if len(print_place_tmp) == 1:
+                place = Print_place.objects.get(place_name__iexact=print_place_tmp[0])
+            else:
+                place = Print_place.objects.get(place_name__iexact=print_place_tmp[1])
+        prt_obj.print_place = place
+        prt_obj.save()
+
+    return HttpResponseRedirect(reverse('maket:admin'))

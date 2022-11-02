@@ -66,6 +66,7 @@ urlpatterns = [
     path('additional_files/<int:id>', views.additional_files, name='additional_files'),
     path('add_file/<int:id>', views.add_file, name='add_file'),
     path('download_add_file/<int:id>', views.download_add_file, name='download_add_file'),
-    path('delete_additional_file/<int:id>', views.delete_additional_file, name='delete_additional_file')
+    path('delete_additional_file/<int:id>', views.delete_additional_file, name='delete_additional_file'),
+    path('print_place_connect', views.print_place_connect, name='print_place_connect')
 
 ]

@@ -189,5 +189,31 @@
     </tbody>
 </table>
 
+<!--print_place_connect -->
+<table class="table table-sm table-hover">
+    <thead>
+        <tr class="table-primary">
+            <th></th>
+            <th></th>
+            <th class="text-end">
+            <form action="print_place_connect" method="post">
+            {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-primary">Исправить</button>
+            </form>
+            </th>
+        </tr>
+
+    </thead>
+    <tbody>
+    {% for prt_obj in print_objects %}
+    <tr>
+        <td>{{prt_obj.id}}</td>
+        <td>{{prt_obj.item.item}}</td>
+        <td class="text-end">{{prt_obj.place}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
 
 {% endblock %}
