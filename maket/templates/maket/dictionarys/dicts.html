@@ -192,6 +192,10 @@
         <a href="javascript:upd_ln({{prt_pos.id}}+'_ps');" class="form-control">{{ prt_pos.position_option }}</a></div>
     <div class="col">
         <a href="javascript:upd_ln({{prt_pos.id}}+'_ps');" class="form-control">{{ prt_pos.position_orientation }}</a></div>
+        <form action="delete_print_position/{{prt_pos.id}}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></button>
+        </form>
     </div>
     </li>
     <li class="list-group-item" id="cst_id2_{{prt_pos.id}}_ps" style="display:none">

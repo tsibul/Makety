@@ -1703,3 +1703,9 @@ def delete_print_place(request, id):
     print_place = Print_place.objects.get(id=id)
     print_place.delete()
     return HttpResponseRedirect(reverse('maket:dicts'))
+
+
+def delete_print_position(request, id):
+    print_position = Print_position.objects.get(id=id)
+    print_position.delete()
+    return HttpResponseRedirect(reverse('maket:dicts'))
