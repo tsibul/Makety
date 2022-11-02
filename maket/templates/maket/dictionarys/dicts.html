@@ -122,6 +122,13 @@
         <a href="javascript:upd_ln({{prt_plc.id}}+'_pl');" class="form-control">{{ prt_plc.detail_name }}</a></div>
     <div class="col">
         <a href="javascript:upd_ln({{prt_plc.id}}+'_pl');" class="form-control">{{ prt_plc.place_name }}</a></div>
+    <div class="m-2">
+        <form action="delete_print_place/{{prt_plc.id}}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></button>
+        </form>
+    </div>
+
     </div>
     </li>
     <li class="list-group-item" id="cst_id2_{{prt_plc.id}}_pl" style="display:none">

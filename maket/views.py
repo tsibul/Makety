@@ -1697,3 +1697,9 @@ def print_place_connect(request):
         prt_obj.save()
 
     return HttpResponseRedirect(reverse('maket:admin'))
+
+
+def delete_print_place(request, id):
+    print_place = Print_place.objects.get(id=id)
+    print_place.delete()
+    return HttpResponseRedirect(reverse('maket:dicts'))
