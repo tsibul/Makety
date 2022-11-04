@@ -111,12 +111,23 @@ def dicts(request):
 
     print_type = Print_type.objects.all()
     print_place = Print_place.objects.all().order_by('detail_name', 'place_name')
-    print_position = Print_position.objects.all()
     print_group = Print_group.objects.all().order_by('code')
+    print_position = Print_position.objects.all().order_by('print_group')
 
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
                'print_position': print_position, 'active2': 'active', 'print_group': print_group}
     return render(request, 'maket/dictionarys/dicts.html', context)
+
+
+def print_position(request):
+    navi = 'dicts'
+    print_place = Print_place.objects.all().order_by('detail_name', 'place_name')
+    print_group = Print_group.objects.all().order_by('code')
+    print_position = Print_position.objects.all().order_by('print_group')
+
+    context = {'navi': navi,  'print_place': print_place,
+               'print_position': print_position, 'active2': 'active', 'print_group': print_group}
+    return render(request, 'maket/dictionarys/print_position.html', context)
 
 
 def print_group(request):
@@ -339,21 +350,32 @@ def add_prt_plc(request):
 
 
 def update_prt_pos(request, id):
-    pos_opt = request.POST['pos_opt']
+    orientation_id = request.POST['pos_opt']
     pos_orn = request.POST['pos_orn']
+    print_group_id = request.POST['print_group']
+    print_place_id = request.POST['position_place']
+    print_group = Print_group.objects.get(id=print_group_id)
+    place = Print_place.objects.get(id=print_place_id)
     print_position = Print_position.objects.get(id=id)
-    print_position.position_option = pos_opt
+    print_position.orientation_id = orientation_id
     print_position.position_orientation = pos_orn
+    print_position.print_group = print_group
+    print_position.position_place = place
     print_position.save()
-    return HttpResponseRedirect(reverse('maket:dicts'))
+    return HttpResponseRedirect(reverse('maket:print_position'))
 
 
 def add_prt_pos(request):
-    pos_opt = request.POST['pos_opt']
+    orientation_id = request.POST['pos_opt']
     pos_orn = request.POST['pos_orn']
-    print_position = Print_position(position_option=pos_opt, position_orientation=pos_orn)
+    print_place_id = request.POST['position_place']
+    print_group_id = request.POST['print_group']
+    print_group = Print_group.objects.get(id=print_group_id)
+    place = Print_place.objects.get(id=print_place_id)
+    print_position = Print_position(orientation_id=orientation_id, position_orientation=pos_orn, print_group=print_group,
+                                    position_place=place)
     print_position.save()
-    return HttpResponseRedirect(reverse('maket:dicts'))
+    return HttpResponseRedirect(reverse('maket:print_position'))
 
 
 def customers(request):
