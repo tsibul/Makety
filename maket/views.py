@@ -15,7 +15,7 @@ from django.http import FileResponse, Http404
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
     Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group, \
-    Print_in_Maket, Additional_Files
+    Print_in_Maket, Additional_Files, Print_color
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -1705,9 +1705,27 @@ def print_place_connect(request):
     print_objects = Print_imports.objects.filter(print_place__isnull=True).order_by('-place')
     for prt_obj in print_objects:
         place = place_obj_from_place(prt_obj.place)
+        print_pos = print_position_and_color_from_print_obj(place, prt_obj)
+        prt_obj.print_position = print_pos
         prt_obj.print_place = place
         prt_obj.save()
     return HttpResponseRedirect(reverse('maket:admin'))
+
+
+def print_position_and_color_from_print_obj (place, prt_obj):
+    try:
+        print_position = Print_position.objects.get(
+            Q(position_place=place) & Q(print_group=prt_obj.item.item.print_group))
+    except:
+        print_position = ''
+    for n in range(prt_obj.colors):
+        try:
+            print_color = Print_color(Q(color_number_in_item=n) & Q(print_item=prt_obj))
+        except:
+            print_color = Print_color(color_number_in_item=n, print_item=prt_obj)
+            print_color.save()
+    return print_position
+
 
 
 def place_obj_from_place(place):
