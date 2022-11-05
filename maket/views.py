@@ -191,7 +191,8 @@ def admin(request):
                'lost_hex_len': lost_hex_len, 'changed_customers': changed_customers,
                'changed_customers_len': changed_customers_len, 'lost_deleted_prints': lost_deleted_prints,
                'lost_deleted_items': lost_deleted_items}
-    print_objects = Print_imports.objects.filter(print_place__isnull=True).order_by('-place')
+    print_colors = list(Print_color.objects.values_list('print_item_id', flat=True))
+    print_objects = Print_imports.objects.filter(Q(print_place__isnull=True) | ~Q(id__in=print_colors)).order_by('-place')
     context.update({'print_objects': print_objects})
     return render(request, 'maket/admin.html', context)
 
@@ -604,8 +605,10 @@ def import_order(request):
                                        second_pass=second_pass, print_price=print_price, print_place=place_obj)
             print_item.save()
             print_pos = print_position_and_color_from_print_obj(place, print_item)
-            print_item.print_position = print_pos
-            print_item.save()
+            if print_pos != '':
+                print_item.print_position = print_pos
+                print_item.save()
+            print_color_check(print_item)
             print_list.append([place, type, colors, second_pass, print_item, print_item.print_id])
     itms_for_price = Item_imports.objects.filter(order=ord_imp)
     gross_prt_quantity = 0
@@ -1705,13 +1708,21 @@ def delete_additional_file(request, id):
 
 
 def print_place_connect(request):
-    print_objects = Print_imports.objects.filter(print_place__isnull=True).order_by('-place')
+    print_colors = list(Print_color.objects.values_list('print_item_id', flat=True))
+    print_objects = Print_imports.objects.filter(Q(print_place__isnull=True) | ~Q(id__in=print_colors)).order_by('-place')
     for prt_obj in print_objects:
         place = place_obj_from_place(prt_obj.place)
         print_pos = print_position_and_color_from_print_obj(place, prt_obj)
-        prt_obj.print_position = print_pos
-        prt_obj.print_place = place
-        prt_obj.save()
+        if print_pos != '':
+            prt_obj.print_position = print_pos
+        if prt_obj.place != '':
+            prt_obj.print_place = place
+        if prt_obj.place != '' or print_pos != '':
+            prt_obj.save()
+        if prt_obj.id not in print_colors:
+            if print_colors.count(prt_obj.id) != prt_obj.colors:
+                Print_color.objects.filter(print_item=prt_obj).delete()
+            print_color_check(prt_obj)
     return HttpResponseRedirect(reverse('maket:admin'))
 
 
@@ -1721,14 +1732,7 @@ def print_position_and_color_from_print_obj(place, prt_obj):
             Q(position_place=place) & Q(print_group=prt_obj.item.item.print_group))
     except:
         print_position = ''
-    for n in range(prt_obj.colors):
-        try:
-            print_color = Print_color(Q(color_number_in_item=n) & Q(print_item=prt_obj))
-        except:
-            print_color = Print_color(color_number_in_item=n, print_item=prt_obj)
-            print_color.save()
     return print_position
-
 
 
 def place_obj_from_place(place):
@@ -1757,3 +1761,12 @@ def delete_print_position(request, id):
     print_position = Print_position.objects.get(id=id)
     print_position.delete()
     return HttpResponseRedirect(reverse('maket:print_position'))
+
+
+def print_color_check(prt_obj):
+    for n in range(int(prt_obj.colors)):
+        print_color = Print_color(color_number_in_item=n+1, print_item=prt_obj)
+        print_color.save()
+    return
+
+
