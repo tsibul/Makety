@@ -123,7 +123,7 @@ def print_position(request):
     navi = 'dicts'
     print_place = Print_place.objects.all().order_by('detail_name', 'place_name')
     print_group = Print_group.objects.all().order_by('code')
-    print_position = Print_position.objects.all().order_by('print_group')
+    print_position = Print_position.objects.all().order_by('print_group', 'position_place', 'orientation_id')
 
     context = {'navi': navi,  'print_place': print_place,
                'print_position': print_position, 'active2': 'active', 'print_group': print_group}
@@ -1730,4 +1730,4 @@ def delete_print_place(request, id):
 def delete_print_position(request, id):
     print_position = Print_position.objects.get(id=id)
     print_position.delete()
-    return HttpResponseRedirect(reverse('maket:dicts'))
+    return HttpResponseRedirect(reverse('maket:print_position'))
