@@ -599,9 +599,9 @@ def import_order(request):
                     second_pass = False
                 else:
                     second_pass = True
-
+            place_obj = place_obj_from_place(place)
             print_item = Print_imports(place=place, type=type, colors=colors, item=prt_item, print_id=prt_item.print_id,
-                                       second_pass=second_pass, print_price=print_price)
+                                       second_pass=second_pass, print_price=print_price, print_place=place_obj)
             print_item.save()
             print_list.append([place, type, colors, second_pass, print_item, print_item.print_id])
     itms_for_price = Item_imports.objects.filter(order=ord_imp)
@@ -1704,21 +1704,26 @@ def delete_additional_file(request, id):
 def print_place_connect(request):
     print_objects = Print_imports.objects.filter(print_place__isnull=True).order_by('-place')
     for prt_obj in print_objects:
-        if prt_obj.place != 'Стандартное ProEcoPen':
-            print_place_tmp = prt_obj.place.split(' ')
-        else:
-            print_place_tmp = [prt_obj.place]
-        try:
-            place = Print_place.objects.get(Q(detail_name__iexact=print_place_tmp[0]) & Q(place_name__iexact=print_place_tmp[1]))
-        except:
-            if len(print_place_tmp) == 1:
-                place = Print_place.objects.get(place_name__iexact=print_place_tmp[0])
-            else:
-                place = Print_place.objects.get(place_name__iexact=print_place_tmp[1])
+        place = place_obj_from_place(prt_obj.place)
         prt_obj.print_place = place
         prt_obj.save()
-
     return HttpResponseRedirect(reverse('maket:admin'))
+
+
+def place_obj_from_place(place):
+    if place != 'Стандартное ProEcoPen':
+        print_place_tmp = place.split(' ')
+    else:
+        print_place_tmp = [place]
+    try:
+        place_obj = Print_place.objects.get(
+            Q(detail_name__iexact=print_place_tmp[0]) & Q(place_name__iexact=print_place_tmp[1]))
+    except:
+        if len(print_place_tmp) == 1:
+            place_obj = Print_place.objects.get(place_name__iexact=print_place_tmp[0])
+        else:
+            place_obj = Print_place.objects.get(place_name__iexact=print_place_tmp[1])
+    return place_obj
 
 
 def delete_print_place(request, id):
