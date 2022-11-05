@@ -219,6 +219,7 @@ class Print_imports(models.Model):
     item = models.ForeignKey(Item_imports, on_delete=models.CASCADE, null=True)
     print_id = models.IntegerField(default=0)
     print_price = models.FloatField(default=0)
+    print_position = models.ForeignKey(Print_position, models.SET_NULL, null=True, default='')
 
 
 class Makety(models.Model):
@@ -291,3 +292,16 @@ class Additional_Files(models.Model):
     comment = models.CharField(max_length=255, null=True, blank=True)
     order_id = models.ForeignKey(Order_imports, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.additional_file.name)
+
+
+class Print_color(models.Model):
+    """Colors of printing"""
+    color_pantone = models.CharField(max_length=20, default='')
+    color_hex = models.CharField(max_length=7, default='')
+    color_number_in_item = models.SmallIntegerField(default=1)
+    print_item = models.ForeignKey(Print_imports, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.color_number_in_item + self.color_pantone)
