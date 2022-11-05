@@ -194,6 +194,15 @@ def admin(request):
     print_colors = list(Print_color.objects.values_list('print_item_id', flat=True))
     print_objects = Print_imports.objects.filter(Q(print_place__isnull=True) | ~Q(id__in=print_colors)).order_by('-place')
     context.update({'print_objects': print_objects})
+    print_imports = Print_imports.objects.all()
+    error_print_position_id = []
+    for prt_imports in print_imports:
+        if prt_imports.print_position is not None:
+           if prt_imports.print_position.position_place != prt_imports.print_place or \
+              prt_imports.print_position.print_group != prt_imports.item.item.print_group:
+              error_print_position_id.append(prt_imports.id)
+    position_objects = Print_imports.objects.filter(Q(id__in=error_print_position_id) | Q(print_position__isnull=True))
+    context.update({'position_objects': position_objects})
     return render(request, 'maket/admin.html', context)
 
 
