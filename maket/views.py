@@ -603,6 +603,9 @@ def import_order(request):
             print_item = Print_imports(place=place, type=type, colors=colors, item=prt_item, print_id=prt_item.print_id,
                                        second_pass=second_pass, print_price=print_price, print_place=place_obj)
             print_item.save()
+            print_pos = print_position_and_color_from_print_obj(place, print_item)
+            print_item.print_position = print_pos
+            print_item.save()
             print_list.append([place, type, colors, second_pass, print_item, print_item.print_id])
     itms_for_price = Item_imports.objects.filter(order=ord_imp)
     gross_prt_quantity = 0
@@ -1055,7 +1058,7 @@ def update_maket(request, id):
         #        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first
         try:
             item_checked = Itemgroup_in_Maket.objects.get(
-                Q(item=itm_checked) & Q(maket=maket) & Q(print_name=item.pr_rg[10]))
+                Q(item=itm_checked) & Q(maket=maket) & Q(print_name=pr_rg[10]))
         except:
             item_checked = Itemgroup_in_Maket(item=itm_checked, maket=maket, print_name=pr_rg[10])
         #        item_checked.print_name = print_name
@@ -1712,7 +1715,7 @@ def print_place_connect(request):
     return HttpResponseRedirect(reverse('maket:admin'))
 
 
-def print_position_and_color_from_print_obj (place, prt_obj):
+def print_position_and_color_from_print_obj(place, prt_obj):
     try:
         print_position = Print_position.objects.get(
             Q(position_place=place) & Q(print_group=prt_obj.item.item.print_group))
