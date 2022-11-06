@@ -148,7 +148,7 @@ viewBox="0 0 14480 1600"
 {% endif %}
 
 {% for prt in prt_0 %}
-{% if prt.2 ==  product.5 and prt.5 == product.9 %}
+{% if prt.2 ==  product.5 and prt.5 == product.9 and prt.0.type != 'Soft Touch' %}
     <div class="col p-1 ms-1 mt-1 mb-0" id="itm_{{prt.2}}_{{product.9}}_{{prt.0.id}}"  {% if prt.3 == 0 %} style="display:none;" {% endif %}>
 {% include 'maket/svg/**_b.html'|replace_value:product.5 %}
     </div>
@@ -163,7 +163,7 @@ viewBox="0 0 14480 1600"
 
 <div class="col p-1 m-1">
 {% for prt in prt_0 %}
-{% if prt.2 ==  product.5 and prt.5 == product.9 %}
+{% if prt.2 ==  product.5 and prt.5 == product.9 and prt.0.type != 'Soft Touch' %}
     <div class="d-flex flex-row lh-1">
       <div class="col align-self-center" style="font-size:60%; max-width: 4mm;">
         <input  class="form-check-input" type="checkbox" name="chck_{{prt.2}}_{{product.9}}_{{prt.0.id}}" id="chck_{{prt.2}}_{{product.9}}_{{prt.0.id}}"
@@ -172,7 +172,7 @@ viewBox="0 0 14480 1600"
       <div class="col align-self-center d-grid" style="font-size:60%; max-width: 4mm;">&nbsp{{prt.0.print_id}}&nbsp</div>
       <div class="col align-self-center d-grid" style="font-size:60%; max-width: 16mm;">&nbsp{{prt.0.item.item_group}}.{{prt.0.item.item_color}}&nbsp</div>
       {% include 'maket/svg/**_s.html'|replace_value:product.5 %}
-      <div style="font-size: 60%; width: 30mm;" class="align-self-center d-grid d-print-none">{{prt.0.place}}</div>
+      <div style="font-size: 60%; width: 30mm;" class="align-self-center d-grid d-print-none ms-1">{{prt.0.place}}</div>
      {% for color in prt.6 %}
       <div class="ms-0 p-0" ><input type="text" style="font-size: 60%; height: 5mm; width: 18mm;" class="form-control" value="{{color}}"></div>
      {% endfor %}
