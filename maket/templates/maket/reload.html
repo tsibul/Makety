@@ -51,12 +51,12 @@
 <table class="table-sm" id="collapse_{{ord_imp.id}}" style="display:none;">
     <thead>
     <tr class="text-center lh-1">
-        <th scope="col" class="col" style="font-size:80%;"> # </th>
-        <th scope="col" class="col" style="font-size:80%;"> Арт. </th>
-        <th scope="col" class="col-3" style="font-size:80%;"> Наименование </th>
-        <th scope="col" class="col-2" style="font-size:80%;"> Нанесение </th>
-        <th scope="col" class="col" style="font-size:80%;"> Кол-во </th>
-        <th scope="col" class="col-4" style="font-size:80%;"> Место / Тип / Цветов / 2-й проход </th>
+        <th class="col" style="font-size:80%;"> # </th>
+        <th class="col" style="font-size:80%;"> Арт. </th>
+        <th class="col-3" style="font-size:80%;"> Наименование </th>
+        <th class="col-2" style="font-size:80%;"> Нанесение </th>
+        <th class="col" style="font-size:80%;"> Кол-во </th>
+        <th colspan="4" class="col-5" style="font-size:80%;"> Место / Тип / Цветов / 2-й проход / Положение</th>
     </tr>
     {% for item in item_import %}
     </thead>
@@ -74,12 +74,13 @@
     {% if prt.print_id == item.print_id %}
     <tr class="lh-1 align-top">
         <td colspan="5" > </td>
-        <td class="col text-start" style="font-size:80%;"> {{prt.place}} /</td>
-        <td class="col text-center" style="font-size:80%;"> {{prt.type}} /</td>
-        <td class="col text-center" style="font-size:80%;"> {{prt.colors}} /</td>
-        <td class="col text-center" style="font-size:80%;">
-        <input class="form-check-input" type="checkbox" disabled {% if prt.second_pass %}checked{% endif %}>
+        <td class="col-4 text-start" style="font-size:80%;"> {{prt.place}} /</td>
+        <td class="col-2 text-center" style="font-size:80%;"> {{prt.type}} /</td>
+        <td class="col-1 text-center text-nowrap" style="font-size:80%;">
+            {{prt.colors}}&nbsp;/&nbsp;<input class="form-check-input align-text-top" type="checkbox"
+                                              disabled {% if prt.second_pass %}checked{% endif %}>
         </td>
+        <td class="col-2 text-center" style="min-width:5mm; font-size:80%;">{{prt.print_position.position_orientation}}</td>
     </tr>
     {% else %}
     {% endif %}
