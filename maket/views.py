@@ -961,7 +961,7 @@ def prt_imports(id, print_import, ord_imp, mk_id):
             if items_prt != 0:
                 item_for_color = Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group) & \
                                                         Q(print_name=prt_nm)).first()
-                print_item_for_color = Print_imports.objects.filter(item=item_for_color)
+                print_item_for_color = Print_imports.objects.filter(Q(item=item_for_color) & ~Q(type='Soft Touch'))
                 list_for_count_colors = []
                 for prt_item_for_color in print_item_for_color:
                     list_for_count_colors.append([prt_item_for_color.print_place, prt_item_for_color.place,
