@@ -108,13 +108,13 @@
 <table class="table-sm border border-2 border-success" style="width:190mm;">
     <thead>
     <tr class="text-center lh-1">
-        <th scope="col" class="col" style="max-width:4mm; font-size:60%;"> # </th>
-        <th scope="col" class="col-1" style="font-size:60%;"> Арт. </th>
-        <th scope="col" class="col-3" style="font-size:60%;"> Наименование </th>
-        <th scope="col" class="col-2" style="font-size:60%;"> Нанесение </th>
-        <th scope="col" class="col-1" style="font-size:60%;"> Кол-во </th>
-        <th scope="col" class="col-1" style="font-size:60%;"> Место  </th>
-        <th colspan="4" scope="col" class="col-5" style="font-size:60%;">Тип / Цветов / 2-й проход / Положение </th>
+        <th class="col" style="max-width:4mm; font-size:60%;"> # </th>
+        <th class="col-1" style="font-size:60%;"> Арт. </th>
+        <th class="col-3" style="font-size:60%;"> Наименование </th>
+        <th class="col" style="font-size:60%;"> Нанесение </th>
+        <th class="col" style="font-size:60%;"> Кол-во </th>
+        <th class="col" style="font-size:60%;"> Место  </th>
+        <th colspan="4" scope="col" class="col-7" style="font-size:60%;">Тип / Цветов / 2-й проход / Положение </th>
     </tr>
     </thead>
     <tbody>
@@ -128,13 +128,13 @@
         <td class="col-3" style="font-size:60%;"> {{item.name}}</td>
         <td class="col-2 text-center" style="font-size:60%;"> {{item.print_name}}</td>
         <td class="col-1 text-center" style="font-size:60%;"> {{item.quantity}}</td>
-    <td colspan="4">
+    <td colspan="5">
     <table class="table-sm mb-0">
 
     {% for prt in print_import %}
     {% if prt.print_id == item.print_id %}
     <tr class="lh-1 align-top">
-<!--        <td scope="col" colspan="4" style="font-size:60%;"> </td> <--->
+        <td colspan="5" style="font-size:60%;"> </td>
         <td class="col-4 text-start" style="min-width:20mm; font-size:60%;"> {{prt.place}} </td>
         <td class="col-2 text-center" style="font-size:60%;"> {{prt.type}}</td>
         <td class="col-1 text-center" style="min-width:5mm; font-size:60%;"> {{prt.colors}} /</td>
@@ -145,8 +145,7 @@
             <input class="form-check-input" type="checkbox" disabled>
         {% endif %}
         </td>
-        <td class="text-center" style="font-size:60%;"> {{prt.position}} </td>
-        <td class="col-1 text-center" style="min-width:5mm; font-size:60%;"> {{prt.print_position.position_orientation}}</td>
+        <td class="col text-center" style="min-width:5mm; font-size:60%;"> {{prt.print_position.position_orientation}}</td>
         <td></td>
 
     </tr>
