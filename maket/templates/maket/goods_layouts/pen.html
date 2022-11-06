@@ -5,6 +5,7 @@
 <div class="col lh-1 p-1 m-1"  >
 <div>
 {% if product.5 == '121' %} <!-- Defs for gradient for 121><--->
+<div style="display: none">
     <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="144.8mm" height="0.001mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
 viewBox="0 0 14480 1600"
  xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -62,8 +63,10 @@ viewBox="0 0 14480 1600"
   </radialGradient>
  </defs>
  </svg><!--defs for 121><--->
-{% endif %}
+</div>
+ {% endif %}
 {% if product.5 == '120' %} <!-- Defs for gradient for 120><--->
+<div style="display: none">
     <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="144.8mm" height="16mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
 viewBox="0 0 14480 1600"
  xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -128,9 +131,11 @@ viewBox="0 0 14480 1600"
 
  </defs>
 </svg>
- {% endif %}
+</div>
+{% endif %}
 
- {% for prt in prt_0 %}
+<div class="col" style="font-size:60%;"><h6>{{product.0}},&nbsp;нанесение&nbsp;—&nbsp;{{product.9}}</h6></div>
+{% for prt in prt_0 %}
 {% if prt.2 ==  product.5 and prt.5 == product.9 %}
     <div class="col p-1 ms-1 mt-1 mb-0" id="itm_{{prt.2}}_{{product.9}}_{{prt.0.id}}"  {% if prt.3 == 0 %} style="display:none;" {% endif %}>
 {% include 'maket/svg/**_b.html'|replace_value:product.5 %}
@@ -146,7 +151,6 @@ viewBox="0 0 14480 1600"
 </div>
 
 <div class="col p-1 m-1">
-    <div class="col" style="font-size:60%;"><h6>{{product.9}}</h6></div>
 {% for prt in prt_0 %}
 {% if prt.2 ==  product.5 and prt.5 == product.9 %}
     <div class="d-flex flex-row lh-1">
