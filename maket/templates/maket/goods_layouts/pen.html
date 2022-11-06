@@ -63,8 +63,7 @@ viewBox="0 0 14480 1600"
   </radialGradient>
  </defs>
  </svg><!--defs for 121><--->
- {% endif %}
-{% if product.5 == '120' %} <!-- Defs for gradient for 120><--->
+{% elif product.5 == '120' %} <!-- Defs for gradient for 120><--->
     <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="144.8mm" height="0.001mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
 viewBox="0 0 14480 1600"
  xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -129,6 +128,8 @@ viewBox="0 0 14480 1600"
 
  </defs>
     </svg>
+{% else %}
+ <svg height="0.001mm"></svg>
 {% endif %}
 
 {% for prt in prt_0 %}
