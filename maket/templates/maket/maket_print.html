@@ -102,7 +102,7 @@
         <th class="col" style="font-size:60%;"> Нанесение </th>
         <th class="col" style="font-size:60%;"> Кол-во </th>
         <th class="col" style="font-size:60%;"> Место  </th>
-        <th colspan="4" scope="col" class="col-7" style="font-size:60%;">Тип / Цветов / 2-й проход / Положение </th>
+        <th colspan="4" scope="col" class="col-6" style="font-size:60%;">Тип / Цветов / 2-й проход / Положение </th>
     </tr>
     </thead>
     <tbody>
@@ -128,7 +128,7 @@
         <td class="col-1 text-center text-nowrap" style="min-width:5mm; font-size:60%;">
             {{prt.colors}}&nbsp;/&nbsp;<input class="form-check-input align-text-top" type="checkbox" {% if prt.second_pass %}checked{% endif %} disabled>
         </td>
-        <td class="col text-center" style="min-width:5mm; font-size:60%;"> {{prt.print_position.position_orientation}}</td>
+        <td class="col-3 text-center" style="min-width:5mm; font-size:60%;"> {{prt.print_position.position_orientation}}</td>
         <td></td>
 
     </tr>
