@@ -5,7 +5,7 @@ import os
 
 from bs4 import BeautifulSoup
 from django.core.files.storage import default_storage
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import loader
@@ -191,9 +191,11 @@ def admin(request):
                'lost_hex_len': lost_hex_len, 'changed_customers': changed_customers,
                'changed_customers_len': changed_customers_len, 'lost_deleted_prints': lost_deleted_prints,
                'lost_deleted_items': lost_deleted_items}
+
     print_colors = list(Print_color.objects.values_list('print_item_id', flat=True))
     print_objects = Print_imports.objects.filter(Q(print_place__isnull=True) | ~Q(id__in=print_colors)).order_by('-place')
     context.update({'print_objects': print_objects})
+
     print_imports = Print_imports.objects.all()
     error_print_position_id = []
     for prt_imports in print_imports:
@@ -202,7 +204,8 @@ def admin(request):
               prt_imports.print_position.print_group != prt_imports.item.item.print_group:
               error_print_position_id.append(prt_imports.id)
     position_objects = Print_imports.objects.filter(Q(id__in=error_print_position_id) | Q(print_position__isnull=True))
-    context.update({'position_objects': position_objects})
+    position_count = position_objects.count()
+    context.update({'position_objects': position_objects, 'position_count': position_count})
     return render(request, 'maket/admin.html', context)
 
 
@@ -1779,3 +1782,15 @@ def print_color_check(prt_obj):
     return
 
 
+def print_position_fix(request):
+    print_imports = Print_imports.objects.all()
+    for prt_imports in print_imports:
+        if prt_imports.print_position is not None and \
+                (prt_imports.print_position.position_place != prt_imports.print_place or
+                 prt_imports.print_position.print_group != prt_imports.item.item.print_group) or \
+                prt_imports.print_position is None:
+            print_pos = print_position_and_color_from_print_obj(prt_imports.print_place, prt_imports)
+            if print_pos != '':
+                prt_imports.print_position = print_pos
+                prt_imports.save()
+    return HttpResponseRedirect(reverse('maket:admin'))

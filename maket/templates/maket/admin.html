@@ -218,6 +218,7 @@
     <thead>
         <tr class="table-primary">
             <th colspan="2">Несоответствие или отсутствие места нанесения (если редактировались места нанесения)</th>
+            <th class="text-danger">количество {{position_count}}</th>
             <th class="text-end">
             <form action="print_position_fix" method="post">
             {% csrf_token %}
