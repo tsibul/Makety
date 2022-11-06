@@ -4,6 +4,21 @@
 <div class="row p-1 m-1" id="prt_{{product.5}}_{{product.9}}" {% if product.6 == 0 %} style="display:none" {% endif %}>
 <div class="col lh-1 p-1 m-1"  >
 <div class="col" style="font-size:60%;"><h6>{{product.0}},&nbsp;нанесение&nbsp;—&nbsp;{{product.9}}</h6></div>
+<div class="row m-1 " style="font-size: 70%;">
+{% for product_color in product.11 %}
+<div class="col align-self-center" data-print="{{product_color.1}}">{{product_color.1}}</div>
+{% for clr_it in product_color.2 %}
+<div class="col align-self-center" style="max-width: 6.5mm;">
+ <svg width="6mm" height="5.5mm">
+  <rect width="5.5mm" height="5mm" style="fill:none;stroke-width:1;stroke:rgb(0,0,0)" />
+</svg>
+</div>
+<div class="col-3 " >
+ <input type="text" class="form-control text-nowrap " style="font-size: 100%;" value="">
+</div>
+{% endfor %}
+{% endfor %}
+</div>
 
 {% if product.5 == '121' %} <!-- Defs for gradient for 121><--->
     <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="144.8mm" height="0.001mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"

@@ -955,6 +955,13 @@ def prt_imports(id, print_import, ord_imp, mk_id):
             len_prt = len(Print_imports.objects.filter(Q(item__order=order_id) & Q(item__item__print_group=print_group) \
                                                        & Q(item__print_name=prt_nm)))
             if items_prt != 0:
+                item_for_color = Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group) & \
+                                                        Q(print_name=prt_nm)).first()
+                print_item_for_color = Print_imports.objects.filter(item=item_for_color)
+                list_for_count_colors = []
+                for prt_item_for_color in print_item_for_color:
+                    list_for_count_colors.append([prt_item_for_color.print_place, prt_item_for_color.place,
+                                                  list(range(0, prt_item_for_color.colors))])
                 try:
                     maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
                     itemgroup_in_maket = Itemgroup_in_Maket.objects.get(
@@ -968,12 +975,14 @@ def prt_imports(id, print_import, ord_imp, mk_id):
                     product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
                                           'maket/svg/svg' + print_group.code + '.html', print_group.code, ig_ch,
                                           print_group.options, print_group.layout,
-                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_'), prt_nm])
+                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_'), prt_nm,
+                                          list_for_count_colors])
                 except:
                     product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
                                           'maket/svg/svg' + print_group.code + '.html', print_group.code, 1,
                                           print_group.options, print_group.layout,
-                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_'), prt_nm])
+                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_'), prt_nm,
+                                          list_for_count_colors])
 
     context.update({'print_groups': print_groups})
     return [context, product_range]
