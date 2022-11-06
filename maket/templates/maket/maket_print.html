@@ -63,18 +63,6 @@
         </tr>
     </tbody>
 
-<div class=" row d-print-none">
-    <div class="col">
-    Пленка {{ord_imp.film.film_id}} от {{ord_imp.film.date}}
-    {% if ord_imp.film_status %}
-    <input class="form-check-input" type="checkbox" checked disabled name="filmstatus" id="filmstatus">
-    <label for="filmstatus">без ошибок</label>
-    {% else %}
-    <input class="form-check-input" type="checkbox" disabled name="filmstatus" id="filmstatus_">
-    <label for="filmstatus_"> ошибки </label>
-    {% endif %}
-    </div>
-</div>
 </table>
 </div>
 </div>
