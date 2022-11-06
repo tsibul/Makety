@@ -983,7 +983,14 @@ def maket_print(request, id, mk_id):
     ord_imp = order_imports(id)[0]
     item_import = order_imports(id)[1]
     print_import = order_imports(id)[2]
-    context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import}
+    print_import_color_print = []
+    for prt_import in print_import:
+        print_color = Print_color.objects.filter(print_item=prt_import)
+        colors = []
+        for prt_color in print_color:
+            colors.append(prt_color.color_pantone)
+        print_import_color_print.append([prt_import, colors])
+    context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import_color_print}
 
     order_id = ord_imp.id
     product_range = prt_imports(order_id, print_import, ord_imp, mk_id)[1]
@@ -995,8 +1002,6 @@ def maket_print(request, id, mk_id):
     maket_id_list = []
     for mk in mkt:
         maket_id_list.append(mk.maket_id)
-    #    if len(maket_id_list) == 0:
-    #       maket_id_list = [1]
     context.update({'maket_id_list': maket_id_list, 'len_maket': len(maket_id_list) + 1})
     try:
         maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)

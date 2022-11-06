@@ -120,16 +120,20 @@
     <table class="table-sm mb-0">
 
     {% for prt in print_import %}
-    {% if prt.print_id == item.print_id %}
+    {% if prt.0.print_id == item.print_id %}
     <tr class="lh-1 align-top">
         <td colspan="5" style="font-size:60%;"> </td>
-        <td class="col-4 text-start" style="min-width:20mm; font-size:60%;"> {{prt.place}} </td>
-        <td class="col-2 text-center" style="font-size:60%;"> {{prt.type}}</td>
+        <td class="col-4 text-start" style="min-width:20mm; font-size:60%;"> {{prt.0.place}} </td>
+        <td class="col-2 text-center" style="font-size:60%;"> {{prt.0.type}}</td>
         <td class="col-1 text-center text-nowrap" style="min-width:5mm; font-size:60%;">
-            {{prt.colors}}&nbsp;/&nbsp;<input class="form-check-input align-text-top" type="checkbox" {% if prt.second_pass %}checked{% endif %} disabled>
+            {{prt.0.colors}}&nbsp;/&nbsp;<input class="form-check-input align-text-top" type="checkbox" {% if prt.0.second_pass %}checked{% endif %} disabled>
         </td>
-        <td class="col-3 text-center" style="min-width:5mm; font-size:60%;"> {{prt.print_position.position_orientation}}</td>
-        <td></td>
+        <td class="col-3 text-center" style="min-width:5mm; font-size:60%;"> {{prt.0.print_position.position_orientation}}</td>
+        <td>
+            {% for color in prt.1 %}
+            {{color}}&nbsp;
+            {% endfor %}
+        </td>
 
     </tr>
     {% else %}
