@@ -921,28 +921,29 @@ def prt_imports(id, print_import, ord_imp, mk_id):
         colors_list = []
         for color in colors:
             colors_list.append(color.color_pantone)
-        try:
-            maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
+        if print_item.type != 'Soft Touch':
             try:
-                pt = Print_in_Maket.objects.get(Q(maket=maket) & Q(print_item=print_item))
-                if pt.checked:
-                    pt_0 = 1
-                else:
-                    pt_0 = 0
-                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, pt_0, pt.option, \
-                               pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
-                prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, pt_0, pt.option, \
-                              pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
+                maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
+                try:
+                    pt = Print_in_Maket.objects.get(Q(maket=maket) & Q(print_item=print_item))
+                    if pt.checked:
+                        pt_0 = 1
+                    else:
+                        pt_0 = 0
+                        prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, pt_0, pt.option, \
+                                       pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
+                        prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, pt_0, pt.option, \
+                                      pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
+                except:
+                    prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1, \
+                                   pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
+                    prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1, \
+                                      pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
             except:
                 prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1, \
                                pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
                 prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1, \
-                              pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
-        except:
-            prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1, \
-                           pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
-            prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1, \
-                          pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
+                                  pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
 
         context.update({'prt_0': prt_0})
         context.update({'prt_0_': prt_0_})
