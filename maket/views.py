@@ -1123,13 +1123,21 @@ def update_maket(request, id):
             pr_in_maket.checked = True
         except:
             pr_in_maket.checked = False
-        if pi.item.item.print_group.options > 1:
+        if pi.item.item.print_group.options > 1 and pi.type != 'Soft Touch':
             pen_pos = 'pen_pos_' + str(pi.id)
             option = request.POST[pen_pos]
             pr_in_maket.option = option
         else:
             pr_in_maket.option = 0
         pr_in_maket.save()
+        colors = list(Print_color.objects.filter(print_item=pi))
+        for color in colors:
+            try:
+                color_input = request.POST[str(pi.id) + '_' + str(color.color_number_in_item)]
+                color.color_pantone = color_input
+                color.save()
+            except:
+                pass
     return HttpResponseRedirect(reverse('maket:maket_print', args=[id, maket_id]))
 
 
