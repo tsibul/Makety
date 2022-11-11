@@ -645,3 +645,14 @@ function clear_add_file(clrObj){
           .childNodes[3]
           .childNodes[1].value = null;
 }
+
+function setPantone(printGroup){
+    var colorInput = printGroup.value;
+    var printPlace = printGroup.dataset.place;
+    var printNo = printGroup.dataset.id;
+    var printProduct = printGroup.dataset.product;
+
+    var pensArray = Array.from(document.querySelectorAll('[data-in="receiver"][data-number="' + printNo + '"]' +
+        '[data-place="' + printPlace +'"][data-product="' + printProduct + '"]'));
+    for (var i = 0; i < pensArray.length; i++){pensArray[i].value = colorInput}
+}
