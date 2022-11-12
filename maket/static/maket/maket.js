@@ -656,3 +656,9 @@ function setPantone(printGroup){
         '[data-place="' + printPlace +'"][data-product="' + printProduct + '"]'));
     for (var i = 0; i < pensArray.length; i++){pensArray[i].value = colorInput}
 }
+
+function showTable(objInput){
+    if(objInput.checked){
+        document.getElementById('items_table').style.display = 'initial';}
+    else{document.getElementById('items_table').style.display = 'none';}
+}
