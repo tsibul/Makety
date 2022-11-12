@@ -672,3 +672,29 @@ function printSmallItems(printObj){
 
     }
 }
+
+function selectAllItems(thisInput, selectId){
+    var printItems = document.querySelectorAll('[data-in="checked"][data-product="' + selectId + '"]');
+    if(thisInput.checked){
+        printItems.forEach(makeChecked)
+    }
+    else {printItems.forEach(makeUnChecked)}
+    printItems.forEach(selectItem);
+}
+
+function selectItem(thisInput){
+    if(thisInput.checked) {
+        document.querySelector('[data-id="' + thisInput.id + '"]').style.display = 'block'
+    }
+    else{
+        document.querySelector('[data-id="' + thisInput.id + '"]').style.display = 'none'
+    }
+}
+
+function makeChecked(item){
+    item.checked = true;
+}
+
+function makeUnChecked(item){
+    item.checked = false;
+}
