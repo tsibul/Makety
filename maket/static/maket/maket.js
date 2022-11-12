@@ -662,3 +662,13 @@ function showTable(objInput){
         document.getElementById('items_table').style.display = 'initial';}
     else{document.getElementById('items_table').style.display = 'none';}
 }
+
+function printSmallItems(printObj){
+    if(printObj.checked){
+        printObj.parentElement.parentElement.classList.add('d-print-none')
+    }
+    else {
+        printObj.parentElement.parentElement.classList.remove('d-print-none')
+
+    }
+}
