@@ -1,4 +1,4 @@
-<div class="col" id="1_{{prt.0.id}}" {% if prt.4 != 1 %} style="display:none;" {% endif %}>
+<div class="col" id="1_{{prt.0.id}}" style="max-width: 40mm;{% if prt.4 != 1 %} display:none;{% endif %}">
     <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="39mm" height="4.501mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
 viewBox="0 0 14200 1300" xmlns:xlink="http://www.w3.org/1999/xlink">
  <g id="Слой_x0020_1">
@@ -24,7 +24,7 @@ viewBox="0 0 14200 1300" xmlns:xlink="http://www.w3.org/1999/xlink">
  </g>
 </svg>
 </div>
-<div class="col"  id="2_{{prt.0.id}}" {% if prt.4 != 2 %} style="display:none;" {% endif %}>
+<div class="col"  id="2_{{prt.0.id}}" style="max-width: 40mm;{% if prt.4 != 2 %} display:none;{% endif %}">
     <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="39mm" height="4.501mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
     viewBox="0 0 14200 1630" xmlns:xlink="http://www.w3.org/1999/xlink">
      <g id="Слой_x0020_1">
@@ -47,7 +47,7 @@ viewBox="0 0 14200 1300" xmlns:xlink="http://www.w3.org/1999/xlink">
      </g>
     </svg>
 </div>
-<div class="col"  id="3_{{prt.0.id}}" {% if prt.4 != 3 %} style="display:none;" {% endif %}>
+<div class="col"  id="3_{{prt.0.id}}" style="max-width: 40mm;{% if prt.4 != 3 %} display:none;{% endif %}">
    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="39mm" height="4.501mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
 viewBox="0 0 14200 1300"
  xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -74,7 +74,7 @@ viewBox="0 0 14200 1300"
  </g>
 </svg>
 </div>
-<div class="col"  id="4_{{prt.0.id}}" {% if prt.4 != 4 %} style="display:none;" {% endif %}>
+<div class="col"  id="4_{{prt.0.id}}" style="max-width: 40mm;{% if prt.4 != 4 %} display:none;{% endif %}">
     <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="39mm" height="4.501mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
     viewBox="0 0 14200 1630" xmlns:xlink="http://www.w3.org/1999/xlink">
      <g id="Слой_x0020_1">
@@ -98,10 +98,9 @@ viewBox="0 0 14200 1300"
     </svg>
 </div>
 &nbsp;&nbsp;
-<select class="form-select form-select-sm" style="font-size:60%;" form="form_maket_{{ord_imp.id}}"
+<select class="form-select form-select-sm" style="font-size:60%; height: 6mm; width: 26mm;" form="form_maket_{{ord_imp.id}}"
       name="pen_pos_{{prt.0.id}}" id="pen_pos_{{prt.0.id}}" onchange="javascript:pen_position({{prt.0.id}}, 4);">
-  <option  name="left" class="select-option" value="1" {% if prt.4 == 1 %} selected {% endif %}>слева</option>
-  <option  name="opposite" class="select-option" value="2" {% if prt.4 == 2 %} selected {% endif %}>напротив</option>
-  <option  name="right" class="select-option" value="3" {% if prt.4 == 3 %} selected {% endif %}>справа</option>
-  <option  name="back" class="select-option" value="4" {% if prt.4 == 4 %} selected {% endif %}>сзади</option>
+  {% for position in prt.7 %}
+  <option  name="{{position.1}}" class="select-option" value="{{position.0}}" {% if prt.4 == position.0 %} selected {% endif %}>{{position.1}}</option>
+  {% endfor %}
 </select>

@@ -3,7 +3,31 @@
 
 <div class="row p-1 m-1" id="prt_{{product.5}}_{{product.9}}" {% if product.6 == 0 %} style="display:none" {% endif %}>
 <div class="col lh-1 p-1 m-1"  >
-<div>
+<div class="col" style="font-size:60%;"><h6>{{product.0}},&nbsp;нанесение&nbsp;—&nbsp;{{product.9}}</h6></div>
+<div class="row" style="font-size: 70%;">
+{% for product_color in product.11 %}
+<div class="col">
+<div class="input-group flex-nowrap m-1">
+<span class="input-group-text mb-1" data-print="{{product_color.1}}" style="font-size: 100%;">{{product_color.1}}</span>
+<div class="col align-self-center" >
+{% for clr_it in product_color.2 %}
+<div class="input-group flex-nowrap">
+<div class="col-auto" style="max-width: 7.5mm; ">
+ <input type="text" class="form-control mb-1" style="font-size: 100%;">
+</div>
+<div class="col-auto" style="width: 40mm;">
+ <input type="text" class="form-control text-nowrap mb-1" style="font-size: 100%;" value="" data-id={{forloop.counter}} onload=""
+        onchange="setPantone(this);" data-product="{{product.5}}_{{product.9}}" data-place="{{product_color.1}}"
+        data-in="sender">
+</div>
+</div>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endfor %}
+</div>
+
 {% if product.5 == '121' %} <!-- Defs for gradient for 121><--->
     <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="144.8mm" height="0.001mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
 viewBox="0 0 14480 1600"
@@ -62,9 +86,8 @@ viewBox="0 0 14480 1600"
   </radialGradient>
  </defs>
  </svg><!--defs for 121><--->
-{% endif %}
-{% if product.5 == '120' %} <!-- Defs for gradient for 120><--->
-    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="144.8mm" height="16mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+{% elif product.5 == '120' %} <!-- Defs for gradient for 120><--->
+    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="144.8mm" height="0.001mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
 viewBox="0 0 14480 1600"
  xmlns:xlink="http://www.w3.org/1999/xlink">
  <defs>
@@ -127,17 +150,19 @@ viewBox="0 0 14480 1600"
 
 
  </defs>
-</svg>
- {% endif %}
+    </svg>
+{% else %}
+ <svg height="0.001mm"></svg>
+{% endif %}
 
- {% for prt in prt_0 %}
+{% for prt in prt_0 %}
 {% if prt.2 ==  product.5 and prt.5 == product.9 %}
-    <div class="col p-1 ms-1 mt-1 mb-0" id="itm_{{prt.2}}_{{product.9}}_{{prt.0.id}}"  {% if prt.3 == 0 %} style="display:none;" {% endif %}>
+    <div class="col p-1 ms-1 mt-1 mb-0" id="itm_{{prt.2}}_{{product.9}}_{{prt.0.id}}"
+         data-id="chck_{{prt.2}}_{{product.9}}_{{prt.0.id}}" {% if prt.3 == 0 %} style="display:none;" {% endif %}>
 {% include 'maket/svg/**_b.html'|replace_value:product.5 %}
     </div>
 {% endif %}
 {% endfor %}
-</div>
     {% if product.5 == '34' %}
     <div class="ms-2 lh-1 mt-0"><img src="{% static 'maket/img/ruler_340.svg' %}" /></div><!--- ruler --->
     {% elif product.5 == '35' %}
@@ -146,28 +171,45 @@ viewBox="0 0 14480 1600"
 </div>
 
 <div class="col p-1 m-1">
-    <div class="col" style="font-size:60%;"><h6>{{product.9}}</h6></div>
 {% for prt in prt_0 %}
 {% if prt.2 ==  product.5 and prt.5 == product.9 %}
-    <div class="d-flex flex-row lh-1">
-      <div class="col" style="font-size:60%;">
+    <div class="row lh-1" data-print_place="{{prt.0.place}}">
+      <div class="col align-self-center" style="font-size:60%; max-width: 4mm;">
         <input  class="form-check-input" type="checkbox" name="chck_{{prt.2}}_{{product.9}}_{{prt.0.id}}" id="chck_{{prt.2}}_{{product.9}}_{{prt.0.id}}"
-                form="form_maket_{{ord_imp.id}}"  {% if prt.3 == 1 %} checked {% endif %} onclick="chs_note({{prt_0_}},'{{product.5}}_{{product.9}}');">
+                form="form_maket_{{ord_imp.id}}"  {% if prt.3 == 1 %} checked {% endif %} data-in="checked" data-product="{{product.5}}_{{product.9}}"
+                onclick="selectItem(this)">
       </div>
-      <div class="col" style="font-size:60%;">&nbsp{{prt.0.print_id}}&nbsp</div>
-      <div class="col" style="font-size:60%;">&nbsp{{prt.0.item.item_group}}.{{prt.0.item.item_color}}&nbsp</div>
+      <div class="col align-self-center d-grid" style="font-size:60%; max-width: 4mm;">&nbsp{{prt.0.print_id}}&nbsp</div>
+      <div class="col align-self-center d-grid" style="font-size:60%; max-width: 16mm;">&nbsp{{prt.0.item.item_group}}.{{prt.0.item.item_color}}&nbsp</div>
       {% include 'maket/svg/**_s.html'|replace_value:product.5 %}
+     {% for color in prt.6 %}
+      <div class="col ms-0 p-0 align-self-start" >
+      <input type="text" style="font-size: 60%; height: 6mm; width: 18mm;" class="form-control" data-in="receiver"
+              value="{{color}}" data-number="{{forloop.counter}}" data-place="{{prt.0.place}}" data-product="{{product.5}}_{{product.9}}"
+              name="{{prt.0.id}}_{{forloop.counter}}" form="form_maket_{{ord_imp.id}}">
+     </div>
+     {% endfor %}
+     <div style="font-size: 60%; width: 26mm;" class="col align-items-center d-grid d-print-none">{{prt.0.place}}</div>
     </div>
 {% endif %}
 {% endfor %}
-    <div class="d-flex flex-row lh-1">
+    <div class="d-flex flex-row lh-1 d-print-none mt-2" style="font-size:60%;">
 
-     <div class="col d-print-none" style="font-size:60%;">
-        <input  class="form-check-input" type="checkbox" name="chck_{{prt.0.id}}" id="chck_{{product.5}}_{{product.9}}_all"
-                form="form_maket_{{ord_imp.id}}" onclick="chs_note({{prt_0_}},'{{product.5}}_{{product.9}}');">
-      </div>
-      <div class="col" style="font-size:60%;">выбрать все</div>
+        <input  class="form-check-input me-6" type="checkbox" name="chck_{{prt.0.id}}" id="chck_{{product.5}}_{{product.9}}_all"
+                form="form_maket_{{ord_imp.id}}" onchange="selectAllItems(this, '{{product.5}}_{{product.9}}', {{prt_0_}});">
+        <label class="form-check-label fw-bold" for="chck_{{product.5}}_{{product.9}}_all">&nbsp;&nbsp;выбрать все &nbsp;&nbsp;</label>
+        <input  class="form-check-input text-end" type="checkbox"
+                id="chck_{{product.5}}_{{product.9}}_print"  onchange="printSmallItems(this);">
+        <label class="form-check-label fw-bold" for="chck_{{product.5}}_{{product.9}}_print">&nbsp;&nbsp;не печатать маленькие изображения</label>
     </div>
 </div>
 </div>
+<script src="{% static 'maket/maket.js' %}"></script>
+{% for product_color in product.11 %}
+{% for clr_it in product_color.2 %}
+<script>
+ setPantoneBack({{forloop.counter}}, '{{product.5}}','{{product.9}}', '{{product_color.1}}');
+</script>
 
+{% endfor %}
+{% endfor %}

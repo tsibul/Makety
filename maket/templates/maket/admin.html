@@ -189,5 +189,56 @@
     </tbody>
 </table>
 
+<!--print_place_connect -->
+<table class="table table-sm table-hover">
+    <thead>
+        <tr class="table-primary">
+            <th colspan="2">Отсутствие места нанесения и таблицы цветов нанесения</th>
+            <th class="text-end">
+            <form action="print_place_connect" method="post">
+            {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-primary">Исправить</button>
+            </form>
+            </th>
+        </tr>
+
+    </thead>
+    <tbody>
+    {% for prt_obj in print_objects %}
+    <tr>
+        <td>{{prt_obj.id}}</td>
+        <td>{{prt_obj.item.item}}</td>
+        <td class="text-end">{{prt_obj.place}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+
+<!--print_position_errors -->
+<table class="table table-sm table-hover">
+    <thead>
+        <tr class="table-primary">
+            <th colspan="2">Несоответствие или отсутствие места нанесения (если редактировались места нанесения)</th>
+            <th class="text-danger">количество {{position_count}}</th>
+            <th class="text-end">
+            <form action="print_position_fix" method="post">
+            {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-primary">Исправить</button>
+            </form>
+            </th>
+        </tr>
+
+    </thead>
+    <tbody>
+    {% for pos_obj in position_objects %}
+    <tr>
+        <td>{{pos_obj.id}}</td>
+        <td>{{pos_obj.item.item}}</td>
+        <td class="text-end">{{pos_obj.print_position.position_orientation}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+
 
 {% endblock %}

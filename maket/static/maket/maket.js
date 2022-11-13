@@ -645,3 +645,64 @@ function clear_add_file(clrObj){
           .childNodes[3]
           .childNodes[1].value = null;
 }
+
+function setPantone(printGroup){
+    var colorInput = printGroup.value;
+    var printPlace = printGroup.dataset.place;
+    var printNo = printGroup.dataset.id;
+    var printProduct = printGroup.dataset.product;
+
+    var pensArray = Array.from(document.querySelectorAll('[data-in="receiver"][data-number="' + printNo + '"]' +
+        '[data-place="' + printPlace +'"][data-product="' + printProduct + '"]'));
+    for (var i = 0; i < pensArray.length; i++){pensArray[i].value = colorInput}
+}
+
+function showTable(objInput){
+    if(objInput.checked){
+        document.getElementById('items_table').style.display = 'initial';}
+    else{document.getElementById('items_table').style.display = 'none';}
+}
+
+function printSmallItems(printObj){
+    if(printObj.checked){
+        printObj.parentElement.parentElement.classList.add('d-print-none')
+    }
+    else {
+        printObj.parentElement.parentElement.classList.remove('d-print-none')
+
+    }
+}
+
+function selectAllItems(thisInput, selectId){
+    var printItems = document.querySelectorAll('[data-in="checked"][data-product="' + selectId + '"]');
+    if(thisInput.checked){
+        printItems.forEach(makeChecked)
+    }
+    else {printItems.forEach(makeUnChecked)}
+    printItems.forEach(selectItem);
+}
+
+function selectItem(thisInput){
+    if(thisInput.checked) {
+        document.querySelector('[data-id="' + thisInput.id + '"]').style.display = 'block'
+    }
+    else{
+        document.querySelector('[data-id="' + thisInput.id + '"]').style.display = 'none'
+    }
+}
+
+function makeChecked(item){
+    item.checked = true;
+}
+
+function makeUnChecked(item){
+    item.checked = false;
+}
+
+function setPantoneBack(counter, product5, product9, color){
+    document.querySelector('[data-in="sender"][data-id="' + counter + '"]' +
+        '[data-place="' + color +'"][data-product="' + product5 + '_' + product9 + '"]').value =
+        document.querySelector('[data-in="receiver"][data-number="' + counter + '"]' +
+        '[data-place="' + color +'"][data-product="' + product5 + '_' + product9 + '"]').value;
+
+}

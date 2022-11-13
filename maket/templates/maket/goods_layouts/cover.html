@@ -2,7 +2,13 @@
 {% load extras %}
 
 <div class="col p-1 m-1" id="prt_{{product.5}}_{{product.9}}" {% if product.6 == 0 %} style="display:none" {% endif %}>
-    <div class="col" style="font-size:60%;"><h6>{{product.9}}</h6></div>
+<div class="col" style="font-size:60%;"><h6>{{product.9}}</h6></div>
+    <div class="d-print-none" style="font-size: 80%;">
+    <input  class="form-check-input text-end" type="checkbox"
+            id="chck_{{product.5}}_{{product.9}}_print"  onchange="printSmallItems(this);">
+    <label class="form-check-label" for="chck_{{product.5}}_{{product.9}}_print">&nbsp;&nbsp;не печатать маленькие изображения</label>
+</div>
+
     <div class="d-flex flex-row justify-content-start">
 {% for prt in prt_0 %}
 {% if prt.2 ==  product.5 and prt.5 == product.9 %}
@@ -16,10 +22,42 @@
       <div class="col" style="font-size:60%;">{{prt.0.item.item_group}}.{{prt.0.item.detail1_color}} </div>
     </div>
      {% include 'maket/svg/**_s.html'|replace_value:product.5 %}
+      {% for color in prt.6 %}
+      <div class="col mt-1 ms-0 p-0 align-self-start" >
+      <input type="text" style="font-size: 60%; height: 6mm; width: 18mm;" class="form-control" data-in="receiver"
+              value="{{color}}" data-number="{{forloop.counter}}" data-place="{{prt.0.place}}" data-product="{{product.5}}_{{product.9}}"
+              name="{{prt.0.id}}_{{forloop.counter}}" form="form_maket_{{ord_imp.id}}">
+     </div>
+     {% endfor %}
+
     </div>
 {% endif %}
 {% endfor %}
     </div>
+    <div class="row" style="font-size: 70%;">
+{% for product_color in product.11 %}
+<div class="col">
+<div class="input-group flex-nowrap m-1">
+<span class="input-group-text mb-1" data-print="{{product_color.1}}" style="font-size: 100%;">{{product_color.1}}</span>
+<div class="col align-self-center" >
+{% for clr_it in product_color.2 %}
+<div class="input-group flex-nowrap">
+<div class="col-auto" style="max-width: 7.5mm; ">
+ <input type="text" class="form-control mb-1" style="font-size: 100%;">
+</div>
+<div class="col-auto" style="width: 40mm;">
+ <input type="text" class="form-control text-nowrap mb-1" style="font-size: 100%;" value="" data-id={{forloop.counter}} onload=""
+        onchange="setPantone(this);" data-product="{{product.5}}_{{product.9}}" data-place="{{product_color.1}}"
+        data-in="sender">
+</div>
+</div>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endfor %}
+</div>
+
     <div class="d-flex flex-row lh-1 mb-3">
 {% for prt in prt_0 %}
 {% if prt.2 ==  product.5 and prt.5 == product.9 %}
@@ -30,3 +68,12 @@
 {% endfor %}
 </div>
 </div>
+<script src="{% static 'maket/maket.js' %}"></script>
+{% for product_color in product.11 %}
+{% for clr_it in product_color.2 %}
+<script>
+ setPantoneBack({{forloop.counter}}, '{{product.5}}','{{product.9}}', '{{product_color.1}}');
+</script>
+
+{% endfor %}
+{% endfor %}

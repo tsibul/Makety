@@ -63,24 +63,17 @@
         </tr>
     </tbody>
 
-<div class=" row d-print-none">
-    <div class="col">
-    Пленка {{ord_imp.film.film_id}} от {{ord_imp.film.date}}
-    {% if ord_imp.film_status %}
-    <input class="form-check-input" type="checkbox" checked disabled name="filmstatus" id="filmstatus">
-    <label for="filmstatus">без ошибок</label>
-    {% else %}
-    <input class="form-check-input" type="checkbox" disabled name="filmstatus" id="filmstatus_">
-    <label for="filmstatus_"> ошибки </label>
-    {% endif %}
-    </div>
-</div>
 </table>
 </div>
 </div>
 
 <div class="d-flex flex-row border p-2 m-2  d-print-none" style="width:140mm;">
 <div class="col align-end">
+    <div class="align-text-bottom text-nowrap border-bottom border-1 mb-2" style="font-size: 80%;">
+        <input  class="form-check-input" type="checkbox" id="show_table"
+                checked onchange="showTable(this);">
+        <label class="form-check-label fw-bold" for="show_table"> показать таблицу с номенклатурой </label>
+    </div>
     {% for prd in product_range %}
     <div class="row align-end">
     <div class="col" style="font-size:60%" >{{prd.0}}</div>
@@ -105,47 +98,48 @@
 <div class="d-flex align-content-start flex-wrap">
 
 <div class="d-flex p-1 m-1" style="width:192mm;">
-<table class="table-sm border border-2 border-success" style="width:190mm;">
+<table class="table-sm border border-2 border-success" style="width:190mm;" id="items_table">
     <thead>
     <tr class="text-center lh-1">
-        <th scope="col" class="col" style="max-width:4mm; font-size:60%;"> # </th>
-        <th scope="col" class="col-1" style="font-size:60%;"> Арт. </th>
-        <th scope="col" class="col-3" style="font-size:60%;"> Наименование </th>
-        <th scope="col" class="col-2" style="font-size:60%;"> Нанесение </th>
-        <th scope="col" class="col-1" style="font-size:60%;"> Кол-во </th>
-        <th scope="col" class="col-1" style="font-size:60%;"> Место  </th>
-        <th colspan="4" scope="col" class="col-5" style="font-size:60%;">Тип / Цветов / 2-й проход / Положение </th>
+        <th style="max-width:4mm; font-size:60%;"> # </th>
+        <th style="font-size:60%;"> Арт. </th>
+        <th style="font-size:60%;"> Наименование </th>
+        <th style="font-size:60%;"> Нанесение </th>
+        <th style="font-size:60%;"> Кол-во </th>
+        <th colspan="5" class=""
+            style="font-size:60%;">Место&nbsp/&nbsp;;Тип&nbsp/&nbsp;;Цветов&nbsp;/&nbsp;2-й&nbsp;/&nbsp;проход&nbsp;/&nbsp;Поз.&nbsp;/&nbsp;Цвет</th>
+
     </tr>
     </thead>
     <tbody>
 {% for item in item_import %}
-    <tr class="lh-1" id="prt_{{item.item.print_group.code}}_{{ '**'|print_name_to_string_:item.print_name }}_"
+    <tr class="lh-1 border border-1" id="prt_{{item.item.print_group.code}}_{{ '**'|print_name_to_string_:item.print_name }}_"
         {% for prod in product_range %}
         {% if prod.5 == item.item.print_group.code and prod.6 == 0  and prod.9 == '**'|print_name_to_string_:item.print_name %}
          style="display:none;" {% endif %}{% endfor %}>
-        <td class="col text-center" style="max-width:4mm; font-size:60%;"> {{item.print_id}} </td>
-        <td class="col-1 text-center" style="font-size:60%;"> {{item.code}} </td>
-        <td class="col-3" style="font-size:60%;"> {{item.name}}</td>
-        <td class="col-2 text-center" style="font-size:60%;"> {{item.print_name}}</td>
-        <td class="col-1 text-center" style="font-size:60%;"> {{item.quantity}}</td>
-    <td colspan="4">
+        <td class="text-center" style="max-width:4mm; font-size:60%;"> {{item.print_id}} </td>
+        <td class="text-center" style="font-size:60%;"> {{item.code}} </td>
+        <td class="" style="font-size:60%;"> {{item.name}}</td>
+        <td class="text-center" style="font-size:60%;"> {{item.print_name}}</td>
+        <td class="text-center" style="font-size:60%;"> {{item.quantity}}</td>
+    <td colspan="5" style="min-width: 90mm;">
     <table class="table-sm mb-0">
 
     {% for prt in print_import %}
-    {% if prt.print_id == item.print_id %}
+    {% if prt.0.print_id == item.print_id and prt.0.type != 'Soft Touch' %}
     <tr class="lh-1 align-top">
-<!--        <td scope="col" colspan="4" style="font-size:60%;"> </td> <--->
-        <td class="col-4 text-start" style="min-width:20mm; font-size:60%;"> {{prt.place}} </td>
-        <td class="col-2 text-center" style="font-size:60%;"> {{prt.type}}</td>
-        <td class="col-1 text-center" style="min-width:5mm; font-size:60%;"> {{prt.colors}} /</td>
-         <td class="col-1 text-center" style="font-size:60%;">
-        {% if prt.second_pass %}
-            <input class="form-check-input" type="checkbox" checked disabled>
-        {% else %}
-            <input class="form-check-input" type="checkbox" disabled>
-        {% endif %}
+        <td class="m-1 p-1" style="font-size:60%; max-width: 20mm;"> {{prt.0.place}} </td>
+        <td class="m-1 p-1" style="font-size:60%;"> {{prt.0.type}}</td>
+        <td class="text-nowrap m-1 p-1" style="min-width: 5mm; font-size:60%;">
+            {{prt.0.colors}}&nbsp;/&nbsp;<input class="form-check-input align-text-top" type="checkbox" {% if prt.0.second_pass %}checked{% endif %} disabled>
         </td>
-        <td class="text-center" style="font-size:60%;"> {{prt.position}} </td>
+        <td class="m-1 p-1" style="font-size:60%; min-width: 20mm;"> {{prt.0.print_position.position_orientation}}</td>
+        <td style="font-size: 60%; " class="m-1 p-1 text-nowrap">
+            {% for color in prt.1 %}
+            {{color}}&nbsp;
+            {% endfor %}
+        </td>
+
     </tr>
     {% else %}
     {% endif %}

@@ -5,7 +5,7 @@ import os
 
 from bs4 import BeautifulSoup
 from django.core.files.storage import default_storage
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import loader
@@ -15,7 +15,7 @@ from django.http import FileResponse, Http404
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
     Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group, \
-    Print_in_Maket, Additional_Files
+    Print_in_Maket, Additional_Files, Print_color
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -110,13 +110,24 @@ def dicts(request):
     color_scheme = Color_scheme.objects.all()
 
     print_type = Print_type.objects.all()
-    print_place = Print_place.objects.all()
-    print_position = Print_position.objects.all()
+    print_place = Print_place.objects.all().order_by('detail_name', 'place_name')
     print_group = Print_group.objects.all().order_by('code')
+    print_position = Print_position.objects.all().order_by('print_group')
 
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
                'print_position': print_position, 'active2': 'active', 'print_group': print_group}
     return render(request, 'maket/dictionarys/dicts.html', context)
+
+
+def print_position(request):
+    navi = 'dicts'
+    print_place = Print_place.objects.all().order_by('detail_name', 'place_name')
+    print_group = Print_group.objects.all().order_by('code')
+    print_position = Print_position.objects.all().order_by('print_group', 'position_place', 'orientation_id')
+
+    context = {'navi': navi,  'print_place': print_place,
+               'print_position': print_position, 'active2': 'active', 'print_group': print_group}
+    return render(request, 'maket/dictionarys/print_position.html', context)
 
 
 def print_group(request):
@@ -180,6 +191,21 @@ def admin(request):
                'lost_hex_len': lost_hex_len, 'changed_customers': changed_customers,
                'changed_customers_len': changed_customers_len, 'lost_deleted_prints': lost_deleted_prints,
                'lost_deleted_items': lost_deleted_items}
+
+    print_colors = list(Print_color.objects.values_list('print_item_id', flat=True))
+    print_objects = Print_imports.objects.filter(Q(print_place__isnull=True) | ~Q(id__in=print_colors)).order_by('-place')
+    context.update({'print_objects': print_objects})
+
+    print_imports = Print_imports.objects.all()
+    error_print_position_id = []
+    for prt_imports in print_imports:
+        if prt_imports.print_position is not None:
+           if prt_imports.print_position.position_place != prt_imports.print_place or \
+              prt_imports.print_position.print_group != prt_imports.item.item.print_group:
+              error_print_position_id.append(prt_imports.id)
+    position_objects = Print_imports.objects.filter(Q(id__in=error_print_position_id) | Q(print_position__isnull=True))
+    position_count = position_objects.count()
+    context.update({'position_objects': position_objects, 'position_count': position_count})
     return render(request, 'maket/admin.html', context)
 
 
@@ -337,21 +363,32 @@ def add_prt_plc(request):
 
 
 def update_prt_pos(request, id):
-    pos_opt = request.POST['pos_opt']
+    orientation_id = request.POST['pos_opt']
     pos_orn = request.POST['pos_orn']
+    print_group_id = request.POST['print_group']
+    print_place_id = request.POST['position_place']
+    print_group = Print_group.objects.get(id=print_group_id)
+    place = Print_place.objects.get(id=print_place_id)
     print_position = Print_position.objects.get(id=id)
-    print_position.position_option = pos_opt
+    print_position.orientation_id = orientation_id
     print_position.position_orientation = pos_orn
+    print_position.print_group = print_group
+    print_position.position_place = place
     print_position.save()
-    return HttpResponseRedirect(reverse('maket:dicts'))
+    return HttpResponseRedirect(reverse('maket:print_position'))
 
 
 def add_prt_pos(request):
-    pos_opt = request.POST['pos_opt']
+    orientation_id = request.POST['pos_opt']
     pos_orn = request.POST['pos_orn']
-    print_position = Print_position(position_option=pos_opt, position_orientation=pos_orn)
+    print_place_id = request.POST['position_place']
+    print_group_id = request.POST['print_group']
+    print_group = Print_group.objects.get(id=print_group_id)
+    place = Print_place.objects.get(id=print_place_id)
+    print_position = Print_position(orientation_id=orientation_id, position_orientation=pos_orn, print_group=print_group,
+                                    position_place=place)
     print_position.save()
-    return HttpResponseRedirect(reverse('maket:dicts'))
+    return HttpResponseRedirect(reverse('maket:print_position'))
 
 
 def customers(request):
@@ -575,10 +612,15 @@ def import_order(request):
                     second_pass = False
                 else:
                     second_pass = True
-
+            place_obj = place_obj_from_place(place)
             print_item = Print_imports(place=place, type=type, colors=colors, item=prt_item, print_id=prt_item.print_id,
-                                       second_pass=second_pass, print_price=print_price)
+                                       second_pass=second_pass, print_price=print_price, print_place=place_obj)
             print_item.save()
+            print_pos = print_position_and_color_from_print_obj(place, print_item)
+            if print_pos != '':
+                print_item.print_position = print_pos
+                print_item.save()
+            print_color_check(print_item)
             print_list.append([place, type, colors, second_pass, print_item, print_item.print_id])
     itms_for_price = Item_imports.objects.filter(order=ord_imp)
     gross_prt_quantity = 0
@@ -875,28 +917,38 @@ def prt_imports(id, print_import, ord_imp, mk_id):
         clr_hex = Item_color.objects.get(color_scheme=clr_sch, color_id=clr)
         clr_hex = clr_hex.color_code
         pt_name = print_item.item.print_name
-        try:
-            maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
+        colors = Print_color.objects.filter(print_item=print_item)
+        positions = Print_position.objects.filter(Q(print_group=print_item.item.item.print_group) &\
+                                                  Q(position_place=print_item.print_place))
+        position_list = []
+        for position in positions:
+            position_list.append([position.orientation_id, (position.position_orientation).split(' ')[0]])
+        colors_list = []
+        for color in colors:
+            colors_list.append(color.color_pantone)
+        if print_item.type != 'Soft Touch':
             try:
-                pt = Print_in_Maket.objects.get(Q(maket=maket) & Q(print_item=print_item))
-                if pt.checked:
-                    pt_0 = 1
-                else:
-                    pt_0 = 0
-                prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, pt_0, pt.option, \
-                               pt_name.replace(' ', '_').replace(',', '').replace('+', '_')])
-                prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, pt_0, pt.option, \
-                              pt_name.replace(' ', '_').replace(',', '').replace('+', '_')])
+                maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
+                try:
+                    pt = Print_in_Maket.objects.get(Q(maket=maket) & Q(print_item=print_item))
+                    if pt.checked:
+                        pt_0 = 1
+                    else:
+                        pt_0 = 0
+                    prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, pt_0, pt.option, \
+                                   pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
+                    prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, pt_0, pt.option, \
+                                  pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list, position_list])
+                except:
+                    prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1, \
+                                   pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
+                    prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1, \
+                                      pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list, position_list])
             except:
                 prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1, \
-                               pt_name.replace(' ', '_').replace(',', '').replace('+', '_')])
+                               pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
                 prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1, \
-                              pt_name.replace(' ', '_').replace(',', '').replace('+', '_')])
-        except:
-            prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1, \
-                           pt_name.replace(' ', '_').replace(',', '').replace('+', '_')])
-            prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1, \
-                          pt_name.replace(' ', '_').replace(',', '').replace('+', '_')])
+                                  pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list, position_list])
 
         context.update({'prt_0': prt_0})
         context.update({'prt_0_': prt_0_})
@@ -913,6 +965,13 @@ def prt_imports(id, print_import, ord_imp, mk_id):
             len_prt = len(Print_imports.objects.filter(Q(item__order=order_id) & Q(item__item__print_group=print_group) \
                                                        & Q(item__print_name=prt_nm)))
             if items_prt != 0:
+                item_for_color = Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group) & \
+                                                        Q(print_name=prt_nm)).first()
+                print_item_for_color = Print_imports.objects.filter(Q(item=item_for_color) & ~Q(type='Soft Touch'))
+                list_for_count_colors = []
+                for prt_item_for_color in print_item_for_color:
+                    list_for_count_colors.append([prt_item_for_color.print_place.id, prt_item_for_color.place,
+                                                  list(range(0, prt_item_for_color.colors))])
                 try:
                     maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
                     itemgroup_in_maket = Itemgroup_in_Maket.objects.get(
@@ -926,12 +985,14 @@ def prt_imports(id, print_import, ord_imp, mk_id):
                     product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
                                           'maket/svg/svg' + print_group.code + '.html', print_group.code, ig_ch,
                                           print_group.options, print_group.layout,
-                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_'), prt_nm])
+                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_'), prt_nm,
+                                          list_for_count_colors])
                 except:
                     product_range.append([print_group.name, len_prt, 'prt_' + print_group.code, items_prt,
                                           'maket/svg/svg' + print_group.code + '.html', print_group.code, 1,
                                           print_group.options, print_group.layout,
-                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_'), prt_nm])
+                                          prt_nm.replace(' ', '_').replace(',', '').replace('+', '_'), prt_nm,
+                                          list_for_count_colors])
 
     context.update({'print_groups': print_groups})
     return [context, product_range]
@@ -941,7 +1002,14 @@ def maket_print(request, id, mk_id):
     ord_imp = order_imports(id)[0]
     item_import = order_imports(id)[1]
     print_import = order_imports(id)[2]
-    context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import}
+    print_import_color_print = []
+    for prt_import in print_import:
+        print_color = Print_color.objects.filter(print_item=prt_import)
+        colors = []
+        for prt_color in print_color:
+            colors.append(prt_color.color_pantone)
+        print_import_color_print.append([prt_import, colors])
+    context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import_color_print}
 
     order_id = ord_imp.id
     product_range = prt_imports(order_id, print_import, ord_imp, mk_id)[1]
@@ -953,8 +1021,6 @@ def maket_print(request, id, mk_id):
     maket_id_list = []
     for mk in mkt:
         maket_id_list.append(mk.maket_id)
-    #    if len(maket_id_list) == 0:
-    #       maket_id_list = [1]
     context.update({'maket_id_list': maket_id_list, 'len_maket': len(maket_id_list) + 1})
     try:
         maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
@@ -1031,7 +1097,7 @@ def update_maket(request, id):
         #        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first
         try:
             item_checked = Itemgroup_in_Maket.objects.get(
-                Q(item=itm_checked) & Q(maket=maket) & Q(print_name=item.pr_rg[10]))
+                Q(item=itm_checked) & Q(maket=maket) & Q(print_name=pr_rg[10]))
         except:
             item_checked = Itemgroup_in_Maket(item=itm_checked, maket=maket, print_name=pr_rg[10])
         #        item_checked.print_name = print_name
@@ -1062,13 +1128,27 @@ def update_maket(request, id):
             pr_in_maket.checked = True
         except:
             pr_in_maket.checked = False
-        if pi.item.item.print_group.options > 1:
+        if pi.item.item.print_group.options > 1 and pi.type != 'Soft Touch':
             pen_pos = 'pen_pos_' + str(pi.id)
             option = request.POST[pen_pos]
+            prt_position = Print_position.objects.get(Q(position_place=pi.print_place) & Q(print_group=pi.item.item.print_group)\
+                                                        & Q(orientation_id=option))
             pr_in_maket.option = option
         else:
             pr_in_maket.option = 0
+            prt_position = Print_position.objects.get(Q(position_place=pi.print_place) & Q(print_group=pi.item.item.print_group) \
+                                                      & Q(orientation_id=1))
+        pi.print_position = prt_position
+        pi.save()
         pr_in_maket.save()
+        colors = list(Print_color.objects.filter(print_item=pi))
+        for color in colors:
+            try:
+                color_input = request.POST[str(pi.id) + '_' + str(color.color_number_in_item)]
+                color.color_pantone = color_input
+                color.save()
+            except:
+                pass
     return HttpResponseRedirect(reverse('maket:maket_print', args=[id, maket_id]))
 
 
@@ -1675,3 +1755,80 @@ def delete_additional_file(request, id):
     new_id = add_file.order_id.id
     add_file.delete()
     return HttpResponseRedirect(reverse('maket:additional_files', args=[new_id]))
+
+
+def print_place_connect(request):
+    print_colors = list(Print_color.objects.values_list('print_item_id', flat=True))
+    print_objects = Print_imports.objects.filter(Q(print_place__isnull=True) | ~Q(id__in=print_colors)).order_by('-place')
+    for prt_obj in print_objects:
+        place = place_obj_from_place(prt_obj.place)
+        print_pos = print_position_and_color_from_print_obj(place, prt_obj)
+        if print_pos != '':
+            prt_obj.print_position = print_pos
+        if prt_obj.place != '':
+            prt_obj.print_place = place
+        if prt_obj.place != '' or print_pos != '':
+            prt_obj.save()
+        if prt_obj.id not in print_colors:
+            if print_colors.count(prt_obj.id) != prt_obj.colors:
+                Print_color.objects.filter(print_item=prt_obj).delete()
+            print_color_check(prt_obj)
+    return HttpResponseRedirect(reverse('maket:admin'))
+
+
+def print_position_and_color_from_print_obj(place, prt_obj):
+    try:
+        print_position = Print_position.objects.get(
+            Q(position_place=place) & Q(print_group=prt_obj.item.item.print_group))
+    except:
+        print_position = ''
+    return print_position
+
+
+def place_obj_from_place(place):
+    if place != 'Стандартное ProEcoPen':
+        print_place_tmp = place.split(' ')
+    else:
+        print_place_tmp = [place]
+    try:
+        place_obj = Print_place.objects.get(
+            Q(detail_name__iexact=print_place_tmp[0]) & Q(place_name__iexact=print_place_tmp[1]))
+    except:
+        if len(print_place_tmp) == 1:
+            place_obj = Print_place.objects.get(place_name__iexact=print_place_tmp[0])
+        else:
+            place_obj = Print_place.objects.get(place_name__iexact=print_place_tmp[1])
+    return place_obj
+
+
+def delete_print_place(request, id):
+    print_place = Print_place.objects.get(id=id)
+    print_place.delete()
+    return HttpResponseRedirect(reverse('maket:dicts'))
+
+
+def delete_print_position(request, id):
+    print_position = Print_position.objects.get(id=id)
+    print_position.delete()
+    return HttpResponseRedirect(reverse('maket:print_position'))
+
+
+def print_color_check(prt_obj):
+    for n in range(int(prt_obj.colors)):
+        print_color = Print_color(color_number_in_item=n+1, print_item=prt_obj)
+        print_color.save()
+    return
+
+
+def print_position_fix(request):
+    print_imports = Print_imports.objects.all()
+    for prt_imports in print_imports:
+        if prt_imports.print_position is not None and \
+                (prt_imports.print_position.position_place != prt_imports.print_place or
+                 prt_imports.print_position.print_group != prt_imports.item.item.print_group) or \
+                prt_imports.print_position is None:
+            print_pos = print_position_and_color_from_print_obj(prt_imports.print_place, prt_imports)
+            if print_pos != '':
+                prt_imports.print_position = print_pos
+                prt_imports.save()
+    return HttpResponseRedirect(reverse('maket:admin'))
