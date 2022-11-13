@@ -1111,9 +1111,6 @@ def update_maket(request, id):
         item_checked.maket = maket
         item_checked.save()
         items_checked.append(item_checked)  # ////
-    if all_checked:
-        ord_imp.maket_status = 'R'
-    else:
         ord_imp.maket_status = 'P'
     ord_imp.save()
     for pi in print_import:
@@ -1419,8 +1416,12 @@ def upload_maket(request):
         maket.maket_file.save(file.name, file)
         maket.uploaded = True
         maket.save()
+        order = maket.order
+        order.maket_status = 'R'
+        order.save()
     except:
         pass
+
     return HttpResponseRedirect(reverse('maket:maket_base'))
 
 
