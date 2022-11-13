@@ -918,6 +918,11 @@ def prt_imports(id, print_import, ord_imp, mk_id):
         clr_hex = clr_hex.color_code
         pt_name = print_item.item.print_name
         colors = Print_color.objects.filter(print_item=print_item)
+        positions = Print_position.objects.filter(Q(print_group=print_item.item.item.print_group) &\
+                                                  Q(position_place=print_item.print_place))
+        position_list = []
+        for position in positions:
+            position_list.append([position.orientation_id, (position.position_orientation).split(' ')[0]])
         colors_list = []
         for color in colors:
             colors_list.append(color.color_pantone)
@@ -933,17 +938,17 @@ def prt_imports(id, print_import, ord_imp, mk_id):
                     prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, pt_0, pt.option, \
                                    pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
                     prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, pt_0, pt.option, \
-                                  pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
+                                  pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list, position_list])
                 except:
                     prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1, \
                                    pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
                     prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1, \
-                                      pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
+                                      pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list, position_list])
             except:
                 prt_0_.append([print_item.id, clr_hex, clr, print_item.item.item.print_group.code, 0, 1, \
                                pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
                 prt_0.append([print_item, clr_hex, print_item.item.item.print_group.code, 0, 1, \
-                                  pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list])
+                                  pt_name.replace(' ', '_').replace(',', '').replace('+', '_'), colors_list, position_list])
 
         context.update({'prt_0': prt_0})
         context.update({'prt_0_': prt_0_})
@@ -1126,9 +1131,15 @@ def update_maket(request, id):
         if pi.item.item.print_group.options > 1 and pi.type != 'Soft Touch':
             pen_pos = 'pen_pos_' + str(pi.id)
             option = request.POST[pen_pos]
+            prt_position = Print_position.objects.get(Q(position_place=pi.print_place) & Q(print_group=pi.item.item.print_group)\
+                                                        & Q(orientation_id=option))
             pr_in_maket.option = option
         else:
             pr_in_maket.option = 0
+            prt_position = Print_position.objects.get(Q(position_place=pi.print_place) & Q(print_group=pi.item.item.print_group) \
+                                                      & Q(orientation_id=1))
+        pi.print_position = prt_position
+        pi.save()
         pr_in_maket.save()
         colors = list(Print_color.objects.filter(print_item=pi))
         for color in colors:
