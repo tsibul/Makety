@@ -6,18 +6,19 @@
 <div class="col" style="font-size:60%;"><h6>{{product.0}},&nbsp;нанесение&nbsp;—&nbsp;{{product.9}}</h6></div>
 <div class="row" style="font-size: 70%;">
 {% for product_color in product.11 %}
-<div class="col align-self-center" data-print="{{product_color.1}}">{{product_color.1}}</div>
-<div class="col align-self-center" >
+<div class="col-auto align-self-center" data-print="{{product_color.1}}">{{product_color.1}}</div>
+<div class="col-auto align-self-center" >
 {% for clr_it in product_color.2 %}
 <div class="row">
-<div class="col align-self-center" style="max-width: 6.5mm;">
+<div class="col-auto align-self-center" style="max-width: 6.5mm;">
  <svg width="6mm" height="5.5mm">
   <rect width="5.5mm" height="5mm" style="fill:none;stroke-width:1;stroke:rgb(0,0,0)" />
 </svg>
 </div>
-<div class="col" >
- <input type="text" class="form-control text-nowrap " style="font-size: 100%;" value="" data-id={{forloop.counter}}
-        onchange="setPantone(this);" data-product="{{product.5}}_{{product.9}}" data-place="{{product_color.1}}">
+<div class="col-auto" >
+ <input type="text" class="form-control text-nowrap " style="font-size: 100%;" value="" data-id={{forloop.counter}} onload=""
+        onchange="setPantone(this);" data-product="{{product.5}}_{{product.9}}" data-place="{{product_color.1}}"
+        data-in="sender">
 </div>
 </div>
 {% endfor %}
@@ -170,7 +171,7 @@ viewBox="0 0 14480 1600"
 <div class="col p-1 m-1">
 {% for prt in prt_0 %}
 {% if prt.2 ==  product.5 and prt.5 == product.9 %}
-    <div class="d-flex flex-row lh-1" data-print_place="{{prt.0.place}}">
+    <div class="row lh-1" data-print_place="{{prt.0.place}}">
       <div class="col align-self-center" style="font-size:60%; max-width: 4mm;">
         <input  class="form-check-input" type="checkbox" name="chck_{{prt.2}}_{{product.9}}_{{prt.0.id}}" id="chck_{{prt.2}}_{{product.9}}_{{prt.0.id}}"
                 form="form_maket_{{ord_imp.id}}"  {% if prt.3 == 1 %} checked {% endif %} data-in="checked" data-product="{{product.5}}_{{product.9}}"
@@ -179,14 +180,14 @@ viewBox="0 0 14480 1600"
       <div class="col align-self-center d-grid" style="font-size:60%; max-width: 4mm;">&nbsp{{prt.0.print_id}}&nbsp</div>
       <div class="col align-self-center d-grid" style="font-size:60%; max-width: 16mm;">&nbsp{{prt.0.item.item_group}}.{{prt.0.item.item_color}}&nbsp</div>
       {% include 'maket/svg/**_s.html'|replace_value:product.5 %}
-      <div style="font-size: 60%; width: 30mm;" class="align-self-center d-grid d-print-none ms-1">{{prt.0.place}}</div>
      {% for color in prt.6 %}
-      <div class="ms-0 p-0" >
-       <input type="text" style="font-size: 60%; height: 5mm; width: 18mm;" class="form-control" data-in="receiver"
+      <div class="col ms-0 p-0 align-self-start" >
+      <input type="text" style="font-size: 60%; height: 6mm; width: 18mm;" class="form-control" data-in="receiver"
               value="{{color}}" data-number="{{forloop.counter}}" data-place="{{prt.0.place}}" data-product="{{product.5}}_{{product.9}}"
               name="{{prt.0.id}}_{{forloop.counter}}" form="form_maket_{{ord_imp.id}}">
-      </div>
+     </div>
      {% endfor %}
+     <div style="font-size: 60%; width: 26mm;" class="col align-items-center d-grid d-print-none">{{prt.0.place}}</div>
     </div>
 {% endif %}
 {% endfor %}
@@ -201,4 +202,12 @@ viewBox="0 0 14480 1600"
     </div>
 </div>
 </div>
+<script src="{% static 'maket/maket.js' %}"></script>
+{% for product_color in product.11 %}
+{% for clr_it in product_color.2 %}
+<script>
+ setPantoneBack({{forloop.counter}}, '{{product.5}}','{{product.9}}', '{{product_color.1}}');
+</script>
 
+{% endfor %}
+{% endfor %}

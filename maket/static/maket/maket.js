@@ -698,3 +698,11 @@ function makeChecked(item){
 function makeUnChecked(item){
     item.checked = false;
 }
+
+function setPantoneBack(counter, product5, product9, color){
+    document.querySelector('[data-in="sender"][data-id="' + counter + '"]' +
+        '[data-place="' + color +'"][data-product="' + product5 + '_' + product9 + '"]').value =
+        document.querySelector('[data-in="receiver"][data-number="' + counter + '"]' +
+        '[data-place="' + color +'"][data-product="' + product5 + '_' + product9 + '"]').value;
+
+}
