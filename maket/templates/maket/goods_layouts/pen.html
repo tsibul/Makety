@@ -6,22 +6,24 @@
 <div class="col" style="font-size:60%;"><h6>{{product.0}},&nbsp;нанесение&nbsp;—&nbsp;{{product.9}}</h6></div>
 <div class="row" style="font-size: 70%;">
 {% for product_color in product.11 %}
-<div class="col-auto align-self-center" data-print="{{product_color.1}}">{{product_color.1}}</div>
-<div class="col-auto align-self-center" >
+<div class="col">
+<div class="input-group flex-nowrap m-1">
+<span class="input-group-text mb-1" data-print="{{product_color.1}}" style="font-size: 100%;">{{product_color.1}}</span>
+<div class="col align-self-center" >
 {% for clr_it in product_color.2 %}
-<div class="row">
-<div class="col-auto align-self-center" style="max-width: 6.5mm;">
- <svg width="6mm" height="5.5mm">
-  <rect width="5.5mm" height="5mm" style="fill:none;stroke-width:1;stroke:rgb(0,0,0)" />
-</svg>
+<div class="input-group flex-nowrap">
+<div class="col-auto" style="max-width: 7.5mm; ">
+ <input type="text" class="form-control mb-1" style="font-size: 100%;">
 </div>
-<div class="col-auto" >
- <input type="text" class="form-control text-nowrap " style="font-size: 100%;" value="" data-id={{forloop.counter}} onload=""
+<div class="col-auto" style="width: 40mm;">
+ <input type="text" class="form-control text-nowrap mb-1" style="font-size: 100%;" value="" data-id={{forloop.counter}} onload=""
         onchange="setPantone(this);" data-product="{{product.5}}_{{product.9}}" data-place="{{product_color.1}}"
         data-in="sender">
 </div>
 </div>
 {% endfor %}
+</div>
+</div>
 </div>
 {% endfor %}
 </div>
