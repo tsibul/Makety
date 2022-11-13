@@ -82,8 +82,7 @@ viewBox="0 0 14200 1300" xmlns:xlink="http://www.w3.org/1999/xlink">
 &nbsp;&nbsp;
 <select class="form-select form-select-sm" style="font-size:60%; height: 6mm; width: 26mm;" name="pen_pos_{{prt.0.id}}" form="form_maket_{{ord_imp.id}}"
       id="pen_pos_{{prt.0.id}}" onchange="javascript:pen_position({{prt.0.id}}, 4);">
-  <option  name="left" class="select-option" value="1" {% if prt.4 == 1 %} selected {% endif %}>слева</option>
-  <option  name="opposite" class="select-option" value="2" {% if prt.4 == 2 %} selected {% endif %}>напротив</option>
-  <option  name="right" class="select-option" value="3" {% if prt.4 == 3 %} selected {% endif %}>справа</option>
-  <option  name="back" class="select-option" value="4" {% if prt.4 == 4 %} selected {% endif %}>сзади</option>
+  {% for position in prt.7 %}
+  <option  name="{{position.1}}" class="select-option" value="{{position.0}}" {% if prt.4 == position.0 %} selected {% endif %}>{{position.1}}</option>
+  {% endfor %}
 </select>
