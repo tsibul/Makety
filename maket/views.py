@@ -970,7 +970,7 @@ def prt_imports(id, print_import, ord_imp, mk_id):
                 print_item_for_color = Print_imports.objects.filter(Q(item=item_for_color) & ~Q(type='Soft Touch'))
                 list_for_count_colors = []
                 for prt_item_for_color in print_item_for_color:
-                    list_for_count_colors.append([prt_item_for_color.print_place, prt_item_for_color.place,
+                    list_for_count_colors.append([prt_item_for_color.print_place.id, prt_item_for_color.place,
                                                   list(range(0, prt_item_for_color.colors))])
                 try:
                     maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
