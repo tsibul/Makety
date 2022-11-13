@@ -48,6 +48,7 @@
 &nbsp;
 <select class="form-select form-select-sm pt-0 pb-0 me-1" style="font-size:60%; height: 4.2mm; width: 26mm;" form="form_maket_{{ord_imp.id}}"
        name="pen_pos_{{prt.0.id}}" id="pen_pos_{{prt.0.id}}" onchange="javascript:pen_position({{prt.0.id}}, 2);">
-  <option  name="round" class="select-option" value="1" {% if prt.4 == 1 %} selected {% endif %}>круглая</option>
-  <option  name="plain" class="select-option" value="2" {% if prt.4 == 2 %} selected {% endif %}>плоская</option>
+  {% for position in prt.7 %}
+  <option  name="{{position.1}}" class="select-option" value="{{position.0}}" {% if prt.4 == position.0 %} selected {% endif %}>{{position.1}}</option>
+  {% endfor %}
 </select>
