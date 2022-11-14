@@ -298,7 +298,7 @@ class Additional_Files(models.Model):
 
 class Print_color(models.Model):
     """Colors of printing"""
-    color_pantone = models.CharField(max_length=20, default='')
+    color_pantone = models.CharField(max_length=40, default='')
     color_hex = models.CharField(max_length=7, default='')
     color_number_in_item = models.SmallIntegerField(default=1)
     print_item = models.ForeignKey(Print_imports, on_delete=models.CASCADE)
