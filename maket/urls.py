@@ -36,6 +36,7 @@ urlpatterns = [
     path('maket_print_empty/<int:id>/<int:mk_id>', views.maket_print_empty, name='maket_print_empty'),
     path('update_cst/<int:id>', views.update_cst, name='update_cst'),
     path('maket_print/update_maket/<int:id>', views.update_maket, name='update_maket'),
+    path('maket_print/update_maket_empty/<int:id>', views.update_maket_empty, name='update_maket_empty'),
     path('goods', views.goods, name='goods'),
     path('print_group', views.print_group, name='print_group'),
     path('update_goods/<int:id>', views.upd_goods, name='update_goods'),
