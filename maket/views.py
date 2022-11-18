@@ -1911,3 +1911,57 @@ def update_maket_empty(request, id):
 #            except:
 #                pass
     return HttpResponseRedirect(reverse('maket:maket_print_empty', args=[id, maket_id]))
+
+
+def look_up_not_finished(request, navi):
+    if navi == 'orders':
+        orders = Order_imports.objects.filter(Q(maket_status='P') | Q(maket_status='N'))
+        ord_imp = orders.order_by('-order_date', '-id').first()
+        item_import = list(Item_imports.objects.filter(order=ord_imp.id).order_by('code'))
+        print_import = ()
+        for item in item_import:
+            print_import = print_import + tuple(Print_imports.objects.filter(item=item))
+        print_import = list(print_import)
+
+        context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
+                   'orders': orders, 'active1': 'active', 'look_up': True}
+        return render(request, 'maket/index.html', context)
+
+    elif navi == 'maket_base':
+
+        maket = Makety.objects.filter(Q(order__maket_status='P') | Q(order__maket_status='N')).order_by('-order_date', 'maket_id')
+
+        item_group = Itemgroup_in_Maket.objects.all().order_by('item')
+        f_group = {}
+        for i in item_group:
+            if i.maket not in f_group:
+                f_group[i.maket] = []
+            if i.checked:
+                ig_q = 0
+                ig_p = 0
+                ig_pp = 0
+                itms = Item_imports.objects.filter(
+                    Q(order=i.maket.order) & Q(item__print_group=i.item.item.print_group))
+                for it in itms:
+                    ig_q = ig_q + it.quantity
+                    ig_p = ig_p + it.quantity * it.item_price
+                    ig_pp = ig_pp + it.quantity * it.print_price
+                f_group[i.maket].append([i, ig_q, ig_p, ig_pp])
+
+        f_maket = {}
+        for m in maket:
+            if m.order not in f_maket:
+                f_maket[m.order] = {}
+            f_maket[m.order].update({m: f_group.get(m)})
+
+        films = Films.objects.filter(status=False).order_by('-date')
+        current_date = datetime.date.today()
+        try:
+            last_film = films.first().film_id + 1
+        except:
+            last_film = 1
+
+        context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'films': films,
+                   'current_date': current_date, 'last_film': last_film, 'look_up': True}
+        return render(request, 'maket/maket_base.html', context)
+    return

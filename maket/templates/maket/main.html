@@ -75,6 +75,14 @@
             <a class="nav-link {{active4}}" id="4" href="{% url 'maket:admin' %}"  aria-current="page">Починки</a>
           </li>
       </ul>
+      {% if active1 == 'active' or active5 == 'active' %}
+      <form action="/maket/look_up_not_finished/{% if active1 == 'active' %}orders{% elif active5 == 'active' %}maket_base{% endif %}"
+            id="form_lookup_not_finished" method="post" class="d-flex">
+      {% csrf_token %}
+           <button class="btn btn-primary {% if look_up %}text-white{% else %}text-white-50{% endif %}" type="submit" >&nbsp;Не закончено&nbsp;</button>
+      </form>
+      {% endif %}
+
       {% if active1 == 'active' or active5 == 'active' or active7 == 'active' or active3 == 'active' %}
       <form action="/maket/look_up/{% if active1 == 'active' %}orders{% elif active5 == 'active' %}maket_base{% elif active7 == 'active' %}films{% elif active3 == 'active' %}customers{% endif %}"
             id="form_lookup" method="post" class="d-flex">

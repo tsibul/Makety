@@ -72,6 +72,7 @@ urlpatterns = [
     path('delete_print_position/<int:id>', views.delete_print_position, name='delete_print_positon'),
     path('delete_print_place/<int:id>', views.delete_print_place, name='delete_print_place'),
     path('print_position', views.print_position, name='print_position'),
-    path('print_position_fix', views.print_position_fix, name='print_position_fix')
+    path('print_position_fix', views.print_position_fix, name='print_position_fix'),
+    path('look_up_not_finished/<str:navi>', views.look_up_not_finished, name='look_up_not_finished'),
 
 ]
