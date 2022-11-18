@@ -1915,7 +1915,7 @@ def update_maket_empty(request, id):
 
 def look_up_not_finished(request, navi):
     if navi == 'orders':
-        orders = Order_imports.objects.filter(Q(maket_status='P') | Q(maket_status='N'))
+        orders = Order_imports.objects.filter(Q(maket_status='P') | Q(maket_status='N')).order_by('-order_date', 'order_id')
         ord_imp = orders.order_by('-order_date', '-id').first()
         item_import = list(Item_imports.objects.filter(order=ord_imp.id).order_by('code'))
         print_import = ()
