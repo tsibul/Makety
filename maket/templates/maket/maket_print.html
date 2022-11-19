@@ -9,7 +9,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'maket/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
-    <title>Макет {{ord_imp.order_id}} от {{ord_imp.order_date|date:'d.m.Y'}} &nbsp {{ord_imp.customer.name}}</title>
+    <title>Макет {{ord_imp.order_id}}#{{maket.maket_id}}&nbsp;от&nbsp;{{ord_imp.order_date|date:'d.m.Y'}}&nbsp{{ord_imp.customer.name}}</title>
 </head>
 <body>
 <div class="d-grid gap-2 d-md-flex justify-content-md-between d-print-none">
@@ -181,7 +181,9 @@
 </div>
 
 </div>
-
+<script>
+    document.getElementById('url').value = window.location.href;
+</script>
 
 <script src="{% static 'maket/maket.js' %}"></script>
 <script src="{% static 'maket/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
