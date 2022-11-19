@@ -24,6 +24,12 @@
             <input type="text" class="form-control" name="ly" value="{{ pg.layout }}" placeholder="шаблон">
         </div>
         <div class="col m-1">
+            <input type="number" class="form-control" step="0.001" name="width" value="{{ pg.item_width }}" placeholder="ширина">
+        </div>
+        <div class="col m-1">
+            <input type="number" class="form-control"  step="0.001"name="height" value="{{ pg.item_width }}" placeholder="высота">
+        </div>
+        <div class="col m-1">
         <div class="d-flex justify-content-end text-nowrap">
         <a href="javascript:add_ln_reverse('new_ln2');"><button type="button" class="btn btn-sm btn-outline-danger">
             <i class="bi bi-arrow-counterclockwise"></i>Отменить</button></a>
@@ -41,6 +47,8 @@
 <div class="col-5 m-1" >{{ pg.name }}</div>
 <div class="col m-1" >{{ pg.options }}</div>
 <div class="col m-1">{{ pg.layout }}</div>
+<div class="col m-1">{{ pg.item_width}}</div>
+<div class="col m-1">{{ pg.item_height}}</div>
 </div>
 </li>
 <li class="list-group-item" id="cst_id2_{{pg.id}}_pg" style="display:none;">
@@ -60,7 +68,13 @@
         <div class="col m-1">
         <input type="text" class="form-control" name="pg_ly" value="{{ pg.layout }}">
         </div>
-        <div class="col" >
+       <div class="col m-1">
+        <input type="number" class="form-control" step="0.001" name="pg_width" value="{{ pg.item_width }}" placeholder="ширина">
+        </div>
+        <div class="col m-1">
+        <input type="number" class="form-control" step="0.001" name="pg_height" value="{{ pg.item_width }}" placeholder="высота">
+        </div>
+         <div class="col" >
         <div class="d-flex justify-content-end">
         <a href="javascript:upd_ln_reverse({{pg.id}}+'_pg');"><button type="button"
                   class="btn btn-sm btn-outline-danger"><i class="bi bi-arrow-counterclockwise"></i>Отменить</button></a>

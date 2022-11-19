@@ -1234,6 +1234,10 @@ def upd_pg(request, id):
     pg.options = op
     ly = request.POST['pg_ly']
     pg.layout = ly
+    width = request.POST['pg_width']
+    pg.item_width = width
+    height = request.POST['pg_height']
+    pg.item_height = height
     pg.save()
     return HttpResponseRedirect(reverse('maket:print_group'))
 
@@ -1243,7 +1247,9 @@ def add_pg(request):
     nm = request.POST['pg']
     op = request.POST['op']
     ly = request.POST['ly']
-    pg = Print_group(code=cd, name=nm, layout=ly, options=op)
+    width = request.POST['width']
+    height = request.POST['height']
+    pg = Print_group(code=cd, name=nm, layout=ly, options=op, item_width=width, item_height=height)
     pg.save()
     return HttpResponseRedirect(reverse('maket:print_group'))
 
