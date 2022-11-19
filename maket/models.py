@@ -25,6 +25,8 @@ class Print_group(models.Model):
     options = models.SmallIntegerField(default=1)
     layout = models.CharField(max_length=120, blank=True, default='')
     pattern_file = models.FileField(storage=fs_patterns, null=True, blank=True)
+    item_width = models.DecimalField(default=39, max_digits=7, decimal_places=3)
+    item_height = models.DecimalField(default=39, max_digits=7, decimal_places=3)
 
     def __repr__(self):
         return self.code
