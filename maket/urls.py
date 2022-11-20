@@ -81,5 +81,6 @@ urlpatterns = [
     path('deleted_repairs', views.deleted_repairs, name='deleted_repairs'),
     path('maket_repairs', views.maket_repairs, name='maket_repairs'),
     path('import_repairs', views.import_repairs, name='import_repairs'),
+    path('order_errors', views.order_errors, name='order_errors'),
 
 ]

@@ -111,6 +111,12 @@
                         <div class="col text-end text-danger">{{lost_imports_len}}</div>
                     </div>
                     </a></li>
+                <li><a class="dropdown-item" href="{% url 'maket:order_errors' %}">
+                    <div class="row flex-nowrap">
+                        <div class=" col text-start">Ошибки импорта заказов</div>
+                        <div class="col text-danger text-end">{{order_errors_len}}</div>
+                    </div>
+                    </a></li>
                 <li><a class="dropdown-item" href="{% url 'maket:print_position_repairs' %}">
                     <div class="row flex-nowrap">
                         <div class=" col text-start">Отсутствие позиции нанесения</div>
@@ -137,7 +143,7 @@
         <button class="btn btn-primary" type="submit" >Поиск</button>
       </form>
       {% endif %}
-      <div class="d-flex text-white m-1 pt-1"> v3.1.1</div>
+      <div class="d-flex text-white m-1 pt-1"> v3.1.2</div>
     </div>
   </div>
 </nav>

@@ -83,12 +83,14 @@ def count_errors():
     lost_position_len = Print_imports.objects.filter(Q(print_position__isnull=True) |
                                         ~Q(print_position__position_place=F('print_place')) |
                                          ~Q(print_position__print_group=F('item__item__print_group'))).count()
+    order_errors_len = Order_imports.objects.filter(to_check=True).order_by('-order_date', 'order_id').count()
     err_len = lost_position_len + lost_makets_len +lost_deleted_len +lost_colors_len + changed_customers_len + \
-        lost_hex_len
+              lost_hex_len + order_errors_len
+
     context = {'lost_imports_len': lost_imports_len, 'lost_makets_len': lost_makets_len,
                'lost_deleted_len': lost_deleted_len, 'lost_colors_len': lost_colors_len,
                'changed_customers_len': changed_customers_len, 'lost_hex_len': lost_hex_len, 'lost_position_len':
-               lost_position_len, 'err_len': err_len}
+               lost_position_len, 'err_len': err_len, 'order_errors_len': order_errors_len}
     return context
 
 
@@ -2064,3 +2066,19 @@ def look_up_not_finished(request, navi):
         context.update(count_errors())
         return render(request, 'maket/maket_base.html', context)
     return
+
+def order_errors(request):
+        navi = 'admin'
+        orders = Order_imports.objects.filter(to_check=True).order_by('-order_date', 'order_id')
+        ord_imp = orders.order_by('-order_date', '-id').first()
+        item_import = list(Item_imports.objects.filter(order=ord_imp.id).order_by('code'))
+        print_import = ()
+        for item in item_import:
+            print_import = print_import + tuple(Print_imports.objects.filter(item=item))
+        print_import = list(print_import)
+
+        context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
+                   'orders': orders, 'active4': 'active', 'look_up': True}
+        context.update(count_errors())
+        return render(request, 'maket/index.html', context)
+
