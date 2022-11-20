@@ -21,7 +21,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 def main_maket(request):
     template = loader.get_template('maket/main.html')
-    return HttpResponse(template.render({}, request))
+    context = {}
+    return HttpResponse(template.render({}, request, context))
 
 
 def index(request):
@@ -157,6 +158,30 @@ def admin(request):
             pass
     lost_imports_len = len(lost_imports)
 
+    context = {'navi': navi, 'active4': 'active', 'lost_imports': lost_imports, 'lost_imports_len': lost_imports_len}
+
+    return render(request, 'maket/admin.html', context)
+
+
+def import_repairs(request):
+    navi = 'admin'
+    lost_imports = []
+    l_imports = Item_imports.objects.filter(item=None).order_by('code')
+    for l_imp in l_imports:
+        try:
+            l_det = Detail_set.objects.get(item_name=l_imp.item_group)
+            lost_imports.append([l_imp, l_det])
+        except:
+            pass
+    lost_imports_len = len(lost_imports)
+
+    context = {'navi': navi, 'active4': 'active', 'lost_imports': lost_imports, 'lost_imports_len': lost_imports_len}
+
+    return render(request, 'maket/repairs/import_repairs.html', context)
+
+
+def maket_repairs(request):
+    navi = 'admin'
     lost_makets = []
     l_makets = Makety.objects.filter(order=None).order_by('-order_date')
     for l_mak in l_makets:
@@ -166,7 +191,41 @@ def admin(request):
         except:
             lost_makets.append([l_mak, ])
     lost_makets_len = len(lost_makets)
+    context = {'navi': navi, 'active4': 'active', 'lost_makets': lost_makets, 'lost_makets_len': lost_makets_len}
+    return render(request, 'maket/repairs/maket_repairs.html', context)
 
+
+def deleted_repairs(request):
+    navi = 'admin'
+    lost_deleted_items = list(Item_imports.objects.filter(order=None))
+    lost_deleted_prints = list(Print_imports.objects.filter(item=None))
+    context = {'navi': navi, 'active4': 'active', 'lost_deleted_prints': lost_deleted_prints,
+               'lost_deleted_items': lost_deleted_items}
+    return render(request, 'maket/repairs/deleted_repairs.html', context)
+
+
+def color_place_repairs(request):
+    navi = 'admin'
+    print_colors = list(Print_color.objects.values_list('print_item_id', flat=True))
+    print_objects = Print_imports.objects.filter(Q(print_place__isnull=True) | ~Q(id__in=print_colors)).order_by('-place')
+    context = {'navi': navi, 'active4': 'active', 'print_objects': print_objects}
+    return render(request, 'maket/repairs/color_place_repairs.html', context)
+
+def customer_repairs(request):
+    navi = 'admin'
+    orders = Order_imports.objects.all().order_by('-order_date')
+    changed_customers = []
+    for order in orders:
+        if order.customer_name != order.customer.name:
+            changed_customers.append(order)
+    changed_customers_len = len(changed_customers)
+    context = {'navi': navi, 'active4': 'active', 'changed_customers': changed_customers,'changed_customers_len': changed_customers_len}
+    return render(request, 'maket/repairs/customer_repairs.html', context)
+
+
+
+def hex_repairs(request):
+    navi = 'admin'
     items = list(Item_imports.objects.filter(Q(detail1_hex='') & ~Q(detail1_color='') | \
                                         Q(detail2_hex='') & ~Q(detail2_color='') | \
                                         Q(detail3_hex='') & ~Q(detail3_color='') | \
@@ -174,28 +233,12 @@ def admin(request):
                                         Q(detail5_hex='') & ~Q(detail5_color='') | \
                                         Q(detail6_hex='') & ~Q(detail6_color='')))
     lost_hex_len = len(items)
-
-    orders = Order_imports.objects.all().order_by('-order_date')
-    changed_customers = []
-    for order in orders:
-        if order.customer_name != order.customer.name:
-            changed_customers.append(order)
-    changed_customers_len = len(changed_customers)
-
-    lost_deleted_items = list(Item_imports.objects.filter(order=None))
-    lost_deleted_prints = list(Print_imports.objects.filter(item=None))
+    context = {'navi': navi, 'active4': 'active',  'lost_hex': items, 'lost_hex_len': lost_hex_len}
+    return render(request, 'maket/repairs/hex_repairs.html', context)
 
 
-    context = {'navi': navi, 'active4': 'active', 'lost_imports': lost_imports, 'lost_imports_len': lost_imports_len,
-               'lost_makets': lost_makets, 'lost_makets_len': lost_makets_len, 'lost_hex': items,
-               'lost_hex_len': lost_hex_len, 'changed_customers': changed_customers,
-               'changed_customers_len': changed_customers_len, 'lost_deleted_prints': lost_deleted_prints,
-               'lost_deleted_items': lost_deleted_items}
-
-    print_colors = list(Print_color.objects.values_list('print_item_id', flat=True))
-    print_objects = Print_imports.objects.filter(Q(print_place__isnull=True) | ~Q(id__in=print_colors)).order_by('-place')
-    context.update({'print_objects': print_objects})
-
+def print_position_repairs(request):
+    navi = 'admin'
     print_imports = Print_imports.objects.all()
     error_print_position_id = []
     for prt_imports in print_imports:
@@ -205,15 +248,15 @@ def admin(request):
               error_print_position_id.append(prt_imports.id)
     position_objects = Print_imports.objects.filter(Q(id__in=error_print_position_id) | Q(print_position__isnull=True))
     position_count = position_objects.count()
-    context.update({'position_objects': position_objects, 'position_count': position_count})
-    return render(request, 'maket/admin.html', context)
+    context = {'navi': navi, 'active4': 'active', 'position_objects': position_objects, 'position_count': position_count}
+    return render(request, 'maket/repairs/print_position_repairs.html', context)
 
 
 def changed_customers(request, id):
     order = Order_imports.objects.get(id=id)
     order.customer_name = order.customer.name
     order.save()
-    return HttpResponseRedirect(reverse('maket:admin'))
+    return HttpResponseRedirect(reverse('maket:customer_repairs'))
 
 
 def lost_hex(request):
@@ -237,7 +280,7 @@ def lost_hex(request):
             except:
                 pass
         item.save()
-    return HttpResponseRedirect(reverse('maket:admin'))
+    return HttpResponseRedirect(reverse('maket:hex_repairs'))
 
 
 def lost_imports(request, id):
@@ -250,7 +293,7 @@ def lost_imports(request, id):
         #        context = {'l_import': l_import}
         #        render(request, 'maket/item_totally_lost.html', context)
         pass
-    return HttpResponseRedirect(reverse('maket:admin'))
+    return HttpResponseRedirect(reverse('maket:import_repairs'))
 
 
 def maket_base(request):
@@ -1632,7 +1675,7 @@ def lost_maket(request, id):
     try:
         order = Order_imports.objects.get(id=order_id)
     except:
-        return HttpResponseRedirect(reverse('maket:admin'))
+        return HttpResponseRedirect(reverse('maket:maket_repairs'))
     maket_id = id
     maket = Makety.objects.get(id=maket_id)
 
@@ -1640,7 +1683,7 @@ def lost_maket(request, id):
     other_makets_number = max(Makety.objects.filter(order=order).values_list('maket_id'))[0]
     maket.maket_id = other_makets_number + 1
     maket.save()
-    return HttpResponseRedirect(reverse('maket:admin'))
+    return HttpResponseRedirect(reverse('maket:maket_repairs'))
 
 
 def order_edit(request, id):
@@ -1780,7 +1823,7 @@ def print_place_connect(request):
             if print_colors.count(prt_obj.id) != prt_obj.colors:
                 Print_color.objects.filter(print_item=prt_obj).delete()
             print_color_check(prt_obj)
-    return HttpResponseRedirect(reverse('maket:admin'))
+    return HttpResponseRedirect(reverse('maket:color_place_repairs'))
 
 
 def print_position_and_color_from_print_obj(place, prt_obj):
@@ -1838,7 +1881,7 @@ def print_position_fix(request):
             if print_pos != '':
                 prt_imports.print_position = print_pos
                 prt_imports.save()
-    return HttpResponseRedirect(reverse('maket:admin'))
+    return HttpResponseRedirect(reverse('maket:print_position_repairs'))
 
 
 def update_maket_empty(request, id):

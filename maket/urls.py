@@ -74,5 +74,12 @@ urlpatterns = [
     path('print_position', views.print_position, name='print_position'),
     path('print_position_fix', views.print_position_fix, name='print_position_fix'),
     path('look_up_not_finished/<str:navi>', views.look_up_not_finished, name='look_up_not_finished'),
+    path('hex_repairs', views.hex_repairs, name='hex_repairs'),
+    path('print_position_repairs', views.print_position_repairs, name='print_position_repairs'),
+    path('customer_repairs', views.customer_repairs, name='customer_repairs'),
+    path('color_place_repairs', views.color_place_repairs, name='color_place_repairs'),
+    path('deleted_repairs', views.deleted_repairs, name='deleted_repairs'),
+    path('maket_repairs', views.maket_repairs, name='maket_repairs'),
+    path('import_repairs', views.import_repairs, name='import_repairs'),
 
 ]

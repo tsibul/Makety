@@ -1,0 +1,48 @@
+{% extends 'maket/main.html' %}
+{% block title %}Администрирование{% endblock %}
+{% block content %}
+<!-- Modal delete Maket-->
+{% include 'maket/deleteMaketModal.html' %}
+
+<!-- несвязанные макеты><--->
+<table class="table table-hover">
+    <thead>
+    <tr onclick="javascript:colapse_('lost_makets');" class="table-primary">
+        <th colspan="5">несвязанные макеты</th>
+        <th colspan="3" class="text-danger text-end">всего</th>
+        <th colspan="2" class="text-danger text-start">{{lost_makets_len}}</th>
+        <th colspan="1" class="text-danger text-start"></th>
+    </tr>
+    </thead>
+    <tbody id="collapse_lost_makets" >
+    {% for l_m in lost_makets %}
+    <tr>
+        <form action="lost_maket/{{l_m.0.id}}" id="form_lost_maket_{{l_m.0.id}}" method="post">
+        {% csrf_token %}
+        <input type="text" hidden name="l_maket" value="{{l_m.0.id}}">
+        <input type="text" hidden name="l_order" value="{{l_m.1.id}}">
+        </form>
+        <td style="max-width:360px;">макет</td>
+        <td style="max-width:360px;" id="ord_id_{{l_m.0.id}}">{{l_m.0.order_num}}</td>
+        <td style="max-width:360px;" id="order_date_{{l_m.0.id}}">{{l_m.0.order_date| date:'d.m.Y'}}</td>
+        <td style="max-width:360px;">{{l_m.0.maket_id}}</td>
+        <td class="text-danger fw-bold"> <= </td>
+        <td style="max-width:360px;">заказ</td>
+        <td>{{l_m.1.order_id}}</td>
+        <td>{{l_m.1.order_date|date:'d.m.Y'}}</td>
+        <td id="cust_nm_{{l_m.0.id}}">{{l_m.1.customer.name}}</td>
+
+        <td><button type="submit" form="form_lost_maket_{{l_m.0.id}}" class="btn btn-sm btn-outline-primary text-nowrap">
+            установить связь
+        </button></td>
+        <td><button type="button"  class="btn btn-sm btn-outline-danger text-nowrap" data-bs-toggle="modal"
+                    data-bs-target="#deleteMaketModal" onclick="javascript:delete_object_modal({{l_m.0.id}});">
+            <i class="bi bi-x-lg"></i> удалить макет
+        </button></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

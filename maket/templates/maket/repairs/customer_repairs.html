@@ -1,0 +1,41 @@
+{% extends 'maket/main.html' %}
+{% block title %}Администрирование{% endblock %}
+{% block content %}
+<!-- Modal delete Maket-->
+{% include 'maket/deleteMaketModal.html' %}
+
+<!-- измененные клиенты><--->
+<table class="table table-hover">
+    <thead>
+    <tr onclick="javascript:colapse_('changed_customers');" class="table-primary">
+        <th colspan="2">расхождения в клиентах</th>
+        <th colspan="4" class="text-danger fw-normal">количество {{changed_customers_len}}</th>
+    </tr>
+    <tr onclick="javascript:colapse_('changed_customers');" class="table-primary">
+        <th>Заказ</th>
+        <th>Дата</th>
+        <th>Клиент в заказе</th>
+        <th>Клиент в базе</th>
+        <th>Группа клиента</th>
+        <th class="text-danger fw-normal"></th>
+    </tr>
+    </thead>
+    <tbody id="collapse_changed_customers">
+{% for order in changed_customers %}
+    <tr>
+        <td>{{order.order_id}}</td>
+        <td>{{order.order_date|date:'d.m.Y'}}</td>
+        <td>{{order.customer_name}}</td>
+        <td>{{order.customer.name}}</td>
+        <td>{{order.customer.group}}</td>
+        <form action="changed_customers/{{order.id}}" method="post">
+        {% csrf_token %}
+            <td><button class="btn btn-sm btn-outline-primary" type="submit">Изменить</button></td>
+        </form>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}
