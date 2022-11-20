@@ -9,7 +9,7 @@ urlpatterns = [
     path('vieworder/<int:id>', views.vieworder, name='vieworder'),
     path('order/<str:id_str>', views.reload, name='reload2'),
 
-    path('main', views.main_maket, name='main_maket'),
+#    path('main_maket', views.main_maket, name='main_maket'),
 
     path('dicts', views.dicts, name='dicts'),
     path('colors', views.colors, name='colors'),
