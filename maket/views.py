@@ -5,7 +5,7 @@ import os
 
 from bs4 import BeautifulSoup
 from django.core.files.storage import default_storage
-from django.db.models import Q, Count
+from django.db.models import Q, F
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import loader
@@ -60,11 +60,36 @@ def index(request):
                 date_range.append(['нет данных'])
         context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                    'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range}
-
     except:
         context = {'navi': navi}
 
+    context.update(count_errors())
     return render(request, 'maket/index.html', context)
+
+
+def count_errors():
+    lost_imports_len = Item_imports.objects.filter(item=None).count()
+    lost_makets_len = Makety.objects.filter(order=None).count()
+    lost_deleted_len = Item_imports.objects.filter(order=None).count() + Print_imports.objects.filter(item=None).count()
+    print_colors = list(Print_color.objects.values_list('print_item_id', flat=True))
+    lost_colors_len = Print_imports.objects.filter(Q(print_place__isnull=True) | ~Q(id__in=print_colors)).order_by('-place').count()
+    changed_customers_len = Order_imports.objects.filter(~Q(customer__name=F('customer_name'))).count()
+    lost_hex_len = Item_imports.objects.filter(Q(detail1_hex='') & ~Q(detail1_color='') |
+                                        Q(detail2_hex='') & ~Q(detail2_color='') |
+                                        Q(detail3_hex='') & ~Q(detail3_color='') |
+                                        Q(detail4_hex='') & ~Q(detail4_color='') |
+                                        Q(detail5_hex='') & ~Q(detail5_color='') |
+                                        Q(detail6_hex='') & ~Q(detail6_color='')).count()
+    lost_position_len = Print_imports.objects.filter(Q(print_position__isnull=True) |
+                                        ~Q(print_position__position_place=F('print_place')) |
+                                         ~Q(print_position__print_group=F('item__item__print_group'))).count()
+    err_len = lost_position_len + lost_makets_len +lost_deleted_len +lost_colors_len + changed_customers_len + \
+        lost_hex_len
+    context = {'lost_imports_len': lost_imports_len, 'lost_makets_len': lost_makets_len,
+               'lost_deleted_len': lost_deleted_len, 'lost_colors_len': lost_colors_len,
+               'changed_customers_len': changed_customers_len, 'lost_hex_len': lost_hex_len, 'lost_position_len':
+               lost_position_len, 'err_len': err_len}
+    return context
 
 
 def reload(request, id_str):
@@ -102,7 +127,7 @@ def reload(request, id_str):
             date_range.append(['нет данных'])
     context.update({'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                     'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range})
-
+    context.update(count_errors())
     return render(request, 'maket/index.html', context)
 
 
@@ -117,6 +142,7 @@ def dicts(request):
 
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
                'print_position': print_position, 'active2': 'active', 'print_group': print_group}
+    context.update(count_errors())
     return render(request, 'maket/dictionarys/dicts.html', context)
 
 
@@ -128,6 +154,7 @@ def print_position(request):
 
     context = {'navi': navi,  'print_place': print_place,
                'print_position': print_position, 'active2': 'active', 'print_group': print_group}
+    context.update(count_errors())
     return render(request, 'maket/dictionarys/print_position.html', context)
 
 
@@ -135,6 +162,7 @@ def print_group(request):
     navi = 'print_group'
     print_group = Print_group.objects.all().order_by('code')
     context = {'navi': navi, 'active2': 'active', 'print_group': print_group}
+    context.update(count_errors())
     return render(request, 'maket/dictionarys//print_group.html', context)
 
 
@@ -143,6 +171,7 @@ def colors(request):
     color = Item_color.objects.all().order_by('-color_scheme', 'color_id')
     color_scheme = Color_scheme.objects.all()
     context = {'navi': navi, 'color': color, 'active2': 'active', 'color_scheme': color_scheme}
+    context.update(count_errors())
     return render(request, 'maket/dictionarys/colors.html', context)
 
 
@@ -159,7 +188,7 @@ def admin(request):
     lost_imports_len = len(lost_imports)
 
     context = {'navi': navi, 'active4': 'active', 'lost_imports': lost_imports, 'lost_imports_len': lost_imports_len}
-
+    context.update(count_errors())
     return render(request, 'maket/admin.html', context)
 
 
@@ -176,7 +205,7 @@ def import_repairs(request):
     lost_imports_len = len(lost_imports)
 
     context = {'navi': navi, 'active4': 'active', 'lost_imports': lost_imports, 'lost_imports_len': lost_imports_len}
-
+    context.update(count_errors())
     return render(request, 'maket/repairs/import_repairs.html', context)
 
 
@@ -192,6 +221,7 @@ def maket_repairs(request):
             lost_makets.append([l_mak, ])
     lost_makets_len = len(lost_makets)
     context = {'navi': navi, 'active4': 'active', 'lost_makets': lost_makets, 'lost_makets_len': lost_makets_len}
+    context.update(count_errors())
     return render(request, 'maket/repairs/maket_repairs.html', context)
 
 
@@ -201,6 +231,7 @@ def deleted_repairs(request):
     lost_deleted_prints = list(Print_imports.objects.filter(item=None))
     context = {'navi': navi, 'active4': 'active', 'lost_deleted_prints': lost_deleted_prints,
                'lost_deleted_items': lost_deleted_items}
+    context.update(count_errors())
     return render(request, 'maket/repairs/deleted_repairs.html', context)
 
 
@@ -209,6 +240,7 @@ def color_place_repairs(request):
     print_colors = list(Print_color.objects.values_list('print_item_id', flat=True))
     print_objects = Print_imports.objects.filter(Q(print_place__isnull=True) | ~Q(id__in=print_colors)).order_by('-place')
     context = {'navi': navi, 'active4': 'active', 'print_objects': print_objects}
+    context.update(count_errors())
     return render(request, 'maket/repairs/color_place_repairs.html', context)
 
 def customer_repairs(request):
@@ -220,6 +252,7 @@ def customer_repairs(request):
             changed_customers.append(order)
     changed_customers_len = len(changed_customers)
     context = {'navi': navi, 'active4': 'active', 'changed_customers': changed_customers,'changed_customers_len': changed_customers_len}
+    context.update(count_errors())
     return render(request, 'maket/repairs/customer_repairs.html', context)
 
 
@@ -234,21 +267,26 @@ def hex_repairs(request):
                                         Q(detail6_hex='') & ~Q(detail6_color='')))
     lost_hex_len = len(items)
     context = {'navi': navi, 'active4': 'active',  'lost_hex': items, 'lost_hex_len': lost_hex_len}
+    context.update(count_errors())
     return render(request, 'maket/repairs/hex_repairs.html', context)
 
 
 def print_position_repairs(request):
     navi = 'admin'
-    print_imports = Print_imports.objects.all()
-    error_print_position_id = []
-    for prt_imports in print_imports:
-        if prt_imports.print_position is not None:
-           if prt_imports.print_position.position_place != prt_imports.print_place or \
-              prt_imports.print_position.print_group != prt_imports.item.item.print_group:
-              error_print_position_id.append(prt_imports.id)
-    position_objects = Print_imports.objects.filter(Q(id__in=error_print_position_id) | Q(print_position__isnull=True))
-    position_count = position_objects.count()
-    context = {'navi': navi, 'active4': 'active', 'position_objects': position_objects, 'position_count': position_count}
+    print_imports = Print_imports.objects.filter(Q(print_position__isnull=True) |
+                                                 ~Q(print_position__position_place=F('print_place')) |
+                                                 ~Q(print_position__print_group=F('item__item__print_group')))
+#    error_print_position_id = []
+#    for prt_imports in print_imports:
+#        if prt_imports.print_position is not None:
+#           if prt_imports.print_position.position_place != prt_imports.print_place or \
+#              prt_imports.print_position.print_group != prt_imports.item.item.print_group:
+#              error_print_position_id.append(prt_imports.id)
+#    position_objects = Print_imports.objects.filter(Q(id__in=error_print_position_id) | Q(print_position__isnull=True))
+#    position_count = position_objects.count()
+    position_count = print_imports.count()
+    context = {'navi': navi, 'active4': 'active', 'position_objects': print_imports, 'position_count': position_count}
+    context.update(count_errors())
     return render(request, 'maket/repairs/print_position_repairs.html', context)
 
 
@@ -348,12 +386,14 @@ def maket_base(request):
 
     context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'page_obj': page_obj, 'films': films,
                'current_date': current_date, 'last_film': last_film, 'date_range': date_range}
+    context.update(count_errors())
     return render(request, 'maket/maket_base.html', context)
 
 
 def maket(request):
     navi = 'maket'
     context = {'navi': navi}
+    context.update(count_errors())
     return render(request, 'maket/index.html', context)
 
 
@@ -439,6 +479,7 @@ def customers(request):
     customers = Customer.objects.all().order_by('name')
 
     context = {'navi': navi, 'customers': customers, 'active2': 'active'}
+    context.update(count_errors())
     return render(request, 'maket/dictionarys/customers.html', context)
 
 
@@ -1206,6 +1247,7 @@ def goods(request):
 
     context = {'navi': navi, 'goods': goods, 'active2': 'active', 'color_scheme': color_scheme,
                'print_group': print_group}
+    context.update(count_errors())
     return render(request, 'maket/dictionarys/goods.html', context)
 
 
@@ -1371,6 +1413,7 @@ def films(request):
         page_obj = ''
         date_range = ''
     context = {'navi': navi, 'active7': 'active', 'f_group': f_group, 'page_obj': page_obj, 'date_range': date_range}
+    context.update(count_errors())
     return render(request, 'maket/films.html', context)
 
 
@@ -1529,6 +1572,7 @@ def look_up(request, navi):
 
             context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                        'orders': orders, 'active1': 'active', 'look_up': True, 'lookup': lookup}
+            context.update(count_errors())
             return render(request, 'maket/index.html', context)
         except:
             return HttpResponseRedirect(reverse('maket:index'))
@@ -1580,6 +1624,7 @@ def look_up(request, navi):
 
         context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'films': films,
                    'current_date': current_date, 'last_film': last_film, 'look_up': True}
+        context.update(count_errors())
         return render(request, 'maket/maket_base.html', context)
 
     elif navi == 'films':
@@ -1641,6 +1686,7 @@ def look_up(request, navi):
             f_group[fg].insert(0, [ig_q_all, ig_p_all, ig_pp_all, ig_pp_all + ig_p_all, len_it])
 
         context = {'navi': navi, 'active7': 'active', 'f_group': f_group, 'look_up': True}
+        context.update(count_errors())
         return render(request, 'maket/films.html', context)
 
     elif navi == 'customers':
@@ -1658,6 +1704,7 @@ def look_up(request, navi):
                                             Q(id__in=cst_id)).order_by('name')
 
         context = {'navi': navi, 'customers': customers, 'active3': 'active'}
+        context.update(count_errors())
         return render(request, 'maket/customers.html', context)
 
     return
@@ -1740,6 +1787,7 @@ def patterns(request):
     print_group = Print_group.objects.all().order_by('code')
     context = {'active8': 'active', 'print_group': print_group}
     print_group = Print_group.objects.all().order_by('code')
+    context.update(count_errors())
     return render(request, 'maket/patterns.html', context)
 
 
@@ -1974,6 +2022,7 @@ def look_up_not_finished(request, navi):
 
         context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                    'orders': orders, 'active1': 'active', 'look_up': True}
+        context.update(count_errors())
         return render(request, 'maket/index.html', context)
 
     elif navi == 'maket_base':
@@ -2012,5 +2061,6 @@ def look_up_not_finished(request, navi):
 
         context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'films': films,
                    'current_date': current_date, 'last_film': last_film, 'look_up': True}
+        context.update(count_errors())
         return render(request, 'maket/maket_base.html', context)
     return

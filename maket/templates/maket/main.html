@@ -73,15 +73,50 @@
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link {{active4}} dropdown-toggle" id="4" href="#"  aria-current="page"
-               role="button" data-bs-toggle="dropdown" aria-expanded="false">Ошибки</a>
-               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'maket:hex_repairs' %}">Заполнение HEX цветов</a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:customer_repairs' %}">Измененные клиенты</a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:color_place_repairs' %}">Отсутствие места нанесения и цвета</a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:deleted_repairs' %}">Ошибки удаления</a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:maket_repairs' %}">Удаленные макеты</a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:import_repairs' %}">Ошибки импорта</a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:print_position_repairs' %}">Отсутствие позиции нанесения</a></li>
+               role="button" data-bs-toggle="dropdown" aria-expanded="false">Ошибки&nbsp;{{err_len}}</a>
+               <ul class="dropdown-menu flex-nowrap">
+                <li><a class="dropdown-item" href="{% url 'maket:hex_repairs' %}">
+                    <div class="row flex-nowrap">
+                        <div class="col text-start">Заполнение HEX цветов</div>
+                        <div class="col text-end text-danger">{{lost_hex_len}}</div>
+                    </div>
+                    </a></li>
+                <li><a class="dropdown-item" href="{% url 'maket:customer_repairs' %}">
+                     <div class="row flex-nowrap">
+                        <div class="col text-start">Измененные клиенты</div>
+                        <div class="col text-end text-danger">{{changed_customers_len}}</div>
+                     </div>
+                    </a></li>
+                <li><a class="dropdown-item" href="{% url 'maket:color_place_repairs' %}">
+                    <div class="row flex-nowrap">
+                        <div class="col text-start">Отсутствие места нанесения и цвета</div>
+                        <div class="col text-end text-danger">{{lost_colors_len}}</div>
+                    </div>
+                    </a></li>
+                <li><a class="dropdown-item" href="{% url 'maket:deleted_repairs' %}">
+                    <div class="row flex-nowrap">
+                        <div class=" col text-start">Ошибки удаления</div>
+                        <div class="col text-end text-danger">{{lost_deleted_len}}</div>
+                    </div>
+                    </a></li>
+                <li><a class="dropdown-item" href="{% url 'maket:maket_repairs' %}">
+                    <div class="row flex-nowrap">
+                        <div class=" col text-start">Удаленные макеты</div>
+                        <div class="col text-end text-danger">{{lost_makets_len}}</div>
+                    </div>
+                    </a></li>
+                <li><a class="dropdown-item text-nowrap" href="{% url 'maket:import_repairs' %}">
+                    <div class="row flex-nowrap">
+                        <div class="col text-start">Ошибки импорта</div>
+                        <div class="col text-end text-danger">{{lost_imports_len}}</div>
+                    </div>
+                    </a></li>
+                <li><a class="dropdown-item" href="{% url 'maket:print_position_repairs' %}">
+                    <div class="row flex-nowrap">
+                        <div class=" col text-start">Отсутствие позиции нанесения</div>
+                        <div class="col text-danger text-end">{{lost_position_len}}</div>
+                    </div>
+                    </a></li>
                 <li><a class="dropdown-item" href="{% url 'maket:admin' %}">Прочие починки</a></li>
                </ul>
           </li>
@@ -102,7 +137,7 @@
         <button class="btn btn-primary" type="submit" >Поиск</button>
       </form>
       {% endif %}
-      <div class="d-flex text-white m-1 pt-1"> v3.1.0</div>
+      <div class="d-flex text-white m-1 pt-1"> v3.1.1</div>
     </div>
   </div>
 </nav>
