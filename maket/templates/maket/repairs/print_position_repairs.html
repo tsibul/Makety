@@ -21,9 +21,11 @@
     </thead>
     <tbody>
     {% for pos_obj in position_objects %}
-    <tr>
+    <tr onclick="window.open('/maket/maket_print/{{pos_obj.item.order.id}}/1', '_blank');">
         <td>{{pos_obj.id}}</td>
         <td>{{pos_obj.item.item}}</td>
+        <td>{{pos_obj.item.order.order_id}}</td>
+        <td>{{pos_obj.item.order.customer.name}}</td>
         <td class="text-end">{{pos_obj.print_position.position_orientation}}</td>
     </tr>
     {% endfor %}
