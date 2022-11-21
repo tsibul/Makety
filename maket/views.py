@@ -387,7 +387,7 @@ def maket_base(request):
             date_range.append(['нет данных'])
 
     context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'page_obj': page_obj, 'films': films,
-               'current_date': current_date, 'last_film': last_film, 'date_range': date_range}
+               'current_date': current_date, 'last_film': last_film, 'date_range': date_range, 'look_up': False}
     context.update(count_errors())
     return render(request, 'maket/maket_base.html', context)
 
@@ -1498,7 +1498,7 @@ def download_order(request, id):
         return HttpResponse('<script type="text/javascript">window.close();</script>')
 
 
-def upload_maket(request):
+def upload_maket(request, look_up):
     id = request.POST['upload_id']
     maket = Makety.objects.get(id=id)
     try:
@@ -1515,8 +1515,10 @@ def upload_maket(request):
         order.save()
     except:
         pass
-
-    return HttpResponseRedirect(reverse('maket:maket_base'))
+    if look_up == 'True':
+        return HttpResponseRedirect(reverse('maket:look_up_not_finished', kwargs={'navi': 'maket_base'}))
+    else:
+        return HttpResponseRedirect(reverse('maket:maket_base'))
 
 
 def download_maket(request, id):
@@ -1625,7 +1627,7 @@ def look_up(request, navi):
             last_film = 1
 
         context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'films': films,
-                   'current_date': current_date, 'last_film': last_film, 'look_up': True}
+                   'current_date': current_date, 'last_film': last_film, 'look_up': True, 'lookup': lookup}
         context.update(count_errors())
         return render(request, 'maket/maket_base.html', context)
 

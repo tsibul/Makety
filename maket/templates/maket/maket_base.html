@@ -87,7 +87,7 @@
               <div id="uploadMaketLabel2"></div></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="upload_maket" method="post" id="upload_maket_" enctype="multipart/form-data">
+      <form action="/maket/upload_maket/{{look_up}}" method="post" id="upload_maket_" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="modal-body m-1">
          <!-- Выбор файла --->
