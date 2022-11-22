@@ -1492,6 +1492,7 @@ def upload_order(request):
             pass
         order.order_file.save(file.name, file)
         order.order_upload = True
+        order.number_orders = 1
         order.save()
     except:
         pass
@@ -2104,4 +2105,14 @@ def scale(request):
         pg.save()
     return HttpResponseRedirect(reverse('maket:print_group'))
 
+
+def badge_file_count(request):
+    orders = Order_imports.objects.all()
+    for order in orders:
+        if order.order_upload:
+            order.number_orders = 1
+        order.number_makets = Makety.objects.filter(Q(order=order) & Q(uploaded=True)).count()
+        order.number_additional = Additional_Files.objects.filter(order_id=order).count()
+        order.save()
+    return HttpResponseRedirect(reverse('maket:admin'))
 
