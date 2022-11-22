@@ -1512,16 +1512,16 @@ def download_order(request, id):
 def upload_maket(request, look_up):
     id = request.POST['upload_id']
     maket = Makety.objects.get(id=id)
+    order = maket.order
     try:
         file = request.FILES['ChoseMaket']
         try:
             maket.maket_file.delete()
         except:
-            pass
+            order.number_makets += 1
         maket.maket_file.save(file.name, file)
         maket.uploaded = True
         maket.save()
-        order = maket.order
         order.maket_status = 'R'
         order.save()
     except:
@@ -1728,6 +1728,10 @@ def look_up(request, navi):
 def delete_maket(request):
     id = request.POST['object_to_delete']
     maket = Makety.objects.get(id=id)
+    order = maket.order
+    order.number_makets -= 1
+    order.save()
+    maket.maket_file.delete()
     maket.delete()
     return HttpResponseRedirect(reverse('maket:maket_base'))
 
@@ -1860,12 +1864,18 @@ def add_file(request, id):
     a_file = request.FILES['file']
     add_file = Additional_Files(order_id=order, comment=comment, file_type=type, additional_file_name=a_file.name)
     add_file.additional_file.save(a_file.name, a_file)
+    order.number_additional += 1
+    order.save()
     add_file.save()
     return HttpResponseRedirect(reverse('maket:additional_files', args=[id]))
 
 def delete_additional_file(request, id):
     add_file = Additional_Files.objects.get(id=id)
+    order = add_file.order_id
+    order.number_additional -= 1
+    order.save()
     new_id = add_file.order_id.id
+    add_file.additional_file.delete()
     add_file.delete()
     return HttpResponseRedirect(reverse('maket:additional_files', args=[new_id]))
 
