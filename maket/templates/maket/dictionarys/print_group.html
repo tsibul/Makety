@@ -2,9 +2,17 @@
 {% block title %}Справочники{% endblock %}
 {% block content %}
 
-<div class="d-flex justify-content-between ms-2 me-3">
-  <h5 onclick="javascript:colapse('1');">Группа печати</h5>
-<a href="javascript:add_ln('new_ln2');"><button type="button" class="btn btn-primary">Добавить</button></a>
+<div class="d-flex justify-content-between ms-2 me-3 bg-light">
+    <h5>Группа печати</h5>
+    <a href="javascript:add_ln('new_ln2');"><button type="button" class="btn btn-primary">Добавить</button></a>
+    <<h5>Изменить масштаб всех в %</h5>
+    <form action="scale" method="post">
+    {% csrf_token %}
+    <div class="input-group flex-nowrap" >
+    <input type="number" class="form-control" step="0.001" name="scale" value="{{scale}}">
+    <button type="submit" class="btn btn-outline-primary">Применить</button>
+    </div>
+    </form>
 </div>
 <ul class="list-group list-group-flush" id="collapse_1" >
 <li class="list-group-item" id="new_ln2" style="display:none">
@@ -27,7 +35,13 @@
             <input type="number" class="form-control" step="0.001" name="width" value="{{ pg.item_width }}" placeholder="ширина">
         </div>
         <div class="col m-1">
-            <input type="number" class="form-control"  step="0.001"name="height" value="{{ pg.item_width }}" placeholder="высота">
+            <input type="number" class="form-control"  step="0.001"name="height" value="{{ pg.item_height }}" placeholder="высота">
+        </div>
+        <div class="col m-1">
+            <input type="number" class="form-control" step="0.001" name="width_initial" value="{{ pg.item_width_initial }}" placeholder="ширина">
+        </div>
+        <div class="col m-1">
+            <input type="number" class="form-control"  step="0.001"name="height_initial" value="{{ pg.item_height_initial }}" placeholder="высота">
         </div>
         <div class="col m-1">
         <div class="d-flex justify-content-end text-nowrap">
@@ -40,15 +54,31 @@
     </div>
     </form>
 </li>
+<li class="list-group-item bg-light fixed-bottom" >
+<div class="d-flex justify-content-between lh-1 fw-bold" >
+<div class="col m-1" > артикул</div>
+<div class="col-4 m-1" >наименование</div>
+<div class="col m-1" >опции</div>
+<div class="col m-1">шаблон</div>
+<div class="col m-1">тек. ширина</div>
+<div class="col m-1">тек. высота</div>
+<div class="col m-1">нач. ширина</div>
+<div class="col m-1">нач. высота</div>
+<div class="col m-1"></div>
+</div>
+</li>
 {% for pg in print_group %}
 <li class="list-group-item" id="cst_id_{{pg.id}}_pg" onclick="javascript:upd_ln({{pg.id}}+'_pg');">
 <div class="d-flex justify-content-between lh-1" >
 <div class="col m-1" > {{ pg.code }}</div>
-<div class="col-5 m-1" >{{ pg.name }}</div>
+<div class="col-4 m-1" >{{ pg.name }}</div>
 <div class="col m-1" >{{ pg.options }}</div>
 <div class="col m-1">{{ pg.layout }}</div>
 <div class="col m-1">{{ pg.item_width}}</div>
 <div class="col m-1">{{ pg.item_height}}</div>
+<div class="col m-1">{{ pg.item_width_initial}}</div>
+<div class="col m-1">{{ pg.item_height_initial}}</div>
+<div class="col m-1"></div>
 </div>
 </li>
 <li class="list-group-item" id="cst_id2_{{pg.id}}_pg" style="display:none;">
@@ -58,7 +88,7 @@
         <div class="col m-1">
         <input type="text" class="form-control" name="pg_cd" value="{{ pg.code }}">
         </div>
-        <div class="col-5 m-1">
+        <div class="col-4 m-1">
         <input type="text" class="form-control" name="pg_nm" value="{{ pg.name }}">
         <input type="hidden" class="form-control" name="pg_id" value="{{ pg.id }}">
         </div>
@@ -72,7 +102,13 @@
         <input type="number" class="form-control" step="0.001" name="pg_width" value="{{ pg.item_width }}" placeholder="ширина">
         </div>
         <div class="col m-1">
-        <input type="number" class="form-control" step="0.001" name="pg_height" value="{{ pg.item_width }}" placeholder="высота">
+        <input type="number" class="form-control" step="0.001" name="pg_height" value="{{ pg.item_height }}" placeholder="высота">
+        </div>
+       <div class="col m-1">
+        <input type="number" class="form-control" step="0.001" name="pg_width_initial" value="{{ pg.item_width_initial }}" placeholder="ширина">
+        </div>
+        <div class="col m-1">
+        <input type="number" class="form-control" step="0.001" name="pg_height_initial" value="{{ pg.item_height_initial }}" placeholder="высота">
         </div>
          <div class="col" >
         <div class="d-flex justify-content-end">

@@ -27,6 +27,8 @@ class Print_group(models.Model):
     pattern_file = models.FileField(storage=fs_patterns, null=True, blank=True)
     item_width = models.DecimalField(default=39, max_digits=7, decimal_places=3)
     item_height = models.DecimalField(default=39, max_digits=7, decimal_places=3)
+    item_width_initial = models.DecimalField(default=39, max_digits=7, decimal_places=3)
+    item_height_initial = models.DecimalField(default=39, max_digits=7, decimal_places=3)
 
     def __repr__(self):
         return self.code

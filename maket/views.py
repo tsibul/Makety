@@ -12,6 +12,7 @@ from django.template import loader
 from django.urls import reverse
 from django.core.paginator import Paginator
 from django.http import FileResponse, Http404
+from decimal import Decimal
 
 from .models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
     Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group, \
@@ -163,7 +164,9 @@ def print_position(request):
 def print_group(request):
     navi = 'print_group'
     print_group = Print_group.objects.all().order_by('code')
-    context = {'navi': navi, 'active2': 'active', 'print_group': print_group}
+    first = print_group.first()
+    scale = round(first.item_width / first.item_width_initial * 100, 3)
+    context = {'navi': navi, 'active2': 'active', 'print_group': print_group, 'scale': scale}
     context.update(count_errors())
     return render(request, 'maket/dictionarys//print_group.html', context)
 
@@ -1325,6 +1328,10 @@ def upd_pg(request, id):
     pg.item_width = width
     height = request.POST['pg_height']
     pg.item_height = height
+    width_initial = request.POST['pg_width_initial']
+    pg.item_width_initial = width_initial
+    height_initial = request.POST['pg_height_initial']
+    pg.item_height_initial = height_initial
     pg.save()
     return HttpResponseRedirect(reverse('maket:print_group'))
 
@@ -1336,7 +1343,10 @@ def add_pg(request):
     ly = request.POST['ly']
     width = request.POST['width']
     height = request.POST['height']
-    pg = Print_group(code=cd, name=nm, layout=ly, options=op, item_width=width, item_height=height)
+    width_initial = request.POST['width_initial']
+    height_initial = request.POST['height_initial']
+    pg = Print_group(code=cd, name=nm, layout=ly, options=op, item_width=width, item_height=height,
+                     item_width_initial=width_initial, item_height_initial=height_initial)
     pg.save()
     return HttpResponseRedirect(reverse('maket:print_group'))
 
@@ -2083,4 +2093,15 @@ def order_errors(request):
                    'orders': orders, 'active4': 'active', 'look_up': True}
         context.update(count_errors())
         return render(request, 'maket/index.html', context)
+
+
+def scale(request):
+    scale = Decimal((request.POST['scale'])) / 100
+    print_group = Print_group.objects.all()
+    for pg in print_group:
+        pg.item_width = round(pg.item_width_initial * scale, 3)
+        pg.item_height = round(pg.item_height_initial * scale, 3)
+        pg.save()
+    return HttpResponseRedirect(reverse('maket:print_group'))
+
 
