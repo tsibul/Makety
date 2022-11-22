@@ -27,8 +27,8 @@
 </div>
 {% for mkt in maket %}
 <div class="row m-2 flex-row">
-    <div class="col-1 fw-bold">макет&nbsp;{{mkt.maket_id}}</div>
-    <div class="col-6">
+    <div class="col-3 fw-bold">макет&nbsp;{{mkt.maket_id}}</div>
+    <div class="col-4">
         <a href="/maket/download_maket/{{mkt.id}}" target="_blank">{{mkt.maket_file}}</a>
     </div>
     <div class="col-2"></div>
@@ -36,8 +36,8 @@
 {% endfor %}
 {% for add in additional_files %}
 <div class="row m-2  flex-row">
-    <div class="col-1 fw-bold">{{add.comment}}</div>
-    <div class="col-6">
+    <div class="col-3 fw-bold">{{add.comment}}</div>
+    <div class="col-4">
         <a href="/maket/download_add_file/{{add.id}}" target="_blank">{{add.additional_file}}</a>
     </div>
     <div class="col-2">
