@@ -874,6 +874,12 @@ def import_csv_order(request):
 def delete_order(request):
     id = request.POST['object_to_delete']
     order_d = Order_imports.objects.get(id=id)
+    makets = Makety.objects.filter(order=order_d)
+    for maket in makets:
+        maket.maket_file.delete()
+    additional_files = Additional_Files.objects.filter(order_id=order_d)
+    for additional_file in additional_files:
+        additional_file.additional_file.delete()
     order_d.delete()
     return HttpResponseRedirect(reverse('maket:index'))
 
