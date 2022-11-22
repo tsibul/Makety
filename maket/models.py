@@ -168,6 +168,9 @@ class Order_imports(models.Model):
     order_upload = models.BooleanField(default=False)
     order_file = models.FileField(storage=fs_orders, null=True, blank=True)
     to_check = models.BooleanField(default=False)
+    number_orders = models.SmallIntegerField(default=0)
+    number_makets = models.SmallIntegerField(default=0)
+    number_additional = models.SmallIntegerField(default=0)
 
     def __repr__(self):
         return self.order_id
