@@ -40,12 +40,12 @@
   <body>
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
-  <div class="container-fluid">
+  <span class="container-fluid">
     <a class="navbar-brand" href="#"><i class="bi bi-palette2"></i></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
+    <span class="collapse navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
             <a class="nav-link {{active1}}" id="1" aria-current="page"  href="{% url 'maket:index' %}">Заказы</a>
@@ -73,55 +73,74 @@
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link {{active4}} dropdown-toggle" id="4" href="#"  aria-current="page"
-               role="button" data-bs-toggle="dropdown" aria-expanded="false">Ошибки&nbsp;{{err_len}}</a>
+               role="button" data-bs-toggle="dropdown" aria-expanded="false">Ошибки
+                <span class="badge bg-danger">
+                {{err_len}}
+                </span></a>
                <ul class="dropdown-menu flex-nowrap">
                 <li><a class="dropdown-item" href="{% url 'maket:hex_repairs' %}">
-                    <div class="row flex-nowrap">
-                        <div class="col text-start">Заполнение HEX цветов</div>
-                        <div class="col text-end text-danger">{{lost_hex_len}}</div>
-                    </div>
+                    Заполнение HEX цветов
+                    {% if lost_hex_len != 0 %}
+                    <span class="badge bg-danger">
+                    {{lost_hex_len}}
+                    </span>
+                    {% endif %}
                     </a></li>
                 <li><a class="dropdown-item" href="{% url 'maket:customer_repairs' %}">
-                     <div class="row flex-nowrap">
-                        <div class="col text-start">Измененные клиенты</div>
-                        <div class="col text-end text-danger">{{changed_customers_len}}</div>
-                     </div>
+                    Измененные клиенты
+                    {% if changed_customers_len != 0 %}
+                    <span class="badge bg-danger">
+                    {{changed_customers_len}}
+                    </span>
+                    {% endif %}
                     </a></li>
                 <li><a class="dropdown-item" href="{% url 'maket:color_place_repairs' %}">
-                    <div class="row flex-nowrap">
-                        <div class="col text-start">Отсутствие места нанесения и цвета</div>
-                        <div class="col text-end text-danger">{{lost_colors_len}}</div>
-                    </div>
+                    Отсутствие места нанесения и цвета
+                    {% if lost_colors_len != 0 %}
+                    <span class="badge bg-danger">
+                    {{lost_colors_len}}
+                    </span>
+                    {% endif %}
                     </a></li>
                 <li><a class="dropdown-item" href="{% url 'maket:deleted_repairs' %}">
-                    <div class="row flex-nowrap">
-                        <div class=" col text-start">Ошибки удаления</div>
-                        <div class="col text-end text-danger">{{lost_deleted_len}}</div>
-                    </div>
+                    Ошибки удаления
+                    {% if lost_deleted_len != 0 %}
+                    <span class="badge bg-danger">
+                    {{lost_deleted_len}}
+                    </span>
+                    {% endif %}}
                     </a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:maket_repairs' %}">
-                    <div class="row flex-nowrap">
-                        <div class=" col text-start">Удаленные макеты</div>
-                        <div class="col text-end text-danger">{{lost_makets_len}}</div>
-                    </div>
+                <li><a class="dropdown-item justify-content-between" href="{% url 'maket:maket_repairs' %}">
+                    Удаленные макеты
+                    {% if lost_makets_len != 0 %}
+                    <span class="text-end badge bg-danger">
+                    {{lost_makets_len}}
+                    </span>
+                    {% endif %}
                     </a></li>
                 <li><a class="dropdown-item text-nowrap" href="{% url 'maket:import_repairs' %}">
-                    <div class="row flex-nowrap">
-                        <div class="col text-start">Ошибки импорта</div>
-                        <div class="col text-end text-danger">{{lost_imports_len}}</div>
-                    </div>
+                    Ошибки импорта
+                    {% if lost_imports_len != 0 %}
+                    <span class="badge bg-danger">
+                    {{lost_imports_len}}
+                    </span>
+                    {% endif %}
                     </a></li>
                 <li><a class="dropdown-item" href="{% url 'maket:order_errors' %}">
-                    <div class="row flex-nowrap">
-                        <div class=" col text-start">Ошибки импорта заказов</div>
-                        <div class="col text-danger text-end">{{order_errors_len}}</div>
-                    </div>
+                    Ошибки импорта заказов
+                    {% if order_errors_len != 0 %}
+                    <span class="badge bg-danger">
+                    {{order_errors_len}}
+                    </span>
+                    {% endif %}
                     </a></li>
                 <li><a class="dropdown-item" href="{% url 'maket:print_position_repairs' %}">
-                    <div class="row flex-nowrap">
-                        <div class=" col text-start">Отсутствие позиции нанесения</div>
-                        <div class="col text-danger text-end">{{lost_position_len}}</div>
-                    </div>
+                    Отсутствие позиции нанесения
+                    {% if lost_position_len != 0 %}
+                    <span class="badge bg-danger">
+                    {{lost_position_len}}
+                    </span>
+                    {% endif %}
                     </a></li>
                 <li><a class="dropdown-item" href="{% url 'maket:admin' %}">Прочие починки</a></li>
                </ul>
@@ -143,7 +162,7 @@
         <button class="btn btn-primary" type="submit" >Поиск</button>
       </form>
       {% endif %}
-      <div class="d-flex text-white m-1 pt-1"> v3.2.2</div>
+      <div class="d-flex text-white m-1 pt-1"> v3.2.3</div>
     </div>
   </div>
 </nav>
