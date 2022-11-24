@@ -139,20 +139,3 @@ def update_to_film(request, data_to_film):
     film.save()
     return HttpResponse()
 
-
-@csrf_exempt
-def save_to_film(request, id, film):
-    item_group = Itemgroup_in_Maket.objects.get(id=id)
-    try:
-        film = Films.objects.get(id=film)
-    except:
-        try:
-            flm = Films.objects.all().order_by('-date').first.film_id
-            flm = flm + 1
-        except:
-            flm = 1
-        film = Films(date=datetime.date.today(), film_id=flm)
-        film.save()
-    item_group.film = film
-    item_group.save()
-    return HttpResponse()
