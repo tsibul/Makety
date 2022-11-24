@@ -202,6 +202,7 @@ def color_place_repairs(request):
     context.update(count_errors())
     return render(request, 'maket/repairs/color_place_repairs.html', context)
 
+
 def customer_repairs(request):
     navi = 'admin'
     orders = Order_imports.objects.all().order_by('-order_date')
@@ -213,7 +214,6 @@ def customer_repairs(request):
     context = {'navi': navi, 'active4': 'active', 'changed_customers': changed_customers,'changed_customers_len': changed_customers_len}
     context.update(count_errors())
     return render(request, 'maket/repairs/customer_repairs.html', context)
-
 
 
 def hex_repairs(request):
@@ -354,8 +354,6 @@ def maket(request):
     context = {'navi': navi}
     context.update(count_errors())
     return render(request, 'maket/index.html', context)
-
-
 
 
 def import_order(request):
@@ -1511,6 +1509,7 @@ def order_edit(request, id):
                'print_ids': print_ids}
 
     return render(request, 'maket/order_edit.html', context)
+
 
 def order_save(request):
     id = request.POST['order_id']

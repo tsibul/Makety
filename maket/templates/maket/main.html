@@ -78,7 +78,7 @@
                 {{err_len}}
                 </span></a>
                <ul class="dropdown-menu flex-nowrap">
-                <li><a class="dropdown-item" href="{% url 'maket:hex_repairs' %}">
+                <li><a class="dropdown-item" href="{% url 'errors:hex_repairs' %}">
                     Заполнение HEX цветов
                     {% if lost_hex_len != 0 %}
                     <span class="badge bg-danger">
@@ -86,7 +86,7 @@
                     </span>
                     {% endif %}
                     </a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:customer_repairs' %}">
+                <li><a class="dropdown-item" href="{% url 'errors:customer_repairs' %}">
                     Измененные клиенты
                     {% if changed_customers_len != 0 %}
                     <span class="badge bg-danger">
@@ -94,7 +94,7 @@
                     </span>
                     {% endif %}
                     </a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:color_place_repairs' %}">
+                <li><a class="dropdown-item" href="{% url 'errors:color_place_repairs' %}">
                     Отсутствие места нанесения и цвета
                     {% if lost_colors_len != 0 %}
                     <span class="badge bg-danger">
@@ -102,7 +102,7 @@
                     </span>
                     {% endif %}
                     </a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:deleted_repairs' %}">
+                <li><a class="dropdown-item" href="{% url 'errors:deleted_repairs' %}">
                     Ошибки удаления
                     {% if lost_deleted_len != 0 %}
                     <span class="badge bg-danger">
@@ -110,7 +110,7 @@
                     </span>
                     {% endif %}
                     </a></li>
-                <li><a class="dropdown-item justify-content-between" href="{% url 'maket:maket_repairs' %}">
+                <li><a class="dropdown-item justify-content-between" href="{% url 'errors:maket_repairs' %}">
                     Удаленные макеты
                     {% if lost_makets_len != 0 %}
                     <span class="text-end badge bg-danger">
@@ -118,7 +118,7 @@
                     </span>
                     {% endif %}
                     </a></li>
-                <li><a class="dropdown-item text-nowrap" href="{% url 'maket:import_repairs' %}">
+                <li><a class="dropdown-item text-nowrap" href="{% url 'errors:import_repairs' %}">
                     Ошибки импорта
                     {% if lost_imports_len != 0 %}
                     <span class="badge bg-danger">
@@ -134,7 +134,7 @@
                     </span>
                     {% endif %}
                     </a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:print_position_repairs' %}">
+                <li><a class="dropdown-item" href="{% url 'errors:print_position_repairs' %}">
                     Отсутствие позиции нанесения
                     {% if lost_position_len != 0 %}
                     <span class="badge bg-danger">
@@ -142,7 +142,7 @@
                     </span>
                     {% endif %}
                     </a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:admin' %}">Прочие починки</a></li>
+                <li><a class="dropdown-item" href="{% url 'errors:other' %}">Прочие починки</a></li>
                </ul>
           </li>
       </ul>

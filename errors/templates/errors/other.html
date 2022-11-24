@@ -8,7 +8,7 @@
 <h5> Пересчитать количество загруженных файлов</h5>
 </div>
 <div class="col">
-<form action="{% url 'maket:badge_file_count' %}" method="post">
+<form action="{% url 'errors:badge_file_count' %}" method="post">
 {% csrf_token %}
 <button type="submit" class="btn btn-primary">Пересчитать</button>
 </form>

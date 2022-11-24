@@ -35,4 +35,7 @@ urlpatterns = [
     path('add_prt_plc', views.add_prt_plc, name='add_prt_plc'),
     path('delete_print_place/<int:id>', views.delete_print_place, name='delete_print_place'),
 
+    path('scale', views.scale, name='scale'),
+
 ]
+

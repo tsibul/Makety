@@ -5,6 +5,7 @@ from maket.models import Color_scheme, Print_type, Print_place, Print_position, 
     Print_group
 
 from maket.views import count_errors
+from decimal import Decimal
 
 
 def goods(request):
@@ -379,3 +380,11 @@ def delete_print_place(request, id):
     return HttpResponseRedirect(reverse('dictionarys:other'))
 
 
+def scale(request):
+    scale = Decimal((request.POST['scale'])) / 100
+    print_group = Print_group.objects.all()
+    for pg in print_group:
+        pg.item_width = round(pg.item_width_initial * scale, 3)
+        pg.item_height = round(pg.item_height_initial * scale, 3)
+        pg.save()
+    return HttpResponseRedirect(reverse('dictionarys:print_group'))
