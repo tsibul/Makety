@@ -146,7 +146,7 @@ def dicts(request):
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
                'print_position': print_position, 'active2': 'active', 'print_group': print_group}
     context.update(count_errors())
-    return render(request, 'maket/dictionarys/dicts.html', context)
+    return render(request, 'maket/dictionarys/other.html', context)
 
 
 def print_position(request):

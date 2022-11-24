@@ -1,19 +1,13 @@
-from django.db import models
-from django.db.models import Q, F
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from maket.models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Detail_set, Customer, \
+    Print_group
+
+from maket.views import count_errors
 
 
-
-from maket.models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
-    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group, \
-    Print_in_Maket, Additional_Files, Print_color
-
-from maket.views import count_errors, badge_file_count
-
-
-def dicts(request):
+def other(request):
     navi = 'dicts'
     color_scheme = Color_scheme.objects.all()
 
@@ -25,7 +19,8 @@ def dicts(request):
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
                'print_position': print_position, 'active2': 'active', 'print_group': print_group}
     context.update(count_errors())
-    return render(request, 'dictionarys/dicts.html', context)
+    return render(request, 'dictionarys/other.html', context)
+
 
 def print_position(request):
     navi = 'dicts'
@@ -46,7 +41,7 @@ def print_group(request):
     scale = round(first.item_width / first.item_width_initial * 100, 3)
     context = {'navi': navi, 'active2': 'active', 'print_group': print_group, 'scale': scale}
     context.update(count_errors())
-    return render(request, 'maket/dictionarys//print_group.html', context)
+    return render(request, 'dictionarys/print_group.html', context)
 
 
 def colors(request):
@@ -63,14 +58,14 @@ def update_clr_sch(request, id):
     color_scheme = Color_scheme.objects.get(id=id)
     color_scheme.scheme_name = clr_sch
     color_scheme.save()
-    return HttpResponseRedirect(reverse('dictionarys:dicts'))
+    return HttpResponseRedirect(reverse('dictionarys:other'))
 
 
 def add_clr_sch(request):
     clr_sch = request.POST['clr_sch']
     color_scheme = Color_scheme(scheme_name=clr_sch)
     color_scheme.save()
-    return HttpResponseRedirect(reverse('dictionarys:dicts'))
+    return HttpResponseRedirect(reverse('dictionarys:other'))
 
 
 def update_prt_typ(request, id):
@@ -78,14 +73,14 @@ def update_prt_typ(request, id):
     print_type = Print_type.objects.get(id=id)
     print_type.type_name = prt_typ
     print_type.save()
-    return HttpResponseRedirect(reverse('dictionarys:dicts'))
+    return HttpResponseRedirect(reverse('dictionarys:other'))
 
 
 def add_prt_typ(request):
     prt_typ = request.POST['prt_typ']
     print_type = Print_type(type_name=prt_typ)
     print_type.save()
-    return HttpResponseRedirect(reverse('dictionarys:dicts'))
+    return HttpResponseRedirect(reverse('dictionarys:other'))
 
 
 def update_prt_plc(request, id):
@@ -95,7 +90,7 @@ def update_prt_plc(request, id):
     print_place.detail_name = prt_det
     print_place.place_name = prt_plc
     print_place.save()
-    return HttpResponseRedirect(reverse('dictionarys:dicts'))
+    return HttpResponseRedirect(reverse('dictionarys:other'))
 
 
 def add_prt_plc(request):
@@ -103,7 +98,7 @@ def add_prt_plc(request):
     prt_plc = request.POST['prt_plc']
     print_type = Print_place(detail_name=prt_det, place_name=prt_plc)
     print_type.save()
-    return HttpResponseRedirect(reverse('dictionarys:dicts'))
+    return HttpResponseRedirect(reverse('dictionarys:other'))
 
 
 def update_prt_pos(request, id):
@@ -375,7 +370,7 @@ def add_pg(request):
 def delete_print_place(request, id):
     print_place = Print_place.objects.get(id=id)
     print_place.delete()
-    return HttpResponseRedirect(reverse('dictionarys:dicts'))
+    return HttpResponseRedirect(reverse('dictionarys:other'))
 
 
 def delete_print_position(request, id):

@@ -23,7 +23,7 @@ urlpatterns = [
     path('add_prt_pos', views.add_prt_pos, name='add_prt_pos'),
     path('delete_print_position/<int:id>', views.delete_print_position, name='delete_print_positon'),
 
-    path('dicts', views.dicts, name='dicts'),
+    path('other', views.other, name='other'),
 
     path('update_clr_sch/<int:id>', views.update_clr_sch, name='update_clr_sch'),
     path('add_clr_sch', views.add_clr_sch, name='add_clr_sch'),
