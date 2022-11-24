@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'maket.apps.MaketConfig',
     'dictionarys.apps.DictionarysConfig',
     'patterns.apps.PatternsConfig',
+    'errors.apps.ErrorsConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',

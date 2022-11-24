@@ -21,5 +21,6 @@ urlpatterns = [
     path('maket/', include('maket.urls')),
     path('dicts/', include('dictionarys.urls')),
     path('patterns/', include('patterns.urls')),
+    path('errors/', include('errors.urls')),
 
 ]
