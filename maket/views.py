@@ -1547,39 +1547,6 @@ def maket_check_status(request, id):
     return HttpResponse()
 
 
-def patterns(request):
-    print_group = Print_group.objects.all().order_by('code')
-    context = {'active8': 'active', 'print_group': print_group}
-    print_group = Print_group.objects.all().order_by('code')
-    context.update(count_errors())
-    return render(request, 'maket/patterns.html', context)
-
-
-def download_pattern(request, id):
-    print_group = Print_group.objects.get(id=id)
-    try:
-        return FileResponse(open(print_group.pattern_file.path, 'rb'), content_type='application/pdf')
-    except:
-        pass
-    return HttpResponse('<script type="text/javascript">window.close();</script>')
-
-
-def upload_pattern(request):
-    id = request.POST['upload_id']
-    pattern = Print_group.objects.get(id=id)
-    try:
-        file = request.FILES['ChosePattern']
-        try:
-            pattern.pattern_file.delete()
-        except:
-            pass
-        pattern.pattern_file.save(file.name, file)
-        pattern.save()
-    except:
-        pass
-    return HttpResponseRedirect(reverse('maket:patterns'))
-
-
 def additional_files(request, id):
     order = Order_imports.objects.get(id=id)
     maket = list(Makety.objects.filter(order=order))

@@ -10,7 +10,7 @@ def patterns(request):
     print_group = Print_group.objects.all().order_by('code')
     context = {'active8': 'active', 'print_group': print_group}
     context.update(count_errors())
-    return render(request, 'maket/patterns.html', context)
+    return render(request, 'patterns/patterns.html', context)
 
 
 def download_pattern(request, id):
@@ -23,8 +23,8 @@ def download_pattern(request, id):
 
 
 def upload_pattern(request):
-    id = request.POST['upload_id']
-    pattern = Print_group.objects.get(id=id)
+    upload_id = request.POST['upload_id']
+    pattern = Print_group.objects.get(id=upload_id)
     try:
         file = request.FILES['ChosePattern']
         try:
@@ -35,4 +35,4 @@ def upload_pattern(request):
         pattern.save()
     except:
         pass
-    return HttpResponseRedirect(reverse('maket:patterns'))
+    return HttpResponseRedirect(reverse('patterns:patterns'))
