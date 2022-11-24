@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'dictionarys.apps.DictionarysConfig',
     'patterns.apps.PatternsConfig',
     'errors.apps.ErrorsConfig',
+    'films.apps.FilmsConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',

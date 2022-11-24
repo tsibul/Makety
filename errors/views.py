@@ -1,9 +1,8 @@
-from django.http import HttpResponseRedirect, FileResponse, HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from maket.models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Order_imports, Item_imports, \
-    Print_imports, Detail_set, Customer, Manger, Makety, Films, Item_in_Film, Itemgroup_in_Maket, Print_group, \
-    Print_in_Maket, Additional_Files, Print_color
+from maket.models import Item_color, Order_imports, Item_imports, \
+    Print_imports, Detail_set, Makety, Additional_Files, Print_color
 from django.db.models import Q, F
 
 
