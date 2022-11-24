@@ -20,5 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('maket/', include('maket.urls')),
     path('dicts/', include('dictionarys.urls')),
+    path('patterns/', include('patterns.urls')),
 
 ]

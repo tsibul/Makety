@@ -1614,6 +1614,7 @@ def add_file(request, id):
     add_file.save()
     return HttpResponseRedirect(reverse('maket:additional_files', args=[id]))
 
+
 def delete_additional_file(request, id):
     add_file = Additional_Files.objects.get(id=id)
     order = add_file.order_id
