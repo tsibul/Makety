@@ -1379,7 +1379,10 @@ def look_up_not_finished(request, navi):
 
 def order_errors(request):
         navi = 'admin'
-        orders = Order_imports.objects.filter(to_check=True).order_by('-order_date', 'order_id')
+        try:
+            orders = Order_imports.objects.filter(to_check=True).order_by('-order_date', 'order_id')
+        except:
+            return HttpResponseRedirect(reverse('maket:index'))
         ord_imp = orders.order_by('-order_date', '-id').first()
         item_import = list(Item_imports.objects.filter(order=ord_imp.id).order_by('code'))
         print_import = ()
