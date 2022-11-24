@@ -1,0 +1,58 @@
+{% extends 'maket/main.html' %}
+{% block title %}Администрирование{% endblock %}
+{% block content %}
+<!-- Modal delete Maket-->
+{% include 'maket/deleteMaketModal.html' %}
+
+<!-- ошибки удаления><--->
+<table class="table table-hover">
+    <thead>
+    <tr onclick="javascript:colapse_('deleted_items');" class="table-primary">
+        <th colspan="3"> ошибки удаления</th>
+        <th colspan="4"></th>
+    </tr>
+    <tr onclick="javascript:colapse_('deleted_items');" class="table-primary">
+        <th>товар</th>
+        <th>нанесение</th>
+        <th>артикул</th>
+        <th>название в импорте</th>
+        <th>номер заказа</th>
+        <th>id заказа</th>
+        <th class="text-danger fw-normal"></th>
+    </tr>
+    </thead>
+    <tbody id="collapse_deleted_items">
+{% for item in lost_deleted_items %}
+    <tr>
+        <td>{{item.item.name}}</td>
+        <td>{{item.print_name}}</td>
+        <td>{{item.code}</td>
+        <td>{{item.item.item_name}}</td>
+        <td>{{item.order.order_id}}</td>
+        <td>{{item.order.id}}</td>
+        <form action="" method="post">
+        {% csrf_token %}
+            <td><button class="btn btn-sm btn-outline-primary" type="submit">Удалить</button></td>
+        </form>
+    </tr>
+{% endfor %}
+{% for print in lost_deleted_ %}
+    <tr>
+        <td>{{print.type}}</td>
+        <td>{{print.item.name}}</td>
+        <td>{{print.item.id}</td>
+        <td>{{print.item.order.id}}</td>
+        <td></td>
+        <form action="" method="post">
+        {% csrf_token %}
+            <td><button class="btn btn-sm btn-outline-primary" type="submit">Удалить</button></td>
+        </form>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+
+
+
+
+{% endblock %}
