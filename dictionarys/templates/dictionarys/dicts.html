@@ -1,0 +1,181 @@
+{% extends 'maket/main.html' %}
+{% block title %}Справочники{% endblock %}
+{% block content %}
+
+<div class="d-flex">
+<div class="card m-2" style="width: 20rem;">
+  <div class="card-header">
+      <div class="d-flex justify-content-between" onclick="javascript:colapse('6');"><h5>Цветовая группа</h5> </div>
+  <div class="text-end">
+        <a href="javascript:add_ln('new_line');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
+  </div>
+  </div>
+  <ul class="list-group list-group-flush" id="collapse_6" >
+    {% for clr_sch in color_scheme %}
+    <li class="list-group-item" id="cst_id_{{clr_sch.id}}" >
+    <a href="javascript:upd_ln({{clr_sch.id}});" class="form-control">{{ clr_sch.scheme_name }}</a>
+    </li>
+    <li class="list-group-item" id="cst_id2_{{clr_sch.id}}" style="display:none">
+        <form action="update_clr_sch/{{ clr_sch.id }}" method="post">
+        {% csrf_token %}
+        <div class="d-flex justify-content-between" >
+            <div class="col">
+            <input id="clr_sr_{{ clr_sch.id }}" type="text" class="form-control" name="clr_sch" value="{{ clr_sch.scheme_name }}">
+            <input type="hidden" class="form-control" name="clr_sch_id" value="{{ clr_sch.id }}">
+            </div>
+            <div class="col">
+            <div class="d-flex justify-content-end">
+            <a href="javascript:upd_ln_reverse({{clr_sch.id}});"><button type="button" class="btn-sm btn-danger">Отменить</button></a>
+            &nbsp
+            <button type="submit" class="btn-sm btn-success" >Записать</button>
+            </div>
+            </div>
+        </div>
+        </form>
+    </li>
+    {% endfor %}
+    <li class="list-group-item" id="new_line" style="display:none">
+        <form action="add_clr_sch" method="post">
+        {% csrf_token %}
+        <div class="d-flex justify-content-between">
+            <div class="col">
+                <input type="text" class="form-control" name="clr_sch" value="{{ clr_sch.scheme_name }}">
+            </div>
+            <div class="col">
+            <div class="d-flex justify-content-end">
+            <a href="javascript:add_ln_reverse('new_line');"><button type="button" class="btn-sm btn-danger">Отменить</button></a>
+            &nbsp
+            <button type="submit" class="btn-sm btn-success" >Записать</button>
+            </div>
+            </div>
+        </div>
+        </form>
+    </li>
+  </ul>
+</div><!-- Color schemes><--->
+
+<div class="card m-2" style="width: 12rem;">
+  <div class="card-header">
+      <div class="d-flex justify-content-between">
+          <h5 onclick="javascript:colapse('2');">Тип печати </h5></div>
+      <div class="text-end">
+        <a href="javascript:add_ln('new_ln');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
+    </div>
+  </div>
+  <ul class="list-group list-group-flush" id="collapse_2">
+    {% for prt_typ in print_type %}
+    <li class="list-group-item" id="cst_id_{{prt_typ.id}}_pr">
+    <a href="javascript:upd_ln({{prt_typ.id}}+'_pr');" class="form-control">{{ prt_typ.type_name }}</a>
+    </li>
+    <li class="list-group-item" id="cst_id2_{{prt_typ.id}}_pr" style="display:none">
+        <form action="update_prt_typ/{{ prt_typ.id }}" method="post">
+        {% csrf_token %}
+        <div class="d-flex justify-content-between" >
+            <div class="col">
+            <input type="text" class="form-control" name="prt_typ" value="{{ prt_typ.type_name }}">
+            <input type="hidden" class="form-control" name="prt_typ_id" value="{{ prt_typ.id }}">
+            </div>
+            <div class="col">
+            <div class="d-flex justify-content-end">
+            <a href="javascript:upd_ln_reverse({{prt_typ.id}}+'_pr');"><button type="button" class="btn-sm btn-danger">Отменить</button></a>
+            &nbsp
+            <button type="submit" class="btn-sm btn-success" >Записать</button>
+            </div>
+            </div>
+        </div>
+        </form>
+    </li>
+    {% endfor %}
+    <li class="list-group-item" id="new_ln" style="display:none">
+        <form action="add_prt_typ" method="post">
+        {% csrf_token %}
+        <div class="d-flex justify-content-between">
+            <div class="col">
+                <input type="text" class="form-control" name="prt_typ" value="{{ prt_typ.type_name }}">
+            </div>
+            <div class="col">
+            <div class="d-flex justify-content-end">
+            <a href="javascript:add_ln_reverse('new_ln');"><button type="button" class="btn-sm btn-danger">Отменить</button></a>
+            &nbsp
+            <button type="submit" class="btn-sm btn-success" >Записать</button>
+            </div>
+            </div>
+        </div>
+        </form>
+    </li>
+  </ul>
+</div><!-- Print types><--->
+
+<div class="card m-2" style="width: 25rem;"><!-- Print places><--->
+  <div class="card-header">
+      <div onclick="javascript:colapse('3');"><h5>Место печати</h5></div>
+      <div class="d-flex justify-content-between">
+      <div class="col" onclick="javascript:colapse('3');"> Название детали</div>
+      <div class="col" onclick="javascript:colapse('3');"> Место печати </div>
+        <a href="javascript:add_ln('new_ln3');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
+    </div>
+  </div>
+  <ul class="list-group list-group-flush" id="collapse_3">
+    {% for prt_plc in print_place %}
+    <li class="list-group-item" id="cst_id_{{prt_plc.id}}_pl">
+    <div class="d-flex justify-content-between" >
+    <div class="col m-1">
+        <a href="javascript:upd_ln({{prt_plc.id}}+'_pl');" class="form-control">{{ prt_plc.detail_name }}</a></div>
+    <div class="col m-1">
+        <a href="javascript:upd_ln({{prt_plc.id}}+'_pl');" class="form-control">{{ prt_plc.place_name }}</a></div>
+    <div class="m-1">
+        <form action="delete_print_place/{{prt_plc.id}}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></button>
+        </form>
+    </div>
+
+    </div>
+    </li>
+    <li class="list-group-item" id="cst_id2_{{prt_plc.id}}_pl" style="display:none">
+        <form action="update_prt_plc/{{ prt_plc.id }}" method="post">
+        {% csrf_token %}
+        <div class="d-flex justify-content-between" >
+            <div class="col">
+                <input type="text" class="form-control" name="prt_det" value="{{ prt_plc.detail_name }}"></div>
+            &nbsp
+            <div class="col">
+                <input type="text" class="form-control" name="prt_plc" value="{{ prt_plc.place_name }}"></div>
+            <input type="hidden" class="form-control" name="prt_plc_id" value="{{ prt_plc.id }}">
+            <div class="col">
+            <div class="d-flex justify-content-end">
+            <a href="javascript:upd_ln_reverse({{prt_plc.id}}+'_pl');"><button type="button" class="btn-sm btn-danger">Отменить</button></a>
+            &nbsp
+            <button type="submit" class="btn-sm btn-success" >Записать</button>
+            </div>
+            </div>
+        </div>
+        </form>
+    </li>
+    {% endfor %}
+    <li class="list-group-item" id="new_ln3" style="display:none">
+        <form action="add_prt_plc" method="post">
+        {% csrf_token %}
+        <div class="d-flex justify-content-between">
+            <div class="col">
+                <input type="text" class="form-control" name="prt_det" value="{{ prt_plc.detail_name }}"></div>
+            &nbsp
+            <div class="col">
+                <input type="text" class="form-control" name="prt_plc" value="{{ prt_plc.place_name }}"></div>
+            <div class="col">
+            <div class="d-flex justify-content-end">
+            <a href="javascript:add_ln_reverse('new_ln3');"><button type="button" class="btn-sm btn-danger">Отменить</button></a>
+            &nbsp
+            <button type="submit" class="btn-sm btn-success" >Записать</button>
+            </div>
+            </div>
+        </div>
+        </form>
+    </li>
+  </ul>
+</div><!-- Print places><--->
+</div>
+
+
+<!-- Добавить карточки сочетаний Item_to_type, Item_to_position, Item_to_color если их потом использовать><--->
+{% endblock %}

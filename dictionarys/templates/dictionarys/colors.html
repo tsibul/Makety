@@ -1,0 +1,87 @@
+{% extends 'maket/main.html' %}
+{% block title %}Справочники{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between ms-2 me-3">
+      <div><h5>Цвета</h5></div>
+<div class="text-end">
+    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#addclrModal">
+      Добавить цвет</button>
+</div>
+</div>
+<!-- Modal -->
+    <form id="add_clr" action="{% url 'maket:add_clr' %}" method="post">
+      {% csrf_token %}
+        <div class="modal fade" id="addclrModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addclrModalLabel">Добавление/Изменение Цвета</h5>
+              </div>
+              <div class="modal-body">
+                 <!--  --->
+               <input hidden type="text" class="form-control" id="id_id" name="id_id" >
+
+              <div class="row p-1">
+                  <div class="col-4">
+                      <input type="text" class="form-control" name="clr_id" placeholder="Цвет" id="clr_id"></div>
+                  <div class="col-8">
+                      <input type="text" class="form-control" name="clr_nm" placeholder="Название" id="clr_nm"></div>
+
+              </div>
+              <div class="row p-1">
+                    <div class="col-4">
+                        <input type="text" class="form-control" name="dt1_ptn" placeholder="Pantone" id="dt1_ptn"></div>
+                    <div class="col-3">
+                        <input type="text" class="form-control" name="dt1_hex" placeholder="#HEX" id="dt1_hex"></div>
+                    <div class="col-5">
+                    <div class="input-group" >
+                    <select class="form-select" id="ColorSelect_add" name="ColorSelect_add">
+                    {% for clr_sch in color_scheme %}
+                         <option id="sch_id_{{ clr_sch.id}}" value="{{ clr_sch.id}}" >{{ clr_sch.scheme_name}}</option>
+                    {% endfor %}
+                    </select>
+                    </div>
+                    </div>
+              </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        onclick="javascript:clear_color_modal();">Закрыть</button>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+
+<table class="table table-sm table-hover">
+<thead>
+<tr class="table-primary" onclick="javascript:colapse_('5');">
+    <th class="ps-3">ID</th>
+    <th >Название</th>
+    <th >Pantone С</th>
+    <th >#HEX</th>
+    <th >Цветовая группа</th>
+    <th></th>
+</tr>
+</thead>
+<tbody id="collapse_5">
+{% for clr in color %}
+<tr >
+    <td id="clrid_{{clr.id}}" class="ps-3">{{clr.color_id}}</td>
+    <td id="clrnm_{{clr.id}}">{{clr.color_name}}</td>
+    <td id="clrpnt_{{clr.id}}">{{clr.pantone}}</td>
+    <td id="clrhex_{{clr.id}}">{{clr.color_code}}</td>
+    <td id="ColorSelect2_{{clr.id}}">{{ clr.color_scheme.scheme_name}}</td>
+    <input type="hidden" id="option_{{clr.id}}" value="{{ clr.color_scheme.id}}">
+    <td class="text-end">
+        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addclrModal"
+                onclick="javascript:clr_edit({{clr.id}});">Редактировать</button>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends 'maket/main.html' %}
+{% block title %}Номенклатура{% endblock %}
+{% block content %}
+<div class="row ms-2 mb-1 me-2">
+<div class="col"><h5>Номенклатура</h5></div>
+<div class="col text-end"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+              Добавить Номенклатуру
+</button></div>
+</div>
+<!-- Modal --> <form id="add_detail" action="{% url 'maket:add_detail' %}" method="post">
+{% csrf_token %}
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Добавление состава</h5>
+      </div>
+      <div class="modal-body">
+         <!--  --->
+          <div class="col p-1">
+              <input type="text" class="form-control" name="dt_it_art" placeholder="Артикул"></div>
+          <div class="col p-1">
+              <input type="text" class="form-control" name="dt_it_nm" placeholder="Наименование"></div>
+          <div class="row p-1">
+              <div class="col-4"><label for="dt_it_clr">Цветовая схема</label></div>
+              <div class="col-8">
+              <select class="form-select" name="dt_it_clr" id="dt_it_clr"  aria-label="select color">
+                  <option value="blank" selected></option>
+              {% for clr in color_scheme %}
+                  <option value="{{clr}}">{{clr}}</option>
+              {% endfor %}
+              </select>
+              </div>
+          </div>
+          <div class="row p-1">
+              <div class="col-4"><label for="dt_it_pg">Группа печати</label></div>
+              <div class="col-8">
+              <select class="form-select" name="dt_it_pg" id="dt_it_pg"  aria-label="select print group">
+                  <option value="blank" selected></option>
+              {% for pr_g in print_group %}
+                  <option value="{{pr_g}}">{{pr_g}}</option>
+              {% endfor %}
+              </select>
+              </div>
+          </div>
+          <div class="row p-1">
+            <div class="col-8">
+                <input type="text" class="form-control" name="dt1_nm" placeholder="Деталь 1"></div>
+            <div class="col align-right">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det1"  name="flexCheck_det1">
+              <label class="form-check-label" for="flexCheck_det1" >
+                нанесение
+              </label>
+            </div>
+            </div>
+          </div>
+          <div class="row p-1">
+            <div class="col-8">
+                <input type="text" class="form-control" name="dt2_nm" placeholder="Деталь 2"></div>
+            <div class="col align-right">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det2" name="flexCheck_det2">
+              <label class="form-check-label" for="flexCheck_det2">
+                нанесение
+              </label>
+            </div>
+            </div>
+          </div>
+           <div class="row p-1">
+            <div class="col-8">
+                <input type="text" class="form-control" name="dt3_nm" placeholder="Деталь 3"></div>
+            <div class="col align-right">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="True"  id="flexCheck_det3" name="flexCheck_det3">
+              <label class="form-check-label" for="flexCheck_det3">
+                нанесение
+              </label>
+            </div>
+            </div>
+           </div>
+           <div class="row p-1">
+            <div class="col-8">
+                <input type="text" class="form-control" name="dt4_nm" placeholder="Деталь 4"></div>
+            <div class="col align-right">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det4" name="flexCheck_det4">
+              <label class="form-check-label" for="flexCheck_det4">
+                нанесение
+              </label>
+            </div>
+            </div>
+            </div>
+           <div class="row p-1">
+            <div class="col-8">
+                <input type="text" class="form-control" name="dt5_nm" placeholder="Деталь 5"></div>
+            <div class="col align-right">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det5"  name="flexCheck_det5">
+              <label class="form-check-label" for="flexCheck_det5">
+                нанесение
+              </label>
+            </div>
+            </div>
+            </div>
+           <div class="row p-1">
+            <div class="col-8">
+                <input type="text" class="form-control" name="dt6_nm" placeholder="Деталь 6"></div>
+            <div class="col align-right">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det6"  name="flexCheck_det6">
+              <label class="form-check-label" for="flexCheck_det6">
+                нанесение
+              </label>
+            </div>
+            </div>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+
+<table class="table table-sm table-hover ms-1">
+<thead>
+    <tr  class="table-primary">
+    <th><h6>Арт</h6></th>
+    <th style="min-width:480px;"><h6>Название</h6></th>
+    <th><h6>Цветовая группа</h6></th>
+    <th><h6>Группа печати</h6></th>
+    <th colspan="12" class="text-center"><h6>Детали</h6></th>
+    </tr>
+</thead>
+<tbody>
+{% for good in goods %}
+    <form action="update_goods/{{good.id}}" method="post" id="form_{{good.id}}">
+    {% csrf_token %}
+    <tr onclick="javascript:upd_good({{good.id}}, {{color_scheme}}, {{print_group}});" id="row_{{good.id}}">
+    <input type="text" hidden value="{{good.id}}" id="id_{{good.id}}">
+
+    <td id="art_{{good.id}}" style="min-width:90px;"><div >{{ good.item_name}}</div></td>
+    <td id="nm_{{good.id}}">{{good.name}}</td>
+    <td id="cs_{{good.id}}">{{good.color_scheme.scheme_name}}</td>
+    <td id="pg_{{good.id}}" >{{good.print_group.code}}</td>
+    <td>
+        <input type="checkbox" class="form-check-input" name="dt1_chck" disabled id="dt1c_{{good.id}}"
+                {% if good.detail1_place %} checked {%endif%} value="True" form="form_{{good.id}}">
+    </td>
+    <td id="dt1_{{good.id}}">{{good.detail1_name}}</td>
+    <td >
+        <input type="checkbox" class="form-check-input" name="dt2_chck" disabled id="dt2c_{{good.id}}"
+               {% if good.detail2_place %} checked {%endif%} value="True" form="form_{{good.id}}">
+    </td>
+    <td id="dt2_{{good.id}}">{{good.detail2_name}}</td>
+    <td>
+        <input type="checkbox" class="form-check-input" name="dt3_chck" disabled id="dt3c_{{good.id}}"
+               {% if good.detail3_place %} checked {%endif%} value="True" form="form_{{good.id}}">
+    </td>
+    <td id="dt3_{{good.id}}">{{good.detail3_name}}</td>
+    <td>
+        <input type="checkbox" class="form-check-input" name="dt4_chck" disabled id="dt4c_{{good.id}}"
+               {% if good.detail4_place %} checked {%endif%} value="True" form="form_{{good.id}}">
+    </td>
+    <td id="dt4_{{good.id}}">{{good.detail4_name}}</td>
+    <td>
+        <input type="checkbox" class="form-check-input" name="dt5_chck" disabled id="dt5c_{{good.id}}"
+               {% if good.detail5_place %} checked {%endif%} value="True" form="form_{{good.id}}">
+    </td>
+    <td id="dt5_{{good.id}}">{{good.detail5_name}}</td>
+    <td>
+        <input type="checkbox" class="form-check-input" name="dt6_chck" disabled id="dt6c_{{good.id}}"
+               {% if good.detail6_place %} checked {%endif%} value="True" form="form_{{good.id}}">
+    </td>
+    <td id="dt6_{{good.id}}">{{good.detail6_name}}</td>
+
+    </tr>
+    </form>
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

@@ -37,6 +37,7 @@ ALLOWED_HOSTS = ['10.0.1.16', '127.0.0.1']
 
 INSTALLED_APPS = [
     'maket.apps.MaketConfig',
+    'dictionarys.apps.DictionarysConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
