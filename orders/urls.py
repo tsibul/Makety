@@ -5,7 +5,7 @@ app_name = 'orders'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('<int:id_str>', views.reload, name='reload'),
+    path('<str:id_str>', views.reload, name='reload'),
     path('orders/import_order', views.import_order, name='import_order'),
     path('orders/delete_order', views.delete_order, name='delete_order'),
     path('orders/upload_order', views.upload_order, name='upload_order'),
