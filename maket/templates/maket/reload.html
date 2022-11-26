@@ -1,12 +1,12 @@
 <div class="border border-3 border-primary ms-1 p-1">
 <div class="d-flex flex-row lh-1">
     <div class="d-flex justify-content-md-end">
-        <form action="/maket/maket_print/{{ord_imp.id}}/1" method="post">
+        <form action="/maket_layout/maket_print/{{ord_imp.id}}/1" method="post">
         {% csrf_token %}
         <button class="btn btn-sm btn-outline-primary d-print-none" type="submit" formtarget="_blank">
             <i class="bi bi-printer-fill" ></i> Шаблон макета</button>
         </form>
-        <form action="/maket/maket_print_empty/{{ord_imp.id}}/1" method="post">
+        <form action="/maket_layout/maket_print_empty/{{ord_imp.id}}/1" method="post">
         {% csrf_token %}
         <button class="btn btn-sm btn-outline-secondary d-print-none ms-1" type="submit" formtarget="_blank">
             <i class="bi bi-printer-fill" ></i> Пустой шаблон макета</button>
