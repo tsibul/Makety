@@ -159,7 +159,7 @@ viewBox="0 0 14480 1600"
 {% if prt.2 ==  product.5 and prt.5 == product.9 %}
     <div class="col p-1 ms-1 mt-1 mb-0" id="itm_{{prt.2}}_{{product.9}}_{{prt.0.id}}"
          data-id="chck_{{prt.2}}_{{product.9}}_{{prt.0.id}}" {% if prt.3 == 0 %} style="display:none;" {% endif %}>
-{% include 'maket/svg/**_b.html'|replace_value:product.5 %}
+{% include 'maket_layout/svg/**_b.html'|replace_value:product.5 %}
     </div>
 {% endif %}
 {% endfor %}
@@ -181,7 +181,7 @@ viewBox="0 0 14480 1600"
       </div>
       <div class="col align-self-center d-grid" style="font-size:60%; max-width: 4mm;">&nbsp{{prt.0.print_id}}&nbsp</div>
       <div class="col align-self-center d-grid" style="font-size:60%; max-width: 16mm;">&nbsp{{prt.0.item.item_group}}.{{prt.0.item.item_color}}&nbsp</div>
-      {% include 'maket/svg/**_s.html'|replace_value:product.5 %}
+      {% include 'maket_layout/svg/**_s.html'|replace_value:product.5 %}
      {% for color in prt.6 %}
       <div class="col ms-0 p-0 align-self-start" >
       <input type="text" style="font-size: 60%; height: 6mm; width: 18mm;" class="form-control" data-in="receiver"

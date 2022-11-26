@@ -18,7 +18,7 @@
     <button onclick="window.close();return false;" class="btn btn-outline-secondary">Закрыть</button>
 </div>
 
-<form action="/maket/maket_print/update_maket/{{ord_imp.id}}" id="form_maket_{{ord_imp.id}}" method="post">
+<form action="/maket_layout/maket_print/update_maket/{{ord_imp.id}}" id="form_maket_{{ord_imp.id}}" method="post">
 {% csrf_token %}
     <input type="number" form="form_maket_{{ord_imp.id}}" value="{{mk_id}}" name="maket_id" hidden>
 </form>
@@ -29,10 +29,10 @@
     <div class="col">
     <select class="form-select" id="maket_id_{{ord_imp.id}}" onchange="location = this.options[this.selectedIndex].value;">
         {% for mk_id_l in maket_id_list %}
-        <option value="{% url 'maket:maket_print' id=ord_imp.id mk_id=mk_id_l %}"
+        <option value="{% url 'maket_layout:maket_print' id=ord_imp.id mk_id=mk_id_l %}"
                 {% if mk_id == mk_id_l %} selected {% endif %}>{{mk_id_l}}</option>
         {% endfor %}
-        <option value="{% url 'maket:maket_print' id=ord_imp.id mk_id=len_maket %}"
+        <option value="{% url 'maket_layout:maket_print' id=ord_imp.id mk_id=len_maket %}"
                 {% if len_maket == 1 %} selected {% endif %}> новый </option>
     </select>
     </div>
@@ -154,7 +154,7 @@
 
 {% for product in product_range %}
     <div class="d-flex">
-        {% include 'maket/goods_layouts/**.html'|replace_value:product.8 %}
+        {% include 'maket_layout/goods_layouts/**.html'|replace_value:product.8 %}
     </div>
 {% endfor %}
 </div>

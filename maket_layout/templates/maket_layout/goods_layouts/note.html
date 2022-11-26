@@ -20,7 +20,7 @@
       <div class="col" style="font-size:60%;">{{prt.0.print_id}}</div>
       <div class="col" style="font-size:60%;">{{prt.0.item.item_group}}.{{prt.0.item.item_color}} </div>
     </div>
-     {% include 'maket/svg/**_s.html'|replace_value:product.5 %}
+     {% include 'maket_layout/svg/**_s.html'|replace_value:product.5 %}
      {% for color in prt.6 %}
       <div class="col mt-1 ms-0 p-0 align-self-start" >
       <input type="text" style="font-size: 60%; height: 6mm; width: 18mm;" class="form-control" data-in="receiver"
@@ -38,7 +38,7 @@
                 form="form_maket_{{ord_imp.id}}" onclick="chs_note({{prt_0_}},'{{product.5}}_{{product.9}}');">
     </div>
       <div class="col" style="font-size:60%;">блок</div></div>
-      {% include 'maket/svg/**_bs.html'|replace_value:product.5 %}
+      {% include 'maket_layout/svg/**_bs.html'|replace_value:product.5 %}
     </div>
     </div>
     <div class="row" style="font-size: 70%;">
@@ -69,12 +69,12 @@
 {% for prt in prt_0 %}
 {% if prt.2 ==  product.5 and prt.5 == product.9 %}
     <div class="p-1 m-1" {% if prt.3 == 0 %} style="display:none;" {% endif %} id="itm_{{product.5}}_{{product.9}}_{{prt.0.id}}">
-     {% include 'maket/svg/**_b.html'|replace_value:product.5 %}
+     {% include 'maket_layout/svg/**_b.html'|replace_value:product.5 %}
     </div>
 {% endif %}
 {% endfor %}
     <div class="p-1 m-1" style="display:none;" id="itm_{{product.5}}_{{product.9}}_0">
-     {% include 'maket/svg/**_bb.html'|replace_value:product.5 %}
+     {% include 'maket_layout/svg/**_bb.html'|replace_value:product.5 %}
     </div>
 </div>
 </div>
