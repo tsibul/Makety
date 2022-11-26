@@ -23,5 +23,6 @@ urlpatterns = [
     path('patterns/', include('patterns.urls')),
     path('errors/', include('errors.urls')),
     path('films/', include('films.urls')),
+    path('maket_layout/', include('maket_layout.urls')),
 
 ]

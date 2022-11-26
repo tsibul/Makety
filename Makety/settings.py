@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'patterns.apps.PatternsConfig',
     'errors.apps.ErrorsConfig',
     'films.apps.FilmsConfig',
+    'maket_layout.apps.MaketLayoutConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
