@@ -72,6 +72,31 @@
                </ul>
           </li>
           <li class="nav-item dropdown">
+            <a class="nav-link {{active6}} dropdown-toggle" id="6" href="#"  aria-current="page"
+               role="button" data-bs-toggle="dropdown" aria-expanded="false">Файлы
+                <span class="badge bg-danger">
+                {{err_len}}
+                </span></a>
+               <ul class="dropdown-menu flex-nowrap">
+                <li><a class="dropdown-item" href="{% url 'errors:hex_repairs' %}">
+                    Заполнение HEX цветов
+                    {% if lost_hex_len != 0 %}
+                    <span class="badge bg-danger">
+                    {{lost_hex_len}}
+                    </span>
+                    {% endif %}
+                    </a></li>
+                <li><a class="dropdown-item" href="{% url 'errors:customer_repairs' %}">
+                    Измененные клиенты
+                    {% if changed_customers_len != 0 %}
+                    <span class="badge bg-danger">
+                    {{changed_customers_len}}
+                    </span>
+                    {% endif %}
+                    </a></li>
+                </ul>
+          </li>
+          <li class="nav-item dropdown">
             <a class="nav-link {{active4}} dropdown-toggle" id="4" href="#"  aria-current="page"
                role="button" data-bs-toggle="dropdown" aria-expanded="false">Ошибки
                 <span class="badge bg-danger">
@@ -162,7 +187,7 @@
         <button class="btn btn-primary" type="submit" >Поиск</button>
       </form>
       {% endif %}
-      <div class="d-flex text-white m-1 pt-1"> v3.3.6</div>
+      <div class="d-flex text-white m-1 pt-1"> v3.3.7</div>
     </div>
   </div>
 </nav>
