@@ -1,7 +1,7 @@
 <div class="border border-3 border-primary ms-1 p-1">
 <div class="d-flex flex-row lh-1">
     <div class="d-flex justify-content-md-end">
-        <form action="/maket_layout/maket_print/{{ord_imp.id}}/1" method="post">
+        <form action="/maket_layout/{{ord_imp.id}}/1" method="post">
         {% csrf_token %}
         <button class="btn btn-sm btn-outline-primary d-print-none" type="submit" formtarget="_blank">
             <i class="bi bi-printer-fill" ></i> Шаблон макета</button>

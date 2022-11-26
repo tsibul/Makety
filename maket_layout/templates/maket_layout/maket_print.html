@@ -18,7 +18,7 @@
     <button onclick="window.close();return false;" class="btn btn-outline-secondary">Закрыть</button>
 </div>
 
-<form action="/maket_layout/maket_print/update_maket/{{ord_imp.id}}" id="form_maket_{{ord_imp.id}}" method="post">
+<form action="/maket_layout/update_maket/{{ord_imp.id}}" id="form_maket_{{ord_imp.id}}" method="post">
 {% csrf_token %}
     <input type="number" form="form_maket_{{ord_imp.id}}" value="{{mk_id}}" name="maket_id" hidden>
 </form>
