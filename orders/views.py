@@ -60,7 +60,7 @@ def index(request):
 
 def reload(request, id_str):
     navi = 'orders'
-    ord_i = id_str.split('_')[0]
+    ord_i = id_str
     try:
         ord_imp = Order_imports.objects.get(pk=int(ord_i))
     except:
@@ -77,6 +77,7 @@ def reload(request, id_str):
         context = {'lookup': id_str.split('_')[1]}
     except:
         orders = Order_imports.objects.all().order_by('-order_date', '-id')
+
     f_maket2 = list(orders)
     paginator = Paginator(f_maket2, 20)
     page_number = request.GET.get('page')
@@ -94,7 +95,7 @@ def reload(request, id_str):
     context.update({'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                     'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range})
     context.update(count_errors())
-    return render(request, 'maket/index.html', context)
+    return render(request, 'orders/index.html', context)
 
 
 def import_order(request):
@@ -320,7 +321,7 @@ def import_order(request):
     ord_imp.save()
     tmp = str(ord_imp.id) + '_'
 
-    return HttpResponseRedirect(reverse('maket:reload2', kwargs={'id_str': tmp}))
+    return HttpResponseRedirect(reverse('orders:reload', kwargs={'id_str': tmp}))
 
 
 def import_csv_order(request):
@@ -425,7 +426,8 @@ def import_csv_order(request):
     number_prints = len(print_list)
     #        for row in soup:
     #            order.append(row)
-    return HttpResponseRedirect(reverse('maket:index'))
+    tmp = str(ord_imp.id) + '_'
+    return HttpResponseRedirect(reverse('orders:reload', kwargs={'id_str': tmp}))
 
 
 def delete_order(request):
@@ -438,7 +440,7 @@ def delete_order(request):
     for additional_file in additional_files:
         additional_file.additional_file.delete()
     order_d.delete()
-    return HttpResponseRedirect(reverse('maket:index'))
+    return HttpResponseRedirect(reverse('orders:index'))
 
 
 def upload_order(request):
@@ -456,7 +458,7 @@ def upload_order(request):
         order.save()
     except:
         pass
-    return HttpResponseRedirect(reverse('maket:index'))
+    return HttpResponseRedirect(reverse('orders:index'))
 
 
 def download_order(request, id):
@@ -482,7 +484,7 @@ def order_edit(request, id):
     context = {'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                'print_ids': print_ids}
 
-    return render(request, 'maket/order_edit.html', context)
+    return render(request, 'orders/order_edit.html', context)
 
 
 def order_save(request):
@@ -507,7 +509,7 @@ def order_save(request):
             prt_n.print_id = item_old.print_id
             prt_n.save()
 
-    return HttpResponseRedirect(reverse('maket:order_edit', kwargs={'id': id}))
+    return HttpResponseRedirect(reverse('orders:order_edit', kwargs={'id': id}))
 
 
 def order_errors(request):
@@ -526,5 +528,5 @@ def order_errors(request):
     context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                'orders': orders, 'active4': 'active', 'look_up': True}
     context.update(count_errors())
-    return render(request, 'maket/index.html', context)
+    return render(request, 'orders/index.html', context)
 

@@ -3,7 +3,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
       integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 {% block content %}
-{% include 'maket/reload.html' %}
+{% include 'orders/reload.html' %}
 {% if look_up != True %}
 <div class="row fixed-bottom bg-light p-1 mb-0 pb-0 align-items-center" >
 <br><br>
@@ -52,7 +52,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      <form action="{% url 'maket:delete_order' %}" method="post" id="form_delete_order">
+      <form action="{% url 'orders:delete_order' %}" method="post" id="form_delete_order">
       {% csrf_token %}
         <input type="hidden" name="object_to_delete" value="" id="object_to_delete">
       </form>
@@ -79,7 +79,7 @@
         <h5 class="modal-title" id="uploadOrderLabel"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="upload_order" method="post" id="upload_order_" enctype="multipart/form-data">
+      <form action="{% url 'orders:upload_order' %}" method="post" id="upload_order_" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="modal-body m-1">
          <!-- Выбор файла --->
@@ -100,7 +100,7 @@
 
 
 <!-- Modal import_order -->
-<form id="import_order" action="{% url 'maket:import_order' %}" method="post" enctype="multipart/form-data"
+<form id="import_order" action="{% url 'orders:import_order' %}" method="post" enctype="multipart/form-data"
       onsubmit="javascript:block_button();">
 {% csrf_token %}
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -129,10 +129,10 @@
 <table class="table table-info table-hover" style="font-size:90%;">
     <tbody >
     {% for ord in orders %}
-    <tr ondblclick="window.location.href='/maket/order/{{ord.id}}_{{lookup}}'" class="align-middle
+    <tr ondblclick="window.location.href='/orders/{{ord.id}}_{{lookup}}'" class="align-middle
            {%  if ord.maket_status == 'R' %} text-success{% elif ord.maket_status == 'N' %} text-danger {% endif %}">
         <td class="{% if ord.to_check %}text-danger{% else %}text-success{% endif %}"
-            style="font-size: 140%;" onclick="window.open ('/maket/order_edit/{{ord.id}}', '_blank');">
+            style="font-size: 140%;" onclick="window.open ('/orders/order_edit/{{ord.id}}', '_blank');">
             {% if ord.to_check %}<i class="bi bi-exclamation-square" data-bs-toggle="tooltip"
                     data-bs-title="заказ импортировлся с ошибкой, по клику — переход в редактирование заказа"></i></i>{% else %}
             <i class="bi bi-check-square" data-bs-toggle="tooltip"
@@ -158,7 +158,7 @@
         </td>
         <td>
             <button type="button" class="btn btn-sm btn-outline-secondary  text-nowrap" id="but_upl_{{ord.id}}"
-                    onclick="window.open('/maket/download_order/{{ord.id}}', '_blank');"
+                    onclick="window.open('/orders/download_order/{{ord.id}}', '_blank');"
                     style="font-size:80%" {% if not ord.order_upload %}disabled{% endif %}>
                 <i class="bi bi-download"></i> открыть
             </button>

@@ -48,7 +48,7 @@
     <span class="collapse navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
-            <a class="nav-link {{active1}}" id="1" aria-current="page"  href="{% url 'maket:index' %}">Заказы</a>
+            <a class="nav-link {{active1}}" id="1" aria-current="page"  href="{% url 'orders:index' %}">Заказы</a>
           </li>
           <li class="nav-item">
             <a class="nav-link {{active5}}" id="5" aria-current="page"  href="{% url 'maket:maket_base' %}">Макеты</a>
@@ -126,7 +126,7 @@
                     </span>
                     {% endif %}
                     </a></li>
-                <li><a class="dropdown-item" href="{% url 'maket:order_errors' %}">
+                <li><a class="dropdown-item" href="{% url 'orders:order_errors' %}">
                     Ошибки импорта заказов
                     {% if order_errors_len != 0 %}
                     <span class="badge bg-danger">
@@ -162,7 +162,7 @@
         <button class="btn btn-primary" type="submit" >Поиск</button>
       </form>
       {% endif %}
-      <div class="d-flex text-white m-1 pt-1"> v3.3.5</div>
+      <div class="d-flex text-white m-1 pt-1"> v3.3.6</div>
     </div>
   </div>
 </nav>
