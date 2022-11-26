@@ -25,10 +25,6 @@ urlpatterns = [
     path('order_edit/<int:id>', views.order_edit, name='order_edit'),
     path('order_save', views.order_save, name='order_save'),
     path('maket_check_status/<int:id>', views.maket_check_status, name='maket_check_status'),
-    path('additional_files/<int:id>', views.additional_files, name='additional_files'),
-    path('add_file/<int:id>', views.add_file, name='add_file'),
-    path('download_add_file/<int:id>', views.download_add_file, name='download_add_file'),
-    path('delete_additional_file/<int:id>', views.delete_additional_file, name='delete_additional_file'),
     path('look_up_not_finished/<str:navi>', views.look_up_not_finished, name='look_up_not_finished'),
     path('order_errors', views.order_errors, name='order_errors'),
 
