@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'films.apps.FilmsConfig',
     'maket_layout.apps.MaketLayoutConfig',
     'addfiles.apps.AddfilesConfig',
+    'orders.apps.OrdersConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',

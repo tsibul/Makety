@@ -1,0 +1,97 @@
+<div class="border border-3 border-primary ms-1 p-1">
+<div class="d-flex flex-row lh-1">
+    <div class="d-flex justify-content-md-end">
+        <form action="/maket_layout/{{ord_imp.id}}/1" method="post">
+        {% csrf_token %}
+        <button class="btn btn-sm btn-outline-primary d-print-none" type="submit" formtarget="_blank">
+            <i class="bi bi-printer-fill" ></i> Шаблон макета</button>
+        </form>
+        <form action="/maket_layout/maket_print_empty/{{ord_imp.id}}/1" method="post">
+        {% csrf_token %}
+        <button class="btn btn-sm btn-outline-secondary d-print-none ms-1" type="submit" formtarget="_blank">
+            <i class="bi bi-printer-fill" ></i> Пустой шаблон макета</button>
+        </form>
+    </div>
+    <div class="fw-bold m-2">ЗАКАЗ {{ord_imp.order_id}}  от {{ord_imp.order_date|date:'d.m.Y'}}</div>
+    <div class="m-2" style="font-size:80%;">Сумма {{ord_imp.order_sum}}</div>
+    <div class="m-2" style="font-size:80%;">Кол-во {{ord_imp.order_quantity}}</div>
+    <div class="m-2" style="font-size:80%;">Сумма нанес. {{ord_imp.print_sum}}</div>
+    <div class="m-2" style="font-size:80%;">Кол-во нанес. {{ord_imp.print_quantity}}</div>
+</div><!-- Order -->
+<div class="d-flex flex-rowlh-1">
+    <div class="fw-bold m-1">Поставщик </div>
+    <div class="m-1">{{ord_imp.supplier}},</div>
+    <div class="m-1"> менеджер </div>
+    <div class="m-1"> {{ord_imp.our_manager}}</div>
+</div><!-- Supplier -->
+<div class="d-flex flex-row lh-1">
+    <div class="fw-bold m-1">Покупатель </div>
+    <div class="m-1">{{ord_imp.customer.name}},</div>
+    <div class="m-1">ИНН {{ord_imp.customer_INN}},</div>
+    <div class="m-1">{{ord_imp.customer_address}}</div>
+</div><!-- Customer -->
+<div class="row justify-content-between">
+<div class="col">
+<div class="d-flex flex-row">
+    <div class="fw-bold align-middle m-1">Менеджер клиента</div>
+    <div class="align-middle m-1">{{ord_imp.manager.manager}},</div>
+    <div class="align-middle m-1">E-mail: {{ord_imp.manager.manager_mail}},</div>
+    <div class="align-middle m-1">тел. {{ord_imp.manager.manager_phone}}</div>
+</div><!-- Customer manager -->
+</div>
+<div class="col-2">
+<div class="m-1 row align-self-end">
+<button class="btn btn-sm btn-outline-secondary" type="button" onclick="javascript:colapse({{ord_imp.id}});">
+    Cостав заказа
+</button></div></div>
+</div><!-- Manager with collapse button -->
+</div>
+<div >
+<div class="border border-4" >
+<table class="table-sm" id="collapse_{{ord_imp.id}}" style="display:none;">
+    <thead>
+    <tr class="text-center lh-1">
+        <th class="col" style="font-size:80%;"> # </th>
+        <th class="col" style="font-size:80%;"> Арт. </th>
+        <th class="col-3" style="font-size:80%;"> Наименование </th>
+        <th class="col-2" style="font-size:80%;"> Нанесение </th>
+        <th class="col" style="font-size:80%;"> Кол-во </th>
+        <th colspan="4" class="col-5" style="font-size:80%;"> Место / Тип / Цветов / 2-й проход / Положение</th>
+    </tr>
+    {% for item in item_import %}
+    </thead>
+    <tbody>
+    <tr class="lh-1">
+        <td class="col text-center" style="font-size:80%;"> {{item.print_id}} </td>
+        <td class="col text-center" style="font-size:80%;"> {{item.code}} </td>
+        <td class="col-3" style="font-size:80%;"> {{item.name}}</td>
+        <td class="col-2 text-center" style="font-size:80%;"> {{item.print_name}}</td>
+        <td class="col text-center" style="font-size:80%;"> {{item.quantity}}</td>
+    <td colspan="4">
+    <table class="table-sm mb-0">
+
+    {% for prt in print_import %}
+    {% if prt.print_id == item.print_id %}
+    <tr class="lh-1 align-top">
+        <td colspan="5" > </td>
+        <td class="col-4 text-start" style="font-size:80%;"> {{prt.place}} /</td>
+        <td class="col-2 text-center" style="font-size:80%;"> {{prt.type}} /</td>
+        <td class="col-1 text-center text-nowrap" style="font-size:80%;">
+            {{prt.colors}}&nbsp;/&nbsp;<input class="form-check-input align-text-top" type="checkbox"
+                                              disabled {% if prt.second_pass %}checked{% endif %}>
+        </td>
+        <td class="col-2 text-center" style="min-width:5mm; font-size:80%;">{{prt.print_position.position_orientation}}</td>
+    </tr>
+    {% else %}
+    {% endif %}
+    {% endfor %}
+    </table>
+    </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div><!-- Table border -->
+</div><!-- Collapse table -->
+</div>
+

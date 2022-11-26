@@ -25,5 +25,6 @@ urlpatterns = [
     path('films/', include('films.urls')),
     path('maket_layout/', include('maket_layout.urls')),
     path('addfiles/', include('addfiles.urls')),
+    path('orders/', include('orders.urls')),
 
 ]
