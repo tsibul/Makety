@@ -7,9 +7,8 @@ from django.core.files.storage import default_storage
 from django.http import HttpResponseRedirect, FileResponse, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
-from maket.models import Print_place, Print_position, Item_color, Order_imports, Item_imports, \
-    Print_imports, Detail_set, Customer, Manger, Makety, Films, Itemgroup_in_Maket, Print_group, \
-    Print_in_Maket, Additional_Files, Print_color
+from maket.models import Item_color, Order_imports, Item_imports, Print_imports, Detail_set, Customer, Manger, Makety, \
+     Additional_Files
 from django.db.models import Q
 from django.core.paginator import Paginator
 
