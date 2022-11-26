@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'maket_layout.apps.MaketLayoutConfig',
     'addfiles.apps.AddfilesConfig',
     'orders.apps.OrdersConfig',
+    'file_manage.apps.FileManageConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
