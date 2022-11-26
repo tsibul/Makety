@@ -3,10 +3,8 @@ import datetime
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from maket.models import Print_place, Print_position, Item_color, Order_imports, Item_imports, \
-    Print_imports, Detail_set, Customer, Manger, Makety, Films, Itemgroup_in_Maket, Print_group, \
-    Print_in_Maket, Additional_Files, Print_color
-from django.db.models import Q, F
+from maket.models import Print_position, Item_imports, Makety, Itemgroup_in_Maket, Print_in_Maket, Print_color
+from django.db.models import Q
 
 from maket.views import order_imports, prt_imports
 
@@ -66,8 +64,6 @@ def maket_print_empty(request, id, mk_id):
     maket_id_list = []
     for mk in mkt:
         maket_id_list.append(mk.maket_id)
-    #    if len(maket_id_list) == 0:
-    #       maket_id_list = [1]
     context.update({'maket_id_list': maket_id_list, 'len_maket': len(maket_id_list) + 1})
     try:
         maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
@@ -179,15 +175,11 @@ def update_maket_empty(request, id):
         items_checked = []
         itm_checked = Item_imports.objects.filter(Q(item__print_group__code=itemgroup) & Q(order=ord_imp) & \
                                                   Q(print_name=pr_rg[10])).first()
-        #                print_name = item.print_name
-        #                break
-        #        itemgroup = Detail_set.objects.filter(print_group__code=itemgroup).first
         try:
             item_checked = Itemgroup_in_Maket.objects.get(
                 Q(item=itm_checked) & Q(maket=maket) & Q(print_name=pr_rg[10]))
         except:
             item_checked = Itemgroup_in_Maket(item=itm_checked, maket=maket, print_name=pr_rg[10])
-        #        item_checked.print_name = print_name
         try:
             sel_item = request.POST[prt]
             if sel_item == 'on':
