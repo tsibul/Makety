@@ -642,15 +642,12 @@ def prt_imports(id, print_import, ord_imp, mk_id):
         context.update({'prt_0_': prt_0_})
     product_range = []
     for print_group in print_groups:
-        prt_names = Item_imports.objects.filter(Q(item__print_group=print_group) & Q(order=ord_imp))
-        prt_nms = []
-        for prt_nm in prt_names:
-            if prt_nm.print_name not in prt_nms:
-                prt_nms.append(prt_nm.print_name)
+        prt_nms = set(Item_imports.objects.filter(Q(item__print_group=print_group) &
+                                                  Q(order=ord_imp)).values_list('print_name', flat=True))
         for prt_nm in prt_nms:
-            items_prt = len(Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group) & \
+            items_prt = len(Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group) &
                                                         Q(print_name=prt_nm)))
-            len_prt = len(Print_imports.objects.filter(Q(item__order=order_id) & Q(item__item__print_group=print_group) \
+            len_prt = len(Print_imports.objects.filter(Q(item__order=order_id) & Q(item__item__print_group=print_group)
                                                        & Q(item__print_name=prt_nm)))
             if items_prt != 0:
                 item_for_color = Item_imports.objects.filter(Q(order=order_id) & Q(item__print_group=print_group) & \
@@ -663,7 +660,7 @@ def prt_imports(id, print_import, ord_imp, mk_id):
                 try:
                     maket = Makety.objects.get(order=ord_imp, maket_id=mk_id)
                     itemgroup_in_maket = Itemgroup_in_Maket.objects.get(
-                        Q(maket=maket) & Q(item__item__print_group=print_group) \
+                        Q(maket=maket) & Q(item__item__print_group=print_group)
                         & Q(item__print_name=prt_nm))
                     context.update({'maket': maket})
                     if itemgroup_in_maket.checked:
@@ -684,6 +681,11 @@ def prt_imports(id, print_import, ord_imp, mk_id):
 
     context.update({'print_groups': print_groups})
     return [context, product_range]
+
+
+def product_range(ord_imp):
+    return product_range
+
 
 
 def maket_print(request, id, mk_id):
