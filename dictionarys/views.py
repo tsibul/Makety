@@ -227,39 +227,29 @@ def print_group(request):
     return render(request, 'dictionarys/print_group.html', context)
 
 
-def upd_pg(request, id):
-    pg = Print_group.objects.get(id=id)
+def update_pg(request):
     cd = request.POST['pg_cd']
-    pg.code = cd
     nm = request.POST['pg_nm']
-    pg.name = nm
     op = request.POST['pg_op']
-    pg.options = op
     ly = request.POST['pg_ly']
-    pg.layout = ly
     width = request.POST['pg_width']
-    pg.item_width = width
     height = request.POST['pg_height']
-    pg.item_height = height
     width_initial = request.POST['pg_width_initial']
-    pg.item_width_initial = width_initial
     height_initial = request.POST['pg_height_initial']
-    pg.item_height_initial = height_initial
-    pg.save()
-    return HttpResponseRedirect(reverse('dictionarys:print_group'))
-
-
-def add_pg(request):
-    cd = request.POST['cd']
-    nm = request.POST['pg']
-    op = request.POST['op']
-    ly = request.POST['ly']
-    width = request.POST['width']
-    height = request.POST['height']
-    width_initial = request.POST['width_initial']
-    height_initial = request.POST['height_initial']
-    pg = Print_group(code=cd, name=nm, layout=ly, options=op, item_width=width, item_height=height,
-                     item_width_initial=width_initial, item_height_initial=height_initial)
+    try:
+        pg_id = request.POST['pg_id']
+        pg = Print_group.objects.get(id=pg_id)
+        pg.code = cd
+        pg.name = nm
+        pg.options = op
+        pg.layout = ly
+        pg.item_width = width
+        pg.item_height = height
+        pg.item_width_initial = width_initial
+        pg.item_height_initial = height_initial
+    except:
+        pg = Print_group(code=cd, name=nm, layout=ly, options=op, item_width=width, item_height=height,
+                         item_width_initial=width_initial, item_height_initial=height_initial)
     pg.save()
     return HttpResponseRedirect(reverse('dictionarys:print_group'))
 

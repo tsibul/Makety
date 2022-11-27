@@ -15,8 +15,7 @@ urlpatterns = [
     path('add_clr', views.add_clr, name='add_clr'),
 
     path('print_group', views.print_group, name='print_group'),
-    path('update_pg/<int:id>', views.upd_pg, name='update_pg'),
-    path('add_pg', views.add_pg, name='add_pg'),
+    path('update_pg', views.update_pg, name='update_pg'),
 
     path('print_position', views.print_position, name='print_position'),
     path('update_prt_pos/<int:id>', views.update_prt_pos, name='update_prt_pos'),
