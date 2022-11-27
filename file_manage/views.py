@@ -10,9 +10,39 @@ from django.core.paginator import Paginator
 
 from maket.views import count_errors
 
-def file_manage(request):
-    context = {'active6': 'active'}
-    return render(request, 'file_manage/file_manage.html', context)
+
+def files_orders(request):
+    path_orders = 'files/orders'
+    files_in_orders_list = os.listdir(path_orders)
+    files_list = []
+    for file in files_in_orders_list:
+        try:
+            order = Order_imports.objects.get(order_file=file)
+        except:
+            files_list.append(['', file])
+    context = {'active6': 'active', 'files_list': files_list}
+    context.update(count_errors())
+    return render(request, 'file_manage/files_orders.html', context)
+
+
+def all_files_orders(request):
+    path_orders = 'files/orders'
+    files_in_orders_list = os.listdir(path_orders)
+    files_list = []
+    for file in files_in_orders_list:
+        try:
+            order = Order_imports.objects.get(order_file=file)
+            files_list.append([order, file])
+        except:
+            files_list.append(['', file])
+    context = {'active6': 'active', 'files_list': files_list}
+    context.update(count_errors())
+    return render(request, 'file_manage/files_orders.html', context)
+
+
+def delete_files_orders(request):
+    file_name = request.POST['file_name']
+    return HttpResponseRedirect(reverse('file_manage:files_orders'))
 
 
 def files_makety(request):
@@ -48,41 +78,6 @@ def all_files_makety(request):
 def delete_files_makety(request):
     file_name = request.POST['file_name']
     return HttpResponseRedirect(reverse('file_manage:files_makety'))
-
-
-
-def files_orders(request):
-    path_orders = 'files/orders'
-    files_in_orders_list = os.listdir(path_orders)
-    files_list = []
-    for file in files_in_orders_list:
-        try:
-            order = Order_imports.objects.get(order_file=file)
-        except:
-            files_list.append(['', file])
-    context = {'active6': 'active', 'files_list': files_list}
-    context.update(count_errors())
-    return render(request, 'file_manage/files_orders.html', context)
-
-
-def all_files_orders(request):
-    path_orders = 'files/orders'
-    files_in_orders_list = os.listdir(path_orders)
-    files_list = []
-    for file in files_in_orders_list:
-        try:
-            order = Order_imports.objects.get(order_file=file)
-            files_list.append([order, file])
-        except:
-            files_list.append(['', file])
-    context = {'active6': 'active', 'files_list': files_list}
-    context.update(count_errors())
-    return render(request, 'file_manage/files_orders.html', context)
-
-
-def delete_files_orders(request):
-    file_name = request.POST['file_name']
-    return HttpResponseRedirect(reverse('file_manage:files_orders'))
 
 
 def files_films(request):
@@ -164,7 +159,7 @@ def files_patterns(request):
             files_list.append(['', file])
     context = {'active6': 'active', 'files_list': files_list}
     context.update(count_errors())
-    return render(request, 'file_manage/files_patterns', context)
+    return render(request, 'file_manage/files_patterns.html', context)
 
 
 def all_files_patterns(request):
@@ -179,7 +174,7 @@ def all_files_patterns(request):
             files_list.append(['', file])
     context = {'active6': 'active', 'files_list': files_list}
     context.update(count_errors())
-    return render(request, 'file_manage/files_patterns', context)
+    return render(request, 'file_manage/files_patterns.html', context)
 
 
 def delete_files_patterns(request):
