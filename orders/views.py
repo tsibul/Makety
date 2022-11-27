@@ -59,7 +59,7 @@ def index(request):
 
 def reload(request, id_str):
     navi = 'orders'
-    ord_i = id_str
+    ord_i = id_str.split('_')[0]
     try:
         ord_imp = Order_imports.objects.get(pk=int(ord_i))
     except:

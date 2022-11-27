@@ -45,7 +45,7 @@
     </tr>
     </thead>
     {% for item in item_import %}
-    <form action="{% url 'maket:order_save' %}" method="post" id="order_save">
+    <form action="{% url 'orders:order_save' %}" method="post" id="order_save">
     {% csrf_token %}
     <tbody class="border-bottom-0">
     <tr class="lh-1" id="row_{{item.print_id}}">
