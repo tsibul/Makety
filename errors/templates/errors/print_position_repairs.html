@@ -21,7 +21,7 @@
     </thead>
     <tbody>
     {% for pos_obj in position_objects %}
-    <tr onclick="window.open('/maket/maket_print/{{pos_obj.item.order.id}}/1', '_blank');">
+    <tr onclick="window.open('/maket_layout/{{pos_obj.item.order.id}}/1', '_blank');">
         <td>{{pos_obj.id}}</td>
         <td>{{pos_obj.item.item}}</td>
         <td>{{pos_obj.item.order.order_id}}</td>

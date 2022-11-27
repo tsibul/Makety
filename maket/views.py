@@ -48,7 +48,6 @@ def count_errors():
     additional_files_diff = len(os.listdir('files/additional')) - Additional_Files.objects.all().count()
     total_files_diff = maket_files_diff + order_files_diff + films_files_diff + patterns_files_diff + additional_files_diff
 
-
     context = {'lost_imports_len': lost_imports_len, 'lost_makets_len': lost_makets_len,
                'lost_deleted_len': lost_deleted_len, 'lost_colors_len': lost_colors_len,
                'changed_customers_len': changed_customers_len, 'lost_hex_len': lost_hex_len, 'lost_position_len':
