@@ -75,27 +75,50 @@
             <a class="nav-link {{active6}} dropdown-toggle" id="6" href="#"  aria-current="page"
                role="button" data-bs-toggle="dropdown" aria-expanded="false">Файлы
                 <span class="badge bg-danger">
-                {{err_len}}
+                {{total_files_diff}}
                 </span></a>
                <ul class="dropdown-menu flex-nowrap">
-                <li><a class="dropdown-item" href="{% url 'errors:hex_repairs' %}">
-                    Заполнение HEX цветов
-                    {% if lost_hex_len != 0 %}
+                <li><a class="dropdown-item" href="{% url 'file_manage:files_orders' %}">
+                    Заказы
+                    {% if order_files_diff != 0 %}
                     <span class="badge bg-danger">
-                    {{lost_hex_len}}
+                    {{order_files_diff}}
                     </span>
                     {% endif %}
                     </a></li>
-                <li><a class="dropdown-item" href="{% url 'errors:customer_repairs' %}">
-                    Измененные клиенты
-                    {% if changed_customers_len != 0 %}
+                <li><a class="dropdown-item" href="{% url 'file_manage:files_makety' %}">
+                    Макеты
+                    {% if maket_files_diff != 0 %}
                     <span class="badge bg-danger">
-                    {{changed_customers_len}}
+                    {{maket_files_diff}}
                     </span>
                     {% endif %}
                     </a></li>
-                </ul>
-          </li>
+                <li><a class="dropdown-item" href="{% url 'file_manage:files_films' %}">
+                    Пленки
+                    {% if films_files_diff != 0 %}
+                    <span class="badge bg-danger">
+                    {{films_files_diff}}
+                    </span>
+                    {% endif %}
+                    </a></li>
+                <li><a class="dropdown-item" href="{% url 'file_manage:files_additional' %}">
+                    Дополнительные файлы
+                    {% if additional_files_diff != 0 %}
+                    <span class="badge bg-danger">
+                    {{additional_files_diff}}
+                    </span>
+                    {% endif %}
+                    </a></li>
+                <li><a class="dropdown-item" href="{% url 'file_manage:files_patterns' %}">
+                    Шаблоны
+                    {% if patterns_files_diff != 0 %}
+                    <span class="badge bg-danger">
+                    {{patterns_files_diff}}
+                    </span>
+                    {% endif %}
+                    </a></li>
+          </ul>
           <li class="nav-item dropdown">
             <a class="nav-link {{active4}} dropdown-toggle" id="4" href="#"  aria-current="page"
                role="button" data-bs-toggle="dropdown" aria-expanded="false">Ошибки
@@ -187,7 +210,7 @@
         <button class="btn btn-primary" type="submit" >Поиск</button>
       </form>
       {% endif %}
-      <div class="d-flex text-white m-1 pt-1"> v3.3.7</div>
+      <div class="d-flex text-white m-1 pt-1"> v3.4.0</div>
     </div>
   </div>
 </nav>

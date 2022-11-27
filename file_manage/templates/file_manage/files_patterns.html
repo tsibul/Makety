@@ -1,0 +1,50 @@
+{% extends 'maket/main.html' %}
+{% block title %}файлы_макеты{% endblock %}
+{% block content %}
+
+<table class="table table-sm table-hover">
+    <thead>
+        <tr class="table-secondary">
+            <th>код</th>
+            <th>название</th>
+            <th>файл</th>
+            <th class="">
+                <div class="input-group justify-content-end">
+                <div class="text-nowrap me-1">
+                <form action="/file_manage/files_patterns" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-primary">Показать непривязанные</button>
+                </form>
+                </div>
+                <div class="text-nowrap">
+                <form action="/file_manage/all_files_patterns" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-primary">Показать все</button>
+                </form>
+                </div>
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for list in files_list %}
+        <tr>
+            <td class="text-center">{{list.0.code}}</td>
+            <td>{{list.0.name}}</td>
+            <td>{{list.1}}</td>
+            <td class="text-end">
+                {% if list.0 == '' %}
+                <form action="/file_manage/delete_files_patterns" method="post">
+                {% csrf_token %}
+                <input type="text" name="file_name" value="{{list.1}}" hidden>
+                <button type="button" class="btn btn-sm btn-outline-danger">Удалить</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+{% endblock %}

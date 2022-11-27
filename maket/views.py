@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from django.db.models import Q, F
 from django.http import HttpResponse, HttpResponseRedirect
@@ -10,7 +11,7 @@ from django.http import FileResponse, Http404
 
 from .models import Print_place, Print_position, Item_color, Order_imports, Item_imports, \
     Print_imports, Detail_set, Customer, Makety, Films, Itemgroup_in_Maket, Print_group, \
-    Print_in_Maket, Print_color
+    Print_in_Maket, Print_color, Additional_Files
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -40,10 +41,21 @@ def count_errors():
     err_len = lost_position_len + lost_makets_len +lost_deleted_len +lost_colors_len + changed_customers_len + \
               lost_hex_len + order_errors_len
 
+    maket_files_diff = len(os.listdir('files/makety')) - Makety.objects.filter(uploaded=True).count()
+    order_files_diff = len(os.listdir('files/orders')) - Order_imports.objects.filter(order_upload=True).count()
+    films_files_diff = len(os.listdir('files/films')) - Films.objects.filter(film_upload=True).count()
+    patterns_files_diff = len(os.listdir('files/patterns')) - Print_group.objects.filter(~Q(pattern_file='')).count()
+    additional_files_diff = len(os.listdir('files/additional')) - Additional_Files.objects.all().count()
+    total_files_diff = maket_files_diff + order_files_diff + films_files_diff + patterns_files_diff + additional_files_diff
+
+
     context = {'lost_imports_len': lost_imports_len, 'lost_makets_len': lost_makets_len,
                'lost_deleted_len': lost_deleted_len, 'lost_colors_len': lost_colors_len,
                'changed_customers_len': changed_customers_len, 'lost_hex_len': lost_hex_len, 'lost_position_len':
-               lost_position_len, 'err_len': err_len, 'order_errors_len': order_errors_len}
+               lost_position_len, 'err_len': err_len, 'order_errors_len': order_errors_len, 'maket_files_diff': maket_files_diff,
+               'order_files_diff': order_files_diff, 'films_files_diff': films_files_diff,
+               'patterns_files_diff': patterns_files_diff, 'additional_files_diff': additional_files_diff,
+               'total_files_diff': total_files_diff}
     return context
 
 
