@@ -9,6 +9,7 @@
     <tbody>
         {% for add_file in additional_files %}
         <tr>
+            <td>{{add_file.id}}</td>
             <td>{{add_file.comment}}</td>
             <td>{{add_file.order_id.order_id}}</td>
             <td>{{add_file.order_id.customer.name}}</td>
