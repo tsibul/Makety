@@ -346,9 +346,9 @@ def look_up(request, navi):
             context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                        'orders': orders, 'active1': 'active', 'look_up': True, 'lookup': lookup}
             context.update(count_errors())
-            return render(request, 'maket/index.html', context)
+            return render(request, 'orders/index.html', context)
         except:
-            return HttpResponseRedirect(reverse('maket:index'))
+            return HttpResponseRedirect(reverse('orders:index'))
     elif navi == 'maket_base':
         try:
             lookup = request.POST['look_up']
@@ -406,7 +406,7 @@ def look_up(request, navi):
         except:
             pass
         if lookup == '':
-            return HttpResponseRedirect(reverse('maket:films'))
+            return HttpResponseRedirect(reverse('films:films'))
 
         item = Item_imports.objects.filter(print_name__icontains=lookup)
         maket = Makety.objects.filter(Q(order__order_id__icontains=lookup) | Q(order__customer__name__icontains=lookup)) \
@@ -468,7 +468,7 @@ def look_up(request, navi):
         except:
             pass
         if lookup == '':
-            return HttpResponseRedirect(reverse('maket:customers'))
+            return HttpResponseRedirect(reverse('dictionarys:customers'))
         order = Order_imports.objects.filter(manager__manager__icontains=lookup)
         cst_id = []
         for ord in order:
