@@ -566,7 +566,7 @@ def look_up_not_finished(request, navi):
         context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                    'orders': orders, 'active1': 'active', 'look_up': True}
         context.update(count_errors())
-        return render(request, 'maket/index.html', context)
+        return render(request, 'orders/index.html', context)
 
     elif navi == 'maket_base':
 
