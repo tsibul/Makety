@@ -176,6 +176,9 @@ def all_files_patterns(request):
             files_list.append([pattern, file])
         except:
             files_list.append(['', file])
+    for item in Print_group.objects.exclude(Q(pattern_file__endswith='pdf') | Q(pattern_file='')):
+        if item.pattern_file not in files_list:
+            files_list.append([item, ''])
     context = {'active6': 'active', 'files_list': files_list, 'num_files': num_files, 'num_patterns': num_patterns}
     context.update(count_errors())
     return render(request, 'file_manage/files_patterns.html', context)
