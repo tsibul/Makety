@@ -190,6 +190,14 @@
                     </span>
                     {% endif %}
                     </a></li>
+                <li><a class="dropdown-item" href="{% url 'errors:additional' %}">
+                    Дополнительные файлы без файлов
+                    {% if additional_files_len != 0 %}
+                    <span class="badge bg-danger">
+                    {{additional_files_len}}
+                    </span>
+                    {% endif %}
+                    </a></li>
                 <li><a class="dropdown-item" href="{% url 'errors:other' %}">Прочие починки</a></li>
                </ul>
           </li>

@@ -26,27 +26,29 @@ def count_errors():
     lost_makets_len = Makety.objects.filter(order=None).count()
     lost_deleted_len = Item_imports.objects.filter(order=None).count() + Print_imports.objects.filter(item=None).count()
     print_colors = list(Print_color.objects.values_list('print_item_id', flat=True))
-    lost_colors_len = Print_imports.objects.filter(Q(print_place__isnull=True) | ~Q(id__in=print_colors)).order_by('-place').count()
+    lost_colors_len = Print_imports.objects.filter(Q(print_place__isnull=True) |
+                                                   ~Q(id__in=print_colors)).order_by('-place').count()
     changed_customers_len = Order_imports.objects.filter(~Q(customer__name=F('customer_name'))).count()
     lost_hex_len = Item_imports.objects.filter(Q(detail1_hex='') & ~Q(detail1_color='') |
-                                        Q(detail2_hex='') & ~Q(detail2_color='') |
-                                        Q(detail3_hex='') & ~Q(detail3_color='') |
-                                        Q(detail4_hex='') & ~Q(detail4_color='') |
-                                        Q(detail5_hex='') & ~Q(detail5_color='') |
-                                        Q(detail6_hex='') & ~Q(detail6_color='')).count()
+                                               Q(detail2_hex='') & ~Q(detail2_color='') |
+                                               Q(detail3_hex='') & ~Q(detail3_color='') |
+                                               Q(detail4_hex='') & ~Q(detail4_color='') |
+                                               Q(detail5_hex='') & ~Q(detail5_color='') |
+                                               Q(detail6_hex='') & ~Q(detail6_color='')).count()
     lost_position_len = Print_imports.objects.filter(Q(print_position__isnull=True) |
-                                        ~Q(print_position__position_place=F('print_place')) |
-                                         ~Q(print_position__print_group=F('item__item__print_group'))).count()
+                                                     ~Q(print_position__position_place=F('print_place')) |
+                                                     ~Q(print_position__print_group=F('item__item__print_group'))).count()
     order_errors_len = Order_imports.objects.filter(to_check=True).order_by('-order_date', 'order_id').count()
-    err_len = lost_position_len + lost_makets_len +lost_deleted_len +lost_colors_len + changed_customers_len + \
-              lost_hex_len + order_errors_len
+    additional_files_len = Additional_Files.objects.filter(additional_file__isnull=True).count()
+    err_len = lost_position_len + lost_makets_len + lost_deleted_len + lost_colors_len + changed_customers_len + \
+              lost_hex_len + order_errors_len + additional_files_len
 
     maket_files_diff = len(os.listdir('files/makety')) - Makety.objects.filter(uploaded=True).count()
     order_files_diff = len(os.listdir('files/orders')) - Order_imports.objects.filter(order_upload=True).count()
     films_files_diff = len(os.listdir('files/films')) - Films.objects.filter(film_upload=True).count()
     patterns_files_diff = len(os.listdir('files/patterns')) - Print_group.objects.filter(~Q(pattern_file='')).count()
     additional_files_diff = len(os.listdir('files/additional')) - Additional_Files.objects.all().count() + \
-        Additional_Files.objects.filter(additional_file__is_null=True).count()
+        Additional_Files.objects.filter(additional_file__isnull=True).count()
     total_files_diff = maket_files_diff + order_files_diff + films_files_diff + patterns_files_diff + additional_files_diff
 
     context = {'lost_imports_len': lost_imports_len, 'lost_makets_len': lost_makets_len,
@@ -55,7 +57,7 @@ def count_errors():
                lost_position_len, 'err_len': err_len, 'order_errors_len': order_errors_len, 'maket_files_diff': maket_files_diff,
                'order_files_diff': order_files_diff, 'films_files_diff': films_files_diff,
                'patterns_files_diff': patterns_files_diff, 'additional_files_diff': additional_files_diff,
-               'total_files_diff': total_files_diff}
+               'total_files_diff': total_files_diff, 'additional_files_len': additional_files_len}
     return context
 
 
@@ -608,4 +610,7 @@ def look_up_not_finished(request, navi):
         context.update(count_errors())
         return render(request, 'maket/maket_base.html', context)
     return
+
+
+
 
