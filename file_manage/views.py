@@ -151,13 +151,15 @@ def delete_files_additional(request):
 def files_patterns(request):
     path_patterns = 'files/patterns'
     files_in_patterns_list = os.listdir(path_patterns)
+    num_files = len(files_in_patterns_list)
+    num_patterns = Print_group.objects.filter(~Q(pattern_file='')).count()
     files_list = []
     for file in files_in_patterns_list:
         try:
             pattern = Print_group.objects.get(pattern_file=file)
         except:
             files_list.append(['', file])
-    context = {'active6': 'active', 'files_list': files_list}
+    context = {'active6': 'active', 'files_list': files_list, 'num_files': num_files, 'num_patterns': num_patterns}
     context.update(count_errors())
     return render(request, 'file_manage/files_patterns.html', context)
 
@@ -165,6 +167,8 @@ def files_patterns(request):
 def all_files_patterns(request):
     path_patterns = 'files/patterns'
     files_in_patterns_list = os.listdir(path_patterns)
+    num_files = len(files_in_patterns_list)
+    num_patterns = Print_group.objects.filter(~Q(pattern_file='')).count()
     files_list = []
     for file in files_in_patterns_list:
         try:
@@ -172,7 +176,7 @@ def all_files_patterns(request):
             files_list.append([pattern, file])
         except:
             files_list.append(['', file])
-    context = {'active6': 'active', 'files_list': files_list}
+    context = {'active6': 'active', 'files_list': files_list, 'num_files': num_files, 'num_patterns': num_patterns}
     context.update(count_errors())
     return render(request, 'file_manage/files_patterns.html', context)
 
