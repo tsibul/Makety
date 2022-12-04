@@ -203,6 +203,10 @@
           </li>
       </ul>
       {% if active1 == 'active' or active5 == 'active' %}
+      <form action="{% url 'errors:badge_file_count' %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-secondary">Пересчитать связанные файлы</button>
+      </form>
       <form action="/maket/look_up_not_finished/{% if active1 == 'active' %}orders{% elif active5 == 'active' %}maket_base{% endif %}"
             id="form_lookup_not_finished" method="post" class="d-flex">
       {% csrf_token %}
@@ -218,7 +222,7 @@
         <button class="btn btn-primary" type="submit" >Поиск</button>
       </form>
       {% endif %}
-      <div class="d-flex text-white m-1 pt-1"> v3.4.1</div>
+      <div class="d-flex text-white m-1 pt-1"> v3.4.2</div>
     </div>
   </div>
 </nav>

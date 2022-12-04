@@ -1,18 +1,6 @@
 {% extends 'maket/main.html' %}
 {% block title %}Администрирование{% endblock %}
 {% block content %}
-<!-- Modal delete Maket-->
-{% include 'maket/deleteMaketModal.html' %}
-<div class="row text-nowrap">
-<div class="col">
-<h5> Пересчитать количество загруженных файлов</h5>
-</div>
-<div class="col">
-<form action="{% url 'errors:badge_file_count' %}" method="post">
-{% csrf_token %}
-<button type="submit" class="btn btn-primary">Пересчитать</button>
-</form>
-</div>
-</div>
+
 
 {% endblock %}
