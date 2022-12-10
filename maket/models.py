@@ -37,6 +37,28 @@ class Print_group(models.Model):
         return str(self.code)
 
 
+class Customer_types(models.Model):
+    type_name = models.CharField(max_length=30)
+    group_discount = models.SmallIntegerField
+
+    def __repr__(self):
+        return self.type_name
+
+    def __str__(self):
+        return str(self.type_name)
+
+
+class Customer_groups(models.Model):
+    group_name = models.CharField(max_length=255)
+    group_type = models.ForeignKey(Customer_types, models.SET_NULL, null=True)
+
+    def __repr__(self):
+        return self.group_name
+
+    def __str__(self):
+        return str(self.group_name)
+
+
 class Detail_set(models.Model):
     """details of item detail# if exist
         name - name of goods
@@ -118,6 +140,8 @@ class Customer(models.Model):
     type = models.CharField(max_length=30)
     region = models.CharField(max_length=2, default='77')
     group = models.CharField(max_length=255)
+    customer_group = models.ForeignKey(Customer_groups, models.SET_NULL, null=True, default=None)
+    customer_type = models.ForeignKey(Customer_types, models.SET_NULL, null=True, default=None)
 
     def __repr__(self):
         return self.name
