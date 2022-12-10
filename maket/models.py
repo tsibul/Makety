@@ -7,6 +7,27 @@ fs_films = FileSystemStorage(location='files/films')
 fs_patterns = FileSystemStorage(location='files/patterns')
 fs_additional = FileSystemStorage(location='files/additional')
 
+
+class Good_matrix_type(models.Model):
+    matrix_name = models.CharField(max_length=140)
+
+    def __repr__(self):
+        return self.matrix_name
+
+    def __str__(self):
+        return str(self.matrix_name)
+
+
+class Good_crm_type(models.Model):
+    crm_name = models.CharField(max_length=140)
+
+    def __repr__(self):
+        return self.crm_name
+
+    def __str__(self):
+        return str(self.crm_name)
+
+
 class Color_scheme(models.Model):
     """ color scheme IV, Grant, Eco """
     scheme_name = models.CharField(max_length=13)
@@ -67,6 +88,9 @@ class Detail_set(models.Model):
         detail_place - if prinring possible"""
     name = models.CharField(max_length=200, null=True, blank=True)
     item_name = models.CharField(max_length=20, null=True, blank=True)
+    eco = models.BooleanField(default=True)
+    matrix = models.ForeignKey(Good_matrix_type, models.SET_NULL, null=True, default=None)
+    crm = models.ForeignKey(Good_crm_type,  models.SET_NULL, null=True, default=None)
     color_scheme = models.ForeignKey(Color_scheme, models.SET_NULL, null=True)
     print_group = models.ForeignKey(Print_group, models.SET_NULL, null=True)
     detail1_name = models.CharField(max_length=60)
@@ -93,6 +117,9 @@ class Print_type(models.Model):
     """ Pad, screen, UW, soft_touch etc."""
     type_name = models.CharField(max_length=20)
 
+    def __repr__(self):
+        return self.type_name
+
     def __str__(self):
         return str(self.type_name)
 
@@ -102,6 +129,9 @@ class Print_place(models.Model):
         print_name name of printing place as in import"""
     detail_name = models.CharField(max_length=20)
     place_name = models.CharField(max_length=30)
+
+    def __repr__(self):
+        return str(self.detail_name + ' ' + self.place_name)
 
     def __str__(self):
         return str(self.detail_name + ' ' + self.place_name)
@@ -126,6 +156,9 @@ class Item_color(models.Model):
     color_name = models.CharField(max_length=60)
     color_code = models.CharField(max_length=7)
     color_scheme = models.ForeignKey(Color_scheme, models.SET_NULL, null=True)
+
+    def __repr__(self):
+        return str(self.color_id + ', ' + self.color_scheme.scheme_name)
 
     def __str__(self):
         return str(self.color_id + ', ' + self.color_scheme.scheme_name)
@@ -296,6 +329,9 @@ class Itemgroup_in_Maket(models.Model):
     film = models.ForeignKey(Films, models.SET_NULL, blank=True, null=True)
     film_error = models.BooleanField(default=True)
 
+    def __repr__(self):
+        return str(self.maket.order_num + ' ' + self.item.item.print_group.name)
+
     def __str__(self):
         return str(self.maket.order_num + ' ' + self.item.item.print_group.name)
 
@@ -323,6 +359,10 @@ class Additional_Files(models.Model):
     comment = models.CharField(max_length=255, null=True, blank=True)
     order_id = models.ForeignKey(Order_imports, on_delete=models.CASCADE)
 
+
+    def __repr__(self):
+        return self.additional_file.name
+
     def __str__(self):
         return str(self.additional_file.name)
 
@@ -333,6 +373,9 @@ class Print_color(models.Model):
     color_hex = models.CharField(max_length=7, default='')
     color_number_in_item = models.SmallIntegerField(default=1)
     print_item = models.ForeignKey(Print_imports, on_delete=models.CASCADE)
+
+    def __repr__(self):
+        return str(self.color_number_in_item + self.color_pantone)
 
     def __str__(self):
         return str(self.color_number_in_item + self.color_pantone)
