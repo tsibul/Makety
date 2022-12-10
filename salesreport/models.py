@@ -10,6 +10,12 @@ class Customers_sales(models.Model):
     customer_group = models.ForeignKey(Customer_groups, models.SET_NULL, null=True)
     date_first = models.DateField
 
+    def __repr__(self):
+        return self.customer_name
+
+    def __str__(self):
+        return str(self.customer_name)
+
 
 class Sales_docs(models.Model):
     sales_document = models.CharField(max_length=255)
@@ -21,6 +27,12 @@ class Sales_docs(models.Model):
     total_buy_with_vat = models.IntegerField
     total_buy_without_vat = models.IntegerField
     order = models.ForeignKey(Order_imports, models.SET_NULL, null=True)
+
+    def __repr__(self):
+        return str(self.sales_doc_number) + ' от ' + str(self.sales_doc_date) + ' заказ ' + str(self.order.order_id)
+
+    def __str__(self):
+        return str(self.sales_doc_number) + ' от ' + str(self.sales_doc_date) + ' заказ ' + str(self.order.order_id)
 
 
 class Sales_doc_imports(models.Model):
@@ -38,4 +50,9 @@ class Sales_doc_imports(models.Model):
     sale_with_vat = models.FloatField
     sale_price_vat = models.FloatField
 
+    def __repr__(self):
+        return self.code
+
+    def __str__(self):
+        return str(self.code)
 
