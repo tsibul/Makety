@@ -3,17 +3,20 @@ from django.shortcuts import render, HttpResponseRedirect, reverse
 # Create your views here.
 
 def index(request):
-    context = {}
+    navi = 'Главная'
+    context = {'navi': navi}
     return render(request, 'salesreport/index.html', context)
 
 
 def customer_sales(request):
-    context = {}
+    navi = 'Клиенты'
+    context = {'navi': navi}
     return render(request, 'salesreport/customers.html', context)
 
 
 def customer_groups(request):
-    context = {}
+    navi = 'Группы клиентов'
+    context = {'navi': navi}
     return render(request, 'salesreport/groups.html', context)
 
 
