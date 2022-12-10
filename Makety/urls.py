@@ -27,5 +27,6 @@ urlpatterns = [
     path('addfiles/', include('addfiles.urls')),
     path('orders/', include('orders.urls')),
     path('file_manage/', include('file_manage.urls')),
+    path('salesreport/', include('salesreport.urls')),
 
 ]

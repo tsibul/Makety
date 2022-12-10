@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'addfiles.apps.AddfilesConfig',
     'orders.apps.OrdersConfig',
     'file_manage.apps.FileManageConfig',
+    'salesreport.apps.SalesreportConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
