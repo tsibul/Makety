@@ -1,0 +1,49 @@
+{% extends 'salesreport/main_salesrep.html' %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<div class="text-center"> <h5>Главная</h5></div>
+<br>
+<div class="row m-3">
+  <div class="col-2">Дата последнего импорта&nbsp;</div>
+  <div class="col-2">{{date_last}}</div>
+</div>
+<div class="row m-3">
+  <div class="col-2">Импортировать c&nbsp;</div>
+  <div class="col-2"><input type="date" class="form-control" name="start_date"
+                          value="{{date_now}}" required form="import_report">
+  </div>
+</div>
+<div class="row m-3">
+   <div class="col-4">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <i class="bi bi-wind"></i> Импортироавть отчет</button>
+   </div>
+</div>
+
+
+
+<!-- Modal import_report -->
+<form id="import_report" action="{% url 'salesreport:import_report' %}" method="post" enctype="multipart/form-data"
+      onsubmit="javascript:block_button();">
+{% csrf_token %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Выберите файл</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <label class="custom-file-label" for="ChoseCSV"></label>
+         <input type="file" accept=".csv" class="custom-file-input col-auto border" id="ChoseCSV" name="Chosen" required>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal" >Загрузить</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form><!-- Modal Import report -->
+
+{% endblock %}
