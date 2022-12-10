@@ -1,0 +1,35 @@
+{% extends 'salesreport/main_salesrep.html' %}
+{% block title %}Клиенты{% endblock %}
+{% block content %}
+<div class="text-center"> <h5>Клиенты</h5></div>
+<br>
+<table class="table table-sm table-hover ms-1">
+<thead>
+    <tr  class="table-primary">
+    <th><h6>ID</h6></th>
+    <th><h6>Название</h6></th>
+    <th><h6>Группа</h6></th>
+    <th><h6>Тип</h6></th>
+    <th><h6>Регион</h6></th>
+    <th><h6>ИНН</h6></th>
+    <th ><h6>Адрес</h6></th>
+    <th><h6>Дата появления</h6></th>
+    </tr>
+</thead>
+<tbody>
+{% for cst in customers %}
+    <input type="text" hidden value="{{cst.id}}" id="id_{{cst.id}}">
+    <td id="cst_id_{{cst.id}}" class="fw-bold"><div >{{cst.customer_id}}</div></td>
+    <td id="nm_{{cst.id}}" class="fw-bold"><div >{{cst.customer_name}}</div></td>
+    <td id="gr_{{cst.id}}">{{cst.customer_group.group_name}}</td>
+    <td id="tp_{{cst.id}}">{{cst.customer_type}}</td>
+    <td id="rg_{{cst.id}}">{{cst.customer.region}}</td>
+    <td id="in_{{cst.id}}" >{{cst.customer.inn}}</td>
+    <td id="addr_{{cst.id}}">{{cst.customer.address}}</td>
+    <td id="dt_{{cst.id}}">{{cst.date_first}}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}
