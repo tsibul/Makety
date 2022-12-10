@@ -1,10 +1,5 @@
 from django.db import models
-from maket.models import Customer, Detail_set, Item_color
-
-
-class Customer_groups(models.Model):
-    group_name = models.CharField(max_length=255)
-    group_type = models.CharField(max_length=140)
+from maket.models import Customer, Detail_set, Item_color, Order_imports, Customer_groups
 
 
 class Customers_sales(models.Model):
@@ -21,6 +16,11 @@ class Sales_docs(models.Model):
     sales_doc_number = models.IntegerField
     sales_doc_date = models.DateField
     customer_sales = models.ForeignKey(Customers_sales, models.SET_NULL, null=True)
+    total_sale_with_vat = models.IntegerField
+    total_sale_without_vat = models.IntegerField
+    total_buy_with_vat = models.IntegerField
+    total_buy_without_vat = models.IntegerField
+    order = models.ForeignKey(Order_imports, models.SET_NULL, null=True)
 
 
 class Sales_doc_imports(models.Model):
@@ -34,8 +34,8 @@ class Sales_doc_imports(models.Model):
     buy_without_vat = models.FloatField
     buy_with_vat = models.FloatField
     sales_quantity = models.IntegerField
-    sell_without_vat = models.FloatField
-    sell_with_vat = models.FloatField
-    sell_price_vat = models.FloatField
+    sale_without_vat = models.FloatField
+    sale_with_vat = models.FloatField
+    sale_price_vat = models.FloatField
 
 
