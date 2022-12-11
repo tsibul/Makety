@@ -1,4 +1,5 @@
 {% extends 'maket/main.html' %}
+{% load static %}
 {% block title %}Номенклатура{% endblock %}
 {% block content %}
 <div class="row ms-2 mb-1 me-2">
@@ -13,14 +14,16 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addModalLabel">Добавление состава</h5>
+        <h5 class="modal-title" id="addModalLabel">Добавление/Редактирование состава</h5>
       </div>
       <div class="modal-body">
          <!--  --->
           <div class="col p-1">
-              <input type="text" class="form-control" name="dt_it_art" placeholder="Артикул"></div>
+              <input type="text" class="form-control" name="dt_it_id" id="dt_it_id" placeholder="ID" value=""></div>
           <div class="col p-1">
-              <input type="text" class="form-control" name="dt_it_nm" placeholder="Наименование"></div>
+              <input type="text" class="form-control" name="dt_it_art" id="dt_it_art" placeholder="Артикул"></div>
+          <div class="col p-1">
+              <input type="text" class="form-control" name="dt_it_nm" id="dt_it_nm"placeholder="Наименование"></div>
           <div class="row p-1">
               <div class="col-4"><label for="dt_it_clr">Цветовая схема</label></div>
               <div class="col-8">
@@ -45,7 +48,7 @@
           </div>
           <div class="row p-1">
             <div class="col-8">
-                <input type="text" class="form-control" name="dt1_nm" placeholder="Деталь 1"></div>
+                <input type="text" class="form-control" name="dt1_nm" id="dt1_nm" placeholder="Деталь 1"></div>
             <div class="col align-right">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det1"  name="flexCheck_det1">
@@ -57,7 +60,7 @@
           </div>
           <div class="row p-1">
             <div class="col-8">
-                <input type="text" class="form-control" name="dt2_nm" placeholder="Деталь 2"></div>
+                <input type="text" class="form-control" name="dt2_nm" id="dt2_nm" placeholder="Деталь 2"></div>
             <div class="col align-right">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det2" name="flexCheck_det2">
@@ -69,7 +72,7 @@
           </div>
            <div class="row p-1">
             <div class="col-8">
-                <input type="text" class="form-control" name="dt3_nm" placeholder="Деталь 3"></div>
+                <input type="text" class="form-control" name="dt3_nm" id="dt3_nm" placeholder="Деталь 3"></div>
             <div class="col align-right">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="True"  id="flexCheck_det3" name="flexCheck_det3">
@@ -81,7 +84,7 @@
            </div>
            <div class="row p-1">
             <div class="col-8">
-                <input type="text" class="form-control" name="dt4_nm" placeholder="Деталь 4"></div>
+                <input type="text" class="form-control" name="dt4_nm" id="dt4_nm" placeholder="Деталь 4"></div>
             <div class="col align-right">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det4" name="flexCheck_det4">
@@ -93,7 +96,7 @@
             </div>
            <div class="row p-1">
             <div class="col-8">
-                <input type="text" class="form-control" name="dt5_nm" placeholder="Деталь 5"></div>
+                <input type="text" class="form-control" name="dt5_nm" id="dt5_nm" placeholder="Деталь 5"></div>
             <div class="col align-right">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det5"  name="flexCheck_det5">
@@ -105,7 +108,7 @@
             </div>
            <div class="row p-1">
             <div class="col-8">
-                <input type="text" class="form-control" name="dt6_nm" placeholder="Деталь 6"></div>
+                <input type="text" class="form-control" name="dt6_nm" id="dt6_nm" placeholder="Деталь 6"></div>
             <div class="col align-right">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="True" id="flexCheck_det6"  name="flexCheck_det6">
@@ -117,7 +120,7 @@
             </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearModalGoods();">Закрыть</button>
         <button type="submit" class="btn btn-primary">Сохранить</button>
       </div>
     </div>
@@ -139,7 +142,15 @@
 {% for good in goods %}
     <form action="update_goods/{{good.id}}" method="post" id="form_{{good.id}}">
     {% csrf_token %}
-    <tr onclick="javascript:upd_good({{good.id}}, {{color_scheme}}, {{print_group}});" id="row_{{good.id}}">
+    <tr onclick="fillModalGoods(this)" data-bs-toggle="modal" data-bs-target="#addModal" id="row_{{good.id}}"
+        data-id="{{good.id}}" data-art="{{good.item_name}}" data-name="{{good.name}}"
+        data-color="{{good.color_scheme.scheme_name}}" data-pg="{{good.print_group.code}}"
+        data-det1nm="{{good.detail1_name}}" data-det1chck="{{good.detail1_place}}"
+        data-det2nm="{{good.detail2_name}}" data-det2chck="{{good.detail2_place}}"
+        data-det3nm="{{good.detail3_name}}" data-det3chck="{{good.detail3_place}}"
+        data-det4nm="{{good.detail4_name}}" data-det4chck="{{good.detail4_place}}"
+        data-det5nm="{{good.detail5_name}}" data-det5chck="{{good.detail5_place}}"
+        data-det6nm="{{good.detail6_name}}" data-det6chck="{{good.detail6_place}}">
     <input type="text" hidden value="{{good.id}}" id="id_{{good.id}}">
 
     <td id="art_{{good.id}}" style="min-width:90px;"><div >{{ good.item_name}}</div></td>
@@ -182,5 +193,7 @@
 {% endfor %}
 </tbody>
 </table>
+
+<script src="{% static 'dictionarys/dicts.js' %}"></script>
 
 {% endblock %}

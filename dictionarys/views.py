@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from maket.models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Detail_set, Customer, \
-    Print_group
+    Print_group, Good_crm_type, Good_matrix_type
 
 from maket.views import count_errors
 from decimal import Decimal
@@ -81,81 +81,6 @@ def upd_goods(request, id):
         detail6_place = False
     item.detail6_place = detail6_place
     item.save()
-    return HttpResponseRedirect(reverse('dictionarys:goods'))
-
-
-def add_detail(request):
-    item_code = request.POST['dt_it_art']
-    name = request.POST['dt_it_nm']
-    cs = request.POST['dt_it_clr']
-    pg = request.POST['dt_it_pg']
-    try:
-        color_scheme = Color_scheme.objects.get(scheme_name=cs)
-    except:
-        color_scheme = None
-    try:
-        print_group = Print_group.objects.get(code=pg)
-    except:
-        print_group = None
-    detail1_name = request.POST['dt1_nm']
-    try:
-        detail1_place = request.POST['flexCheck_det1']
-    except:
-        detail1_place = False
-
-    detail2_name = request.POST['dt2_nm']
-    if detail2_name != '':
-        try:
-            detail2_place = request.POST['flexCheck_det2']
-        except:
-            detail2_place = False
-    else:
-        detail2_place = False
-
-    detail3_name = request.POST['dt3_nm']
-    if detail3_name != '':
-        try:
-            detail3_place = request.POST['flexCheck_det3']
-        except:
-            detail3_place = False
-    else:
-        detail3_place = False
-
-    detail4_name = request.POST['dt4_nm']
-    if detail4_name != '':
-        try:
-            detail4_place = request.POST['flexCheck_det4']
-        except:
-            detail4_place = False
-    else:
-        detail4_place = False
-
-    detail5_name = request.POST['dt5_nm']
-    if detail5_name != '':
-        try:
-            detail5_place = request.POST['flexCheck_det5']
-        except:
-            detail5_place = False
-    else:
-        detail5_place = False
-
-    detail6_name = request.POST['dt6_nm']
-    if detail5_name != '':
-        try:
-            detail6_place = request.POST['flexCheck_det6']
-        except:
-            detail6_place = False
-    else:
-        detail6_place = False
-
-    det_set = Detail_set(item_name=item_code, name=name, color_scheme=color_scheme, print_group=print_group,
-                         detail1_name=detail1_name, detail1_place=detail1_place,
-                         detail2_name=detail2_name, detail2_place=detail2_place,
-                         detail3_name=detail3_name, detail3_place=detail3_place,
-                         detail4_name=detail4_name, detail4_place=detail4_place,
-                         detail5_name=detail5_name, detail5_place=detail5_place,
-                         detail6_name=detail6_name, detail6_place=detail6_place)
-    det_set.save()
     return HttpResponseRedirect(reverse('dictionarys:goods'))
 
 
@@ -309,9 +234,11 @@ def other(request):
     print_place = Print_place.objects.all().order_by('detail_name', 'place_name')
     print_group = Print_group.objects.all().order_by('code')
     print_position = Print_position.objects.all().order_by('print_group')
+    good_crm_types = Good_crm_type.objects.all()
 
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
-               'print_position': print_position, 'active2': 'active', 'print_group': print_group}
+               'print_position': print_position, 'active2': 'active', 'print_group': print_group,
+               'good_crm_types': good_crm_types}
     context.update(count_errors())
     return render(request, 'dictionarys/other.html', context)
 
@@ -378,3 +305,24 @@ def scale(request):
         pg.item_height = round(pg.item_height_initial * scale, 3)
         pg.save()
     return HttpResponseRedirect(reverse('dictionarys:print_group'))
+
+
+def update_crm_type(request, id):
+    crm_type = request.POST['good_crm']
+    good_crm = Good_crm_type.objects.get(id=id)
+    good_crm.crm_name = crm_type
+    good_crm.save()
+    return HttpResponseRedirect(reverse('dictionarys:other'))
+
+
+def add_crm_type(request):
+    crm_type = request.POST['crm_type']
+    good_crm = Good_crm_type(crm_name=crm_type)
+    good_crm.save()
+    return HttpResponseRedirect(reverse('dictionarys:other'))
+
+
+def delete_crm_type(request, id):
+    good_crm = Good_crm_type.objects.get(id=id)
+    good_crm.delete()
+    return HttpResponseRedirect(reverse('dictionarys:other'))
