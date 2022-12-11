@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearModal();">Закрыть</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearModalPg();">Закрыть</button>
         <form action="update_pg" method="post" id="upd_pg">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary" onclick="" form="upd_pg">Сохранить</button>
@@ -85,7 +85,7 @@
     </thead>
     <tbody>
     {% for pg in print_group %}
-    <tr id="{{pg.id}}" data-bs-toggle="modal" data-bs-target="#editModal" onclick="fillModal(this);"
+    <tr id="{{pg.id}}" data-bs-toggle="modal" data-bs-target="#editModal" onclick="fillModalPg(this);"
         data-code="{{ pg.code }}" data-name="{{ pg.name }}" data-options="{{ pg.options }}"
         data-layout="{{ pg.layout }}" data-width="{{ pg.item_width}}" data-height="{{ pg.item_height}}"
         data-swidth="{{ pg.item_width_initial}}" data-sheight="{{ pg.item_height_initial}}">
