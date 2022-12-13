@@ -106,9 +106,6 @@
   </ul>
 </div><!-- Print types><--->
 
-
-
-
 <div class="card m-2" style="width: 25rem;"><!-- Print places><--->
   <div class="card-header">
       <div onclick="javascript:colapse('3');"><h5>Место печати</h5></div>
@@ -178,22 +175,25 @@
   </ul>
 </div><!-- Print places><--->
 
-
-<div class="card m-2" style="width: 25rem;"><!-- Crm types><--->
+<div class="card m-2" style="width: 40rem;"><!-- Print places><--->
   <div class="card-header">
-    <div class="col" onclick="colapse('4');"> Группы товаров CRM </div>
-    <div class="text-end">
+      <div onclick="colapse('4');"><h5>Типы клиентов</h5></div>
+      <div class="d-flex justify-content-between">
+      <div class="col" onclick="colapse('4');"> Тип клиента</div>
+      <div class="col" onclick="colapse('4');"> Скидка </div>
         <a href="javascript:add_ln('new_ln4');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
     </div>
   </div>
   <ul class="list-group list-group-flush" id="collapse_4">
-    {% for good_crm in good_crm_types %}
-    <li class="list-group-item" id="cst_id_{{good_crm.id}}_crm">
+    {% for cst_type in customer_types %}
+    <li class="list-group-item" id="cst_id_{{cst_type.id}}_ct">
     <div class="d-flex justify-content-between" >
     <div class="col m-1">
-        <a href="javascript:upd_ln({{good_crm.id}}+'_crm');" class="form-control">{{ good_crm.crm_name }}</a></div>
+        <a href="javascript:upd_ln({{cst_type.id}}+'_ct');" class="form-control">{{cst_type.type_name }}</a></div>
+    <div class="col m-1">
+        <a href="javascript:upd_ln({{cst_type.id}}+'_ct');" class="form-control">{{cst_type.group_discount }}</a></div>
     <div class="m-1">
-        <form action="delete_crm_type/{{good_crm.id}}" method="post">
+        <form action="delete_cst_type/{{cst_type.id}}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></button>
         </form>
@@ -201,17 +201,19 @@
 
     </div>
     </li>
-    <li class="list-group-item" id="cst_id2_{{good_crm.id}}_crm" style="display: none">
-        <form action="update_crm_type/{{good_crm.id }}" method="post">
+    <li class="list-group-item" id="cst_id2_{{cst_type.id}}_ct" style="display:none">
+        <form action="update_cst_type/{{cst_type.id }}" method="post">
         {% csrf_token %}
         <div class="d-flex justify-content-between" >
             <div class="col">
-                <input type="text" class="form-control" name="good_crm" value="{{ good_crm.crm_name }}"></div>
+                <input type="text" class="form-control" name="cst_typ" value="{{cst_type.type_name }}"></div>
             &nbsp
-            <input type="hidden" class="form-control" name="good_crm_id" value="{{ good_crm.id }}">
+            <div class="col">
+                <input type="number" step="0.01" class="form-control" name="grp_dsc" value="{{ cst_type.group_discount}}"></div>
+            <input type="hidden" class="form-control" name="cst_type_id" value="{{ cst_type.id }}">
             <div class="col">
             <div class="d-flex justify-content-end">
-            <a href="javascript:upd_ln_reverse({{good_crm.id}}+'_crm');"><button type="button" class="btn-sm btn-danger">Отменить</button></a>
+            <a href="javascript:upd_ln_reverse({{cst_type.id}}+'_ct');"><button type="button" class="btn-sm btn-danger">Отменить</button></a>
             &nbsp
             <button type="submit" class="btn-sm btn-success" >Записать</button>
             </div>
@@ -220,12 +222,15 @@
         </form>
     </li>
     {% endfor %}
-    <li class="list-group-item" id="new_ln4" style="display: none">
-        <form action="add_crm_type" method="post">
+    <li class="list-group-item" id="new_ln4" style="display:none">
+        <form action="add_cst_type" method="post">
         {% csrf_token %}
         <div class="d-flex justify-content-between">
             <div class="col">
-                <input type="text" class="form-control" name="crm_type" value="{{ good_crm.crm_name }}"></div>
+                <input type="text" class="form-control" name="cst_type" value="{{ cst_type.type_name }}"></div>
+            &nbsp
+            <div class="col">
+                <input type="number" step="0.01" class="form-control" name="grp_dsc" value="{{ cst_type.group_discount }}"></div>
             <div class="col">
             <div class="d-flex justify-content-end">
             <a href="javascript:add_ln_reverse('new_ln4');"><button type="button" class="btn-sm btn-danger">Отменить</button></a>
@@ -237,7 +242,9 @@
         </form>
     </li>
   </ul>
-</div><!-- Crm types><--->
+</div><!-- Customer types><--->
+
+
 
 </div>
 

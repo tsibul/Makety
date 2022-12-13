@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from maket.models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Detail_set, Customer, \
-    Print_group, Good_crm_type, Good_matrix_type
+    Print_group, Good_crm_type, Good_matrix_type, Customer_types, Customer_groups
 
 from maket.views import count_errors
 from decimal import Decimal
@@ -113,7 +113,9 @@ def customers(request):
 def update_cst(request, id):
     cst = Customer.objects.get(id=id)
     nm = request.POST['nm']
+    gr_old = request.POST['gr_o']
     gr = request.POST['gr']
+    tp_old = request.POST['tp_o']
     tp = request.POST['tp']
     rg = request.POST['rg']
     in_ = request.POST['in_']
@@ -246,7 +248,9 @@ def delete_print_position(request, id):
 def good_groups(request):
     navi = 'dicts'
     good_groups = Good_matrix_type.objects.all()
-    context = {'navi': navi, 'active2': 'active', 'good_groups': good_groups}
+    good_crm_types = Good_crm_type.objects.all()
+    context = {'navi': navi, 'active2': 'active', 'good_groups': good_groups, 'good_crm_types': good_crm_types}
+    context.update(count_errors())
     return render(request, 'dictionarys/good_groups.html', context)
 
 
@@ -271,6 +275,28 @@ def delete_matrix_type(request, id):
     return HttpResponseRedirect(reverse('dictionarys:good_groups'))
 
 
+def update_crm_type(request, id):
+    crm_type = request.POST['good_crm']
+    good_crm = Good_crm_type.objects.get(id=id)
+    good_crm.crm_name = crm_type
+    good_crm.save()
+    return HttpResponseRedirect(reverse('dictionarys:good_groups'))
+
+
+def add_crm_type(request):
+    crm_type = request.POST['crm_type']
+    good_crm = Good_crm_type(crm_name=crm_type)
+    good_crm.save()
+    return HttpResponseRedirect(reverse('dictionarys:good_groups'))
+
+
+def delete_crm_type(request, id):
+    good_crm = Good_crm_type.objects.get(id=id)
+    good_crm.delete()
+    return HttpResponseRedirect(reverse('dictionarys:good_groups'))
+
+
+
 def other(request):
     navi = 'dicts'
     color_scheme = Color_scheme.objects.all()
@@ -279,11 +305,11 @@ def other(request):
     print_place = Print_place.objects.all().order_by('detail_name', 'place_name')
     print_group = Print_group.objects.all().order_by('code')
     print_position = Print_position.objects.all().order_by('print_group')
-    good_crm_types = Good_crm_type.objects.all()
+    customer_types = Customer_types.objects.all()
 
     context = {'navi': navi, 'color_scheme': color_scheme, 'print_type': print_type, 'print_place': print_place,
                'print_position': print_position, 'active2': 'active', 'print_group': print_group,
-               'good_crm_types': good_crm_types}
+               'customer_types': customer_types}
     context.update(count_errors())
     return render(request, 'dictionarys/other.html', context)
 
@@ -342,6 +368,30 @@ def delete_print_place(request, id):
     return HttpResponseRedirect(reverse('dictionarys:other'))
 
 
+def update_cst_type(request, id):
+    type_name = request.POST['cst_typ']
+    grp_dsc = request.POST['grp_dsc']
+    customer_type = Customer_types.objects.get(id=id)
+    customer_type.type_name = type_name
+    customer_type.group_discount = grp_dsc
+    customer_type.save()
+    return HttpResponseRedirect(reverse('dictionarys:other'))
+
+
+def add_cst_type(request):
+    type_name = request.POST['cst_type']
+    grp_dsc = request.POST['grp_dsc']
+    customer_type = Customer_types(type_name=type_name, group_discount=grp_dsc)
+    customer_type.save()
+    return HttpResponseRedirect(reverse('dictionarys:other'))
+
+
+def delete_cst_type(request, id):
+    customer_type = Customer_types.objects.get(id=id)
+    customer_type.save()
+    return HttpResponseRedirect(reverse('dictionarys:other'))
+
+
 def scale(request):
     scale = Decimal((request.POST['scale'])) / 100
     print_group = Print_group.objects.all()
@@ -352,22 +402,4 @@ def scale(request):
     return HttpResponseRedirect(reverse('dictionarys:print_group'))
 
 
-def update_crm_type(request, id):
-    crm_type = request.POST['good_crm']
-    good_crm = Good_crm_type.objects.get(id=id)
-    good_crm.crm_name = crm_type
-    good_crm.save()
-    return HttpResponseRedirect(reverse('dictionarys:other'))
-
-
-def add_crm_type(request):
-    crm_type = request.POST['crm_type']
-    good_crm = Good_crm_type(crm_name=crm_type)
-    good_crm.save()
-    return HttpResponseRedirect(reverse('dictionarys:other'))
-
-
-def delete_crm_type(request, id):
-    good_crm = Good_crm_type.objects.get(id=id)
-    good_crm.delete()
 

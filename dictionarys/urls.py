@@ -42,6 +42,10 @@ urlpatterns = [
     path('add_crm_type', views.add_crm_type, name='add_crm_type'),
     path('delete_crm_type/<int:id>', views.delete_crm_type, name='delete_crm_type'),
 
+    path('update_cst_type/<int:id>', views.update_cst_type, name='update_cst_type'),
+    path('add_cst_type', views.add_cst_type, name='add_cst_type'),
+    path('delete_cst_type/<int:id>', views.delete_cst_type, name='delete_cst_type'),
+
     path('scale', views.scale, name='scale'),
 
 ]

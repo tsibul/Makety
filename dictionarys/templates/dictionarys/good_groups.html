@@ -2,16 +2,18 @@
 {% block title %}Справочники{% endblock %}
 {% block content %}
 
-<div class="card m-2" style="width: 25rem;"><!-- Crm types><--->
+<div class="row">
+<div class="col-auto">
+<div class="card m-2" style="width: 40rem;"><!-- Matrix types><--->
   <div class="card-header">
-    <div class="col" onclick="colapse('1');"> Группы товаров CRM </div>
+    <div class="col" onclick="colapse('1');"><h5>Товарная матрица</h5></div>
     <div class="text-end">
         <a href="javascript:add_ln('new_ln1');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
     </div>
   </div>
-  <ul class="list-group list-group-flush" id="collapse_4">
+  <ul class="list-group list-group-flush" id="collapse_1">
     {% for good_group in good_groups %}
-    <li class="list-group-item" id="cst_id_{{good_crm.id}}_crm">
+    <li class="list-group-item" id="cst_id_{{good_crm.id}}_mtr">
     <div class="d-flex justify-content-between" >
     <div class="col m-1">
         <a href="javascript:upd_ln({{good_group.id}}+'_mtr');" class="form-control">{{ good_group.matrix_name }}</a></div>
@@ -43,7 +45,7 @@
         </form>
     </li>
     {% endfor %}
-    <li class="list-group-item" id="new_ln4" style="display: none">
+    <li class="list-group-item" id="new_ln1" style="display: none">
         <form action="add_matrix_type" method="post">
         {% csrf_token %}
         <div class="d-flex justify-content-between">
@@ -60,10 +62,71 @@
         </form>
     </li>
   </ul>
-</div><!-- Crm types><--->
-
+</div><!-- Matrix types><--->
 </div>
 
+<div class="col-auto">
+<div class="card m-2" style="width: 25rem;"><!-- Crm types><--->
+  <div class="card-header">
+    <div class="col" onclick="colapse('4');"><h5>Группы товаров CRM</h5></div>
+    <div class="text-end">
+        <a href="javascript:add_ln('new_ln4');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
+    </div>
+  </div>
+  <ul class="list-group list-group-flush" id="collapse_4">
+    {% for good_crm in good_crm_types %}
+    <li class="list-group-item" id="cst_id_{{good_crm.id}}_crm">
+    <div class="d-flex justify-content-between" >
+    <div class="col m-1">
+        <a href="javascript:upd_ln({{good_crm.id}}+'_crm');" class="form-control">{{ good_crm.crm_name }}</a></div>
+    <div class="m-1">
+        <form action="delete_crm_type/{{good_crm.id}}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></button>
+        </form>
+    </div>
+
+    </div>
+    </li>
+    <li class="list-group-item" id="cst_id2_{{good_crm.id}}_crm" style="display: none">
+        <form action="update_crm_type/{{good_crm.id }}" method="post">
+        {% csrf_token %}
+        <div class="d-flex justify-content-between" >
+            <div class="col">
+                <input type="text" class="form-control" name="good_crm" value="{{ good_crm.crm_name }}"></div>
+            &nbsp
+            <input type="hidden" class="form-control" name="good_crm_id" value="{{ good_crm.id }}">
+            <div class="col">
+            <div class="d-flex justify-content-end">
+            <a href="javascript:upd_ln_reverse({{good_crm.id}}+'_crm');"><button type="button" class="btn-sm btn-danger">Отменить</button></a>
+            &nbsp
+            <button type="submit" class="btn-sm btn-success" >Записать</button>
+            </div>
+            </div>
+        </div>
+        </form>
+    </li>
+    {% endfor %}
+    <li class="list-group-item" id="new_ln4" style="display: none">
+        <form action="add_crm_type" method="post">
+        {% csrf_token %}
+        <div class="d-flex justify-content-between">
+            <div class="col">
+                <input type="text" class="form-control" name="crm_type" value="{{ good_crm.crm_name }}"></div>
+            <div class="col">
+            <div class="d-flex justify-content-end">
+            <a href="javascript:add_ln_reverse('new_ln4');"><button type="button" class="btn-sm btn-danger">Отменить</button></a>
+            &nbsp
+            <button type="submit" class="btn-sm btn-success" >Записать</button>
+            </div>
+            </div>
+        </div>
+        </form>
+    </li>
+  </ul>
+</div><!-- Crm types><--->
+</div>
+</div>
 
 <!-- Добавить карточки сочетаний Item_to_type, Item_to_position, Item_to_color если их потом использовать><--->
 {% endblock %}

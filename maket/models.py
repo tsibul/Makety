@@ -60,7 +60,7 @@ class Print_group(models.Model):
 
 class Customer_types(models.Model):
     type_name = models.CharField(max_length=30)
-    group_discount = models.SmallIntegerField
+    group_discount = models.FloatField(default=0)
 
     def __repr__(self):
         return self.type_name
@@ -175,6 +175,7 @@ class Customer(models.Model):
     group = models.CharField(max_length=255)
     customer_group = models.ForeignKey(Customer_groups, models.SET_NULL, null=True, default=None)
     customer_type = models.ForeignKey(Customer_types, models.SET_NULL, null=True, default=None)
+    frigat_id = models.CharField(max_length=30, default='')
 
     def __repr__(self):
         return self.name
