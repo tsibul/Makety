@@ -26,61 +26,78 @@ def goods(request):
     return render(request, 'dictionarys/goods.html', context)
 
 
-def upd_goods(request, id):
-    item = Detail_set.objects.get(id=id)
-    item_code = request.POST['art']
-    item.item_name = item_code
-    item_name = request.POST['nm']
-    item.name = item_name
-    item_clr = request.POST['ColorSelect']
-    if item_clr != 'None':
-        item.color_scheme = Color_scheme.objects.get(scheme_name=item_clr)
-    prt_group = request.POST['PrtSelect']
-    if prt_group != 'None':
-        item.print_group = Print_group.objects.get(code=prt_group)
-    detail1_name = request.POST['dt1']
-    item.detail1_name = detail1_name
+def add_detail(request):
+    item_code = request.POST['dt_it_art']
+    name = request.POST['dt_it_nm']
+    cs = request.POST['dt_it_clr']
+    pg = request.POST['dt_it_pg']
     try:
-        detail1_place = request.POST['dt1_chck']
+        color_scheme = Color_scheme.objects.get(scheme_name=cs)
+    except:
+        color_scheme = None
+    try:
+        print_group = Print_group.objects.get(code=pg)
+    except:
+        print_group = None
+    detail1_name = request.POST['dt1_nm']
+    try:
+        detail1_place = request.POST['flexCheck_det1']
     except:
         detail1_place = False
-    item.detail1_place = detail1_place
-    detail2_name = request.POST['dt2']
-    item.detail2_name = detail2_name
-    try:
-        detail2_place = request.POST['dt2_chck']
-    except:
+
+    detail2_name = request.POST['dt2_nm']
+    if detail2_name != '':
+        try:
+            detail2_place = request.POST['flexCheck_det2']
+        except:
+            detail2_place = False
+    else:
         detail2_place = False
-    item.detail2_place = detail2_place
-    detail3_name = request.POST['dt3']
-    item.detail3_name = detail3_name
-    try:
-        detail3_place = request.POST['dt3_chck']
-    except:
+
+    detail3_name = request.POST['dt3_nm']
+    if detail3_name != '':
+        try:
+            detail3_place = request.POST['flexCheck_det3']
+        except:
+            detail3_place = False
+    else:
         detail3_place = False
-    item.detail3_place = detail3_place
-    detail4_name = request.POST['dt4']
-    item.detail4_name = detail4_name
-    try:
-        detail4_place = request.POST['dt4_chck']
-    except:
+
+    detail4_name = request.POST['dt4_nm']
+    if detail4_name != '':
+        try:
+            detail4_place = request.POST['flexCheck_det4']
+        except:
+            detail4_place = False
+    else:
         detail4_place = False
-    item.detail4_place = detail4_place
-    detail5_name = request.POST['dt5']
-    item.detail5_name = detail5_name
-    try:
-        detail5_place = request.POST['dt5_chck']
-    except:
+
+    detail5_name = request.POST['dt5_nm']
+    if detail5_name != '':
+        try:
+            detail5_place = request.POST['flexCheck_det5']
+        except:
+            detail5_place = False
+    else:
         detail5_place = False
-    item.detail5_place = detail5_place
-    detail6_name = request.POST['dt6']
-    item.detail6_name = detail6_name
-    try:
-        detail6_place = request.POST['dt6_chck']
-    except:
+
+    detail6_name = request.POST['dt6_nm']
+    if detail5_name != '':
+        try:
+            detail6_place = request.POST['flexCheck_det6']
+        except:
+            detail6_place = False
+    else:
         detail6_place = False
-    item.detail6_place = detail6_place
-    item.save()
+
+    det_set = Detail_set(item_name=item_code, name=name, color_scheme=color_scheme, print_group=print_group,
+                         detail1_name=detail1_name, detail1_place=detail1_place,
+                         detail2_name=detail2_name, detail2_place=detail2_place,
+                         detail3_name=detail3_name, detail3_place=detail3_place,
+                         detail4_name=detail4_name, detail4_place=detail4_place,
+                         detail5_name=detail5_name, detail5_place=detail5_place,
+                         detail6_name=detail6_name, detail6_place=detail6_place)
+    det_set.save()
     return HttpResponseRedirect(reverse('dictionarys:goods'))
 
 
@@ -226,6 +243,34 @@ def delete_print_position(request, id):
     return HttpResponseRedirect(reverse('dictionarys:print_position'))
 
 
+def good_groups(request):
+    navi = 'dicts'
+    good_groups = Good_matrix_type.objects.all()
+    context = {'navi': navi, 'active2': 'active', 'good_groups': good_groups}
+    return render(request, 'dictionarys/good_groups.html', context)
+
+
+def update_matrix_type(request, id):
+    matrix_type = request.POST['good_matrix']
+    good_matrix = Good_matrix_type.objects.get(id=id)
+    good_matrix.matrix_name = matrix_type
+    good_matrix.save()
+    return HttpResponseRedirect(reverse('dictionarys:good_groups'))
+
+
+def add_matrix_type(request):
+    matrix_type = request.POST['matrix_type']
+    good_matrix = Good_matrix_type(matrix_name=matrix_type)
+    good_matrix.save()
+    return HttpResponseRedirect(reverse('dictionarys:good_groups'))
+
+
+def delete_matrix_type(request, id):
+    good_matrix = Good_matrix_type.objects.get(id=id)
+    good_matrix.delete()
+    return HttpResponseRedirect(reverse('dictionarys:good_groups'))
+
+
 def other(request):
     navi = 'dicts'
     color_scheme = Color_scheme.objects.all()
@@ -325,4 +370,4 @@ def add_crm_type(request):
 def delete_crm_type(request, id):
     good_crm = Good_crm_type.objects.get(id=id)
     good_crm.delete()
-    return HttpResponseRedirect(reverse('dictionarys:other'))
+
