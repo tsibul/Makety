@@ -181,6 +181,7 @@
       <div class="d-flex justify-content-between">
       <div class="col" onclick="colapse('4');"> Тип клиента</div>
       <div class="col" onclick="colapse('4');"> Скидка </div>
+      <div class="col" onclick="colapse('4');"> Код </div>
         <a href="javascript:add_ln('new_ln4');"><button type="button" class="btn-sm btn-primary">Добавить</button></a>
     </div>
   </div>
@@ -192,6 +193,8 @@
         <a href="javascript:upd_ln({{cst_type.id}}+'_ct');" class="form-control">{{cst_type.type_name }}</a></div>
     <div class="col m-1">
         <a href="javascript:upd_ln({{cst_type.id}}+'_ct');" class="form-control">{{cst_type.group_discount }}</a></div>
+    <div class="col m-1">
+        <a href="javascript:upd_ln({{cst_type.id}}+'_ct');" class="form-control">{{cst_type.code }}</a></div>
     <div class="m-1">
         <form action="delete_cst_type/{{cst_type.id}}" method="post">
         {% csrf_token %}
@@ -210,6 +213,8 @@
             &nbsp
             <div class="col">
                 <input type="number" step="0.01" class="form-control" name="grp_dsc" value="{{ cst_type.group_discount}}"></div>
+            <div class="col">
+                <input type="text" class="form-control" name="code" value="{{ cst_type.code}}"></div>
             <input type="hidden" class="form-control" name="cst_type_id" value="{{ cst_type.id }}">
             <div class="col">
             <div class="d-flex justify-content-end">
@@ -231,6 +236,8 @@
             &nbsp
             <div class="col">
                 <input type="number" step="0.01" class="form-control" name="grp_dsc" value="{{ cst_type.group_discount }}"></div>
+            <div class="col">
+                <input type="text" class="form-control" name="code" value="{{cst_type.code}}"></div>
             <div class="col">
             <div class="d-flex justify-content-end">
             <a href="javascript:add_ln_reverse('new_ln4');"><button type="button" class="btn-sm btn-danger">Отменить</button></a>

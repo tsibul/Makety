@@ -61,6 +61,7 @@ class Print_group(models.Model):
 class Customer_types(models.Model):
     type_name = models.CharField(max_length=30)
     group_discount = models.FloatField(default=0)
+    code = models.CharField(max_length=2, default='')
 
     def __repr__(self):
         return self.type_name

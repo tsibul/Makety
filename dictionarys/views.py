@@ -393,9 +393,11 @@ def delete_print_place(request, id):
 def update_cst_type(request, id):
     type_name = request.POST['cst_typ']
     grp_dsc = request.POST['grp_dsc']
+    code = request.POST['code']
     customer_type = Customer_types.objects.get(id=id)
     customer_type.type_name = type_name
     customer_type.group_discount = grp_dsc
+    customer_type.code = code
     customer_type.save()
     return HttpResponseRedirect(reverse('dictionarys:other'))
 
@@ -403,7 +405,8 @@ def update_cst_type(request, id):
 def add_cst_type(request):
     type_name = request.POST['cst_type']
     grp_dsc = request.POST['grp_dsc']
-    customer_type = Customer_types(type_name=type_name, group_discount=grp_dsc)
+    code = request.POST['code']
+    customer_type = Customer_types(type_name=type_name, group_discount=grp_dsc, code=code)
     customer_type.save()
     return HttpResponseRedirect(reverse('dictionarys:other'))
 
