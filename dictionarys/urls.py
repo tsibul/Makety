@@ -5,7 +5,7 @@ app_name = 'dictionarys'
 
 urlpatterns = [
     path('goods', views.goods, name='goods'),
-    path('update_goods/<int:id>', views.upd_goods, name='update_goods'),
+    path('add_detail', views.add_detail, name='add_detail'),
 
     path('customers', views.customers, name='customers'),
     path('update_cst/<int:id>', views.update_cst, name='update_cst'),
@@ -21,6 +21,11 @@ urlpatterns = [
     path('add_prt_pos', views.add_prt_pos, name='add_prt_pos'),
     path('delete_print_position/<int:id>', views.delete_print_position, name='delete_print_positon'),
 
+    path('matrix', views.good_groups, name='good_groups'),
+    path('update_matrix_type/<int:id>', views.update_matrix_type, name='update_matrix_type'),
+    path('add_matrix_type', views.add_matrix_type, name='add_matrix_type'),
+    path('delete_matrix_type/<int:id>', views.delete_matrix_type, name='delete_matrix_type'),
+
     path('other', views.other, name='other'),
 
     path('update_clr_sch/<int:id>', views.update_clr_sch, name='update_clr_sch'),
@@ -34,7 +39,7 @@ urlpatterns = [
     path('delete_print_place/<int:id>', views.delete_print_place, name='delete_print_place'),
 
     path('update_crm_type/<int:id>', views.update_crm_type, name='update_crm_type'),
-    path('add_crm_type', views.add_crm_type, name='add_prt_plc'),
+    path('add_crm_type', views.add_crm_type, name='add_crm_type'),
     path('delete_crm_type/<int:id>', views.delete_crm_type, name='delete_crm_type'),
 
     path('scale', views.scale, name='scale'),
