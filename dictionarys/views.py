@@ -104,25 +104,47 @@ def add_detail(request):
 def customers(request):
     navi = 'customers'
     customers = Customer.objects.all().order_by('name')
+    customer_types = Customer_types.objects.all()
 
-    context = {'navi': navi, 'customers': customers, 'active2': 'active'}
+    context = {'navi': navi, 'customers': customers, 'active2': 'active', 'customer_types': customer_types}
     context.update(count_errors())
     return render(request, 'dictionarys/customers.html', context)
 
 
-def update_cst(request, id):
-    cst = Customer.objects.get(id=id)
+def update_cst(request):
+    cst_id = request.POST['id']
+    cst = Customer.objects.get(id=cst_id)
     nm = request.POST['nm']
     gr_old = request.POST['gr_o']
+    gr_id = request.POST['gr_id']
     gr = request.POST['gr']
     tp_old = request.POST['tp_o']
-    tp = request.POST['tp']
     rg = request.POST['rg']
     in_ = request.POST['in_']
     ad = request.POST['ad']
+    try:
+        tp = request.POST['tp']
+        type = Customer_types.objects.get(id=tp)
+        cst.customer_type = type
+    except:
+        pass
+    if gr != '' or gr_id != '':
+        try:
+            group = Customer_groups.objects.get(id=gr_id)
+        except:
+            try:
+                group = Customer_groups.objects.get(group_name=gr)
+            except:
+                group = Customer_groups(group_name=gr)
+                try:
+                    group.group_type = type
+                except:
+                    pass
+                group.save()
+        cst.customer_group = group
     cst.name = nm
-    cst.group = gr
-    cst.type = tp
+    cst.group = gr_old
+    cst.type = tp_old
     cst.region = rg
     cst.inn = in_
     cst.address = ad
