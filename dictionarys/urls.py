@@ -8,7 +8,7 @@ urlpatterns = [
     path('add_detail', views.add_detail, name='add_detail'),
 
     path('customers', views.customers, name='customers'),
-    path('update_cst/<int:id>', views.update_cst, name='update_cst'),
+    path('update_cst', views.update_cst, name='update_cst'),
 
     path('colors', views.colors, name='colors'),
     path('add_clr', views.add_clr, name='add_clr'),
