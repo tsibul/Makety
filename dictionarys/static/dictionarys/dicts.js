@@ -26,6 +26,9 @@ function fillModalGoods(goodObj){
     document.getElementById('dt_it_id').value = goodObj.dataset.id;
     document.getElementById('dt_it_art').value = goodObj.dataset.art;
     document.getElementById('dt_it_nm').value = goodObj.dataset.name;
+    document.getElementById('eco').value = goodObj.dataset.eco;
+    document.getElementById('crm').value = goodObj.dataset.crm;
+    document.getElementById('matrix').value = goodObj.dataset.matrix;
     document.getElementById('dt_it_clr').value = goodObj.dataset.color;
     document.getElementById('dt_it_pg').value = goodObj.dataset.pg;
     document.getElementById('dt1_nm').value = goodObj.dataset.det1nm;
@@ -47,6 +50,9 @@ function clearModalGoods(){
     document.getElementById('dt_it_id').value = null;
     document.getElementById('dt_it_art').value = null;
     document.getElementById('dt_it_nm').value = null;
+    document.getElementById('eco').value = 'True';
+    document.getElementById('crm').value = null;
+    document.getElementById('matrix').value = null;
     document.getElementById('dt_it_clr').value = null;
     document.getElementById('dt_it_pg').value = null;
     document.getElementById('dt1_nm').value = null;

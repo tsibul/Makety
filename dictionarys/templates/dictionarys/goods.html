@@ -25,6 +25,35 @@
           <div class="col p-1">
               <input type="text" class="form-control" name="dt_it_nm" id="dt_it_nm"placeholder="Наименование"></div>
           <div class="row p-1">
+              <div class="col-3">
+              <label for="eco">Эко</label>
+              <select class="form-select" name="eco" id="eco"  aria-label="eco">
+                  <option value="True">Да</option>
+                  <option value="False">Нет</option>
+              </select>
+              </div>
+              <div class="col-9">
+              <label for="matrix">Товарная матрица</label>
+              <select class="form-select" name="matrix" id="matrix"  aria-label="select color">
+                  <option value="blank" selected></option>
+              {% for good_mtr in goods_matrix %}
+                  <option value="{{good_mtr.id}}">{{good_mtr.matrix_name}}</option>
+              {% endfor %}
+              </select>
+              </div>
+          </div>
+          <div class="row p-1">
+              <div class="col-3"><label for="crm">CRM</label></div>
+              <div class="col-9">
+              <select class="form-select" name="crm" id="crm"  aria-label="select color">
+                  <option value="blank" selected></option>
+              {% for good_crm in goods_crm %}
+                  <option value="{{good_crm.id}}">{{good_crm.crm_name}}</option>
+              {% endfor %}
+              </select>
+              </div>
+          </div>
+          <div class="row p-1">
               <div class="col-4"><label for="dt_it_clr">Цветовая схема</label></div>
               <div class="col-8">
               <select class="form-select" name="dt_it_clr" id="dt_it_clr"  aria-label="select color">
@@ -132,9 +161,12 @@
 <thead>
     <tr  class="table-primary">
     <th><h6>Арт</h6></th>
-    <th style="min-width:480px;"><h6>Название</h6></th>
+    <th style="min-width:300px;"><h6>Название</h6></th>
+    <th><h6>Эко</h6></th>
+    <th><h6>Матрица</h6></th>
+    <th><h6>CRM</h6></th>
     <th><h6>Цветовая группа</h6></th>
-    <th><h6>Группа печати</h6></th>
+    <th><h6>Гр. печати</h6></th>
     <th colspan="12" class="text-center"><h6>Детали</h6></th>
     </tr>
 </thead>
@@ -143,7 +175,8 @@
     <form action="update_goods/{{good.id}}" method="post" id="form_{{good.id}}">
     {% csrf_token %}
     <tr onclick="fillModalGoods(this)" data-bs-toggle="modal" data-bs-target="#addModal" id="row_{{good.id}}"
-        data-id="{{good.id}}" data-art="{{good.item_name}}" data-name="{{good.name}}"
+        data-id="{{good.id}}" data-art="{{good.item_name}}" data-name="{{good.name}}" data-eco="{{good.eco}}"
+        data-crm="{{good.crm.id}}" data-matrix="{{good.matrix.id}}"
         data-color="{{good.color_scheme.scheme_name}}" data-pg="{{good.print_group.code}}"
         data-det1nm="{{good.detail1_name}}" data-det1chck="{{good.detail1_place}}"
         data-det2nm="{{good.detail2_name}}" data-det2chck="{{good.detail2_place}}"
@@ -155,6 +188,9 @@
 
     <td id="art_{{good.id}}" style="min-width:90px;"><div >{{ good.item_name}}</div></td>
     <td id="nm_{{good.id}}">{{good.name}}</td>
+    <td>{% if good.eco %}Да{% else %}Нет{% endif %}</td>
+    <td>{{good.matrix.matrix_name}}</td>
+    <td>{{good.crm.crm_name}}</td>
     <td id="cs_{{good.id}}">{{good.color_scheme.scheme_name}}</td>
     <td id="pg_{{good.id}}" >{{good.print_group.code}}</td>
     <td>

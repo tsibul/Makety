@@ -12,6 +12,8 @@ def goods(request):
     navi = 'customers'
     goods = Detail_set.objects.all().order_by('item_name')
     clr_scheme = Color_scheme.objects.all()
+    goods_matrix = Good_matrix_type.objects.all()
+    goods_crm = Good_crm_type.objects.all()
     color_scheme = []
     for clr in clr_scheme:
         color_scheme.append(clr.scheme_name)
@@ -21,7 +23,7 @@ def goods(request):
         print_group.append(prt.code)
 
     context = {'navi': navi, 'goods': goods, 'active2': 'active', 'color_scheme': color_scheme,
-               'print_group': print_group}
+               'print_group': print_group, 'goods_matrix': goods_matrix, 'goods_crm': goods_crm}
     context.update(count_errors())
     return render(request, 'dictionarys/goods.html', context)
 
