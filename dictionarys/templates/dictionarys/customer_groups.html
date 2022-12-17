@@ -1,0 +1,26 @@
+{% extends 'maket/main.html' %}
+{% block title %}Группы Клиентов{% endblock %}
+{% block content %}
+
+<table class="table table-hover ms-3 me-3">
+    <thead>
+        <tr class="table-info">
+            <th>Группа Клиентов</th>
+            <th>Код</th>
+            <th>Тип Группы</th>
+            <th>Скидка</th>
+        </tr>
+    </thead>
+    {% for cst_gr in cst_groups %}
+        <tr>
+            <td>{{cst_gr.group_name}}</td>
+            <td>{{cst_gr.group_type.code}}</td>
+            <td>{{cst_gr.group_type.type_name}}</td>
+            <td>{{cst_gr.group_type.group_discount}}&nbsp;%</td>
+        </tr>
+    {% endfor %}
+    <tbody>
+    </tbody>
+</table>
+
+{% endblock %}

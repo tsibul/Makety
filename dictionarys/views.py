@@ -152,6 +152,19 @@ def update_cst(request):
     return HttpResponseRedirect(reverse('dictionarys:customers'))
 
 
+def customer_groups(request):
+    navi = 'customers'
+    cst_groups = Customer_groups.objects.all()
+    context = {'navi': navi, 'active2': 'active', 'cst_groups': cst_groups}
+    context.update(count_errors())
+    return render(request, 'dictionarys/customer_groups.html', context)
+
+
+def update_cst_group(request):
+    return HttpResponseRedirect(reverse('dictionarys:customer_groups'))
+
+
+
 def colors(request):
     navi = 'colors'
     color = Item_color.objects.all().order_by('-color_scheme', 'color_id')

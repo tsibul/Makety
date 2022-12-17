@@ -10,6 +10,9 @@ urlpatterns = [
     path('customers', views.customers, name='customers'),
     path('update_cst', views.update_cst, name='update_cst'),
 
+    path('customer_groups', views.customer_groups, name='customer_groups'),
+    path('update_cst_group', views.update_cst_group, name='update_cst_group'),
+
     path('colors', views.colors, name='colors'),
     path('add_clr', views.add_clr, name='add_clr'),
 
