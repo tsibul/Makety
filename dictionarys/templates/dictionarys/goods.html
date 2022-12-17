@@ -189,8 +189,8 @@
     <td id="art_{{good.id}}" style="min-width:90px;"><div >{{ good.item_name}}</div></td>
     <td id="nm_{{good.id}}">{{good.name}}</td>
     <td>{% if good.eco %}Да{% else %}Нет{% endif %}</td>
-    <td>{{good.matrix.matrix_name}}</td>
-    <td>{{good.crm.crm_name}}</td>
+    <td class="text-nowrap">{{good.matrix.matrix_name}}</td>
+    <td class="text-nowrap">{{good.crm.crm_name}}</td>
     <td id="cs_{{good.id}}">{{good.color_scheme.scheme_name}}</td>
     <td id="pg_{{good.id}}" >{{good.print_group.code}}</td>
     <td>

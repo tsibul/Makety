@@ -29,18 +29,31 @@ def goods(request):
 
 
 def add_detail(request):
+    good_id = request.POST['dt_it_id']
     item_code = request.POST['dt_it_art']
     name = request.POST['dt_it_nm']
     cs = request.POST['dt_it_clr']
     pg = request.POST['dt_it_pg']
+    eco = request.POST['eco']
+    matrix_in = request.POST['matrix']
+    crm_in = request.POST['crm']
     try:
         color_scheme = Color_scheme.objects.get(scheme_name=cs)
     except:
         color_scheme = None
     try:
+        matrix = Good_matrix_type.objects.get(id=matrix_in)
+    except:
+        matrix = None
+    try:
+        crm = Good_crm_type.objects.get(id=crm_in)
+    except:
+        crm = None
+    try:
         print_group = Print_group.objects.get(code=pg)
     except:
         print_group = None
+
     detail1_name = request.POST['dt1_nm']
     try:
         detail1_place = request.POST['flexCheck_det1']
@@ -91,14 +104,36 @@ def add_detail(request):
             detail6_place = False
     else:
         detail6_place = False
-
-    det_set = Detail_set(item_name=item_code, name=name, color_scheme=color_scheme, print_group=print_group,
-                         detail1_name=detail1_name, detail1_place=detail1_place,
-                         detail2_name=detail2_name, detail2_place=detail2_place,
-                         detail3_name=detail3_name, detail3_place=detail3_place,
-                         detail4_name=detail4_name, detail4_place=detail4_place,
-                         detail5_name=detail5_name, detail5_place=detail5_place,
-                         detail6_name=detail6_name, detail6_place=detail6_place)
+    try:
+        det_set = Detail_set.objects.get(id=good_id)
+        det_set.item_name = item_code
+        det_set.name = name
+        det_set.color_scheme = color_scheme
+        det_set.print_group = print_group
+        det_set.eco = eco
+        det_set.crm = crm
+        det_set.matrix = matrix
+        det_set.detail1_name = detail1_name
+        det_set.detail1_place = detail1_place
+        det_set.detail2_name = detail2_name
+        det_set.detail2_place = detail2_place
+        det_set.detail3_name = detail3_name
+        det_set.detail3_place = detail3_place
+        det_set.detail4_name = detail4_name
+        det_set.detail4_place = detail4_place
+        det_set.detail5_name = detail5_name
+        det_set.detail5_place = detail5_place
+        det_set.detail6_name = detail6_name
+        det_set.detail6_place = detail6_place
+    except:
+        det_set = Detail_set(item_name=item_code, name=name, color_scheme=color_scheme, print_group=print_group,
+                             eco=eco, crm=crm, matrix=matrix,
+                             detail1_name=detail1_name, detail1_place=detail1_place,
+                             detail2_name=detail2_name, detail2_place=detail2_place,
+                             detail3_name=detail3_name, detail3_place=detail3_place,
+                             detail4_name=detail4_name, detail4_place=detail4_place,
+                             detail5_name=detail5_name, detail5_place=detail5_place,
+                             detail6_name=detail6_name, detail6_place=detail6_place)
     det_set.save()
     return HttpResponseRedirect(reverse('dictionarys:goods'))
 
