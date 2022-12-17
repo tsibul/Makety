@@ -35,17 +35,17 @@ def add_detail(request):
     cs = request.POST['dt_it_clr']
     pg = request.POST['dt_it_pg']
     eco = request.POST['eco']
-    matrix_in = request.POST['matrix']
-    crm_in = request.POST['crm']
     try:
         color_scheme = Color_scheme.objects.get(scheme_name=cs)
     except:
         color_scheme = None
     try:
+        matrix_in = request.POST['matrix']
         matrix = Good_matrix_type.objects.get(id=matrix_in)
     except:
         matrix = None
     try:
+        crm_in = request.POST['crm']
         crm = Good_crm_type.objects.get(id=crm_in)
     except:
         crm = None
