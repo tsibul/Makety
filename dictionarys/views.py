@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.urls import reverse
 from maket.models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Detail_set, Customer, \
@@ -21,6 +22,7 @@ def goods(request):
     prt_group = Print_group.objects.all()
     for prt in prt_group:
         print_group.append(prt.code)
+
 
     context = {'navi': navi, 'goods': goods, 'active2': 'active', 'color_scheme': color_scheme,
                'print_group': print_group, 'goods_matrix': goods_matrix, 'goods_crm': goods_crm}
@@ -142,8 +144,20 @@ def customers(request):
     navi = 'customers'
     customers = Customer.objects.all().order_by('name')
     customer_types = Customer_types.objects.all()
+    paginator = Paginator(customers, 25)  # Show 25 contacts per page.
 
-    context = {'navi': navi, 'customers': customers, 'active2': 'active', 'customer_types': customer_types}
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    cst_range = []
+    for i in range(page_obj.paginator.num_pages):
+        page_obj2 = paginator.get_page(i + 1)
+        try:
+            cst_tmp = str(page_obj2.object_list[0])
+            cst_range.append([i + 1, '> ' + cst_tmp])
+        except:
+            cst_range.append(['нет данных'])
+
+    context = {'navi': navi, 'page_obj': page_obj, 'active2': 'active', 'customer_types': customer_types, 'cst_range': cst_range}
     context.update(count_errors())
     return render(request, 'dictionarys/customers.html', context)
 

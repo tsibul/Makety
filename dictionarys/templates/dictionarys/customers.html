@@ -2,7 +2,40 @@
 {% load static %}
 {% block title %}Клиенты{% endblock %}
 {% block content %}
-<h5>Клиенты</h5>
+{% if look_up != True %}
+<div class="row fixed-bottom bg-light p-1 mb-0 pb-0 align-items-center" >
+<br><br>
+    <div class="col-9 text-start">
+<div class="pagination" xmlns="http://www.w3.org/1999/html">
+    <span class="step-links dropup">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
+        {% endif %}
+        <span class="current btn btn-sm btn-outline-secondary">
+           {{ page_obj.object_list.26.1}} - {{ page_obj.object_list.0.1}} (страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }})
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
+        {% endif %}
+    </span>
+</div><!-- pagination -->
+    </div>
+    <div class="col text-end">
+            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="_ChooseClient"
+                    data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+                Выбрать Клиентов
+            </button>
+              <ul class="dropdown-menu fw-bold" aria-labelledby="ChooseClient">
+                {% for c_range in cst_range %}
+              <li><a class="dropdown-item" href="?page={{ c_range.0 }}"> {{ c_range.1 }}</a></li>
+                {% endfor %}
+              </ul>
+    </div>
+</div>
+{% endif %}
+
 <!--Customer Modal -->
 <div class="modal fade" id="custModal" tabindex="-1" aria-labelledby="custModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -70,7 +103,7 @@
 <thead>
     <tr  class="table-primary">
     <th class="text-nowrap"><h6>Fr #&nbsp;</h6></th>
-    <th><h6>Название</h6></th>
+    <th><h6>Название Клиента</h6></th>
     <th colspan="2"><h6>Группа</h6></th>
     <th colspan="2"><h6>Тип</h6></th>
     <th><h6>Регион</h6></th>
@@ -80,7 +113,7 @@
 </thead>
 <tbody>
 
-{% for cst in customers %}
+{% for cst in page_obj %}
     <tr onclick="fillModalCustomers(this);" id="row_{{cst.id}}" data-bs-toggle="modal" data-bs-target="#custModal" data-id="{{cst.id}}"
         data-name="{{cst.name}}" data-group_old="{{cst.group}}" data-group="{{cst.customer_group.group_name}}"
         data-type_old="{{cst.type}}" data-type="{{cst.customer_type.id}}" data-region="{{cst.region}}" data-inn="{{cst.inn}}"
@@ -99,6 +132,7 @@
 {% endfor %}
 </tbody>
 </table>
+<br><br>
 <script src="{% static 'dictionarys/dicts.js' %}"></script>
 
 {% endblock %}
