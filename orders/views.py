@@ -44,8 +44,9 @@ def index(request):
         for i in range(page_obj.paginator.num_pages):
             page_obj2 = paginator.get_page(i + 1)
             try:
-                date_tmp = str(page_obj2.object_list[0])
-                date_range.append([i + 1, 'до ' + date_tmp])
+                date_tmp = page_obj2.object_list[-1].order_date.strftime('%d.%m.%Y') +  ' - ' + \
+                           page_obj2.object_list[0].order_date.strftime('%d.%m.%Y')
+                date_range.append([i + 1, date_tmp])
             except:
                 date_range.append(['нет данных'])
         context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
