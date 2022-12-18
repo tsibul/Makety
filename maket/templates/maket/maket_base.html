@@ -13,7 +13,7 @@
             <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
         {% endif %}
         <span class="current btn btn-sm btn-outline-secondary">
-           {{ page_obj.object_list.13.0|date:"d.m.y" }} - {{ page_obj.object_list.0.0|date:"d.m.y" }} (страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }})
+           {{ page_obj.object_list.11.0.order_date|date:"d.m.y" }} - {{ page_obj.object_list.0.0.order_date|date:"d.m.y" }} (страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }})
         </span>
         {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
