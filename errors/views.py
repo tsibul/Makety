@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from maket.models import Item_color, Order_imports, Item_imports, \
+from maket.models import Item_color, Order_imports, Item_imports, Customer, Customer_groups, Customer_types,\
     Print_imports, Detail_set, Makety, Additional_Files, Print_color
 from django.db.models import Q, F
 
@@ -11,17 +11,14 @@ from maket.views import count_errors, print_position_and_color_from_print_obj, p
 
 def other(request):
     navi = 'admin'
-    lost_imports = []
-    l_imports = Item_imports.objects.filter(item=None).order_by('code')
-    for l_imp in l_imports:
-        try:
-            l_det = Detail_set.objects.get(item_name=l_imp.item_group)
-            lost_imports.append([l_imp, l_det])
-        except:
-            pass
-    lost_imports_len = len(lost_imports)
+    customers = Customer.objects.all().count()
+    customer_groups = Customer_groups.objects.all().count
+    lost_customer_types = Customer.objects.filter(~Q(customer_type__type_name=F('type'))).count()
+    lost_customer_groups = Customer.objects.filter(~Q(customer_group__group_name=F('group')) &
+                                                   ~Q(group='')).count()
 
-    context = {'navi': navi, 'active4': 'active', 'lost_imports': lost_imports, 'lost_imports_len': lost_imports_len}
+    context = {'navi': navi, 'active4': 'active', 'customers': customers, 'customer_groups': customer_groups,
+               'lost_customer_types': lost_customer_types, 'lost_customer_groups': lost_customer_groups}
     context.update(count_errors())
     return render(request, 'errors/other.html', context)
 
@@ -283,3 +280,29 @@ def delete_additional_file_from_table(request):
     add_file = Additional_Files.objects.get(id=add_file_id)
     return HttpResponseRedirect(reverse('errors:additional_repairs'))
 
+
+def fix_customer_types(request):
+    lost_customer_types = list(Customer.objects.filter(~Q(customer_type__type_name=F('type'))))
+    for cust in lost_customer_types:
+        try:
+            type = Customer_types.objects.get(type_name=cust.type)
+            cust.customer_type = type
+        except:
+            pass
+    Customer.objects.bulk_update(lost_customer_types, ['customer_type'])
+    return HttpResponseRedirect(reverse('errors:other'))
+
+
+def fix_customer_groups(request):
+    lost_customer_groups = list(Customer.objects.filter(~Q(customer_group__group_name=F('group')) &
+                                                        ~Q(group='')))
+    for cust in lost_customer_groups:
+        try:
+            group = Customer_groups.objects.get(group_name=cust.group)
+        except:
+            group = Customer_groups(group_name=cust.group, group_type=cust.customer_type)
+            group.save()
+        cust.customer_group = group
+    Customer.objects.bulk_update(lost_customer_groups, ['customer_group'])
+
+    return HttpResponseRedirect(reverse('errors:other'))
