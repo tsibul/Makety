@@ -105,11 +105,9 @@ def maket_base(request):
     date_range = []
     for i in range(page_obj.paginator.num_pages):
         page_obj2 = paginator.get_page(i + 1)
-        try:
-            date_tmp = str(page_obj2.object_list[0][0])
-            date_range.append([i + 1, 'до ' + date_tmp])
-        except:
-            date_range.append(['нет данных'])
+        date_tmp = page_obj2.object_list[-1][0].order_date.strftime('%d.%m.%Y') + ' - ' + \
+                   page_obj2.object_list[0][0].order_date.strftime('%d.%m.%Y')
+        date_range.append([i + 1, date_tmp])
 
     context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'page_obj': page_obj, 'films': films,
                'current_date': current_date, 'last_film': last_film, 'date_range': date_range, 'look_up': False}
