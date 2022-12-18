@@ -210,6 +210,9 @@ def import_order(request):
         tr_len = len(trstrings[i])
         if trstrings[i][tr_len - 1] == '1sec_endofline' and trstrings[i][3] != '\xa0':
             itm_clr = trstrings[i][2].split('.')
+            if len(itm_clr[1]) > 2:
+                itm_clr[0] = str(itm_clr[0]) + '.' + str(itm_clr[1])
+                itm_clr.pop(1)
             itm_group = itm_clr[0]
             prt_name = trstrings[i][3]
             try:
