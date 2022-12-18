@@ -43,12 +43,9 @@ def index(request):
         date_range = []
         for i in range(page_obj.paginator.num_pages):
             page_obj2 = paginator.get_page(i + 1)
-            try:
-                date_tmp = page_obj2.object_list[-1].order_date.strftime('%d.%m.%Y') +  ' - ' + \
-                           page_obj2.object_list[0].order_date.strftime('%d.%m.%Y')
-                date_range.append([i + 1, date_tmp])
-            except:
-                date_range.append(['нет данных'])
+            date_tmp = page_obj2.object_list[-1].order_date.strftime('%d.%m.%Y') +  ' - ' + \
+                       page_obj2.object_list[0].order_date.strftime('%d.%m.%Y')
+            date_range.append([i + 1, date_tmp])
         context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
                    'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range}
     except:
