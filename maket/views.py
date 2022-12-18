@@ -395,7 +395,8 @@ def look_up(request, navi):
             last_film = films.first().film_id + 1
         except:
             last_film = 1
-
+        if len(f_maket) == 0:
+            return HttpResponseRedirect(reverse('maket:maket_base'))
         context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'films': films,
                    'current_date': current_date, 'last_film': last_film, 'look_up': True, 'lookup': lookup}
         context.update(count_errors())
@@ -458,7 +459,8 @@ def look_up(request, navi):
                 ig_pp_all += content[3]
                 len_it += content[6]
             f_group[fg].insert(0, [ig_q_all, ig_p_all, ig_pp_all, ig_pp_all + ig_p_all, len_it])
-
+        if len(f_group) == 0:
+            return HttpResponseRedirect(reverse('films:films'))
         context = {'navi': navi, 'active7': 'active', 'f_group': f_group, 'look_up': True}
         context.update(count_errors())
         return render(request, 'films/films.html', context)
@@ -476,8 +478,9 @@ def look_up(request, navi):
             cst_id.append(ord.customer.id)
         customers = Customer.objects.filter(Q(name__icontains=lookup) | Q(address__icontains=lookup) | \
                                             Q(id__in=cst_id)).order_by('name')
-
-        context = {'navi': navi, 'customers': customers, 'active3': 'active'}
+        if len(customers) == 0:
+            return HttpResponseRedirect(reverse('dictionarys:customers'))
+        context = {'navi': navi, 'page_obj': customers, 'active2': 'active', 'look_up': True, 'lookup': lookup}
         context.update(count_errors())
         return render(request, 'dictionarys/customers.html', context)
 
