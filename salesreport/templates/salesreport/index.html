@@ -35,7 +35,7 @@
 
 <!-- Modal import_report -->
 <form id="import_report" action="{% url 'salesreport:import_report' %}" method="post" enctype="multipart/form-data"
-      onsubmit="javascript:block_button();">
+      onsubmit="javascript:block_but('but_imp_modal');">
 {% csrf_token %}
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -50,7 +50,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal" onclick="block_but(this)">Загрузить</button>
+        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal">Загрузить</button>
       </div>
     </div>
   </div>
@@ -60,7 +60,7 @@
 
 <!-- Modal import_customer -->
 <form id="import_cst" action="{% url 'salesreport:import_cst' %}" method="post" enctype="multipart/form-data"
-      onsubmit="javascript:block_button();">
+      onsubmit="block_but('but_imp_modal_cst');">
 {% csrf_token %}
 <div class="modal fade" id="cstModal" tabindex="-1" aria-labelledby="cstModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -75,7 +75,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal_cst" onclick="block_but(this)">Загрузить</button>
+        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal_cst" >Загрузить</button>
       </div>
     </div>
   </div>
