@@ -177,6 +177,7 @@ class Customer(models.Model):
     customer_group = models.ForeignKey(Customer_groups, models.SET_NULL, null=True, default=None)
     customer_type = models.ForeignKey(Customer_types, models.SET_NULL, null=True, default=None)
     frigat_id = models.CharField(max_length=30, default='')
+    date_first = models.DateField(default='2018-01-01')
 
     def __repr__(self):
         return self.name
