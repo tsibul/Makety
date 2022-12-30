@@ -1,3 +1,3 @@
-function  block_but(butObj){
-    butObj.disabled = true;
+function  block_but(param){
+    document.getElementById(param).disabled = true;
 }
