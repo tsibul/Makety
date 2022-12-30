@@ -1,10 +1,10 @@
 {% extends 'salesreport/main_salesrep.html' %}
 {% block title %}Главная{% endblock %}
 {% block content %}
-<br>
-<br>
+<div class="text-center">Клиенты всего {{customers_quantity}}</div>
+<div class="text-center">Клиенты активные {{customers_active_quantity}}</div>
 <div class="row m-3">
-  <div class="col-2">Дата последнего импорта&nbsp;</div>
+  <div class="col-2">Дата последнего импорта&nbsp;отгрузок</div>
   <div class="col-2">{{date_last}}</div>
 </div>
 <div class="row m-3">
@@ -16,10 +16,21 @@
 <div class="row m-3">
    <div class="col-4">
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      <i class="bi bi-wind"></i> Импортироавть отчет</button>
+      <i class="bi bi-wind"></i> Импортировать отчет</button>
    </div>
 </div>
 
+<div class="row m-3">
+  <div class="col-2">Дата последнего импорта&nbsp;клиентов</div>
+  <div class="col-2">{{date_last_cst|date:'d.m.Y'}}</div>
+</div>
+</div>
+<div class="row m-3">
+   <div class="col-4">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cstModal">
+      <i class="bi bi-wind"></i> Импортировать клиентов</button>
+   </div>
+</div>
 
 
 <!-- Modal import_report -->
@@ -39,11 +50,37 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal" >Загрузить</button>
+        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal" onclick="block_but(this)">Загрузить</button>
       </div>
     </div>
   </div>
 </div>
 </form><!-- Modal Import report -->
+
+
+<!-- Modal import_customer -->
+<form id="import_cst" action="{% url 'salesreport:import_cst' %}" method="post" enctype="multipart/form-data"
+      onsubmit="javascript:block_button();">
+{% csrf_token %}
+<div class="modal fade" id="cstModal" tabindex="-1" aria-labelledby="cstModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cstModalLabel">Выберите файл</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <label class="custom-file-label" for="ChoseCSV"></label>
+         <input type="file" accept=".csv" class="custom-file-input col-auto border" id="ChoseCSV_cst" name="cust" required>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal_cst" onclick="block_but(this)">Загрузить</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form><!-- Modal Import customer -->
+
 
 {% endblock %}
