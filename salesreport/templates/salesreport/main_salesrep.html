@@ -31,13 +31,15 @@
 </div>
 <div class="offcanvas-body" >
     <p><a href="{% url 'salesreport:index' %}">Главная</a></p>
-    <p><a href="{% url 'salesreport:customers' %}">Клиенты</a></p>
+    <p><a href="{% url 'salesreport:customers' %}">Клиенты активные</a></p>
+    <p><a href="{% url 'salesreport:customers_all' %}">Клиенты все</a></p>
     <p><a href="{% url 'salesreport:groups' %}">Группы</a></p>
 </div>
 </div>
 
 <!-- MDB -->
 <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.4.0/mdb.min.js"></script><--->
+<script src="{% static 'salesreport/salesreport.js' %}"></script>
 <script src="{% static 'maket/maket.js' %}"></script>
 <script src="{% static 'maket/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
 <script src="{% static 'maket/jquery.min.js' %}"></script>
