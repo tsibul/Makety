@@ -102,15 +102,15 @@ def maket_base(request):
     page_obj = paginator.get_page(page_number)
     f_maket = dict(page_obj.object_list)
 
-    date_range = []
-    for i in range(page_obj.paginator.num_pages):
-        page_obj2 = paginator.get_page(i + 1)
-        date_tmp = page_obj2.object_list[-1][0].order_date.strftime('%d.%m.%Y') + ' - ' + \
-                   page_obj2.object_list[0][0].order_date.strftime('%d.%m.%Y')
-        date_range.append([i + 1, date_tmp])
+#   date_range = []
+#    for i in range(page_obj.paginator.num_pages):
+#        page_obj2 = paginator.get_page(i + 1)
+#        date_tmp = page_obj2.object_list[-1][0].order_date.strftime('%d.%m.%Y') + ' - ' + \
+#                   page_obj2.object_list[0][0].order_date.strftime('%d.%m.%Y')
+#        date_range.append([i + 1, date_tmp])
 
     context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'page_obj': page_obj, 'films': films,
-               'current_date': current_date, 'last_film': last_film, 'date_range': date_range, 'look_up': False}
+               'current_date': current_date, 'last_film': last_film, 'look_up': False}
     context.update(count_errors())
     return render(request, 'maket/maket_base.html', context)
 
