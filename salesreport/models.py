@@ -2,26 +2,11 @@ from django.db import models
 from maket.models import Customer, Detail_set, Item_color, Order_imports, Customer_groups, Customer_types
 
 
-class Customers_sales(models.Model):
-    customer_id = models.IntegerField
-    customer_name = models.CharField(max_length=255)
-    customer_type = models.CharField(max_length=20)
-    customer = models.ForeignKey(Customer, models.SET_NULL, null=True)
-    customer_group = models.ForeignKey(Customer_groups, models.SET_NULL, null=True)
-    date_first = models.DateField
-
-    def __repr__(self):
-        return self.customer_name
-
-    def __str__(self):
-        return str(self.customer_name)
-
-
 class Sales_docs(models.Model):
     sales_document = models.CharField(max_length=255)
     sales_doc_number = models.IntegerField
     sales_doc_date = models.DateField
-    customer_sales = models.ForeignKey(Customers_sales, models.SET_NULL, null=True)
+    customer = models.ForeignKey(Customer, models.SET_NULL, null=True)
     total_sale_with_vat = models.IntegerField
     total_sale_without_vat = models.IntegerField
     total_buy_with_vat = models.IntegerField
@@ -76,6 +61,7 @@ class Customer_all(models.Model):
     comment = models.CharField(max_length=255, null=True)
     our_manager = models.CharField(max_length=255)
     date_import = models.DateField(default='2010-01-01')
+    customer = models.ForeignKey(Customer, models.SET_NULL, default=None, null=True)
 
     def __repr__(self):
         return self.name
