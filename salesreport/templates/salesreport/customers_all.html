@@ -1,0 +1,72 @@
+{% extends 'salesreport/main_salesrep.html' %}
+{% block title %}Клиенты{% endblock %}
+{% block content %}
+<br>
+<br>
+<table class="table table-sm table-hover ms-1">
+<thead>
+    <tr  class="table-primary" style="font-size: 70%;">
+    <th><h6>ID</h6></th>
+    <th><h6>Форма</h6></th>
+    <th><h6>Название</h6></th>
+    <th><h6>Группа</h6></th>
+    <th><h6>Тип</h6></th>
+    <th><h6>Регион</h6></th>
+    <th><h6>ИНН</h6></th>
+    <th ><h6>Адрес</h6></th>
+    <th ><h6>Телефон</h6></th>
+    <th ><h6>Mail</h6></th>
+    <th ><h6>Менеджер</h6></th>
+    <th><h6>Примечание</h6></th>
+    </tr>
+</thead>
+<tbody style="font-size: 70%;">
+{% for cst in page_obj  %}
+    <input type="text" hidden value="{{cst.id}}" id="id_{{cst.id}}">
+    <td class="fw-bold"><div >{{cst.frigqt_id}}</div></td>
+    <td class="fw-bold"><div >{{cst.form}}</div></td>
+    <td class="fw-bold"><div >{{cst.name}}</div></td>
+    <td >{{cst.customer_group.group_name}}</td>
+    <td >{{cst.customer_type}}</td>
+    <td >{{cst.region}}</td>
+    <td >{{cst.inn}}</td>
+    <td >{{cst.address}}</td>
+    <td >{{cst.phone}}</td>
+    <td >{{cst.mail}}</td>
+    <td >{{cst.our_manager}}</td>
+    <td >{{cst.comment}}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+<div class="row fixed-bottom bg-white justify-content-around m-1">
+<div class="col text-start">
+    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="_ChooseClient"
+            data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+        Выбрать Клиентов
+    </button>
+      <ul class="dropdown-menu fw-bold" aria-labelledby="ChooseClient">
+        {% for c_range in cst_range %}
+      <li><a class="dropdown-item" href="?page={{ c_range.0 }}"> {{ c_range.1 }}</a></li>
+        {% endfor %}
+      </ul>
+</div>
+<div class="col-9 pagination justify-content-end" xmlns="http://www.w3.org/1999/html">
+    <span class="step-links dropup">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
+        {% endif %}
+        <span class="current btn btn-sm btn-outline-secondary">
+           {{ page_obj.object_list.0}} - {{ page_obj.object_list.24}} (страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }})
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+</div>
+
+{% endblock %}
