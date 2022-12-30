@@ -7,6 +7,48 @@ from django.core.paginator import Paginator
 from django.core.files.storage import default_storage
 
 
+def customer_import_compare(row, customer):
+    return customer.name == row[1] and \
+           customer.form == row[2] and \
+           customer.inn == row[3] and \
+           customer.address == row[5] and \
+           customer.phone == row[6] and \
+           customer.mail == row[7] and \
+           customer.comment == row[8] and \
+           customer.all_phones == row[13] and \
+           customer.all_mails == row[12]
+
+
+def customer_check_row(row):
+    result = (len(row) == 14)
+    empty = True
+    for i in range(2, len(row)):
+        empty = empty and (row[i] == '' or row[i] == '0')
+    return result and not empty
+
+
+def customer_type_chose(type, region):
+    if 'Конечник' in type and (region == '77' or region == '50'):
+        type_obj = Customer_types.objects.get(type_name='Конечник Москва')
+    elif 'Конечник' in type and region != '77' and region != '50':
+        type_obj = Customer_types.objects.get(type_name='Конечник Регион')
+    elif 'рекламщик' in type and region == '77' and region != '50':
+        type_obj = Customer_types.objects.get(type_name='Рекламщик Москва')
+    elif 'рекламщик' in type and region != '77' and region != '50':
+        type_obj = Customer_types.objects.get(type_name='Рекламщик Регион')
+    elif 'Агентство' in type and region == '77' and region != '50':
+        type_obj = Customer_types.objects.get(type_name='Агентство Москва')
+    elif 'Агентство' in type and region != '77' and region != '50':
+        type_obj = Customer_types.objects.get(type_name='Агентство Регион')
+    elif 'Дилер' in type and region == '77' and region != '50':
+        type_obj = Customer_types.objects.get(type_name='Дилер Москва')
+    elif 'Дилер' in type and region != '77' and region != '50':
+        type_obj = Customer_types.objects.get(type_name='Дилер Регион')
+    elif 'точка' in type and region != '77' and region != '50':
+        type_obj = Customer_types.objects.get(type_name='Розничная Точка')
+    else:
+        type_obj = ''
+    return type_obj
 
 def index(request):
     navi = 'Главная'
@@ -19,7 +61,6 @@ def index(request):
     context = {'navi': navi, 'date_last_cst': date_last_cst, 'customers_quantity': customers_quantity,
                'customers_active_quantity': customers_active_quantity}
     return render(request, 'salesreport/index.html', context)
-
 
 
 def import_report(request):
@@ -36,64 +77,34 @@ def import_cst(request):
 
     with open(file_name, newline='', encoding='utf-8') as cust_csv:
         for line in enumerate(cust_csv, 1):
-            line = line[1].rstrip('\r\n')
-            row = line.split(';')
+            row = line[1].rstrip('\r\n').split(';')
             fr_id = row[0]
-            cust = Customer_all.objects
-            name = row[1]
-            form = row[2]
-            inn = row[3]
-            try:
-                region = inn[0:2]
-            except:
-                region = ''
-            address = row[5]
-            phone = row[6]
-            mail = row[7]
-            comment = row[8]
-            our_manager = row[10]
-            type = row[11]
-            if 'Конечник' in type and (region == '77' or region == '50'):
-                type_obj = Customer_types.objects.get(type_name='Конечник Москва')
-            elif 'Конечник' in type and region != '77' and region != '50':
-                type_obj = Customer_types.objects.get(type_name='Конечник Регион')
-            elif 'рекламщик' in type and region == '77' and region != '50':
-                type_obj = Customer_types.objects.get(type_name='Рекламщик Москва')
-            elif 'рекламщик' in type and region != '77' and region != '50':
-                type_obj = Customer_types.objects.get(type_name='Рекламщик Регион')
-            elif 'Агентство' in type and region == '77' and region != '50':
-                type_obj = Customer_types.objects.get(type_name='Агентство Москва')
-            elif 'Агентство' in type and region != '77' and region != '50':
-                type_obj = Customer_types.objects.get(type_name='Агентство Регион')
-            elif 'Дилер' in type and region == '77' and region != '50':
-                type_obj = Customer_types.objects.get(type_name='Дилер Москва')
-            elif 'Дилер' in type and region != '77' and region != '50':
-                type_obj = Customer_types.objects.get(type_name='Дилер Регион')
-            elif 'точка' in type and region != '77' and region != '50':
-                type_obj = Customer_types.objects.get(type_name='Розничная Точка')
-            else:
-                type_obj = None
-            all_mails = row[12]
-            all_phones = row[13]
-            date_import = date.today()
+            if not customer_check_row(row):
+                continue
             try:
                 customer = Customer_all.objects.get(frigat_id=fr_id)
+                if customer_import_compare(row, customer):
+                    continue
             except:
-                customer = Customer_all(frigat_id=fr_id, date_import=date_import)
-            customer.name = name
-            customer.form = form
-            customer.inn = inn
-            customer.address = address
-            customer.region = region
-            customer.comment = comment
-            customer.our_manager = our_manager
-            customer.phone = phone
-            customer.mail = mail
-            customer.all_phones = all_phones
-            customer.all_mails = all_mails
+                customer = Customer_all(frigat_id=fr_id, date_import=date.today())
+            customer.name = row[1]
+            customer.form = row[2]
+            customer.inn = row[3]
             try:
-                customer.customer_type = type_obj
-                customer.type = type_obj.type_name
+                customer.region = row[3][0:2]
+            except:
+                customer.region = ''
+            customer.address = row[5]
+            customer.phone = row[6]
+            customer.mail = row[7]
+            customer.comment = row[8]
+            customer.our_manager = row[10]
+            type_tmp = row[11]
+            customer.all_mails = row[12]
+            customer.all_phones = row[13]
+            try:
+                customer.customer_type = customer_type_chose(type_tmp, customer.region)
+                customer.type = customer.customer_type.type_name
             except:
                 pass
             customer.save()
@@ -128,14 +139,6 @@ def customer_all(request):
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    cst_range = []
-    for i in range(page_obj.paginator.num_pages):
-        page_obj2 = paginator.get_page(i + 1)
-        try:
-            cst_tmp = str(page_obj2.object_list[0])
-            cst_range.append([i + 1, '> ' + cst_tmp])
-        except:
-            cst_range.append(['нет данных'])
     context = {'navi': navi, 'page_obj': page_obj}
     return render(request, 'salesreport/customers_all.html', context)
 
