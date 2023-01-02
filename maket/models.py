@@ -73,6 +73,8 @@ class Customer_types(models.Model):
 class Customer_groups(models.Model):
     group_name = models.CharField(max_length=255)
     group_type = models.ForeignKey(Customer_types, models.SET_NULL, null=True)
+    phone = models.CharField(max_length=20, default='')
+    mail = models.CharField(max_length=150, default='')
 
     def __repr__(self):
         return self.group_name
