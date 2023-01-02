@@ -198,7 +198,7 @@ def import_order(request):
         elif type2 == 'К':
             type = 'Экспорт'
         customer = Customer(name=customer_name, address=customer_address, inn=customer_inn, region=region,
-                            type=type, customer_type=typegroup)
+                            type=type, customer_type=typegroup, date_first=order_date)
         customer.save()
         ord_imp.customer = customer
     ord_imp.save()
