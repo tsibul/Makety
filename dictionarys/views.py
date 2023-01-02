@@ -52,7 +52,7 @@ def add_detail(request):
     except:
         crm = None
     try:
-        print_group = Print_group.objects.get(code=pg)
+        print_group = Print_group.objects.get(code=pg).order_by('code')
     except:
         print_group = None
 
