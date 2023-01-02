@@ -39,10 +39,35 @@
 </div>
 <div class="row m-3">
    <div class="col-4">
-      <form method="post" action="{% url 'salesreport:cst_sinhro' %}"  id="sinhro">
+      <form method="post" action="{% url 'salesreport:cst_sinhro_inn' %}"  id="sinhro">
       {% csrf_token %}
       <button type="submit" class="btn btn-primary" form="sinhro">
-      <i class="bi bi-plugin"></i> Синхронизировать клиентов</button>
+      <i class="bi bi-plugin"></i> Синхронизировать клиентов по ИНН</button>
+      </form>
+   </div>
+</div>
+<div class="row m-3">
+   <div class="col-4">
+      <form method="post" action="{% url 'salesreport:cst_sinhro_no' %}"  id="sinhro_no">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary" form="sinhro_no">
+      <i class="bi bi-plugin"></i> Синхронизировать клиентов без ИНН</button>
+      </form>
+   </div>
+</div>
+
+
+
+<div class="row m-3">
+  <div class="col-2">Ошибки синхронизации</div>
+  <div class="col-2">{{sinhroerrors}}</div>
+</div>
+<div class="row m-3">
+   <div class="col-4">
+      <form method="post" action="{% url 'salesreport:cst_sinhro_err' %}"  id="sinhro_err">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary" form="sinhro_err">
+      <i class="bi bi-bug"></i> исправить ошибки по ИНН</button>
       </form>
    </div>
 </div>

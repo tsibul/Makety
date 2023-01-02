@@ -6,7 +6,7 @@ from django.shortcuts import render, HttpResponseRedirect, reverse
 from maket.models import Customer_all, Customer, Customer_groups, Customer_types
 from django.core.paginator import Paginator
 from django.core.files.storage import default_storage
-from django.db.models import Q
+from django.db.models import Q, F
 
 
 def customer_import_compare(row, customer):
@@ -60,7 +60,16 @@ def index(request):
         date_last_cst = '2010-01-01'
     customers_quantity = Customer_all.objects.all().count()
     customers_active_quantity = Customer.objects.all().count()
-    sinhronized = Customer.objects.filter(Q(customer_all__isnull=False)).count()
+    sinhronized = Customer.objects.filter(Q(customer_all__isnull=False) &
+                                          Q(group=F('customer_all__group')) &
+                                          Q(type=F('customer_all__type')) &
+                                          (Q(customer_group=F('customer_all__customer_group')) |
+                                          Q(customer_group__isnull=True) & Q(customer_all__customer_group__isnull=True)) &
+                                          (Q(customer_type=F('customer_all__customer_type')) |
+                                          Q(customer_type__isnull=True) & Q(customer_all__customer_type__isnull=True)) &
+                                          Q(inn=F('customer_all__inn')) &
+                                          Q(name__endswith=F('customer_all__name'))
+                                          ).count()
     context = {'navi': navi, 'date_last_cst': date_last_cst, 'customers_quantity': customers_quantity,
                'customers_active_quantity': customers_active_quantity, 'sinhronized': sinhronized}
     return render(request, 'salesreport/index.html', context)
@@ -115,23 +124,76 @@ def import_cst(request):
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
-def cst_sinhro(request):
-    customers = Customer.objects.filter(Q(customer_all__isnull=True))
+def cst_sinhro_inn(request):
+    customers = Customer.objects.filter(~Q(inn='') &
+                                        (Q(customer_all__isnull=True) |
+                                        (~Q(group=F('customer_all__group'))) |
+                                        (~Q(type=F('customer_all__type'))) |
+                                        (~Q(customer_group=F('customer_all__customer_group')) &
+                                        (Q(customer_group__isnull=False) & Q(customer_all__customer_group__isnull=False))) |
+                                        (~Q(customer_type=F('customer_all__customer_type')) &
+                                        (Q(customer_type__isnull=False) & Q(customer_all__customer_type__isnull=False)))
+                                         ))
     for customer in customers:
-        if not customer.inn:
-            customer_all = Customer_all.objects.get(inn=customer.inn)
-        else:
-            customers_all = Customer_all.objects.filter(inn='')
-            for cst_all in customers_all:
-                if cst_all.name in customer.name:
-                    customer_all = cst_all
-        customer.customer_all = customer_all
-        customer.frigat_id = customer_all.frigat_id
-        customer.save()
-        customer_all.group = customer.group
-        customer_all.customer_group = customer.customer_group
-        customer_all.save()
+        if customer.customer_all and customer.inn == customer.customer_all.inn:
+            customer_all = customer.customer_all
+            customer_all.group = customer.group
+            customer_all.customer_group = customer.customer_group
+            customer_all.type = customer.type
+            customer_all.customer_type = customer.customer_type
+            customer_all.save()
+        elif customer.inn != '' and not customer.inn:
+            customer_all = Customer_all.objects.filter(inn=customer.inn).order_by('frigat_id').last()
+            customer.customer_all = customer_all
+            customer.frigat_id = customer_all.frigat_id
+            customer.save()
+            customer_all.group = customer.group
+            customer_all.customer_group = customer.customer_group
+            customer_all.type = customer.type
+            customer_all.customer_type = customer.customer_type
+            customer_all.save()
     return HttpResponseRedirect(reverse('salesreport:index'))
+
+
+def cst_sinhro_no(request):
+    customers = Customer.objects.filter(Q(inn='') &
+                                        (Q(customer_all__isnull=True) |
+                                        ~Q(name__endswith=F('customer_all__name')) |
+                                        (~Q(group=F('customer_all__group'))) |
+                                        (~Q(type=F('customer_all__type'))) |
+                                        (~Q(customer_group=F('customer_all__customer_group')) &
+                                        (Q(customer_group__isnull=False) & Q(customer_all__customer_group__isnull=False))) |
+                                        (~Q(customer_type=F('customer_all__customer_type')) &
+                                        (Q(customer_type__isnull=False) & Q(customer_all__customer_type__isnull=False)))
+                                         ))
+    customers_all = Customer_all.objects.filter(inn='')
+    for customer in customers:
+        for customer_all in customers_all:
+            if customer.name.endswith(customer_all.name):
+                customer.customer_all = customer_all
+                customer.frigat_id = customer_all.frigat_id
+                customer.save()
+                customer_all.group = customer.group
+                customer_all.customer_group = customer.customer_group
+                customer_all.type = customer.type
+                customer_all.customer_type = customer.customer_type
+                customer_all.save()
+    return HttpResponseRedirect(reverse('salesreport:index'))
+
+
+def set_inn(customer):
+    cust_all = Customer_all.objects.filter(inn=customer.inn).order_by('frigat_id').last()
+    customer.customer_all = cust_all
+    customer.frigat_id = cust_all.frigat_id
+    customer.save()
+
+
+def cst_sinhro_err(request):
+    customers = Customer.objects.filter(~Q(inn=F('customer_all__inn')) & ~Q(inn=''))
+    for customer in customers:
+        set_inn(customer)
+    return HttpResponseRedirect(reverse('salesreport:index'))
+
 
 
 def customer_sales(request):

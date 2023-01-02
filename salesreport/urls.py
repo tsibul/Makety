@@ -10,5 +10,7 @@ urlpatterns = [
     path('groups', views.customer_groups, name='groups'),
     path('import_report', views.import_report, name='import_report'),
     path('import_cst', views.import_cst, name='import_cst'),
-    path('cst_sinhro', views.cst_sinhro, name='cst_sinhro'),
+    path('cst_sinhro_inn', views.cst_sinhro_inn, name='cst_sinhro_inn'),
+    path('cst_sinhro_err', views.cst_sinhro_err, name='cst_sinhro_err'),
+    path('cst_sinhro_no', views.cst_sinhro_no, name='cst_sinhro_no'),
 ]
