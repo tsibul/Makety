@@ -48,7 +48,7 @@
 <tbody style="font-size: 80%;">
 {% for cst in page_obj %}
     <input type="text" hidden value="{{cst.id}}" id="id_{{cst.id}}">
-    <td id="cst_id_{{cst.id}}" class="fw-bold"><div >{{cst.customer_id}}</div></td>
+    <td id="cst_id_{{cst.id}}" class="fw-bold"><div >{{cst.frigat_id}}</div></td>
     <td id="nm_{{cst.id}}" class="fw-bold"><div >{{cst.name}}</div></td>
     <td id="gr_{{cst.id}}">{{cst.customer_group.group_name}}</td>
     <td id="tp_{{cst.id}}">{{cst.customer_type.type_name}}</td>
