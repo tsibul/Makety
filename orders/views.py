@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect, FileResponse, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from maket.models import Item_color, Order_imports, Item_imports, Print_imports, Detail_set, Customer, Manger, Makety, \
-     Additional_Files, Customer_types
+     Additional_Files, Customer_types, Customer_all, Customer_groups
 from django.db.models import Q
 from django.core.paginator import Paginator
 
@@ -197,8 +197,16 @@ def import_order(request):
             type = 'Розничная точка'
         elif type2 == 'К':
             type = 'Экспорт'
+        if len(customer_inn) >= 10:
+            customer_all = Customer_all.objects.filter(inn=customer_inn).order_by('frigat_id').last()
+        else:
+            customer_all = Customer_all.objects.filter(customer_name__in=customer_name).order_by('frigat_id').last()
         customer = Customer(name=customer_name, address=customer_address, inn=customer_inn, region=region,
-                            type=type, customer_type=typegroup, date_first=order_date)
+                            type=type, customer_type=typegroup, date_first=order_date, customer_all=customer_all,
+                            frigat_id=customer_all.frigat_id)
+        customer_all.customer_type = typegroup
+        customer_all.type = type
+        customer_all.save()
         customer.save()
         ord_imp.customer = customer
     ord_imp.save()
