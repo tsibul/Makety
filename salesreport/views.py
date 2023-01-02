@@ -1,10 +1,12 @@
 from datetime import date
 import os
 
+
 from django.shortcuts import render, HttpResponseRedirect, reverse
-from .models import Customer_all, Customer, Customer_groups, Customer_types
+from maket.models import Customer_all, Customer, Customer_groups, Customer_types
 from django.core.paginator import Paginator
 from django.core.files.storage import default_storage
+from django.db.models import Q
 
 
 def customer_import_compare(row, customer):
@@ -58,8 +60,9 @@ def index(request):
         date_last_cst = '2010-01-01'
     customers_quantity = Customer_all.objects.all().count()
     customers_active_quantity = Customer.objects.all().count()
+    sinhronized = Customer.objects.filter(Q(customer_all__isnull=False)).count()
     context = {'navi': navi, 'date_last_cst': date_last_cst, 'customers_quantity': customers_quantity,
-               'customers_active_quantity': customers_active_quantity}
+               'customers_active_quantity': customers_active_quantity, 'sinhronized': sinhronized}
     return render(request, 'salesreport/index.html', context)
 
 
@@ -112,6 +115,25 @@ def import_cst(request):
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
+def cst_sinhro(request):
+    customers = Customer.objects.filter(Q(customer_all__isnull=True))
+    for customer in customers:
+        if not customer.inn:
+            customer_all = Customer_all.objects.get(inn=customer.inn)
+        else:
+            customers_all = Customer_all.objects.filter(inn='')
+            for cst_all in customers_all:
+                if cst_all.name in customer.name:
+                    customer_all = cst_all
+        customer.customer_all = customer_all
+        customer.frigat_id = customer_all.frigat_id
+        customer.save()
+        customer_all.group = customer.group
+        customer_all.customer_group = customer.customer_group
+        customer_all.save()
+    return HttpResponseRedirect(reverse('salesreport:index'))
+
+
 def customer_sales(request):
     navi = 'Клиенты'
     customers = Customer.objects.all().order_by('name')
@@ -135,7 +157,7 @@ def customer_sales(request):
 def customer_all(request):
     navi = 'Все Клиенты'
     customers = Customer_all.objects.all().order_by('name')
-    paginator = Paginator(customers, 25)  # Show 25 contacts per page.
+    paginator = Paginator(customers, 50)  # Show 50 contacts per page.
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

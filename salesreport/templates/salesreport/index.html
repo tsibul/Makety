@@ -28,7 +28,22 @@
 <div class="row m-3">
    <div class="col-4">
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cstModal">
-      <i class="bi bi-wind"></i> Импортировать клиентов</button>
+      <i class="bi bi-download"></i> Импортировать клиентов</button>
+   </div>
+</div>
+
+
+<div class="row m-3">
+  <div class="col-2">Синхронизировано клиентов</div>
+  <div class="col-2">{{sinhronized}}</div>
+</div>
+<div class="row m-3">
+   <div class="col-4">
+      <form method="post" action="{% url 'salesreport:cst_sinhro' %}"  id="sinhro">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary" form="sinhro">
+      <i class="bi bi-plugin"></i> Синхронизировать клиентов</button>
+      </form>
    </div>
 </div>
 
