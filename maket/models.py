@@ -81,6 +81,34 @@ class Customer_groups(models.Model):
         return str(self.group_name)
 
 
+class Customer_all(models.Model):
+    """type - agency, dealer, etc.
+        number of Region"""
+    form = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    inn = models.CharField(max_length=20, null=True)
+    type = models.CharField(max_length=30)
+    region = models.CharField(max_length=2)
+    group = models.CharField(max_length=255)
+    customer_group = models.ForeignKey(Customer_groups, models.SET_NULL, null=True, default=None)
+    customer_type = models.ForeignKey(Customer_types, models.SET_NULL, null=True, default=None)
+    frigat_id = models.CharField(max_length=30, default='')
+    phone = models.CharField(max_length=255)
+    all_phones = models.CharField(max_length=600, null=True)
+    mail = models.CharField(max_length=255, null=True)
+    all_mails = models.CharField(max_length=600, null=True)
+    comment = models.CharField(max_length=255, null=True)
+    our_manager = models.CharField(max_length=255)
+    date_import = models.DateField(default='2010-01-01')
+
+    def __repr__(self):
+        return self.name
+
+    def __str__(self):
+        return str(self.name)
+
+
 class Detail_set(models.Model):
     """details of item detail# if exist
         name - name of goods
@@ -178,6 +206,7 @@ class Customer(models.Model):
     customer_type = models.ForeignKey(Customer_types, models.SET_NULL, null=True, default=None)
     frigat_id = models.CharField(max_length=30, default='')
     date_first = models.DateField(default='2018-01-01')
+    customer_all = models.ForeignKey(Customer_all, models.SET_NULL, null=True, default=None)
 
     def __repr__(self):
         return self.name
