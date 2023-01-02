@@ -101,7 +101,10 @@ def import_cst(request):
                 customer = Customer_all(frigat_id=fr_id, date_import=date.today())
             customer.name = row[1]
             customer.form = row[2]
-            customer.inn = row[3]
+            inn = row[3]
+            if len(inn) == 9 or len(inn) == 11:
+                inn = '0' + str(inn)
+            customer.inn = inn
             try:
                 customer.region = row[3][0:2]
             except:
