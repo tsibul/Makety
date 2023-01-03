@@ -35,6 +35,7 @@ class Sales_doc_imports(models.Model):
     code = models.CharField(max_length=20)
     detail_set = models.ForeignKey(Detail_set, models.SET_NULL, null=True)
     color_code = models.CharField(max_length=20)
+    main_color = models.CharField(max_length=9, null=True)
     item_color = models.ForeignKey(Item_color, models.SET_NULL, null=True)
     series_id = models.IntegerField(null=True)
     good_id = models.IntegerField(null=True)
