@@ -1,9 +1,11 @@
+import datetime
 from datetime import date
 import os
 
 
 from django.shortcuts import render, HttpResponseRedirect, reverse
-from maket.models import Customer_all, Customer, Customer_groups, Customer_types
+from maket.models import Customer_all, Customer, Customer_groups, Customer_types, Detail_set, Item_color
+from .models import Sales_doc_imports, Sales_docs
 from django.core.paginator import Paginator
 from django.core.files.storage import default_storage
 from django.db.models import Q, F
@@ -76,6 +78,100 @@ def index(request):
 
 
 def import_report(request):
+    report_file = request.FILES['importReport']
+    start_date = request.POST['start_date']
+    Sales_doc_imports.objects.filter(sales_doc_date__gte=start_date).delete()
+    try:
+        Sales_docs.objects.filter(sales_doc_date__gte=start_date).delete()
+    except:
+        pass
+    try:
+        os.remove('report_file')
+    except:
+        pass
+    file_name = default_storage.save('report_file', report_file)
+
+    with open(file_name, newline='', encoding='utf-8') as cust_csv:
+        for line in enumerate(cust_csv, 1):
+            row = line[1].rstrip('\r\n').split(';')
+            sales_doc_date = datetime.datetime.strptime(row[13], '%d.%m.%Y').strftime("%Y-%m-%d")
+            if sales_doc_date < start_date:
+                continue
+            import_date = date.today()
+            code_imp = row[0]
+            code_list = code_imp.split('.')
+            if len(code_list) >= 3 and len(code_list[1]) == 2:
+                code = code_list[0]
+                main_color = code_list[1]
+                code_list.pop(0)
+                color_code = '.'.join(code_list)
+            elif len(code_list) >= 3 and len(code_list[1]) > 2:
+                code = code_list[0] + '.' + code_list[1]
+                main_color = code_list[2]
+                code_list.pop(0).pop(0)
+                color_code = '.'.join(code_list)
+            elif len(code_list) >= 3 and len(code_list[1]) == 1:
+                code = code_list[0]
+                main_color = code_list[2]
+                code_list.pop(0)
+                color_code = '.'.join(code_list)
+            elif 1 < len(code_list) < 3:
+                code = code_list[0]
+                main_color = code_list[1]
+                code_list.pop(0)
+                color_code = '.'.join(code_list)
+            else:
+                code = code_list[0]
+                main_color = None
+                color_code = None
+            try:
+                detail_set = Detail_set.objects.get(item_name=code)
+            except:
+                detail_set = None
+            try:
+                item_color = Item_color.objects.get(color_id=main_color)
+            except:
+                main_color = None
+            series_id = row[1]
+            good_id = row[2]
+            good_group_id = row[3]
+            good_group = row[4]
+            good_title = row[5]
+            good_name = row[6]
+            code_1 = row[9]
+            quantity = row[10]
+            sales_doc_name = row[11]
+            sales_doc_no = row[12]
+            buy_without_vat = row[14]
+            buy_with_vat = row[15]
+            sales_quantity = row[17]
+            sale_without_vat = row[16]
+            sale_with_vat = row[18]
+            sale_price_vat = row[19]
+            customer_name = row[21]
+            customer_frigat_id = row[20]
+            customer_all = Customer_all.objects.get(frigat_id=customer_frigat_id)
+            try:
+                customer = Customer.objects.get(frigat_id=customer_frigat_id)
+            except:
+                customer = Customer(frigat_id=customer_frigat_id, date_first=sales_doc_date,
+                                    name=(customer_all.form + ' ' + customer_all.name), address=customer_all.address,
+                                    inn=customer_all.inn, region=customer_all.region, type=customer_all.type,
+                                    group=customer_all.group, customer_type=customer_all.customer_type,
+                                    customer_group=customer_all.customer_group, customer_all=customer_all)
+                customer.save()
+            report_record = Sales_doc_imports(import_date=import_date, code=code, detail_set=detail_set,
+                                              color_code=color_code, main_color=main_color, item_color=item_color,
+                                              series_id=series_id, good_id=good_id, good_group_id=good_group_id,
+                                              good_group=good_group, good_title=good_title, good_name=good_name,
+                                              code_1=code_1, quantity=quantity, sales_doc_name=sales_doc_name,
+                                              sales_doc_no=sales_doc_no, sales_doc_date=sales_doc_date,
+                                              buy_without_vat=buy_without_vat, buy_with_vat=buy_with_vat,
+                                              sales_quantity=sales_quantity, sale_without_vat=sale_without_vat,
+                                              sale_with_vat=sale_with_vat, sale_price_vat=sale_price_vat,
+                                              customer_name=customer_name, customer_frigat_id=customer_frigat_id,
+                                              customer=customer, customer_all=customer_all)
+            report_record.save()
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
