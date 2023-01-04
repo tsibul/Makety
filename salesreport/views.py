@@ -66,6 +66,8 @@ def index(request):
         date_last_cst = '2010-01-01'
     customers_quantity = Customer_all.objects.all().count()
     customers_active_quantity = Customer.objects.all().count()
+    sales_doc_quantity = Sales_docs.objects.all().count()
+    transactions_quantity = Sales_doc_imports.objects.all().count()
     sinhronized = Customer.objects.filter(Q(customer_all__isnull=False) &
                                           Q(group=F('customer_all__group')) &
                                           Q(type=F('customer_all__type')) &
@@ -77,7 +79,9 @@ def index(request):
                                           Q(name__endswith=F('customer_all__name'))
                                           ).count()
     context = {'navi': navi, 'date_last_cst': date_last_cst, 'customers_quantity': customers_quantity,
-               'customers_active_quantity': customers_active_quantity, 'sinhronized': sinhronized, 'date_last': date_last}
+               'customers_active_quantity': customers_active_quantity, 'sinhronized': sinhronized,
+               'date_last': date_last, 'sales_doc_quantity': sales_doc_quantity,
+               'transactions_quantity': transactions_quantity}
     return render(request, 'salesreport/index.html', context)
 
 
@@ -180,6 +184,10 @@ def import_report(request):
                                               customer_name=customer_name, customer_frigat_id=customer_frigat_id,
                                               customer=customer, customer_all=customer_all)
             report_record.save()
+    return HttpResponseRedirect(reverse('salesreport:index'))
+
+
+def sales_docs(request):
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
