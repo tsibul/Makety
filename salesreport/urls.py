@@ -14,4 +14,5 @@ urlpatterns = [
     path('cst_sinhro_err', views.cst_sinhro_err, name='cst_sinhro_err'),
     path('cst_sinhro_no', views.cst_sinhro_no, name='cst_sinhro_no'),
     path('sales_docs', views.sales_docs, name='sales_docs'),
+    path('customer_date', views.customer_date, name='customer_date'),
 ]
