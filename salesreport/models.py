@@ -13,6 +13,8 @@ class Sales_docs(models.Model):
     total_buy_with_vat = models.FloatField(default=0)
     total_buy_without_vat = models.FloatField(default=0)
     order = models.ForeignKey(Order_imports, models.SET_NULL, null=True)
+    good_no_error = models.BooleanField(default=True)
+    eco = models.BooleanField(default=True)
 
     def __repr__(self):
         return str(self.sales_doc_number) + ' от ' + str(self.sales_doc_date) + ' заказ ' + str(self.order.order_id)
