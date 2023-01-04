@@ -57,6 +57,10 @@ def customer_type_chose(type, region):
 def index(request):
     navi = 'Главная'
     try:
+        date_last = max(Sales_doc_imports.objects.values_list('import_date', flat=True))
+    except:
+        date_last = '2000-01-01'
+    try:
         date_last_cst = max(Customer_all.objects.values_list('date_import', flat=True))
     except:
         date_last_cst = '2010-01-01'
@@ -73,7 +77,7 @@ def index(request):
                                           Q(name__endswith=F('customer_all__name'))
                                           ).count()
     context = {'navi': navi, 'date_last_cst': date_last_cst, 'customers_quantity': customers_quantity,
-               'customers_active_quantity': customers_active_quantity, 'sinhronized': sinhronized}
+               'customers_active_quantity': customers_active_quantity, 'sinhronized': sinhronized, 'date_last': date_last}
     return render(request, 'salesreport/index.html', context)
 
 
@@ -129,9 +133,9 @@ def import_report(request):
             except:
                 detail_set = None
             try:
-                item_color = Item_color.objects.get(color_id=main_color)
+                item_color = Item_color.objects.get(color_id=main_color, color_scheme=detail_set.color_scheme)
             except:
-                main_color = None
+                item_color = None
             series_id = row[1]
             good_id = row[2]
             good_group_id = row[3]
@@ -139,15 +143,15 @@ def import_report(request):
             good_title = row[5]
             good_name = row[6]
             code_1 = row[9]
-            quantity = row[10]
+            quantity = int(row[10])
             sales_doc_name = row[11]
             sales_doc_no = row[12]
-            buy_without_vat = row[14]
-            buy_with_vat = row[15]
-            sales_quantity = row[17]
-            sale_without_vat = row[16]
-            sale_with_vat = row[18]
-            sale_price_vat = row[19]
+            buy_without_vat = float(row[14].replace(',', '.'))
+            buy_with_vat = float(row[15].replace(',', '.'))
+            sales_quantity = int(row[17].replace(',', '.'))
+            sale_without_vat = float(row[16].replace(',', '.'))
+            sale_with_vat = float(row[18].replace(',', '.'))
+            sale_price_vat = float(row[19].replace(',', '.'))
             customer_name = row[21]
             customer_frigat_id = row[20]
             customer_all = Customer_all.objects.get(frigat_id=customer_frigat_id)
@@ -159,6 +163,10 @@ def import_report(request):
                                     inn=customer_all.inn, region=customer_all.region, type=customer_all.type,
                                     group=customer_all.group, customer_type=customer_all.customer_type,
                                     customer_group=customer_all.customer_group, customer_all=customer_all)
+                customer.save()
+            if customer.date_first == datetime.datetime.strptime('2000-01-01', '%Y-%m-%d').date() \
+                    or datetime.datetime.strptime(sales_doc_date, '%Y-%m-%d').date() < customer.date_first:
+                customer.date_first = sales_doc_date
                 customer.save()
             report_record = Sales_doc_imports(import_date=import_date, code=code, detail_set=detail_set,
                                               color_code=color_code, main_color=main_color, item_color=item_color,
