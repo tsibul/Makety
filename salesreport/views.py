@@ -188,6 +188,7 @@ def import_report(request):
 
 
 def sales_docs(request):
+    sales_docs_imports = Sales_doc_imports.objects.filter(sales_doc__isnull=True)
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
