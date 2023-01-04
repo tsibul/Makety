@@ -54,6 +54,7 @@ def customer_type_chose(type, region):
         type_obj = ''
     return type_obj
 
+
 def index(request):
     navi = 'Главная'
     try:
@@ -68,6 +69,9 @@ def index(request):
     customers_active_quantity = Customer.objects.all().count()
     sales_doc_quantity = Sales_docs.objects.all().count()
     transactions_quantity = Sales_doc_imports.objects.all().count()
+    no_doc = Sales_doc_imports.objects.filter(sales_doc__isnull=True).count()
+    no_cust = Sales_docs.objects.filter(customer__isnull=True).count()
+    no_good = Sales_doc_imports.objects.filter(detail_set__isnull=True).count()
     sinhronized = Customer.objects.filter(Q(customer_all__isnull=False) &
                                           Q(group=F('customer_all__group')) &
                                           Q(type=F('customer_all__type')) &
@@ -81,13 +85,13 @@ def index(request):
     context = {'navi': navi, 'date_last_cst': date_last_cst, 'customers_quantity': customers_quantity,
                'customers_active_quantity': customers_active_quantity, 'sinhronized': sinhronized,
                'date_last': date_last, 'sales_doc_quantity': sales_doc_quantity,
-               'transactions_quantity': transactions_quantity}
+               'transactions_quantity': transactions_quantity, 'no_doc': no_doc, 'no_cust': no_cust, 'no_good': no_good}
     return render(request, 'salesreport/index.html', context)
 
 
 def import_report(request):
     report_file = request.FILES['importReport']
-    start_date = request.POST['start_date']
+    start_date = datetime.datetime.strptime(request.POST['start_date'], '%Y-%m-%d').date()
     Sales_doc_imports.objects.filter(sales_doc_date__gte=start_date).delete()
     try:
         Sales_docs.objects.filter(sales_doc_date__gte=start_date).delete()
@@ -103,6 +107,7 @@ def import_report(request):
         for line in enumerate(cust_csv, 1):
             row = line[1].rstrip('\r\n').split(';')
             sales_doc_date = datetime.datetime.strptime(row[13], '%d.%m.%Y').strftime("%Y-%m-%d")
+            sales_doc_date = datetime.datetime.strptime(sales_doc_date, '%Y-%m-%d').date()
             if sales_doc_date < start_date:
                 continue
             import_date = date.today()
@@ -162,14 +167,15 @@ def import_report(request):
             try:
                 customer = Customer.objects.get(frigat_id=customer_frigat_id)
             except:
-                customer = Customer(frigat_id=customer_frigat_id, date_first=sales_doc_date,
+                customer = Customer(frigat_id=customer_frigat_id,
+                                    date_first=sales_doc_date,
                                     name=(customer_all.form + ' ' + customer_all.name), address=customer_all.address,
                                     inn=customer_all.inn, region=customer_all.region, type=customer_all.type,
                                     group=customer_all.group, customer_type=customer_all.customer_type,
                                     customer_group=customer_all.customer_group, customer_all=customer_all)
                 customer.save()
             if customer.date_first == datetime.datetime.strptime('2000-01-01', '%Y-%m-%d').date() \
-                    or datetime.datetime.strptime(sales_doc_date, '%Y-%m-%d').date() < customer.date_first:
+                    or sales_doc_date < customer.date_first:
                 customer.date_first = sales_doc_date
                 customer.save()
             report_record = Sales_doc_imports(import_date=import_date, code=code, detail_set=detail_set,
@@ -188,14 +194,16 @@ def import_report(request):
 
 
 def sales_docs(request):
-    sales_docs = set(Sales_doc_imports.objects.filter(sales_doc__isnull=True).values_list('sales_doc_name', 'sales_doc_no', 'sales_doc_date', 'customer'))
-#    sales_docs_imports = Sales_doc_imports.objects.filter(sales_doc__isnull=True)
+    sales_docs = set(Sales_doc_imports.objects.filter(sales_doc__isnull=True).values_list('sales_doc_name',
+                                                                                          'sales_doc_no',
+                                                                                          'sales_doc_date', 'customer'))
     for sales_doc in sales_docs:
         sales_object = Sales_docs(sales_document=sales_doc[0], sales_doc_number=sales_doc[1],
                                   sales_doc_date=sales_doc[2], customer=Customer.objects.get(id=sales_doc[3]))
         sales_object.save()
         sales_docs_imports = Sales_doc_imports.objects.filter(sales_doc_name=sales_doc[0], sales_doc_no=sales_doc[1],
                                                               sales_doc_date=sales_doc[2], customer__id=sales_doc[3])
+        eco = 0
         for row in sales_docs_imports:
             row.sales_doc = sales_object
             sales_object.total_sale_with_vat += row.sale_with_vat
@@ -203,7 +211,12 @@ def sales_docs(request):
             sales_object.total_buy_with_vat += row.buy_with_vat
             sales_object.total_buy_without_vat += row.buy_without_vat
             sales_object.quantity += row.quantity
+            if row.detail_set is not None and row.detail_set.eco:
+                eco += row.sale_without_vat
+            if not row.detail_set:
+                sales_object.good_no_error = False
             row.save()
+        sales_object.eco = eco >= sales_object.total_sale_without_vat
         sales_object.save()
 
 
@@ -332,7 +345,7 @@ def cst_sinhro_err(request):
 
 def customer_sales(request):
     navi = 'Клиенты'
-    customers = Customer.objects.all().order_by('name')
+    customers = Customer.objects.all().order_by('customer_all__name')
     paginator = Paginator(customers, 25)  # Show 25 contacts per page.
 
     page_number = request.GET.get('page')
@@ -365,4 +378,12 @@ def customer_groups(request):
     navi = 'Группы клиентов'
     context = {'navi': navi}
     return render(request, 'salesreport/groups.html', context)
+
+
+def customer_date(request):
+    customers = Customer.objects.all()
+    for cst in customers:
+        if type(cst.date_first) == 'str':
+            cst.date_first = datetime.datetime.strptime(cst.date_first, '%Y-%m-%d').date()
+    return HttpResponseRedirect(reverse('salesreport:index'))
 

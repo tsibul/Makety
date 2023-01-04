@@ -6,6 +6,10 @@
 <div class="ms-3">Клиенты активные {{customers_active_quantity}}</div>
 <div class="ms-3">Количество отгрузок {{sales_doc_quantity}}</div>
 <div class="ms-3">Количество транзакций {{transactions_quantity}}</div>
+<div class="ms-3">Транзакции, не привязанные к товару {{no_good}}</div>
+<div class="ms-3">Транзакции без документов {{no_doc}}</div>
+<div class="ms-3">Документы, не привязанные к Клиенту {{no_cust}}</div>
+
 
 <div class="row m-3">
   <div class="col-2">Дата последнего импорта&nbsp;отгрузок</div>
@@ -81,6 +85,17 @@
       {% csrf_token %}
       <button type="submit" class="btn btn-primary" form="sinhro_err">
       <i class="bi bi-bug"></i> исправить ошибки по ИНН</button>
+      </form>
+   </div>
+</div>
+
+
+<div class="row m-3">
+   <div class="col-4">
+      <form action="{% url 'salesreport:customer_date' %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">
+      <i class="bi bi-calendar-date"></i>Дата в клиентах</button>
       </form>
    </div>
 </div>
