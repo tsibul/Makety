@@ -198,7 +198,7 @@ def update_cst(request):
 
 def customer_groups(request):
     navi = 'customers'
-    cst_groups = Customer_groups.objects.all()
+    cst_groups = Customer_groups.objects.all().order_by('group_name')
     context = {'navi': navi, 'active2': 'active', 'cst_groups': cst_groups}
     context.update(count_errors())
     return render(request, 'dictionarys/customer_groups.html', context)
