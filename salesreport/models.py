@@ -4,8 +4,8 @@ from maket.models import Customer, Detail_set, Item_color, Order_imports, Custom
 
 class Sales_docs(models.Model):
     sales_document = models.CharField(max_length=255)
-    sales_doc_number = models.IntegerField
-    sales_doc_date = models.DateField
+    sales_doc_number = models.IntegerField(null=True)
+    sales_doc_date = models.DateField(default='2000-01-01')
     customer = models.ForeignKey(Customer, models.SET_NULL, null=True)
     quantity = models.IntegerField(default=0)
     total_sale_with_vat = models.FloatField(default=0)
