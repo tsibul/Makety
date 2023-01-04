@@ -31,10 +31,10 @@ class Sales_doc_imports(models.Model):
     code_1
     """
 
-    import_date = models.DateField
+    import_date = models.DateField(default='2000-01-01')
     code = models.CharField(max_length=20)
     detail_set = models.ForeignKey(Detail_set, models.SET_NULL, null=True)
-    color_code = models.CharField(max_length=20)
+    color_code = models.CharField(max_length=20, null=True)
     main_color = models.CharField(max_length=9, null=True)
     item_color = models.ForeignKey(Item_color, models.SET_NULL, null=True)
     series_id = models.IntegerField(null=True)
@@ -48,12 +48,12 @@ class Sales_doc_imports(models.Model):
     sales_doc_name = models.CharField(max_length=255, default='Расходная накладная')
     sales_doc_no = models.IntegerField(null=True)
     sales_doc_date = models.DateField(default='2010-01-01')
-    buy_without_vat = models.FloatField
-    buy_with_vat = models.FloatField
-    sales_quantity = models.IntegerField
-    sale_without_vat = models.FloatField
-    sale_with_vat = models.FloatField
-    sale_price_vat = models.FloatField
+    buy_without_vat = models.FloatField(default=0)
+    buy_with_vat = models.FloatField(default=0)
+    sales_quantity = models.IntegerField(default=0)
+    sale_without_vat = models.FloatField(default=0)
+    sale_with_vat = models.FloatField(default=0)
+    sale_price_vat = models.FloatField(default=0)
     customer_name = models.CharField(max_length=255, null=True)
     customer_frigat_id = models.IntegerField(null=True)
     customer = models.ForeignKey(Customer, models.SET_NULL, null=True)
