@@ -7,10 +7,11 @@ class Sales_docs(models.Model):
     sales_doc_number = models.IntegerField
     sales_doc_date = models.DateField
     customer = models.ForeignKey(Customer, models.SET_NULL, null=True)
-    total_sale_with_vat = models.IntegerField
-    total_sale_without_vat = models.IntegerField
-    total_buy_with_vat = models.IntegerField
-    total_buy_without_vat = models.IntegerField
+    quantity = models.IntegerField(default=0)
+    total_sale_with_vat = models.FloatField(default=0)
+    total_sale_without_vat = models.FloatField(default=0)
+    total_buy_with_vat = models.FloatField(default=0)
+    total_buy_without_vat = models.FloatField(default=0)
     order = models.ForeignKey(Order_imports, models.SET_NULL, null=True)
 
     def __repr__(self):
