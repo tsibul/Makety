@@ -188,7 +188,25 @@ def import_report(request):
 
 
 def sales_docs(request):
-    sales_docs_imports = Sales_doc_imports.objects.filter(sales_doc__isnull=True)
+    sales_docs = set(Sales_doc_imports.objects.filter(sales_doc__isnull=True).values_list('sales_doc_name', 'sales_doc_no', 'sales_doc_date', 'customer'))
+#    sales_docs_imports = Sales_doc_imports.objects.filter(sales_doc__isnull=True)
+    for sales_doc in sales_docs:
+        sales_object = Sales_docs(sales_document=sales_doc[0], sales_doc_number=sales_doc[1],
+                                  sales_doc_date=sales_doc[2], customer=Customer.objects.get(id=sales_doc[3]))
+        sales_object.save()
+        sales_docs_imports = Sales_doc_imports.objects.filter(sales_doc_name=sales_doc[0], sales_doc_no=sales_doc[1],
+                                                              sales_doc_date=sales_doc[2], customer__id=sales_doc[3])
+        for row in sales_docs_imports:
+            row.sales_doc = sales_object
+            sales_object.total_sale_with_vat += row.sale_with_vat
+            sales_object.total_sale_without_vat += row.sale_without_vat
+            sales_object.total_buy_with_vat += row.buy_with_vat
+            sales_object.total_buy_without_vat += row.buy_without_vat
+            sales_object.quantity += row.quantity
+            row.save()
+        sales_object.save()
+
+
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
