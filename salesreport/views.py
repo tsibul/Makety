@@ -93,6 +93,7 @@ def import_report(request):
     report_file = request.FILES['importReport']
     start_date = datetime.datetime.strptime(request.POST['start_date'], '%Y-%m-%d').date()
     Sales_doc_imports.objects.filter(sales_doc_date__gte=start_date).delete()
+    Sales_docs.objects.filter(sales_doc_date__gte=start_date).delete()
     try:
         Sales_docs.objects.filter(sales_doc_date__gte=start_date).delete()
     except:
