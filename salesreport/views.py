@@ -179,6 +179,10 @@ def import_report(request):
                     or sales_doc_date < customer.date_first:
                 customer.date_first = sales_doc_date
                 customer.save()
+            if customer.date_last  == datetime.datetime.strptime('2100-01-01', '%Y-%m-%d').date() \
+                    or sales_doc_date > customer.date_last:
+                customer.date_last = sales_doc_date
+                customer.save()
             report_record = Sales_doc_imports(import_date=import_date, code=code, detail_set=detail_set,
                                               color_code=color_code, main_color=main_color, item_color=item_color,
                                               series_id=series_id, good_id=good_id, good_group_id=good_group_id,

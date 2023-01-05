@@ -43,6 +43,7 @@
     <th>ИНН</th>
     <th >Адрес</th>
     <th>Дата появления</th>
+    <th>Последняя дата</th>
     </tr>
 </thead>
 <tbody style="font-size: 80%;">
@@ -56,6 +57,7 @@
     <td id="in_{{cst.id}}" >{{cst.inn}}</td>
     <td id="addr_{{cst.id}}">{{cst.address}}</td>
     <td id="dt_{{cst.id}}">{{cst.date_first|date:'d.m.Y'}}</td>
+    <td id="dl_{{cst.id}}">{{cst.date_last|date:'d.m.Y'}}</td>
     </tr>
 {% endfor %}
 </tbody>
