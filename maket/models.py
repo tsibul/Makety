@@ -208,6 +208,7 @@ class Customer(models.Model):
     customer_type = models.ForeignKey(Customer_types, models.SET_NULL, null=True, default=None)
     frigat_id = models.CharField(max_length=30, default='')
     date_first = models.DateField(default='2000-01-01')
+    date_last = models.DateField(default='2100-01-01')
     customer_all = models.ForeignKey(Customer_all, models.SET_NULL, null=True, default=None)
 
     def __repr__(self):
