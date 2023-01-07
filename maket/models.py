@@ -210,6 +210,8 @@ class Customer(models.Model):
     date_first = models.DateField(default='2000-01-01')
     date_last = models.DateField(default='2100-01-01')
     customer_all = models.ForeignKey(Customer_all, models.SET_NULL, null=True, default=None)
+    active = models.BooleanField(default=True)
+    internal = models.BooleanField(default=False)
 
     def __repr__(self):
         return self.name
