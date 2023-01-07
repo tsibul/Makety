@@ -193,6 +193,12 @@ def update_cst(request):
     cst.inn = in_
     cst.address = ad
     cst.save()
+    cst.customer_all.group = cst.group
+    cst.customer_all.type = cst.type
+    cst.customer_all.customer_group = cst.customer_group
+    cst.customer_all.customer_type = cst.customer_type
+    cst.customer_all.region = cst.region
+    cst.customer_all.save()
     return HttpResponseRedirect(reverse('dictionarys:customers'))
 
 
