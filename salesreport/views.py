@@ -105,6 +105,8 @@ def import_report(request):
     file_name = default_storage.save('report_file', report_file)
 
     with open(file_name, newline='', encoding='utf-8') as cust_csv:
+        records_list = []
+        customer_list = []
         for line in enumerate(cust_csv, 1):
             row = line[1].rstrip('\r\n').split(';')
             sales_doc_date = datetime.datetime.strptime(row[13], '%d.%m.%Y').strftime("%Y-%m-%d")
@@ -114,28 +116,18 @@ def import_report(request):
             import_date = date.today()
             code_imp = row[0]
             code_list = code_imp.split('.')
-            if len(code_list) >= 3 and len(code_list[1]) == 2:
-                code = code_list[0]
+            code = code_list[0]
+            code_list.pop(0)
+            if len(code_list) >= 1 and len(code_list[0]) > 1:
+                main_color = code_list[0]
+                color_code = '.'.join(code_list)
+            elif len(code_list) > 1 and len(code_list[0]) == 1:
                 main_color = code_list[1]
-                code_list.pop(0)
                 color_code = '.'.join(code_list)
-            elif len(code_list) >= 3 and len(code_list[1]) > 2:
-                code = code_list[0] + '.' + code_list[1]
-                main_color = code_list[2]
-                code_list.pop(0).pop(0)
-                color_code = '.'.join(code_list)
-            elif len(code_list) >= 3 and len(code_list[1]) == 1:
-                code = code_list[0]
-                main_color = code_list[2]
-                code_list.pop(0)
-                color_code = '.'.join(code_list)
-            elif 1 < len(code_list) < 3:
-                code = code_list[0]
-                main_color = code_list[1]
-                code_list.pop(0)
-                color_code = '.'.join(code_list)
+            elif len(code_list) == 1 and len(code_list[0]) == 1:
+                main_color = None
+                color_code = code_list[1]
             else:
-                code = code_list[0]
                 main_color = None
                 color_code = None
             try:
@@ -153,18 +145,21 @@ def import_report(request):
             good_title = row[5]
             good_name = row[6]
             code_1 = row[9]
-            quantity = int(row[10])
+            quantity = float(row[10].replace(',', '.'))
             sales_doc_name = row[11]
             sales_doc_no = row[12]
             buy_without_vat = float(row[14].replace(',', '.'))
             buy_with_vat = float(row[15].replace(',', '.'))
-            sales_quantity = int(row[17].replace(',', '.'))
+            sales_quantity = float(row[17].replace(',', '.'))
             sale_without_vat = float(row[16].replace(',', '.'))
             sale_with_vat = float(row[18].replace(',', '.'))
             sale_price_vat = float(row[19].replace(',', '.'))
             customer_name = row[21]
             customer_frigat_id = row[20]
-            customer_all = Customer_all.objects.get(frigat_id=customer_frigat_id)
+            try:
+                customer_all = Customer_all.objects.get(frigat_id=customer_frigat_id)
+            except:
+                pass
             try:
                 customer = Customer.objects.get(frigat_id=customer_frigat_id)
             except:
@@ -174,15 +169,12 @@ def import_report(request):
                                     inn=customer_all.inn, region=customer_all.region, type=customer_all.type,
                                     group=customer_all.group, customer_type=customer_all.customer_type,
                                     customer_group=customer_all.customer_group, customer_all=customer_all)
-                customer.save()
             if customer.date_first == datetime.datetime.strptime('2000-01-01', '%Y-%m-%d').date() \
                     or sales_doc_date < customer.date_first:
                 customer.date_first = sales_doc_date
-                customer.save()
-            if customer.date_last  == datetime.datetime.strptime('2100-01-01', '%Y-%m-%d').date() \
-                    or sales_doc_date > customer.date_last:
+            if customer.date_last == datetime.datetime.strptime('2100-01-01', '%Y-%m-%d').date() \
+                    or sales_doc_date > datetime.datetime.strptime(str(customer.date_last), '%Y-%m-%d').date():
                 customer.date_last = sales_doc_date
-                customer.save()
             report_record = Sales_doc_imports(import_date=import_date, code=code, detail_set=detail_set,
                                               color_code=color_code, main_color=main_color, item_color=item_color,
                                               series_id=series_id, good_id=good_id, good_group_id=good_group_id,
@@ -194,7 +186,12 @@ def import_report(request):
                                               sale_with_vat=sale_with_vat, sale_price_vat=sale_price_vat,
                                               customer_name=customer_name, customer_frigat_id=customer_frigat_id,
                                               customer=customer, customer_all=customer_all)
-            report_record.save()
+            records_list.append(report_record)
+            customer_list.append(customer)
+        new_records = Sales_doc_imports.objects.bulk_create(records_list)
+        new_customers = Customer.objects.bulk_update(customer_list, ['frigat_id', 'date_first', 'name', 'address', 'inn',
+                                                                     'region', 'type', 'group', 'customer_type',
+                                                                     'customer_group', 'customer_all', 'date_last'])
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
