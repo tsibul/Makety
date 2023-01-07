@@ -86,22 +86,22 @@ class Customer_groups(models.Model):
 class Customer_all(models.Model):
     """type - agency, dealer, etc.
         number of Region"""
-    form = models.CharField(max_length=255)
+    form = models.CharField(max_length=255, blank=True)
     name = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
+    address = models.CharField(max_length=255, blank=True)
     inn = models.CharField(max_length=20, null=True)
-    type = models.CharField(max_length=30)
+    type = models.CharField(max_length=30, blank=True)
     region = models.CharField(max_length=2)
-    group = models.CharField(max_length=255)
+    group = models.CharField(max_length=255, blank=True)
     customer_group = models.ForeignKey(Customer_groups, models.SET_NULL, null=True, default=None)
     customer_type = models.ForeignKey(Customer_types, models.SET_NULL, null=True, default=None)
     frigat_id = models.CharField(max_length=30, default='')
-    phone = models.CharField(max_length=255)
-    all_phones = models.CharField(max_length=600, null=True)
-    mail = models.CharField(max_length=255, null=True)
-    all_mails = models.CharField(max_length=600, null=True)
-    comment = models.CharField(max_length=255, null=True)
-    our_manager = models.CharField(max_length=255)
+    phone = models.CharField(max_length=255, blank=True)
+    all_phones = models.CharField(max_length=600, null=True, blank=True)
+    mail = models.CharField(max_length=255, null=True, blank=True)
+    all_mails = models.CharField(max_length=600, null=True, blank=True)
+    comment = models.CharField(max_length=255, null=True, blank=True)
+    our_manager = models.CharField(max_length=255, blank=True)
     date_import = models.DateField(default='2000-01-01')
 
     def __repr__(self):
