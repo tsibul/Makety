@@ -252,7 +252,6 @@ def update_cst_group(request):
     return HttpResponseRedirect(reverse('dictionarys:customer_groups'))
 
 
-
 def colors(request):
     navi = 'colors'
     color = Item_color.objects.all().order_by('-color_scheme', 'color_id')
@@ -526,21 +525,4 @@ def scale(request):
         pg.item_height = round(pg.item_height_initial * scale, 3)
         pg.save()
     return HttpResponseRedirect(reverse('dictionarys:print_group'))
-
-
-def look_up_cst(lookup):
-    order = Order_imports.objects.filter(manager__manager__icontains=lookup)
-    cst_id = []
-    for ord in order:
-        cst_id.append(ord.customer.id)
-    customers = Customer.objects.filter(Q(name__icontains=lookup) | Q(address__icontains=lookup) | \
-                                        Q(id__in=cst_id)).order_by('name')
-    if len(customers) == 0:
-        return HttpResponseRedirect(reverse('dictionarys:customers'))
-    cst_groups = Customer_groups.objects.all().order_by('group_name')
-    cst_types = Customer_types.objects.all()
-    context = {'navi': 'customers', 'page_obj': customers, 'active2': 'active', 'look_up': True, 'lookup': lookup,
-               'customer_types': cst_types, 'customer_groups': cst_groups}
-    context.update(count_errors())
-    return context
 
