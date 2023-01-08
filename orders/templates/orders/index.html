@@ -129,7 +129,9 @@
 <table class="table table-info table-hover" style="font-size:90%;">
     <tbody >
     {% for ord in orders %}
-    <tr ondblclick="window.location.href='/orders/{{ord.id}}_{{lookup}}'" class="align-middle
+    <tr ondblclick={% if page_obj.number == '' %}"window.location.href='/orders/{{ord.id}}_{{lookup}}'"{% else %}
+           "window.location.href='/orders/{{ord.id}}_{{lookup}}?page={{page_obj.number}}'"{% endif %}
+           class="align-middle
            {%  if ord.maket_status == 'R' %} text-success{% elif ord.maket_status == 'N' %} text-danger {% endif %}">
         <td class="{% if ord.to_check %}text-danger{% else %}text-success{% endif %}"
             style="font-size: 140%;" onclick="window.open ('/orders/order_edit/{{ord.id}}', '_blank');">
