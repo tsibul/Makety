@@ -207,6 +207,7 @@
       {% if active1 == 'active' or active5 == 'active' %}
       <form action="{% url 'errors:badge_file_count' %}" method="post">
       {% csrf_token %}
+      <input type="number" hidden value="{{page_obj.number}}" name="page_no">
       <button type="submit" class="btn btn-secondary">Пересчитать связанные файлы</button>
       </form>
       <form action="/maket/look_up_not_finished/{% if active1 == 'active' %}orders{% elif active5 == 'active' %}maket_base{% endif %}"
@@ -224,7 +225,7 @@
         <button class="btn btn-primary" type="submit" >Поиск</button>
       </form>
       {% endif %}
-      <div class="d-flex text-white m-1 pt-1"> v3.6.6</div>
+      <div class="d-flex text-white m-1 pt-1"> v3.6.7</div>
     </span>
   </span>
 </nav>

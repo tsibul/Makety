@@ -224,13 +224,14 @@ def order_save(request):
 
 def badge_file_count(request):
     orders = Order_imports.objects.all()
+    page_no = '?page=' + request.POST['page_no']
     for order in orders:
         if order.order_upload:
             order.number_orders = 1
         order.number_makets = Makety.objects.filter(Q(order=order) & Q(uploaded=True)).count()
         order.number_additional = Additional_Files.objects.filter(order_id=order).count()
         order.save()
-    return HttpResponseRedirect(reverse('orders:index'))
+    return HttpResponseRedirect(reverse('orders:index') + page_no)
 
 
 def print_place_connect(request):

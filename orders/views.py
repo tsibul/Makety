@@ -47,8 +47,7 @@ def index(request):
                        page_obj2.object_list[0].order_date.strftime('%d.%m.%Y')
             date_range.append([i + 1, date_tmp])
         context = {'navi': navi, 'ord_imp': ord_imp, 'item_import': item_import, 'print_import': print_import,
-                   'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range,
-                   'page': page_number}
+                   'orders': orders, 'active1': 'active', 'page_obj': page_obj, 'date_range': date_range}
     except:
         context = {'navi': navi}
 
