@@ -44,9 +44,11 @@
         <h1 class="modal-title fs-5" id="custModalLabel">Редактировать Клиента</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="update_cst" method="post" id="form_">
+      <form action="{% url 'dictionarys:update_cst' %}" method="post" id="form_">
       {% csrf_token %}
       <div class="modal-body">
+        <input type="text" name="lookup" value="{{lookup}}" hidden>
+        <input type="text" name="look_up" value="{{look_up}}" hidden>
         <input type="number" class="form-control" form="form_" value="{{page_obj.number}}" name="page_no">
         <div class="row mb-1">
             <div class="col">
