@@ -11,7 +11,7 @@ from django.http import FileResponse, Http404
 
 from .models import Print_place, Print_position, Item_color, Order_imports, Item_imports, \
     Print_imports, Detail_set, Customer, Makety, Films, Itemgroup_in_Maket, Print_group, \
-    Print_in_Maket, Print_color, Additional_Files
+    Print_in_Maket, Print_color, Additional_Files, Customer_types, Customer_groups
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -480,7 +480,10 @@ def look_up(request, navi):
                                             Q(id__in=cst_id)).order_by('name')
         if len(customers) == 0:
             return HttpResponseRedirect(reverse('dictionarys:customers'))
-        context = {'navi': navi, 'page_obj': customers, 'active2': 'active', 'look_up': True, 'lookup': lookup}
+        cst_groups = Customer_groups.objects.all().order_by('group_name')
+        cst_types = Customer_types.objects.all()
+        context = {'navi': navi, 'page_obj': customers, 'active2': 'active', 'look_up': True, 'lookup': lookup,
+                   'customer_types': cst_types, 'customer_groups': cst_groups}
         context.update(count_errors())
         return render(request, 'dictionarys/customers.html', context)
 
