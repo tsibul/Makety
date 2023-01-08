@@ -52,14 +52,23 @@
 
 <div class="row m-3">
   <div class="col-2">Синхронизировано клиентов</div>
-  <div class="col-2">{{sinhronized}}</div>
+  <div class="col-1"><a href="{% url 'salesreport:cst_unsinhronized' %}" target="_blank">  {{sinhronized}} </a></div>
+</div>
+<div class="row m-3">
+  <div class="col-3">
+      <form action="{% url 'salesreport:cst_sinhro_group' %}" id="sinhro_group">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary" form="sinhro_group">
+      <i class="bi bi-people"></i>&nbsp;Синхронизировать клиентов по группе</button>
+      </form>
+  </div>
 </div>
 <div class="row m-3">
    <div class="col-4">
       <form method="post" action="{% url 'salesreport:cst_sinhro_inn' %}"  id="sinhro">
       {% csrf_token %}
       <button type="submit" class="btn btn-primary" form="sinhro">
-      <i class="bi bi-plugin"></i> Синхронизировать клиентов по ИНН</button>
+      <i class="bi bi-plugin"></i>&nbsp;Синхронизировать клиентов по ИНН</button>
       </form>
    </div>
 </div>
@@ -68,7 +77,7 @@
       <form method="post" action="{% url 'salesreport:cst_sinhro_no' %}"  id="sinhro_no">
       {% csrf_token %}
       <button type="submit" class="btn btn-primary" form="sinhro_no">
-      <i class="bi bi-plugin"></i> Синхронизировать клиентов без ИНН</button>
+      <i class="bi bi-plugin"></i>&nbsp;Синхронизировать клиентов без ИНН</button>
       </form>
    </div>
 </div>

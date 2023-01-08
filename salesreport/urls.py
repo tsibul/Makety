@@ -13,6 +13,9 @@ urlpatterns = [
     path('cst_sinhro_inn', views.cst_sinhro_inn, name='cst_sinhro_inn'),
     path('cst_sinhro_err', views.cst_sinhro_err, name='cst_sinhro_err'),
     path('cst_sinhro_no', views.cst_sinhro_no, name='cst_sinhro_no'),
+    path('cst_sinhro_group', views.cst_sinhro_group, name='cst_sinhro_group'),
     path('sales_docs', views.sales_docs, name='sales_docs'),
     path('customer_date', views.customer_date, name='customer_date'),
+    path('unsinhronized', views.cst_unsinhronized, name='cst_unsinhronized'),
+
 ]

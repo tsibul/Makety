@@ -304,6 +304,24 @@ def cst_sinhro_inn(request):
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
+def cst_sinhro_group(request):
+    customers = Customer.objects.filter(~Q(group=F('customer_all__group')) |
+                                        ~Q(type=F('customer_all__type')) |
+                                        ~Q(customer_group=F('customer_all__customer_group')) |
+                                        ~Q(customer_type=F('customer_all__customer_type')) |
+                                        ~Q(region=F('customer_all__region')))
+    for customer in customers:
+        customer_all = customer.customer_all
+        customer_all.group = customer.group
+        customer_all.customer_group = customer.customer_group
+        customer_all.type = customer.type
+        customer_all.customer_type = customer.customer_type
+        customer_all.region = customer.region
+        customer_all.save()
+    return HttpResponseRedirect(reverse('salesreport:index'))
+
+
+
 def cst_sinhro_no(request):
     customers = Customer.objects.filter(Q(inn='') &
                                         (Q(customer_all__isnull=True) |
@@ -328,6 +346,22 @@ def cst_sinhro_no(request):
                 customer_all.customer_type = customer.customer_type
                 customer_all.save()
     return HttpResponseRedirect(reverse('salesreport:index'))
+
+
+def cst_unsinhronized(request):
+    unsinhronized = Customer.objects.filter(~(Q(customer_all__isnull=False) &
+                                          Q(group=F('customer_all__group')) &
+                                          Q(type=F('customer_all__type')) &
+                                          (Q(customer_group=F('customer_all__customer_group')) |
+                                          Q(customer_group__isnull=True) & Q(customer_all__customer_group__isnull=True)) &
+                                          (Q(customer_type=F('customer_all__customer_type')) |
+                                          Q(customer_type__isnull=True) & Q(customer_all__customer_type__isnull=True)) &
+                                          Q(inn=F('customer_all__inn')) &
+                                          Q(name__endswith=F('customer_all__name'))
+                                          ))
+    context = {'customers': unsinhronized}
+
+    return render(request, 'salesreport/unsinhronized.html', context)
 
 
 def set_inn(customer):
