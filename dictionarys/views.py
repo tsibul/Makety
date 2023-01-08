@@ -205,12 +205,24 @@ def update_cst(request):
 def customer_groups(request):
     navi = 'customers'
     cst_groups = Customer_groups.objects.all().order_by('group_name')
-    context = {'navi': navi, 'active2': 'active', 'cst_groups': cst_groups}
+    cst_types = Customer_types.objects.all()
+    context = {'navi': navi, 'active2': 'active', 'cst_groups': cst_groups, 'cst_types': cst_types}
     context.update(count_errors())
     return render(request, 'dictionarys/customer_groups.html', context)
 
 
 def update_cst_group(request):
+    group_name = request.POST['gr_nm']
+    type_id = request.POST['gr_tp']
+    gr_tp = Customer_types.objects.get(id=type_id)
+    try:
+        group_id = request.POST['gr_id']
+        group = Customer_groups.objects.get(id=group_id)
+        group.group_name = group_name
+    except:
+        group = Customer_groups(group_name=group_name)
+    group.group_type = gr_tp
+    group.save()
     return HttpResponseRedirect(reverse('dictionarys:customer_groups'))
 
 

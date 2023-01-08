@@ -98,3 +98,16 @@ function clearModalCustomers(){
     document.getElementById('tp_o').value = null;
     document.getElementById('ad').textContent = null;
 }
+
+function fillModalCustomerGroups(custObj){
+    document.getElementById('id').value = custObj.dataset.id;
+    document.getElementById('nm').value = custObj.dataset.name;
+    document.getElementById('tp').value = custObj.dataset.type;
+
+}
+
+function clearModalCustomerGroups(){
+    document.getElementById('id').value = null;
+    document.getElementById('nm').value = null;
+    document.getElementById('tp').value = '1';
+}
