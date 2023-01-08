@@ -3,7 +3,9 @@ from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.urls import reverse
 from maket.models import Color_scheme, Print_type, Print_place, Print_position, Item_color, Detail_set, Customer, \
-    Print_group, Good_crm_type, Good_matrix_type, Customer_types, Customer_groups
+    Print_group, Good_crm_type, Good_matrix_type, Customer_types, Customer_groups, Order_imports
+from django.db.models import Q
+
 
 from maket.views import count_errors
 from decimal import Decimal
@@ -155,6 +157,14 @@ def customers(request):
     context = {'navi': navi, 'page_obj': page_obj, 'active2': 'active', 'customer_types': customer_types,
                'customer_groups': customer_groups}
     context.update(count_errors())
+    '''
+    try:
+        look_up = request.POST['look_up']
+        lookup = request.POST['lookup']
+        context.update({'look_up': look_up, 'lookup': lookup})
+    except:
+        pass
+    '''
     return render(request, 'dictionarys/customers.html', context)
 
 
@@ -169,7 +179,10 @@ def update_cst(request):
     nm = request.POST['nm']
     gr_old = request.POST['gr_o']
     gr_id = request.POST['gr_id']
-    gr = request.POST['gr']
+    try:
+        gr = request.POST['gr']
+    except:
+        gr = None
     tp_old = request.POST['tp_o']
     rg = request.POST['rg']
     in_ = request.POST['in_']
@@ -207,11 +220,16 @@ def update_cst(request):
     cst.customer_all.customer_type = cst.customer_type
     cst.customer_all.region = cst.region
     cst.customer_all.save()
-    return HttpResponseRedirect(reverse('dictionarys:customers') + page_no)
+    try:
+        lookup_str = request.POST['look_up']
+        lookup = request.POST['lookup']
+        return render(request, 'dictionarys/customers.html', look_up_cst(lookup))
+    except:
+        return HttpResponseRedirect(reverse('dictionarys:customers') + page_no)
 
 
 def customer_groups(request):
-    navi = 'customers'
+    navi = 'customer_groups'
     cst_groups = Customer_groups.objects.all().order_by('group_name')
     cst_types = Customer_types.objects.all()
     context = {'navi': navi, 'active2': 'active', 'cst_groups': cst_groups, 'cst_types': cst_types}
@@ -510,4 +528,19 @@ def scale(request):
     return HttpResponseRedirect(reverse('dictionarys:print_group'))
 
 
+def look_up_cst(lookup):
+    order = Order_imports.objects.filter(manager__manager__icontains=lookup)
+    cst_id = []
+    for ord in order:
+        cst_id.append(ord.customer.id)
+    customers = Customer.objects.filter(Q(name__icontains=lookup) | Q(address__icontains=lookup) | \
+                                        Q(id__in=cst_id)).order_by('name')
+    if len(customers) == 0:
+        return HttpResponseRedirect(reverse('dictionarys:customers'))
+    cst_groups = Customer_groups.objects.all().order_by('group_name')
+    cst_types = Customer_types.objects.all()
+    context = {'navi': 'customers', 'page_obj': customers, 'active2': 'active', 'look_up': True, 'lookup': lookup,
+               'customer_types': cst_types, 'customer_groups': cst_groups}
+    context.update(count_errors())
+    return context
 
