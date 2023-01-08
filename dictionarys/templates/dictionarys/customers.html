@@ -13,7 +13,7 @@
             <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
         {% endif %}
         <span class="current btn btn-sm btn-outline-secondary">
-           {{ page_obj.object_list.0}} - {{ page_obj.object_list.24}} (страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }})
+           страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }}
         </span>
         {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
@@ -23,15 +23,15 @@
 </div><!-- pagination -->
     </div>
     <div class="col text-end">
-            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="_ChooseClient"
+        {{ page_obj.object_list.0}} - {{ page_obj.object_list.24}}
+<!--            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="_ChooseClient"
                     data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
-                Выбрать Клиентов
             </button>
               <ul class="dropdown-menu fw-bold" aria-labelledby="ChooseClient">
                 {% for c_range in cst_range %}
               <li><a class="dropdown-item" href="?page={{ c_range.0 }}"> {{ c_range.1 }}</a></li>
                 {% endfor %}
-              </ul>
+              </ul><--->
     </div>
 </div>
 {% endif %}
@@ -47,6 +47,7 @@
       <form action="update_cst" method="post" id="form_">
       {% csrf_token %}
       <div class="modal-body">
+        <input type="number" class="form-control" form="form_" value="{{page_obj.number}}" name="page_no">
         <div class="row mb-1">
             <div class="col">
                 <label for="id">ID Макеты</label>
@@ -71,9 +72,15 @@
         <div class="row mb-1">
             <label for="gr">группа</label>
             <div class="col">
-            <input class="form-control" type="text" id="gr" name="gr"></div>
+                <select class="form-select" id="gr" name="gr">
+                {% for cst_group in customer_groups %}
+                    <option value="{{cst_group.id}}">{{cst_group.group_name}}</option>
+                {% endfor %}
+                </select>
+            </div>
             <div class="col">
-            <input class="form-control" type="text" id="gr_o" name="gr_o"></div>
+            <input class="form-control" type="text" id="gr_o" name="gr_o">
+            </div>
         </div>
         <div class="row mb-1">
             <label for="tp">тип</label>
@@ -115,7 +122,7 @@
 
 {% for cst in page_obj %}
     <tr onclick="fillModalCustomers(this);" id="row_{{cst.id}}" data-bs-toggle="modal" data-bs-target="#custModal" data-id="{{cst.id}}"
-        data-name="{{cst.name}}" data-group_old="{{cst.group}}" data-group="{{cst.customer_group.group_name}}"
+        data-name="{{cst.name}}" data-group_old="{{cst.group}}" data-group="{{cst.customer_group.id}}"
         data-type_old="{{cst.type}}" data-type="{{cst.customer_type.id}}" data-region="{{cst.region}}" data-inn="{{cst.inn}}"
         data-address="{{cst.address}}" data-group_id="{{cst.customer_group.id}}" data-fr="{{cst.frigat_id}}">
     <input type="text" hidden value="{{cst.id}}" id="id_{{cst.id}}">

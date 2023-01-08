@@ -137,10 +137,12 @@ def customers(request):
     navi = 'customers'
     customers = Customer.objects.all().order_by('customer_all__name')
     customer_types = Customer_types.objects.all()
+    customer_groups = Customer_groups.objects.all().order_by('group_name')
     paginator = Paginator(customers, 25)  # Show 25 contacts per page.
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    '''
     cst_range = []
     for i in range(page_obj.paginator.num_pages):
         page_obj2 = paginator.get_page(i + 1)
@@ -149,13 +151,19 @@ def customers(request):
             cst_range.append([i + 1, '> ' + cst_tmp])
         except:
             cst_range.append(['нет данных'])
-
-    context = {'navi': navi, 'page_obj': page_obj, 'active2': 'active', 'customer_types': customer_types, 'cst_range': cst_range}
+    '''
+    context = {'navi': navi, 'page_obj': page_obj, 'active2': 'active', 'customer_types': customer_types,
+               'customer_groups': customer_groups}
     context.update(count_errors())
     return render(request, 'dictionarys/customers.html', context)
 
 
 def update_cst(request):
+
+#    try:
+    page_no = '?page=' + request.POST['page_no']
+#    except:
+#        page_no = ''
     cst_id = request.POST['id']
     cst = Customer.objects.get(id=cst_id)
     nm = request.POST['nm']
@@ -174,12 +182,12 @@ def update_cst(request):
         pass
     if gr != '' or gr_id != '':
         try:
-            group = Customer_groups.objects.get(id=gr_id)
+            group = Customer_groups.objects.get(id=gr)
         except:
             try:
-                group = Customer_groups.objects.get(group_name=gr)
+                group = Customer_groups.objects.get(group_name=gr_old)
             except:
-                group = Customer_groups(group_name=gr)
+                group = Customer_groups(group_name=gr_old)
                 try:
                     group.group_type = type
                 except:
@@ -199,7 +207,7 @@ def update_cst(request):
     cst.customer_all.customer_type = cst.customer_type
     cst.customer_all.region = cst.region
     cst.customer_all.save()
-    return HttpResponseRedirect(reverse('dictionarys:customers'))
+    return HttpResponseRedirect(reverse('dictionarys:customers') + page_no)
 
 
 def customer_groups(request):
@@ -213,7 +221,7 @@ def customer_groups(request):
 
 def update_cst_group(request):
     group_name = request.POST['gr_nm']
-    type_id = request.POST['gr_tp']
+    type_id = request.POST['tp']
     gr_tp = Customer_types.objects.get(id=type_id)
     try:
         group_id = request.POST['gr_id']
