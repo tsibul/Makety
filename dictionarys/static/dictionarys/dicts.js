@@ -92,7 +92,7 @@ function clearModalCustomers(){
     document.getElementById('rg').value = null;
     document.getElementById('in').value = null;
     document.getElementById('nm').textContent = null;
-    document.getElementById('gr').value = null;
+    document.getElementById('gr').value = '1';
     document.getElementById('gr_o').value = null;
     document.getElementById('tp').value = '1';
     document.getElementById('tp_o').value = null;
