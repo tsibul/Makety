@@ -7,7 +7,7 @@ from maket.models import Color_scheme, Print_type, Print_place, Print_position, 
 from django.db.models import Q
 
 
-from maket.views import count_errors
+from Makety.service import count_errors, look_up_cst
 from decimal import Decimal
 
 
