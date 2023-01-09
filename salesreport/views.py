@@ -65,8 +65,13 @@ def index(request):
         date_last_cst = max(Customer_all.objects.values_list('date_import', flat=True))
     except:
         date_last_cst = '2010-01-01'
-    customers_quantity = Customer_all.objects.all().count()
-    customers_active_quantity = Customer.objects.all().count()
+    customers_all_quantity = Customer_all.objects.all().count()
+    customers_active_quantity = Customer.objects.filter(active=True, internal=False).count()
+    customers_quantity = Customer.objects.all().count()
+
+    groups_active_quantity = Customer_groups.objects.filter(active=True).count()
+    groups_quantity = Customer_groups.objects.all().count()
+
     sales_doc_quantity = Sales_docs.objects.all().count()
     transactions_quantity = Sales_doc_imports.objects.all().count()
     no_doc = Sales_doc_imports.objects.filter(sales_doc__isnull=True).count()
@@ -84,8 +89,9 @@ def index(request):
                                           ).count()
     context = {'navi': navi, 'date_last_cst': date_last_cst, 'customers_quantity': customers_quantity,
                'customers_active_quantity': customers_active_quantity, 'sinhronized': sinhronized,
-               'date_last': date_last, 'sales_doc_quantity': sales_doc_quantity,
-               'transactions_quantity': transactions_quantity, 'no_doc': no_doc, 'no_cust': no_cust, 'no_good': no_good}
+               'date_last': date_last, 'sales_doc_quantity': sales_doc_quantity, 'customers_all_quantity': customers_all_quantity,
+               'transactions_quantity': transactions_quantity, 'no_doc': no_doc, 'no_cust': no_cust, 'no_good': no_good,
+               'groups_quantity': groups_quantity, 'groups_active_quantity': groups_active_quantity}
     return render(request, 'salesreport/index.html', context)
 
 
@@ -397,6 +403,39 @@ def customer_sales(request):
 
     context = {'navi': navi, 'page_obj': page_obj, 'cst_range': cst_range}
     return render(request, 'salesreport/customers.html', context)
+
+
+def customer_active(request):
+    navi = 'Клиенты'
+    customers = Customer.objects.filter(active=True, internal=False).order_by('customer_all__name')
+    paginator = Paginator(customers, 25)  # Show 25 contacts per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {'navi': navi, 'page_obj': page_obj}
+    return render(request, 'salesreport/customers.html', context)
+
+
+def cst_set_inactive(request):
+    d_n = datetime.date.today() - datetime.timedelta(weeks=154)
+    customers_list = Customer.objects.all()
+    for cst in customers_list:
+        if cst.date_last < d_n:
+            cst.active = False
+        else:
+            cst.active = True
+    Customer.objects.bulk_update(customers_list, ['active'])
+    return HttpResponseRedirect(reverse('salesreport:index'))
+
+def group_set_inactive(request):
+    d_n = datetime.date.today() - datetime.timedelta(weeks=154)
+    customers_list = Customer.objects.filter(date_last__lt=d_n)
+    for cst in customers_list:
+        cst.active = False
+    Customer.objects.bulk_update(customers_list, ['active'])
+    return HttpResponseRedirect(reverse('salesreport:index'))
+
 
 
 def customer_all(request):
