@@ -14,6 +14,8 @@
             <th>Код</th>
             <th>Тип Группы</th>
             <th>Скидка</th>
+            <th>Первая продажа</th>
+            <th>Последняя продажа</th>
         </tr>
     </thead>
     {% for cst_gr in cst_groups %}
@@ -23,6 +25,8 @@
             <td>{{cst_gr.group_type.code}}</td>
             <td>{{cst_gr.group_type.type_name}}</td>
             <td>{{cst_gr.group_type.group_discount}}&nbsp;%</td>
+            <td>{{cst_gr.date_first|date:'d.m.Y'}}</td>
+            <td>{{cst_gr.date_last|date:'d.m.Y'}}</td>
         </tr>
     {% endfor %}
     <tbody>
