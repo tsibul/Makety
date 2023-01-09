@@ -46,7 +46,14 @@
     <div class="m-1 col-auto">Группы активные</div>
     <div class="m-1 col-auto">{{groups_active_quantity}}</div>
 </div>
- <div class="m-1 text-nowrap">
+<div class="m-1 text-nowrap">
+     <form action="{% url 'salesreport:group_set_dates' %}" method="post">
+     {% csrf_token %}
+     <button type="submit" class="btn btn-sm btn-primary">
+     <i class="bi bi-calendar-day"></i>&nbsp;Установить даты по группам</button>
+     </form>
+ </div>
+<div class="m-1 text-nowrap">
      <form action="{% url 'salesreport:group_set_inactive' %}" method="post">
      {% csrf_token %}
      <button type="submit" class="btn btn-sm btn-primary">

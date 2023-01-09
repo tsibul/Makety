@@ -20,7 +20,9 @@ urlpatterns = [
     path('cst_sinhro_no', views.cst_sinhro_no, name='cst_sinhro_no'),
     path('cst_sinhro_group', views.cst_sinhro_group, name='cst_sinhro_group'),
     path('cst_set_inactive', views.cst_set_inactive, name='cst_set_inactive'),
+
     path('group_set_inactive', views.group_set_inactive, name='group_set_inactive'),
+    path('group_set_dates', views.group_set_dates, name='group_set_dates'),
 
     path('sales_docs', views.sales_docs, name='sales_docs'),
     path('customer_date', views.customer_date, name='customer_date'),

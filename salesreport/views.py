@@ -72,6 +72,11 @@ def index(request):
     groups_active_quantity = Customer_groups.objects.filter(active=True).count()
     groups_quantity = Customer_groups.objects.all().count()
 
+    clients_active_quantity = Customer.objects.filter(active=True, internal=False, customer_group__isnull=True).count() + \
+                              Customer_groups.objects.filter(active=True).count()
+    clients_quantity = Customer.objects.filter(customer_group__isnull=True).count() + \
+                       Customer_groups.objects.all().count()
+
     sales_doc_quantity = Sales_docs.objects.all().count()
     transactions_quantity = Sales_doc_imports.objects.all().count()
     no_doc = Sales_doc_imports.objects.filter(sales_doc__isnull=True).count()
@@ -91,7 +96,8 @@ def index(request):
                'customers_active_quantity': customers_active_quantity, 'sinhronized': sinhronized,
                'date_last': date_last, 'sales_doc_quantity': sales_doc_quantity, 'customers_all_quantity': customers_all_quantity,
                'transactions_quantity': transactions_quantity, 'no_doc': no_doc, 'no_cust': no_cust, 'no_good': no_good,
-               'groups_quantity': groups_quantity, 'groups_active_quantity': groups_active_quantity}
+               'groups_quantity': groups_quantity, 'groups_active_quantity': groups_active_quantity,
+               'clients_quantity': clients_quantity, 'clients_active_quantity': clients_active_quantity}
     return render(request, 'salesreport/index.html', context)
 
 
@@ -430,13 +436,25 @@ def cst_set_inactive(request):
 
 def group_set_inactive(request):
     d_n = datetime.date.today() - datetime.timedelta(weeks=154)
-    customers_list = Customer.objects.filter(date_last__lt=d_n)
-    for cst in customers_list:
-        cst.active = False
-    Customer.objects.bulk_update(customers_list, ['active'])
+    groups_list = Customer_groups.objects.filter(date_last__lt=d_n)
+#    map(lambda x: x.active = False, groups_list)
+    for grp in groups_list:
+        if grp.date_last < d_n:
+            grp.active = False
+        else:
+            grp.active = True
+    Customer_groups.objects.bulk_update(groups_list, ['active'])
     return HttpResponseRedirect(reverse('salesreport:index'))
 
-
+def group_set_dates(request):
+    groups_list = Customer_groups.objects.all()
+    for grp in groups_list:
+        date_first = min(Customer.objects.filter(customer_group=grp).values_list('date_first', flat=True))
+        date_last = max(Customer.objects.filter(customer_group=grp).values_list('date_last', flat=True))
+        grp.date_first = date_first
+        grp.date_last = date_last
+    Customer_groups.objects.bulk_update(groups_list, ['date_first', 'date_last'])
+    return HttpResponseRedirect(reverse('salesreport:index'))
 
 def customer_all(request):
     navi = 'Все Клиенты'
