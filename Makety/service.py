@@ -83,7 +83,7 @@ def look_up_cst(lookup):
     for ord in order:
         cst_id.append(ord.customer.id)
     customers = Customer.objects.filter(Q(name__icontains=lookup) | Q(address__icontains=lookup) | \
-                                        Q(id__in=cst_id)).order_by('name')
+                                        Q(id__in=cst_id) | Q(customer_all__mail__icontains=lookup)).order_by('name')
     if len(customers) == 0:
         return  False
     cst_groups = Customer_groups.objects.all().order_by('group_name')
