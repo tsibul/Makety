@@ -75,6 +75,10 @@ class Customer_groups(models.Model):
     group_type = models.ForeignKey(Customer_types, models.SET_NULL, null=True)
     phone = models.CharField(max_length=20, default='')
     mail = models.CharField(max_length=150, default='')
+    date_first = models.DateField(default='2100-01-01')
+    date_last = models.DateField(default='2000-01-01')
+    active = models.BooleanField(default=True)
+
 
     def __repr__(self):
         return self.group_name
