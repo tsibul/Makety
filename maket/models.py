@@ -283,7 +283,7 @@ class Item_imports(models.Model):
         print_name - name of print"""
     print_id = models.IntegerField(default=0)
     item = models.ForeignKey(Detail_set, models.SET_NULL, null=True)
-    code = models.CharField(max_length=20, blank=True, null=True)
+    code = models.CharField(max_length=40, blank=True, null=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     quantity = models.IntegerField(default=0)
     print_name = models.CharField(max_length=50, blank=True, null=True)
