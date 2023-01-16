@@ -108,17 +108,18 @@
   </div>
 </div>
 
-<table class="table table-sm table-hover ms-1">
+<table class="table table-sm table-hover ms-1" style="font-size: 80%;">
 <thead>
-    <tr  class="table-primary">
-    <th class="text-nowrap"><h6>Fr #&nbsp;</h6></th>
-    <th><h6>Название Клиента</h6></th>
-    <th colspan="2"><h6>Группа</h6></th>
-    <th colspan="2"><h6>Тип</h6></th>
-    <th><h6>Регион</h6></th>
-    <th><h6>ИНН</h6></th>
-    <th ><h6>Адрес</h6></th>
-    <th ><h6>E-mail</h6></th>
+    <tr  class="table-info">
+    <th class="text-nowrap"><strong>Fr #&nbsp;</strong></th>
+    <th><strong>Название Клиента</strong></th>
+    <th colspan="2"><strong>Группа</strong></th>
+    <th colspan="2"><strong>Тип</strong></th>
+    <th><strong>Регион</strong></th>
+    <th><strong>ИНН</strong></th>
+    <th ><strong>Адрес</strong></th>
+    <th ><strong>E-mail</strong></th>
+    <th ><strong>Последняя продажа</strong></th>
     </tr>
 </thead>
 <tbody>
@@ -127,7 +128,8 @@
     <tr onclick="fillModalCustomers(this);" id="row_{{cst.id}}" data-bs-toggle="modal" data-bs-target="#custModal" data-id="{{cst.id}}"
         data-name="{{cst.name}}" data-group_old="{{cst.group}}" data-group="{{cst.customer_group.id}}"
         data-type_old="{{cst.type}}" data-type="{{cst.customer_type.id}}" data-region="{{cst.region}}" data-inn="{{cst.inn}}"
-        data-address="{{cst.address}}" data-group_id="{{cst.customer_group.id}}" data-fr="{{cst.frigat_id}}">
+        data-address="{{cst.address}}" data-group_id="{{cst.customer_group.id}}" data-fr="{{cst.frigat_id}}"
+        {% if not cst.active or cst.internal %}class="text-danger"{% endif %}>
     <input type="text" hidden value="{{cst.id}}" id="id_{{cst.id}}">
     <td id="fr_{{cst.id}}"><div >{{cst.frigat_id}}</div></td>
     <td id="nm_{{cst.id}}" class="fw-bold"><div >{{cst.name}}</div></td>
@@ -139,6 +141,7 @@
     <td id="in_{{cst.id}}" >{{cst.inn}}</td>
     <td id="addr_{{cst.id}}">{{cst.address}}</td>
     <td id="mail_{{cst.id}}">{{cst.customer_all.mail}}</td>
+    <td id="dl_{{cst.id}}">{{cst.date_last|date:'d.m.Y'}}</td>
     </tr>
 {% endfor %}
 </tbody>
