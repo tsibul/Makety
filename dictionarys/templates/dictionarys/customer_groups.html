@@ -20,7 +20,8 @@
     </thead>
     {% for cst_gr in cst_groups %}
         <tr data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{cst_gr.id}}" data-name="{{cst_gr.group_name}}"
-            data-type="{{cst_gr.group_type.id}}" onclick="fillModalCustomerGroups(this);">
+            data-type="{{cst_gr.group_type.id}}" onclick="fillModalCustomerGroups(this);"
+            {% if not cst_gr.active %}class="text-danger"{% endif %} >
             <td>{{cst_gr.group_name}}</td>
             <td>{{cst_gr.group_type.code}}</td>
             <td>{{cst_gr.group_type.type_name}}</td>
