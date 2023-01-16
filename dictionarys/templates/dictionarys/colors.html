@@ -56,7 +56,7 @@
 
 <table class="table table-sm table-hover">
 <thead>
-<tr class="table-primary" onclick="javascript:colapse_('5');">
+<tr class="table-info" onclick="javascript:colapse_('5');" style="font-size: 80%;">
     <th class="ps-3">ID</th>
     <th >Название</th>
     <th >Pantone С</th>
@@ -67,7 +67,7 @@
 </thead>
 <tbody id="collapse_5">
 {% for clr in color %}
-<tr >
+<tr style="font-size: 80%;">
     <td id="clrid_{{clr.id}}" class="ps-3">{{clr.color_id}}</td>
     <td id="clrnm_{{clr.id}}">{{clr.color_name}}</td>
     <td id="clrpnt_{{clr.id}}">{{clr.pantone}}</td>
