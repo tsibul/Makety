@@ -2,11 +2,39 @@
 {% load static %}
 {% block title %}Номенклатура{% endblock %}
 {% block content %}
-<div class="row p-2 fixed-bottom bg-light">
-<div class="col"><h5>Номенклатура</h5></div>
+<div class="row m-1 p-2 fixed-bottom bg-light">
+<div class="pagination" xmlns="http://www.w3.org/1999/html">
+    <span class="step-links dropup">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-outline-primary">&laquo; первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">предыдущая</a>
+        {% endif %}
+        <span class="current btn btn-outline-secondary">
+           {{ page_obj.object_list.19.order_date|date:"d.m.y" }} - {{ page_obj.object_list.0.order_date|date:"d.m.y" }} (страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }})
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-primary">последняя &raquo;</a>
+        {% endif %}
+<!--
+        &nbsp
+            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="_ChooseClient"
+                    data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+                Выбрать даты
+            </button>
+              <ul class="dropdown-menu fw-bold" aria-labelledby="ChooseClient">
+                {% for dt_range in date_range %}
+              <li><a class="dropdown-item" href="?page={{ dt_range.0 }}"> {{ dt_range.1 }}</a></li>
+                {% endfor %}
+              </ul>
+<--->
+    </span>
+<div class="col"></div>
 <div class="col text-end"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
               Добавить Номенклатуру
 </button></div>
+</div><!-- pagination -->
+
 </div>
 <!-- Modal --> <form id="add_detail" action="{% url 'dictionarys:add_detail' %}" method="post">
 {% csrf_token %}
@@ -18,6 +46,7 @@
       </div>
       <div class="modal-body">
          <!--  --->
+          <input type="number" class="form-control" form="add_detail" value="{{page_obj.number}}" hidden name="page_no">
           <div class="col p-1">
               <input type="text" class="form-control" name="dt_it_id" id="dt_it_id" placeholder="ID" value="" readonly></div>
           <div class="col p-1">
@@ -160,6 +189,9 @@
 <table class="table table-sm table-hover ms-1" style="font-size: 80%;">
 <thead>
     <tr  class="table-info">
+        <th colspan="19"><h5>Номенклатура<h5></h5></th>
+    </tr>
+    <tr  class="table-info">
     <th><h6>Арт</h6></th>
     <th style="min-width:300px;"><h6>Название</h6></th>
     <th><h6>Эко&nbsp;</h6></th>
@@ -171,7 +203,7 @@
     </tr>
 </thead>
 <tbody>
-{% for good in goods %}
+{% for good in page_obj %}
     <form action="update_goods/{{good.id}}" method="post" id="form_{{good.id}}">
     {% csrf_token %}
     <tr onclick="fillModalGoods(this)" data-bs-toggle="modal" data-bs-target="#addModal" id="row_{{good.id}}"

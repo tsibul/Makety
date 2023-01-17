@@ -25,14 +25,18 @@ def goods(request):
     for prt in prt_group:
         print_group.append(prt.code)
 
+    paginator = Paginator(goods, 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-    context = {'navi': navi, 'goods': goods, 'active2': 'active', 'color_scheme': color_scheme,
+    context = {'navi': navi, 'page_obj': page_obj, 'active2': 'active', 'color_scheme': color_scheme,
                'print_group': print_group, 'goods_matrix': goods_matrix, 'goods_crm': goods_crm}
     context.update(count_errors())
     return render(request, 'dictionarys/goods.html', context)
 
 
 def add_detail(request):
+    page_no = '?page=' + request.POST['page_no']
     good_id = request.POST['dt_it_id']
     item_code = request.POST['dt_it_art']
     name = request.POST['dt_it_nm']
@@ -132,7 +136,7 @@ def add_detail(request):
     det_set.detail6_name = detail6_name
     det_set.detail6_place = detail6_place
     det_set.save()
-    return HttpResponseRedirect(reverse('dictionarys:goods'))
+    return HttpResponseRedirect(reverse('dictionarys:goods') + page_no)
 
 
 def customers(request):
