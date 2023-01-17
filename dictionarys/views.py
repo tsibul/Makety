@@ -173,11 +173,7 @@ def customers(request):
 
 
 def update_cst(request):
-
-#    try:
     page_no = '?page=' + request.POST['page_no']
-#    except:
-#        page_no = ''
     cst_id = request.POST['id']
     cst = Customer.objects.get(id=cst_id)
     nm = request.POST['nm']
@@ -247,6 +243,7 @@ def customer_groups(request):
 
 
 def update_cst_group(request):
+    page_no = '?page=' + request.POST['page_no']
     group_name = request.POST['gr_nm']
     type_id = request.POST['tp']
     gr_tp = Customer_types.objects.get(id=type_id)
@@ -258,7 +255,7 @@ def update_cst_group(request):
         group = Customer_groups(group_name=group_name)
     group.group_type = gr_tp
     group.save()
-    return HttpResponseRedirect(reverse('dictionarys:customer_groups'))
+    return HttpResponseRedirect(reverse('dictionarys:customer_groups') + page_no)
 
 
 def colors(request):
