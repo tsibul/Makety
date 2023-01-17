@@ -41,7 +41,6 @@ def add_detail(request):
     item_code = request.POST['dt_it_art']
     name = request.POST['dt_it_nm']
     cs = request.POST['dt_it_clr']
-    pg = request.POST['dt_it_pg']
     eco = request.POST['eco']
     try:
         color_scheme = Color_scheme.objects.get(scheme_name=cs)
@@ -58,6 +57,7 @@ def add_detail(request):
     except:
         crm = None
     try:
+        pg = request.POST['dt_it_pg']
         print_group = Print_group.objects.get(code=pg)
     except:
         print_group = None
