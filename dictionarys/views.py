@@ -236,7 +236,12 @@ def customer_groups(request):
     navi = 'customer_groups'
     cst_groups = Customer_groups.objects.all().order_by('group_name')
     cst_types = Customer_types.objects.all()
-    context = {'navi': navi, 'active2': 'active', 'cst_groups': cst_groups, 'cst_types': cst_types}
+
+    paginator = Paginator(cst_groups, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {'navi': navi, 'active2': 'active', 'page_obj': page_obj, 'cst_types': cst_types}
     context.update(count_errors())
     return render(request, 'dictionarys/customer_groups.html', context)
 

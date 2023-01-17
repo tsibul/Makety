@@ -2,7 +2,23 @@
 {% load static %}
 {% block title %}Группы Клиентов{% endblock %}
 {% block content %}
-
+<div class="fixed-bottom bg-light m-2">
+<div class="pagination" xmlns="http://www.w3.org/1999/html">
+    <span class="step-links dropup">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
+        {% endif %}
+        <span class="current btn btn-sm btn-outline-secondary">
+           стр. {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }}
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
+        {% endif %}
+    </span>
+</div><!-- pagination -->
+</div>
 <table class="table table-hover ms-3 me-3" style="font-size: 80%;">
     <thead>
         <tr class="table-info">
@@ -18,7 +34,7 @@
             <th>Последняя продажа</th>
         </tr>
     </thead>
-    {% for cst_gr in cst_groups %}
+    {% for cst_gr in page_obj %}
         <tr data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{cst_gr.id}}" data-name="{{cst_gr.group_name}}"
             data-type="{{cst_gr.group_type.id}}" onclick="fillModalCustomerGroups(this);"
             {% if not cst_gr.active %}class="text-danger"{% endif %} >
