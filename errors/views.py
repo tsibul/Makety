@@ -13,7 +13,8 @@ def other(request):
     navi = 'admin'
     customers = Customer.objects.all().count()
     customer_groups = Customer_groups.objects.all().count
-    lost_customer_types = Customer.objects.filter(~Q(customer_type__type_name=F('type'))).count()
+    lost_customer_types = Customer.objects.filter(~Q(customer_type__type_name=F('type')) &
+                                                  ~(Q(customer_type__isnull=True) & Q(type=''))).count()
     lost_customer_groups = Customer.objects.filter(~Q(customer_group__group_name=F('group')) &
                                                    ~Q(group='')).count()
 
