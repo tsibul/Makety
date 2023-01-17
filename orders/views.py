@@ -536,7 +536,7 @@ def order_errors(request):
     try:
         item_import = list(Item_imports.objects.filter(order=ord_imp.id).order_by('code'))
     except:
-        return HttpResponseRedirect(reverse('maket:index'))
+        return HttpResponseRedirect(reverse('order:index'))
     print_import = ()
     for item in item_import:
         print_import = print_import + tuple(Print_imports.objects.filter(item=item))
