@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Номенклатура{% endblock %}
 {% block content %}
-<div class="row ms-2 mb-1 me-2">
+<div class="row p-2 fixed-bottom bg-light">
 <div class="col"><h5>Номенклатура</h5></div>
 <div class="col text-end"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
               Добавить Номенклатуру
@@ -159,7 +159,7 @@
 
 <table class="table table-sm table-hover ms-1" style="font-size: 80%;">
 <thead>
-    <tr  class="table-primary">
+    <tr  class="table-info">
     <th><h6>Арт</h6></th>
     <th style="min-width:300px;"><h6>Название</h6></th>
     <th><h6>Эко&nbsp;</h6></th>
@@ -229,7 +229,7 @@
 {% endfor %}
 </tbody>
 </table>
-
+<br><br>
 <script src="{% static 'dictionarys/dicts.js' %}"></script>
 
 {% endblock %}
