@@ -127,7 +127,7 @@ class Detail_set(models.Model):
     matrix = models.ForeignKey(Good_matrix_type, models.SET_NULL, null=True, default=None)
     crm = models.ForeignKey(Good_crm_type,  models.SET_NULL, null=True, default=None)
     color_scheme = models.ForeignKey(Color_scheme, models.SET_NULL, null=True)
-    print_group = models.ForeignKey(Print_group, models.SET_NULL, null=True)
+    print_group = models.ForeignKey(Print_group, models.SET_NULL, null=True, blank=True)
     detail1_name = models.CharField(max_length=60)
     detail1_place = models.BooleanField(default=False)
     detail2_name = models.CharField(max_length=60, default='', null=True, blank=True)
