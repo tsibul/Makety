@@ -57,33 +57,4 @@
 </tbody>
 </table>
 
-<div class="row fixed-bottom bg-white justify-content-around m-1">
-<div class="col text-start">
-    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="_ChooseClient"
-            data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
-        Выбрать Клиентов
-    </button>
-      <ul class="dropdown-menu fw-bold" aria-labelledby="ChooseClient">
-        {% for c_range in cst_range %}
-      <li><a class="dropdown-item" href="?page={{ c_range.0 }}"> {{ c_range.1 }}</a></li>
-        {% endfor %}
-      </ul>
-</div>
-<div class="col-9 pagination justify-content-end" xmlns="http://www.w3.org/1999/html">
-    <span class="step-links dropup">
-        {% if page_obj.has_previous %}
-            <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; первая</a>
-            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
-        {% endif %}
-        <span class="current btn btn-sm btn-outline-secondary">
-           {{ page_obj.object_list.0}} - {{ page_obj.object_list.49}} (страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }})
-        </span>
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
-        {% endif %}
-    </span>
-</div>
-</div>
-
 {% endblock %}
