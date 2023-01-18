@@ -3,31 +3,32 @@
 {% block title %}Группы клиентов{% endblock %}
 {% block content %}
 
-<div class="fixed-bottom bg-light m-2">
-<div class="pagination" xmlns="http://www.w3.org/1999/html">
+<div class="row justify-content-end">
+<div class="col-auto m-2" >
+    <div class="pagination" xmlns="http://www.w3.org/1999/html">
     <span class="step-links dropup">
         {% if page_obj.has_previous %}
             <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; первая</a>
             <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
         {% endif %}
         <span class="current btn btn-sm btn-outline-secondary">
-           стр. {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }}
+           страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }}
         </span>
         {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
             <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
         {% endif %}
     </span>
-</div><!-- pagination -->
 </div>
-<div class="text-end m-3 text-primary">анализ продаж V 1.1.1</div>
+</div>
+</div>
 
 <table class="table table-hover ms-3 me-3" style="font-size: 80%;">
     <thead>
         <tr class="table-light">
             <th>
                 <button type="button" class="btn btn-sm btn-outline-primary fw-bold" data-bs-toggle="modal" data-bs-target="#groupModal">
-                    Группа Клиентов
+                    Новая Группа Клиентов&nbsp;(всего&nbsp;{{group_quan}})
                 </button>
             </th>
             <th>Код</th>

@@ -19,8 +19,8 @@
 </head>
 
 <body>
-<div class="fixed-top">
-<div class="p-2 -m-2">
+<div class="fixed-top" style="max-width: 100mm;">
+<div class="p-2">
 <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions2" aria-controls="offcanvasWithBothOptions2">
     <i class="fas fa-bars"></i><strong>&nbsp;&nbsp;{{navi}}</strong></button>
 </div>
@@ -37,6 +37,7 @@
     <p><a href="{% url 'salesreport:customers' %}">Клиенты все</a></p>
     <p><a href="{% url 'salesreport:customers_all' %}">Клиенты потенциальные</a></p>
     <p><a href="{% url 'salesreport:groups' %}">Группы</a></p>
+    <p><a href="{% url 'salesreport:admin' %}">Admin</a></p>
 </div>
 </div>
 

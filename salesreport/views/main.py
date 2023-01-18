@@ -2,57 +2,13 @@ import datetime
 from datetime import date
 import os
 
-
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from maket.models import Customer_all, Customer, Customer_groups, Customer_types, Detail_set, Item_color
-from .models import Sales_doc_imports, Sales_docs
+from salesreport.models import Sales_doc_imports, Sales_docs
 from django.core.paginator import Paginator
 from django.core.files.storage import default_storage
 from django.db.models import Q, F
-
-
-def customer_import_compare(row, customer):
-    return customer.name == row[1] and \
-           customer.form == row[2] and \
-           customer.inn == row[3] and \
-           customer.address == row[5] and \
-           customer.phone == row[6] and \
-           customer.mail == row[7] and \
-           customer.comment == row[8] and \
-           customer.all_phones == row[13] and \
-           customer.all_mails == row[12]
-
-
-def customer_check_row(row):
-    result = (len(row) == 14)
-    empty = True
-    for i in range(2, len(row)):
-        empty = empty and (row[i] == '' or row[i] == '0')
-    return result and not empty
-
-
-def customer_type_chose(type, region):
-    if 'Конечник' in type and (region == '77' or region == '50'):
-        type_obj = Customer_types.objects.get(type_name='Конечник Москва')
-    elif 'Конечник' in type and region != '77' and region != '50':
-        type_obj = Customer_types.objects.get(type_name='Конечник Регион')
-    elif 'рекламщик' in type and region == '77' and region != '50':
-        type_obj = Customer_types.objects.get(type_name='Рекламщик Москва')
-    elif 'рекламщик' in type and region != '77' and region != '50':
-        type_obj = Customer_types.objects.get(type_name='Рекламщик Регион')
-    elif 'Агентство' in type and region == '77' and region != '50':
-        type_obj = Customer_types.objects.get(type_name='Агентство Москва')
-    elif 'Агентство' in type and region != '77' and region != '50':
-        type_obj = Customer_types.objects.get(type_name='Агентство Регион')
-    elif 'Дилер' in type and region == '77' and region != '50':
-        type_obj = Customer_types.objects.get(type_name='Дилер Москва')
-    elif 'Дилер' in type and region != '77' and region != '50':
-        type_obj = Customer_types.objects.get(type_name='Дилер Регион')
-    elif 'точка' in type and region != '77' and region != '50':
-        type_obj = Customer_types.objects.get(type_name='Розничная Точка')
-    else:
-        type_obj = ''
-    return type_obj
+from salesreport.views.service import *
 
 
 def index(request):
@@ -333,7 +289,6 @@ def cst_sinhro_group(request):
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
-
 def cst_sinhro_no(request):
     customers = Customer.objects.filter(Q(inn='') &
                                         (Q(customer_all__isnull=True) |
@@ -360,67 +315,11 @@ def cst_sinhro_no(request):
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
-def cst_unsinhronized(request):
-    unsinhronized = Customer.objects.filter(~(Q(customer_all__isnull=False) &
-                                          Q(group=F('customer_all__group')) &
-                                          Q(type=F('customer_all__type')) &
-                                          (Q(customer_group=F('customer_all__customer_group')) |
-                                          Q(customer_group__isnull=True) & Q(customer_all__customer_group__isnull=True)) &
-                                          (Q(customer_type=F('customer_all__customer_type')) |
-                                          Q(customer_type__isnull=True) & Q(customer_all__customer_type__isnull=True)) &
-                                          Q(inn=F('customer_all__inn')) &
-                                          Q(name__endswith=F('customer_all__name'))
-                                          ))
-    context = {'customers': unsinhronized}
-
-    return render(request, 'salesreport/unsinhronized.html', context)
-
-
-def set_inn(customer):
-    cust_all = Customer_all.objects.filter(inn=customer.inn).order_by('frigat_id').last()
-    customer.customer_all = cust_all
-    customer.frigat_id = cust_all.frigat_id
-    customer.save()
-
-
 def cst_sinhro_err(request):
     customers = Customer.objects.filter(~Q(inn=F('customer_all__inn')) & ~Q(inn=''))
     for customer in customers:
         set_inn(customer)
     return HttpResponseRedirect(reverse('salesreport:index'))
-
-
-
-def customer_sales(request):
-    navi = 'Клиенты'
-    customers = Customer.objects.all().order_by('customer_all__name')
-    paginator = Paginator(customers, 25)  # Show 25 contacts per page.
-
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    cst_range = []
-    for i in range(page_obj.paginator.num_pages):
-        page_obj2 = paginator.get_page(i + 1)
-        try:
-            cst_tmp = str(page_obj2.object_list[0])
-            cst_range.append([i + 1, '> ' + cst_tmp])
-        except:
-            cst_range.append(['нет данных'])
-
-    context = {'navi': navi, 'page_obj': page_obj, 'cst_range': cst_range}
-    return render(request, 'salesreport/customers.html', context)
-
-
-def customer_active(request):
-    navi = 'Клиенты'
-    customers = Customer.objects.filter(active=True, internal=False).order_by('customer_all__name')
-    paginator = Paginator(customers, 25)  # Show 25 contacts per page.
-
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    context = {'navi': navi, 'page_obj': page_obj}
-    return render(request, 'salesreport/customers.html', context)
 
 
 def cst_set_inactive(request):
@@ -434,6 +333,7 @@ def cst_set_inactive(request):
     Customer.objects.bulk_update(customers_list, ['active'])
     return HttpResponseRedirect(reverse('salesreport:index'))
 
+
 def group_set_inactive(request):
     d_n = datetime.date.today() - datetime.timedelta(weeks=154)
     groups_list = Customer_groups.objects.filter(date_last__lt=d_n)
@@ -446,6 +346,7 @@ def group_set_inactive(request):
     Customer_groups.objects.bulk_update(groups_list, ['active'])
     return HttpResponseRedirect(reverse('salesreport:index'))
 
+
 def group_set_dates(request):
     groups_list = Customer_groups.objects.all()
     for grp in groups_list:
@@ -456,16 +357,6 @@ def group_set_dates(request):
     Customer_groups.objects.bulk_update(groups_list, ['date_first', 'date_last'])
     return HttpResponseRedirect(reverse('salesreport:index'))
 
-def customer_all(request):
-    navi = 'Все Клиенты'
-    customers = Customer_all.objects.all().order_by('name')
-    paginator = Paginator(customers, 50)  # Show 50 contacts per page.
-
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'navi': navi, 'page_obj': page_obj}
-    return render(request, 'salesreport/customers_all.html', context)
-
 
 def customer_date(request):
     customers = Customer.objects.all()
@@ -475,30 +366,3 @@ def customer_date(request):
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
-def groups(request):
-    navi = 'Группы'
-    cst_groups = Customer_groups.objects.all().order_by('group_name')
-    cst_types = Customer_types.objects.all()
-
-    paginator = Paginator(cst_groups, 20)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    context = {'navi': navi, 'active2': 'active', 'page_obj': page_obj, 'cst_types': cst_types}
-    return render(request, 'salesreport/customer_groups.html', context)
-
-
-def update_cst_group(request):
-    page_no = '?page=' + request.POST['page_no']
-    group_name = request.POST['gr_nm']
-    type_id = request.POST['tp']
-    gr_tp = Customer_types.objects.get(id=type_id)
-    try:
-        group_id = request.POST['gr_id']
-        group = Customer_groups.objects.get(id=group_id)
-        group.group_name = group_name
-    except:
-        group = Customer_groups(group_name=group_name)
-    group.group_type = gr_tp
-    group.save()
-    return HttpResponseRedirect(reverse('dictionarys:customer_groups') + page_no)

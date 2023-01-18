@@ -1,11 +1,28 @@
 {% extends 'salesreport/main_salesrep.html' %}
 {% block title %}Клиенты{% endblock %}
 {% block content %}
-<br>
-<br>
 <table class="table table-sm table-hover ms-1">
-<thead>
-    <tr  class="table-primary" style="font-size: 70%;">
+<thead class="sticky-top">
+    <tr  class="p-5 m-5" style="">
+        <th colspan="12" class="fw-normal bg-white" >
+            <div class="col m-2 pagination justify-content-end" xmlns="http://www.w3.org/1999/html">
+    <span class="step-links dropup">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
+        {% endif %}
+        <span class="current btn btn-sm btn-outline-secondary">
+           {{ page_obj.object_list.0}} - {{ page_obj.object_list.49}} (страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }})
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+        </th>
+    </tr>
+    <tr  class="table-light" style="font-size: 70%;">
     <th>ID</th>
     <th>Форма</th>
     <th>Название</th>
