@@ -1,0 +1,93 @@
+{% extends 'salesreport/main_salesrep.html' %}
+{% load static %}
+{% block title %}Группы клиентов{% endblock %}
+{% block content %}
+
+<div class="fixed-bottom bg-light m-2">
+<div class="pagination" xmlns="http://www.w3.org/1999/html">
+    <span class="step-links dropup">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
+        {% endif %}
+        <span class="current btn btn-sm btn-outline-secondary">
+           стр. {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }}
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
+        {% endif %}
+    </span>
+</div><!-- pagination -->
+</div>
+<div class="text-end m-3 text-primary">анализ продаж V 1.1.1</div>
+
+<table class="table table-hover ms-3 me-3" style="font-size: 80%;">
+    <thead>
+        <tr class="table-light">
+            <th>
+                <button type="button" class="btn btn-sm btn-outline-primary fw-bold" data-bs-toggle="modal" data-bs-target="#groupModal">
+                    Группа Клиентов
+                </button>
+            </th>
+            <th>Код</th>
+            <th>Тип Группы</th>
+            <th>Скидка</th>
+            <th>Первая продажа</th>
+            <th>Последняя продажа</th>
+        </tr>
+    </thead>
+    {% for cst_gr in page_obj %}
+        <tr data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{cst_gr.id}}" data-name="{{cst_gr.group_name}}"
+            data-type="{{cst_gr.group_type.id}}" onclick="fillModalCustomerGroups(this);"
+            {% if not cst_gr.active %}class="text-danger"{% endif %} >
+            <td>{{cst_gr.group_name}}</td>
+            <td>{{cst_gr.group_type.code}}</td>
+            <td>{{cst_gr.group_type.type_name}}</td>
+            <td>{{cst_gr.group_type.group_discount}}&nbsp;%</td>
+            <td>{{cst_gr.date_first|date:'d.m.Y'}}</td>
+            <td>{{cst_gr.date_last|date:'d.m.Y'}}</td>
+        </tr>
+    {% endfor %}
+    <tbody>
+    </tbody>
+</table>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="groupModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="groupModalLabel">Редактировать группу</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="update_cst_group" method="post" id="group_update">
+      {% csrf_token %}
+      <div class="modal-body">
+          <div class=""><input type="number" name="gr_id" class="form-control" readonly id="id" hidden></div>
+          <input type="number" class="form-control" form="group_update" value="{{page_obj.number}}" name="page_no" hidden>
+          <div class="row">
+          <div class="col-7"><input type="text" name="gr_nm" class="form-control" id="nm"></div>
+          <div class="col-5">
+          <select class="form-select" aria-label="Default select example" name="tp" id="tp">
+             {% for cst_type in cst_types %}
+              <option value="{{cst_type.id}}">{{cst_type.type_name}}</option>
+             {% endfor %}
+          </select>
+          </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                onclick="clearModalCustomerGroups();">Закрыть</button>
+        <button type="submit" class="btn btn-primary">Записать</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="{% static 'dictionarys/dicts.js' %}"></script>
+
+{% endblock %}

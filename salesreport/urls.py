@@ -10,7 +10,8 @@ urlpatterns = [
     path('customers', views.customer_sales, name='customers'),
     path('customers_all', views.customer_all, name='customers_all'),
 
-    path('groups', views.customer_groups, name='groups'),
+    path('groups', views.groups, name='groups'),
+    path('views.update_cst_group', views.update_cst_group, name='views.update_cst_group'),
 
     path('import_report', views.import_report, name='import_report'),
     path('import_cst', views.import_cst, name='import_cst'),
