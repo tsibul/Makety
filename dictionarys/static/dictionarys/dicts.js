@@ -78,9 +78,9 @@ function fillModalCustomers(custObj){
     document.getElementById('in').value = custObj.dataset.inn;
     document.getElementById('nm').textContent = custObj.dataset.name;
     document.getElementById('gr').value = custObj.dataset.group;
-    document.getElementById('gr_o').value = custObj.dataset.group_old;
+//    document.getElementById('gr_o').value = custObj.dataset.group_old;
     document.getElementById('tp').value = custObj.dataset.type;
-    document.getElementById('tp_o').value = custObj.dataset.type_old;
+//    document.getElementById('tp_o').value = custObj.dataset.type_old;
     document.getElementById('ad').textContent = custObj.dataset.address;
 
 }
@@ -93,9 +93,9 @@ function clearModalCustomers(){
     document.getElementById('in').value = null;
     document.getElementById('nm').textContent = null;
     document.getElementById('gr').value = '1';
-    document.getElementById('gr_o').value = null;
+//    document.getElementById('gr_o').value = null;
     document.getElementById('tp').value = '1';
-    document.getElementById('tp_o').value = null;
+//    document.getElementById('tp_o').value = null;
     document.getElementById('ad').textContent = null;
 }
 

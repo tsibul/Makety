@@ -5,8 +5,6 @@ from django.db.models import Q, F
 
 def cst_unsinhronized(request):
     unsinhronized = Customer.objects.filter(~(Q(customer_all__isnull=False) &
-                                          Q(group=F('customer_all__group')) &
-                                          Q(type=F('customer_all__type')) &
                                           (Q(customer_group=F('customer_all__customer_group')) |
                                           Q(customer_group__isnull=True) & Q(customer_all__customer_group__isnull=True)) &
                                           (Q(customer_type=F('customer_all__customer_type')) |

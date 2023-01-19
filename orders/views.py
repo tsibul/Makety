@@ -166,46 +166,25 @@ def import_order(request):
         elif len(customer_inn) <= 10:
             customer = Customer.objects.get(name=customer_name)
             ord_imp.customer = customer
-            type = order_no[slice(13, 14)]
-            type2 = order_no[slice(14, 15)]
-            typegroup_in = type + type2
+            typegroup_in = order_no[slice(13, 15)]
             if customer.customer_type != typegroup_in:
                 customer.customer_type = typegroup_in
                 customer.save()
     except:
         region = customer_inn[slice(0, 2)]
-        type = order_no[slice(13, 14)]
-        type2 = order_no[slice(14, 15)]
-        typegroup_in = type + type2
+        typegroup_in = order_no[slice(13, 15)]
         try:
             typegroup = Customer_types.objects.get(code=typegroup_in)
         except:
             typegroup = ''
-        if type == 'Д':
-            type = 'Дилер'
-        elif type == 'А':
-            type = 'Агентство'
-        elif type == 'Р':
-            type = 'Рекламщик'
-        elif type == 'К':
-            type = 'Конечник'
-        if type2 == 'М':
-            type = type + ' Москва'
-        elif type2 == 'Р':
-            type = type + ' Регион'
-        elif type2 == 'Т':
-            type = 'Розничная точка'
-        elif type2 == 'К':
-            type = 'Экспорт'
         if len(customer_inn) >= 10:
             customer_all = Customer_all.objects.filter(inn=customer_inn).order_by('frigat_id').last()
         else:
             customer_all = Customer_all.objects.filter(customer_name__in=customer_name).order_by('frigat_id').last()
         customer = Customer(name=customer_name, address=customer_address, inn=customer_inn, region=region,
-                            type=type, customer_type=typegroup, date_first=order_date, customer_all=customer_all)
+                            customer_type=typegroup, date_first=order_date, customer_all=customer_all)
         if customer_all:
             customer_all.customer_type = typegroup
-            customer_all.type = type
             customer_all.save()
             customer.frigat_id = customer_all.frigat_id
         customer.save()
@@ -284,9 +263,6 @@ def import_order(request):
                 for x in items_list:
                     if x.name == trstrings[i][1]:
                         prt_item = x
-
-            #            if trstrings[i][0] != '':
-            #                print_id = prt_item.print_id
             if tr_len == 9:
                 place = trstrings[i][3]
                 type = trstrings[i][4]
@@ -371,26 +347,14 @@ def import_csv_order(request):
             ord_imp.customer = customer
     except:
         region = customer_inn[slice(0, 2)]
-        type = order_no[slice(13, 14)]
-        type2 = order_no[slice(14, 15)]
-        if type == 'Д':
-            type = 'Дилер'
-        elif type == 'А':
-            type = 'Агентство'
-        elif type == 'Р':
-            type = 'Рекламщик'
-        elif type == 'К':
-            type = 'Конечник'
-        if type2 == 'М':
-            type = type + ' Москва'
-        elif type2 == 'Р':
-            type = type + ' Регион'
-        elif type2 == 'Т':
-            type = 'Розничная точка'
-        elif type2 == 'К':
-            type = 'Экспорт'
-        customer = Customer(name=customer_name, address=customer_address, inn=customer_inn, region=region,
-                            type=type)
+        type = order_no[slice(13, 15)]
+#        type2 = order_no[slice(14, 15)]
+        customer = Customer(name=customer_name, address=customer_address, inn=customer_inn, region=region)
+        try:
+            cst_type = Customer_types.objects.get(code=type)
+            customer.customer_type = cst_type
+        except:
+            pass
         customer.save()
     ord_imp.save()
     #    order = []

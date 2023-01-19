@@ -39,8 +39,6 @@ def index(request):
     no_cust = Sales_docs.objects.filter(customer__isnull=True).count()
     no_good = Sales_doc_imports.objects.filter(detail_set__isnull=True).count()
     sinhronized = Customer.objects.filter(Q(customer_all__isnull=False) &
-                                          Q(group=F('customer_all__group')) &
-                                          Q(type=F('customer_all__type')) &
                                           (Q(customer_group=F('customer_all__customer_group')) |
                                           Q(customer_group__isnull=True) & Q(customer_all__customer_group__isnull=True)) &
                                           (Q(customer_type=F('customer_all__customer_type')) |
