@@ -131,11 +131,11 @@ def update_to_film(request, data_to_film):
     film.date = date
     film.format = format
     film.film_id = film_id
-    if sent == '':
-        film.status = False
-    else:
+    if sent:
         film.status = True
         film.date_sent = sent
+    else:
+        film.status = False
     film.save()
     return HttpResponse()
 

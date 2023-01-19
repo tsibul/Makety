@@ -107,7 +107,7 @@
 <!-- Modal Upload maket -->
 
 
-<table class="table table-hover table-info lh-1">
+<table class="table table-hover table-light lh-1">
 <thead>
 
 </thead>
@@ -147,8 +147,8 @@
     </tr>
     <tr style="font-size:90%;">
         <td colspan="10" class="p-0 lh-0 m-0">
-            <table class="table table-hover table-light lh-1 mb-0" >
-            <tbody id="collapse_ord_{{ord.id}}">
+            <table class="table table-hover lh-1 mb-0">
+            <tbody id="collapse_ord_{{ord.id}}" style="display: none">
                 {% for mkt, itemgr in maket.items %}
                 <tr class="align-middle" ondblclick="window.open('/maket_layout/{{ord.id}}/{{mkt.maket_id}}', '_blank');">
                 <td >&nbsp;<i class="bi bi-arrow-return-right" style="font-size: 120%;"></i>
@@ -159,7 +159,7 @@
                 <td id="mk_id_{{mkt.id}}"># {{mkt.maket_id}}</td>
                 <td style="max-width:120px;">создан {{mkt.date_create|date:'d.m.Y'}}</td>
                 <td style="max-width:120px;">изменен {{mkt.date_modified|date:'d.m.Y'}}</td>
-                <td style="max-width:320px;" class="fw-bold">
+                <td style="max-width:320px;" class="">
                     {% if mkt.uploaded %}<a href="/maket/download_maket/{{mkt.id}}" target="_blank">
                     {{mkt.maket_file}}</a>
                     {% else %}файл не загружен{% endif %}</td>
@@ -181,11 +181,11 @@
                 </tr>
     <tr style="font-size:100%;">
         <td colspan="10" class="p-0 lh-0 m-0">
-            <table class="table table-hover table-light lh-1 text-start mb-0">
+            <table class="table table-hover lh-1 text-start mb-0">
             <tbody id="collapse_mkt_{{mkt.id}}" style="display:none">
 
             {% for itm in itemgr %}
-                <tr class="align-middle {% if not itm.film.status %} text-danger{% endif %}">
+                <tr class="align-middle {% if not itm.0.film.status %} text-danger{% endif %}">
                 <td><input type="text" id="pg_{{itm.0.id}}_1"
                            value="группа {{itm.0.item.item.print_group.name}}" hidden></td>
                 <td><input type="text" id="pg_{{itm.0.id}}_2"

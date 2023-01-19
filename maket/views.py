@@ -70,8 +70,8 @@ def maket_base(request):
 #                   page_obj2.object_list[0][0].order_date.strftime('%d.%m.%Y')
 #        date_range.append([i + 1, date_tmp])
 
-    context = {'navi': navi, 'active5': 'active', 'f_maket': f_maket, 'page_obj': page_obj, 'films': films,
-               'current_date': current_date, 'last_film': last_film, 'look_up': False}
+    context = {'navi': navi, 'active5': 'active', 'page_obj': page_obj, 'films': films,
+               'current_date': current_date, 'last_film': last_film, 'look_up': False, 'f_maket': f_maket}
     context.update(count_errors())
     return render(request, 'maket/maket_base.html', context)
 
