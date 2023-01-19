@@ -14,7 +14,7 @@ from maket.views import count_errors
 def films(request):
     navi = 'films'
 
-    item_group = Itemgroup_in_Maket.objects.filter(film__isnull=False).order_by('item')
+    item_group = Itemgroup_in_Maket.objects.filter(film__isnull=False).order_by('-film__date', '-film__film_id', 'item')
     f_group = {}
     for i in item_group:
         if i.film not in f_group:
