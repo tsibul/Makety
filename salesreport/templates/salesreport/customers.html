@@ -80,6 +80,8 @@
     <tr class="table-light">
         <th colspan="12">
         <div class="row">
+            <div class="col">
+            </div>
             <div class="col text-end mt-3 fw-normal" >
                     {{ page_obj.object_list.0}} - {{ page_obj.object_list.19}}
             </div>
@@ -99,6 +101,12 @@
                     {% endif %}
                 </span>
                 </div>
+            </div>
+            <div class="col-auto justify-content-end">
+            <div class="form-check form-switch mt-3 me-3">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchActive">
+                <label class="form-check-label fw-normal" for="flexSwitchActive" style="font-size: 120%;">Только активные</label>
+            </div>
             </div>
         </div>
         </th>
