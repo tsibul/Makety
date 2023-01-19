@@ -30,5 +30,7 @@ urlpatterns = [
     path('unsinhronized', views.cst_unsinhronized, name='cst_unsinhronized'),
 
     path('admin', views.admin, name='admin'),
+    path('transaction_delete', views.transaction_delete, name='transaction_delete'),
+    path('customer_all_delete', views.customer_all_delete, name='customer_all_delete'),
 
 ]
