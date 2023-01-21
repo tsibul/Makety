@@ -25,8 +25,6 @@ urlpatterns = [
     path('other', views.other, name='other'),
     path('badge_file_count', views.badge_file_count, name='badge_file_count'),
 
-    path('other/fix_customer_types', views.fix_customer_types, name='fix_customer_types'),
-    path('other/fix_customer_groups', views.fix_customer_groups, name='fix_customer_groups'),
 
 ]
 
