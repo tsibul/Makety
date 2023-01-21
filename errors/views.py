@@ -234,17 +234,4 @@ def print_position_fix(request):
 #TODO change cycle to Query
 
 
-def additional(request):
-    navi = 'admin'
-    additional_files = Additional_Files.objects.filter(additional_file__isnull=True)
-    context = {'navi': navi, 'active4': 'active', 'additional_files': additional_files}
-    context.update(count_errors())
-    return render(request, 'errors/additional_repairs.html', context)
-
-
-def delete_additional_file_from_table(request):
-    add_file_id = request.POST['file_id']
-    add_file = Additional_Files.objects.get(id=add_file_id)
-    return HttpResponseRedirect(reverse('errors:additional_repairs'))
-
 

@@ -17,8 +17,6 @@ urlpatterns = [
     path('color_place_repairs', views.color_place_repairs, name='color_place_repairs'),
     path('deleted_repairs', views.deleted_repairs, name='deleted_repairs'),
     path('import_repairs', views.import_repairs, name='import_repairs'),
-    path('additional', views.additional, name='additional'),
-    path('delete_additional_file_from_table', views.delete_additional_file_from_table, name='delete_additional_file_from_table'),
 
     path('other', views.other, name='other'),
     path('badge_file_count', views.badge_file_count, name='badge_file_count'),

@@ -22,9 +22,8 @@ def count_errors():
                                                      ~Q(print_position__position_place=F('print_place')) |
                                                      ~Q(print_position__print_group=F('item__item__print_group'))).count()
     order_errors_len = Order_imports.objects.filter(to_check=True).order_by('-order_date', 'order_id').count()
-    additional_files_len = Additional_Files.objects.filter(additional_file__isnull=True).count()
     err_len = lost_position_len + lost_deleted_len + lost_colors_len + changed_customers_len + \
-              lost_hex_len + order_errors_len + additional_files_len
+              lost_hex_len + order_errors_len
 
     maket_files_diff = len(os.listdir('files/makety')) - Makety.objects.filter(uploaded=True).count()
     order_files_diff = len(os.listdir('files/orders')) - Order_imports.objects.filter(order_upload=True).count()
@@ -40,7 +39,7 @@ def count_errors():
                lost_position_len, 'err_len': err_len, 'order_errors_len': order_errors_len, 'maket_files_diff': maket_files_diff,
                'order_files_diff': order_files_diff, 'films_files_diff': films_files_diff,
                'patterns_files_diff': patterns_files_diff, 'additional_files_diff': additional_files_diff,
-               'total_files_diff': total_files_diff, 'additional_files_len': additional_files_len}
+               'total_files_diff': total_files_diff}
     return context
 
 

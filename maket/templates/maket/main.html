@@ -184,14 +184,6 @@
                     </span>
                     {% endif %}
                     </a></li>
-                <li><a class="dropdown-item" href="{% url 'errors:additional' %}">
-                    Дополнительные файлы без файлов
-                    {% if additional_files_len != 0 %}
-                    <span class="badge bg-danger">
-                    {{additional_files_len}}
-                    </span>
-                    {% endif %}
-                    </a></li>
                 <li><a class="dropdown-item" href="{% url 'errors:other' %}">Прочие починки</a></li>
                </ul>
           </li>
@@ -217,7 +209,7 @@
         <button class="btn btn-primary" type="submit" >Поиск</button>
       </form>
       {% endif %}
-      <div class="d-flex text-white m-1 pt-1"> v3.6.9</div>
+      <div class="d-flex text-white m-1 pt-1"> v3.6.11</div>
     </span>
   </span>
 </nav>
