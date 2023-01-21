@@ -13,13 +13,9 @@ def other(request):
     navi = 'admin'
     customers = Customer.objects.all().count()
     customer_groups = Customer_groups.objects.all().count
-    lost_customer_types = Customer.objects.filter(~Q(customer_type__type_name=F('type')) &
-                                                  ~(Q(customer_type__isnull=True) & Q(type=''))).count()
-    lost_customer_groups = Customer.objects.filter(~Q(customer_group__group_name=F('group')) &
-                                                   ~Q(group='')).count()
 
     context = {'navi': navi, 'active4': 'active', 'customers': customers, 'customer_groups': customer_groups,
-               'lost_customer_types': lost_customer_types, 'lost_customer_groups': lost_customer_groups}
+               }
     context.update(count_errors())
     return render(request, 'errors/other.html', context)
 
@@ -283,28 +279,3 @@ def delete_additional_file_from_table(request):
     return HttpResponseRedirect(reverse('errors:additional_repairs'))
 
 
-def fix_customer_types(request):
-    lost_customer_types = list(Customer.objects.filter(~Q(customer_type__type_name=F('type'))))
-    for cust in lost_customer_types:
-        try:
-            type = Customer_types.objects.get(type_name=cust.type)
-            cust.customer_type = type
-        except:
-            pass
-    Customer.objects.bulk_update(lost_customer_types, ['customer_type'])
-    return HttpResponseRedirect(reverse('errors:other'))
-
-
-def fix_customer_groups(request):
-    lost_customer_groups = list(Customer.objects.filter(~Q(customer_group__group_name=F('group')) &
-                                                        ~Q(group='')))
-    for cust in lost_customer_groups:
-        try:
-            group = Customer_groups.objects.get(group_name=cust.group)
-        except:
-            group = Customer_groups(group_name=cust.group, group_type=cust.customer_type)
-            group.save()
-        cust.customer_group = group
-    Customer.objects.bulk_update(lost_customer_groups, ['customer_group'])
-
-    return HttpResponseRedirect(reverse('errors:other'))

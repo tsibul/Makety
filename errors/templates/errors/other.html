@@ -1,7 +1,6 @@
 {% extends 'maket/main.html' %}
 {% block title %}Администрирование{% endblock %}
 {% block content %}
-<div class="ms-4"><h5>Синхронизировать группу и тип клиента со старыми данными</h5></div>
 <div class="row m-3">
     <div class="col-auto">Всего клиентов</div>
     <div class="col-auto">{{customers}}</div>
@@ -10,17 +9,5 @@
     <div class="col-auto">Всего групп</div>
     <div class="col-auto">{{customer_groups}}</div>
 </div>
-<div class="row m-3">
-    <div class="col-auto">Несинхронизированные типы</div>
-    <div class="col-auto text-danger">{{lost_customer_types}}</div>
-</div>
-<div class="row m-3">
-    <div class="col-auto">Несинхронизированные группы</div>
-    <div class="col-auto text-danger">{{lost_customer_groups}}</div>
-</div>
 
-<div class="btn-group m-3">
-    <a class="btn btn-primary m-1" role="button" href="{% url 'errors:fix_customer_types' %}">Синхронизировать типы</a>
-    <a class="btn btn-primary m-1" role="button" href="{% url 'errors:fix_customer_groups' %}">Синхронизировать группы</a>
-</div>
 {% endblock %}
