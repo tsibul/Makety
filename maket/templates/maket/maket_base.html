@@ -20,30 +20,10 @@
             <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
         {% endif %}
         &nbsp
-<!--            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="_ChooseClientAdd"
-                    data-bs-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
-                Выбрать даты
-            </button>
-              <ul class="dropdown-menu fw-bold" aria-labelledby="ChooseClientAdd">
-                {% for dt_range in date_range %}
-              <li><a class="dropdown-item" href="?page={{ dt_range.0 }}"> {{ dt_range.1 }}</a></li>
-                {% endfor %}
-              </ul><--->
-
     </span>
 </div><!-- pagination -->
     </div>
 {% endif %}
-    <div class="col text-end">
-    <span class="text-nowrap">
-    <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" onclick="javascript:order_collapse();">
-        <i class="bi bi-plus-lg"></i> Скрыть/показать макеты
-    </button>
-    <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" onclick="javascript:total_collapse();">
-        <i class="bi bi-plus-lg"></i> Скрыть/показать состав
-    </button>
-    </span>
-    </div>
 </div>
 <!-- Modal select film-->
 <div class="modal fade" id="selectFilm" tabindex="-1" aria-labelledby="selectFilmLabel" aria-hidden="true">
@@ -106,19 +86,42 @@
 </div>
 <!-- Modal Upload maket -->
 
-
-<table class="table table-hover table-light lh-1">
-<thead>
-
+<table class="table table-sm table-hover lh-1">
+<thead class="sticky-top">
+<tr class="table-secondary text-white mt-2" style="font-size: 100%;">
+    <th colspan="13" style="height: 16mm;"></th>
+</tr>
+<tr class="align-middle table-secondary mt-2 pt-2 pb-2" style="font-size: 100%;">
+    <th class="">файлы</th>
+    <th class="">статус</th>
+    <th class="">номер заказа</th>
+    <th class="">дата заказа</th>
+    <th class=""></th>
+    <th class="">Клиент</th>
+    <th class="" style="width:20px;"></th>
+    <th class="" style="width:20px;">#</th>
+    <th class="" style="width:80px;">создан</th>
+    <th class="" style="width:80px;">изменен</th>
+    <th class="" colspan="">файл</th>
+    <th class="text-end m-1" colspan="2">
+       <button type="button" class="btn btn-sm btn-primary text-nowrap" onclick="javascript:total_collapse();">
+            <i class="bi bi-plus-lg"></i> Скрыть/показать состав
+        </button>
+    </th>
+</tr>
 </thead>
 <tbody>
 {% for ord, maket in f_maket.items %}
-    <tr class="{% if ord.maket_status != 'R' %} text-danger {% endif %}">
-        <td ><button type="button" onclick="colapse_('ord_{{ord.id}}');" class="btn btn-sm btn-outline-secondary">
-                <i class="bi bi-list"></i>
+    <tr class="{% if ord.maket_status != 'R' %} text-danger {% endif %} align-middle justify-content-around"
+        style="">
+        <td >
+            <button type="button" class="btn btn-sm btn-outline-secondary"
+                    onclick="window.open('/addfiles/{{ord.id}}', '_blank');">
+                <i class="bi bi-folder2-open"></i>&nbsp;<span class="badge text-secondary">
+                {{ord.number_orders}} / {{ord.number_makets}} / {{ord.number_additional}}</span>&nbsp;
             </button>
         </td>
-        <td class="fw-bold" style="max-width:110px; font-size:80%;">
+        <td class="fw-bold" style="max-width:110px; font-size:100%;">
             <select class="form-select form-select-sm {% if ord.maket_status != 'R' %}
                     text-danger {% endif %}" style="font-size:100%;"
                     id="status_{{ord.id}}" onchange="location = this.options[this.selectedIndex].value;">
@@ -133,74 +136,73 @@
         <td >{{ord.order_id}}</td>
         <td>{{ord.order_date|date:'d.m.Y'}}</td>
         <td>{% if 'Сувенир' in ord.supplier %}ВВС{% elif 'Студия' in ord.supplier %}ССП{% else %}ВВ{% endif %}</td>
-        <td class="text-wrap" style="max-width:400px"> {{ord.customer.name}}</td>
-        <td> {{ord.manager.manager}}</td>
-        <td class="text-break"> {{ord.manager.manager_mail}}</td>
-        <td class="text-end"> {{ord.order_sum}}</td>
-        <td class="text-end">
-            <button type="button" class="btn btn-sm btn-outline-secondary"
-                    onclick="window.open('/addfiles/{{ord.id}}', '_blank');">
-                <i class="bi bi-folder2-open"></i>&nbsp;&nbsp;посмотреть связанные файлы&nbsp;<span class="badge bg-secondary">
-                {{ord.number_orders}} / {{ord.number_makets}} / {{ord.number_additional}}</span>&nbsp;
-            </button>
-        </td>
-    </tr>
-    <tr style="font-size:90%;">
-        <td colspan="10" class="p-0 lh-0 m-0">
-            <table class="table table-hover lh-1 mb-0">
-            <tbody id="collapse_ord_{{ord.id}}" style="display: none">
+        <td class="text-wrap" style="width:360px"> {{ord.customer.name}}</td>
+        <td colspan="7">
+            <table class="m-1" style="font-size: 90%;">
                 {% for mkt, itemgr in maket.items %}
-                <tr class="align-middle" ondblclick="window.open('/maket_layout/{{ord.id}}/{{mkt.maket_id}}', '_blank');">
-                <td >&nbsp;<i class="bi bi-arrow-return-right" style="font-size: 120%;"></i>
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="colapse_('mkt_{{mkt.id}}');">
-                        <i class="bi bi-list"></i>
-                    </button>
+                <tr class="" ondblclick="window.open('/maket_layout/{{ord.id}}/{{mkt.maket_id}}', '_blank');">
+                <td ><a href="javascript:colapse_('mkt_{{mkt.id}}');" style="width:20px;">
+                    <i class="bi bi-plus-lg"></i></a>
                 </td>
-                <td id="mk_id_{{mkt.id}}"># {{mkt.maket_id}}</td>
-                <td style="max-width:120px;">создан {{mkt.date_create|date:'d.m.Y'}}</td>
-                <td style="max-width:120px;">изменен {{mkt.date_modified|date:'d.m.Y'}}</td>
-                <td style="max-width:320px;" class="">
+                <td style="width:20px;" id="mk_id_{{mkt.id}}">{{mkt.maket_id}}</td>
+                <td style="width:80px;">{{mkt.date_create|date:'d.m.Y'}}</td>
+                <td style="width:80px;">{{mkt.date_modified|date:'d.m.Y'}}</td>
+                <td style="width:440px;" class="text-break">
                     {% if mkt.uploaded %}<a href="/maket/download_maket/{{mkt.id}}" target="_blank">
                     {{mkt.maket_file}}</a>
                     {% else %}файл не загружен{% endif %}</td>
                 <td>{{mkt.comment}}</td>
-                <td class="text-end">
+                <td class="align-items-end">
                     <input type="text" hidden id="ord_id_{{mkt.id}}" value="{{mkt.order.order_id}}">
                     <div hidden id="order_date_{{mkt.id}}">{{mkt.order.order_date|date:'d.m.Y'}}</div>
                     <input type="text" hidden id="cust_nm_{{mkt.id}}" value="{{mkt.order.customer.name}}">
-                    <button type="button"  class="btn btn-sm btn-outline-danger text-nowrap" data-bs-toggle="modal"
+                    <button type="button"  class="btn btn-sm btn-outline-danger text-nowrap ms-1 mb-1 mt-1" data-bs-toggle="modal"
                         data-bs-target="#deleteMaketModal" onclick="javascript:delete_object_modal({{mkt.id}});">
-                        <i class="bi bi-x-lg"></i> удалить макет
+                        <i class="bi bi-x-lg"></i> уд. макет
                      </button>
-                    <button type="button" class="btn btn-sm btn-outline-primary"
+                </td><td>
+                    <button type="button" class="btn btn-sm btn-outline-primary m-1 text-nowrap"
                             onclick="javascript:upload_maket({{mkt.id}});" data-bs-toggle="modal"
                             data-bs-target="#uploadMaket">
-                         <i class="bi bi-upload"></i> загрузить файл
+                         <i class="bi bi-upload"></i> загр. файл
                     </button>
                 </td>
                 </tr>
     <tr style="font-size:100%;">
-        <td colspan="10" class="p-0 lh-0 m-0">
-            <table class="table table-hover lh-1 text-start mb-0">
-            <tbody id="collapse_mkt_{{mkt.id}}" style="display:none">
+        <td colspan="8" class="p-0 lh-0 m-0 ">
+            <table class="table table-hover table-sm lh-0 text-start mb-0 "  id="collapse_mkt_{{mkt.id}}" style="display:none">
+            <thead>
+            <tr class="table-secondary">
+                <th style="width: 150px;">группа</th>
+                <th style="width: 300px;">нанесение</th>
+                <th style="width: 120px;">пленка</th>
+                <th style="width: 20px;">ошибки</th>
+                <th style="width: 40px;">статус</th>
+                <th style="width: 40px;">кол-во</th>
+                <th style="width: 40px;">сумма</th>
+                <th style="width: 60px;" class="text-wrap" a>сумма нанес</th>
+                <th style="width: 120px;"></th>
+            </tr>
+            </thead>
+            <tbody>
 
             {% for itm in itemgr %}
-                <tr class="align-middle {% if not itm.0.film.status %} text-danger{% endif %}">
-                <td><input type="text" id="pg_{{itm.0.id}}_1"
-                           value="группа {{itm.0.item.item.print_group.name}}" hidden></td>
-                <td><input type="text" id="pg_{{itm.0.id}}_2"
-                           value="нанесение {{itm.0.print_name}}" hidden></td>
-                <td> группа {{itm.0.item.item.print_group.name}}</td>
-                <td> нанесение {{itm.0.print_name}}</td>
-                <td id="filmout_{{itm.0.id}}"> пленка: {% if itm.0.film.id == None %} нет {% else %}
-                    {{itm.0.film.film_id}} от {{itm.0.film.date|date:'d.m.Y.'}}{% endif %}
+                <tr class="{% if not itm.0.film.status %} text-danger{% endif %}" >
+                <input type="text" id="pg_{{itm.0.id}}_1"
+                           value="группа {{itm.0.item.item.print_group.name}}" hidden>
+                <input type="text" id="pg_{{itm.0.id}}_2"
+                           value="нанесение {{itm.0.print_name}}" hidden>
+                <td>{{itm.0.item.item.print_group.name}}</td>
+                <td>{{itm.0.print_name}}</td>
+                <td id="filmout_{{itm.0.id}}">{% if itm.0.film.id == None %} нет {% else %}
+                    {{itm.0.film.film_id}}&nbsp;{{itm.0.film.date|date:'d.m.Y.'}}{% endif %}
                 </td>
-                <td>{% if itm.0.film.id != None %}{% if itm.0.film_error %}без ошибок {% else %}ошибки{% endif %}{% endif %} </td>
+                <td>{% if itm.0.film.id != None %}{% if itm.0.film_error %}нет{% else %}да{% endif %}{% endif %} </td>
                 <td>{% if itm.0.film.id != None %}{% if itm.0.film.status %}выведена {% else %}подготовка{% endif %}{% endif %} </td>
-                <td>количество {{itm.1}}</td>
-                <td>сумма {{itm.2}}</td>
-                <td>сумма нанесение {{itm.3}}</td>
-                <td class="text-end"><button type="button" class="btn btn-sm btn-outline-primary"
+                <td>{{itm.1}}</td>
+                <td>{{itm.2}}</td>
+                <td >{{itm.3|floatformat:2}}</td>
+                <td class="text-end text-nowrap"><button type="button" class="btn btn-sm btn-outline-primary"
                                              data-bs-toggle="modal" data-bs-target="#selectFilm"
                                              onclick="javascript:select_film({{itm.0.id}});">
                     на пленку</button> </td>
@@ -211,10 +213,11 @@
         </td>
     </tr>
     {% endfor %}
-            </tbody>
-            </table>
+</table>
+
         </td>
     </tr>
+
 
 {% endfor %}
 </tbody>

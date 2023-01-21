@@ -158,15 +158,6 @@ function total_collapse(){
     }
 }
 
-function order_collapse(){
-    const ids=document.querySelectorAll('[id*="collapse_ord"]')
-    for(var i in ids){
-    if (ids[i].style.display ==='none'){
-    ids[i].style.display = 'table-row-group';}
-    else {ids[i].style.display = 'none';};
-    }
-}
-
 function  block_button(){
     document.getElementById('but_imp_modal').disabled = true;
 }
