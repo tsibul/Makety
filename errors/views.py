@@ -37,22 +37,6 @@ def import_repairs(request):
     return render(request, 'errors/import_repairs.html', context)
 
 
-def maket_repairs(request):
-    navi = 'admin'
-    lost_makets = []
-    l_makets = Makety.objects.filter(order=None).order_by('-order_date')
-    for l_mak in l_makets:
-        try:
-            l_order = Order_imports.objects.get(Q(order_id=l_mak.order_num) & Q(order_date=l_mak.order_date))
-            lost_makets.append([l_mak, l_order])
-        except:
-            lost_makets.append([l_mak, ])
-    lost_makets_len = len(lost_makets)
-    context = {'navi': navi, 'active4': 'active', 'lost_makets': lost_makets, 'lost_makets_len': lost_makets_len}
-    context.update(count_errors())
-    return render(request, 'errors/maket_repairs.html', context)
-
-
 def deleted_repairs(request):
     navi = 'admin'
     lost_deleted_items = list(Item_imports.objects.filter(order=None))
@@ -161,21 +145,6 @@ def lost_imports(request, id):
         pass
     return HttpResponseRedirect(reverse('errors:import_repairs'))
 
-
-def lost_maket(request, id):
-    order_id = request.POST['l_order']
-    try:
-        order = Order_imports.objects.get(id=order_id)
-    except:
-        return HttpResponseRedirect(reverse('errors:maket_repairs'))
-    maket_id = id
-    maket = Makety.objects.get(id=maket_id)
-
-    maket.order = order
-    other_makets_number = max(Makety.objects.filter(order=order).values_list('maket_id'))[0]
-    maket.maket_id = other_makets_number + 1
-    maket.save()
-    return HttpResponseRedirect(reverse('errors:maket_repairs'))
 
 
 def order_edit(request, id):

@@ -160,14 +160,6 @@
                     </span>
                     {% endif %}
                     </a></li>
-                <li><a class="dropdown-item justify-content-between" href="{% url 'errors:maket_repairs' %}">
-                    Удаленные макеты
-                    {% if lost_makets_len != 0 %}
-                    <span class="text-end badge bg-danger">
-                    {{lost_makets_len}}
-                    </span>
-                    {% endif %}
-                    </a></li>
                 <li><a class="dropdown-item text-nowrap" href="{% url 'errors:import_repairs' %}">
                     Ошибки импорта
                     {% if lost_imports_len != 0 %}

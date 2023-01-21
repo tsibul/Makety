@@ -7,7 +7,6 @@ from maket.models import Print_position, Print_place, Print_color, Item_imports,
 
 def count_errors():
     lost_imports_len = Item_imports.objects.filter(item=None).count()
-    lost_makets_len = Makety.objects.filter(order=None).count()
     lost_deleted_len = Item_imports.objects.filter(order=None).count() + Print_imports.objects.filter(item=None).count()
     print_colors = list(Print_color.objects.values_list('print_item_id', flat=True))
     lost_colors_len = Print_imports.objects.filter(Q(print_place__isnull=True) |
@@ -24,7 +23,7 @@ def count_errors():
                                                      ~Q(print_position__print_group=F('item__item__print_group'))).count()
     order_errors_len = Order_imports.objects.filter(to_check=True).order_by('-order_date', 'order_id').count()
     additional_files_len = Additional_Files.objects.filter(additional_file__isnull=True).count()
-    err_len = lost_position_len + lost_makets_len + lost_deleted_len + lost_colors_len + changed_customers_len + \
+    err_len = lost_position_len + lost_deleted_len + lost_colors_len + changed_customers_len + \
               lost_hex_len + order_errors_len + additional_files_len
 
     maket_files_diff = len(os.listdir('files/makety')) - Makety.objects.filter(uploaded=True).count()
@@ -35,7 +34,7 @@ def count_errors():
         Additional_Files.objects.filter(additional_file__isnull=True).count()
     total_files_diff = maket_files_diff + order_files_diff + films_files_diff + patterns_files_diff + additional_files_diff
 
-    context = {'lost_imports_len': lost_imports_len, 'lost_makets_len': lost_makets_len,
+    context = {'lost_imports_len': lost_imports_len,
                'lost_deleted_len': lost_deleted_len, 'lost_colors_len': lost_colors_len,
                'changed_customers_len': changed_customers_len, 'lost_hex_len': lost_hex_len, 'lost_position_len':
                lost_position_len, 'err_len': err_len, 'order_errors_len': order_errors_len, 'maket_files_diff': maket_files_diff,
