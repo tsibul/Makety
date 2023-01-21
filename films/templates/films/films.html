@@ -150,7 +150,7 @@
      <th class="fw-normal">Данные по нанесению</th>
      <th class="fw-normal text-end" style="font-size:90%">{{item_group.0.0}}</th>
      <th class="fw-normal text-end" style="font-size:90%">{{item_group.0.1}}</th>
-     <th class="fw-normal text-end" style="font-size:90%">{{item_group.0.2}}</th>
+     <th class="fw-normal text-end" style="font-size:90%">{{item_group.0.2|floatformat:2}}</th>
      <th class="fw-normal text-end" style="font-size:90%">{{item_group.0.3}}</th>
     </tr>
     </thead>
@@ -179,7 +179,7 @@
       <td style="max-width:300px;">{{itm.5}}</td>
       <td class="text-end">{{itm.1}}</td>
       <td class="text-end">{{itm.2}}</td>
-      <td class="text-end">{{itm.3|floatformat:2}}</td>
+      <td class="text-end">{{itm.3|floatformat:1}}</td>
       <td class="text-end">{{itm.4}}</td>
     </tr>
 
