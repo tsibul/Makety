@@ -52,7 +52,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
         <button type="button" class="btn btn-primary"  data-bs-dismiss="modal"
-                onclick="javascript:save_to_film();">Сохранить</button>
+                onclick="save_to_film(this);" id="modal_save">Сохранить</button>
       </div>
     </div>
   </div>
@@ -104,7 +104,7 @@
     <th class="" style="width:80px;">изменен</th>
     <th class="" colspan="">файл</th>
     <th class="text-end m-1" colspan="2">
-       <button type="button" class="btn btn-sm btn-primary text-nowrap" onclick="javascript:total_collapse();">
+       <button type="button" class="btn btn-sm btn-primary text-nowrap" onclick="total_collapse();">
             <i class="bi bi-plus-lg"></i> Скрыть/показать состав
         </button>
     </th>
@@ -204,7 +204,7 @@
                 <td >{{itm.3|floatformat:2}}</td>
                 <td class="text-end text-nowrap"><button type="button" class="btn btn-sm btn-outline-primary"
                                              data-bs-toggle="modal" data-bs-target="#selectFilm"
-                                             onclick="javascript:select_film({{itm.0.id}});">
+                                             onclick="select_film({{itm.0.id}});">
                     на пленку</button> </td>
                 </tr>
             {% endfor %}
