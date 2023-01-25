@@ -183,8 +183,10 @@ def look_up(request, navi):
         for itm in item:
             if itm.order not in ord_s:
                 ord_s.append(itm.order)
-        maket = Makety.objects.filter(Q(order__order_id__icontains=lookup) | Q(order__customer__name__icontains=lookup) \
-                                      | Q(order__in=ord_s)).order_by('-order_date', 'maket_id')
+        maket = Makety.objects.filter(Q(order__order_id__icontains=lookup)
+                                      | Q(order__customer__name__icontains=lookup)
+                                      | Q(order__in=ord_s)
+                                      | Q(order__item_imports__name__icontains=lookup)).order_by('-order_date', 'maket_id')
 
         item_group = Itemgroup_in_Maket.objects.all().order_by('item')
         f_group = {}
