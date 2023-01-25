@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from maket.models import Item_color, Order_imports, Item_imports, Customer, Customer_groups, Customer_types,\
-    Print_imports, Detail_set, Makety, Additional_Files, Print_color
+    Print_imports, Detail_set, Makety, Additional_Files, Print_color, Films
 from django.db.models import Q, F
 
 
@@ -13,11 +13,20 @@ def other(request):
     navi = 'admin'
     customers = Customer.objects.all().count()
     customer_groups = Customer_groups.objects.all().count
+    films = Films.objects.all()
 
     context = {'navi': navi, 'active4': 'active', 'customers': customers, 'customer_groups': customer_groups,
-               }
+               'films': films}
     context.update(count_errors())
     return render(request, 'errors/other.html', context)
+
+
+def delete_film(reqest):
+    film_id = reqest.POST['id']
+    film = Films.objects.get(id=film_id)
+    film.delete()
+    return HttpResponseRedirect(reverse('errors:other'))
+
 
 
 def import_repairs(request):

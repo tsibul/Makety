@@ -19,6 +19,8 @@ urlpatterns = [
     path('import_repairs', views.import_repairs, name='import_repairs'),
 
     path('other', views.other, name='other'),
+    path('other/delete_film', views.delete_film, name='delete_film'),
+
     path('badge_file_count', views.badge_file_count, name='badge_file_count'),
 
 

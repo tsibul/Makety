@@ -10,4 +10,35 @@
     <div class="col-auto">{{customer_groups}}</div>
 </div>
 
+<table class="table table-sm">
+<thead>
+<tr>
+    <th>film</th>
+    <th>date</th>
+    <th>date sent</th>
+    <th>status </th>
+    <th style="width: 20mm;">id </th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{%  for film in films %}
+<tr>
+    <td>{{ film.film_id }}</td>
+    <td>{{ film.date|date:'d.m.Y' }}</td>
+    <td>{{ film.date_sent|date:'d.m.Y'}}</td>
+    <td>{{ film.status }}</td>
+    <form action="{%  url 'errors:delete_film' %}" method="post">
+    {%  csrf_token %}
+    <td><input type="number" value="{{ film.id }}" name="id" readonly class="form-control">
+    </td>
+    <td>
+        <button type="submit" class="btn btn-outline-danger"><i class="bi bi-x-lg"></i>&nbsp;Delete</button>
+    </td>
+    </form>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
 {% endblock %}
