@@ -46,18 +46,18 @@ def films(request):
         except:
             pass
 
-#    for fg in f_group:
-#        ig_q_all = 0
-#        ig_p_all = 0
-#        ig_pp_all = 0
-#        len_it = 0
+    for fg in f_group:
+        ig_q_all = 0
+        ig_p_all = 0
+        ig_pp_all = 0
+        len_it = 0
 
-#        for content in f_group[fg]:
-#            ig_q_all += content[1]
-#            ig_p_all += content[2]
-#            ig_pp_all += content[3]
-#            len_it += content[6]
-#        f_group[fg].insert(0, [ig_q_all, ig_p_all, ig_pp_all, ig_pp_all + ig_p_all, len_it])
+        for content in f_group[fg]:
+            ig_q_all += content[1]
+            ig_p_all += content[2]
+            ig_pp_all += content[3]
+            len_it += content[6]
+        f_group[fg].insert(0, [ig_q_all, ig_p_all, ig_pp_all, ig_pp_all + ig_p_all, len_it])
 
         f_group2 = list(f_group.items())
         paginator = Paginator(f_group2, 5)
