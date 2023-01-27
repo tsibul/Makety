@@ -177,10 +177,13 @@ def import_order(request):
             typegroup = Customer_types.objects.get(code=typegroup_in)
         except:
             typegroup = ''
-        if len(customer_inn) >= 10:
-            customer_all = Customer_all.objects.filter(inn=customer_inn).order_by('frigat_id').last()
-        else:
-            customer_all = Customer_all.objects.filter(customer_name__in=customer_name).order_by('frigat_id').last()
+        try:
+            if len(customer_inn) >= 10:
+                customer_all = Customer_all.objects.filter(inn=customer_inn).order_by('frigat_id').last()
+            else:
+                customer_all = Customer_all.objects.filter(customer_name__in=customer_name).order_by('frigat_id').last()
+        except:
+            customer_all = None
         customer = Customer(name=customer_name, address=customer_address, inn=customer_inn, region=region,
                             customer_type=typegroup, date_first=order_date, customer_all=customer_all)
         if customer_all:
