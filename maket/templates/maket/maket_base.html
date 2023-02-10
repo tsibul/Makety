@@ -186,7 +186,7 @@
             <tbody>
 
             {% for itm in itemgr %}
-                <tr class="{% if not itm.0.film.status %} text-danger{% endif %}" >
+                <tr class="table-secondary {% if not itm.0.film.status %} text-danger{% endif %} " >
                 <input type="text" id="pg_{{itm.0.id}}_1"
                            value="группа {{itm.0.item.item.print_group.name}}" hidden>
                 <input type="text" id="pg_{{itm.0.id}}_2"
