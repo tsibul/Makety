@@ -195,15 +195,15 @@
                                              data-bs-toggle="modal" data-bs-target="#selectFilm"
                                              onclick="select_film({{itm.0.id}});">
                     на пленку&nbsp;<i class="bi bi-arrow-right"></i></button> </td>
-                <td class="pt-2">{{itm.0.item.item.print_group.name}}</td>
-                <td class="pt-2">{{itm.0.print_name}}</td>
-                <td id="filmout_{{itm.0.id}}" class="pt-2">{% if itm.0.film.id == None %} нет {% else %}
+                <td class="align-middle">{{itm.0.item.item.print_group.name}}</td>
+                <td class="align-middle">{{itm.0.print_name}}</td>
+                <td id="filmout_{{itm.0.id}}" class="align-middle">{% if itm.0.film.id == None %} нет {% else %}
                     {{itm.0.film.film_id}}&nbsp;{% endif %}
                 </td>
-                <td class="pt-2">{% if itm.0.film.id != None %}{% if itm.0.film.status %}{{itm.0.film.date|date:'d.m.Y'}} {% else %}в работе{% endif %}{% endif %} </td>
-                <td class="pt-2 text-end">{{itm.1}}</td>
-                <td class="pt-2 text-end">{{itm.2}}</td>
-                <td class="pt-2 text-end">{{itm.3|floatformat:2}}</td>
+                <td class="align-middle">{% if itm.0.film.id != None %}{% if itm.0.film.status %}{{itm.0.film.date|date:'d.m.Y'}} {% else %}в работе{% endif %}{% endif %} </td>
+                <td class="align-middle text-end">{{itm.1}}</td>
+                <td class="align-middle text-end">{{itm.2}}</td>
+                <td class="align-middle text-end">{{itm.3|floatformat:2}}</td>
                 </tr>
             {% endfor %}
             </tbody>
