@@ -40,8 +40,9 @@ def films(request):
                         prt_place = 'Станд. ProEcoPen'
                     else:
                         prt_place = prt.place
-                    pr += (prt_place + ', ' + prt.type + ', ' + str(prt.colors) + ' цв., ' + sec_pass).ljust(42, '-')
+                    pr += prt_place + ', ' + prt.type + ', ' + str(prt.colors) + ' цв., ' + sec_pass + '\n'
                     len_pr += 1
+            pr = pr.rstrip(', \n')
             f_group[i.film].append([i, ig_q, ig_p, ig_pp, ig_p + ig_pp, pr, len_pr])
         except:
             pass
