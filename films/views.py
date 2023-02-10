@@ -60,20 +60,20 @@ def films(request):
             len_it += content[6]
         f_group[fg].insert(0, [ig_q_all, ig_p_all, ig_pp_all, ig_pp_all + ig_p_all, len_it])
 
-        f_group2 = list(f_group.items())
-        paginator = Paginator(f_group2, 5)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        f_group = dict(page_obj.object_list)
+    f_group2 = list(f_group.items())
+    paginator = Paginator(f_group2, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    f_group = dict(page_obj.object_list)
 
-        date_range = []
-        for i in range(page_obj.paginator.num_pages):
-            page_obj2 = paginator.get_page(i + 1)
-            try:
-                date_tmp = repr(page_obj2.object_list[0][0])
-                date_range.append([i + 1, 'до ' + date_tmp])
-            except:
-                date_range.append(['нет данных'])
+    date_range = []
+    for i in range(page_obj.paginator.num_pages):
+        page_obj2 = paginator.get_page(i + 1)
+        try:
+            date_tmp = repr(page_obj2.object_list[0][0])
+            date_range.append([i + 1, 'до ' + date_tmp])
+        except:
+            date_range.append(['нет данных'])
     if f_group == {}:
         page_obj = ''
         date_range = ''
