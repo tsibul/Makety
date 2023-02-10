@@ -50,7 +50,7 @@ def maket_base(request):
             f_maket[m.order] = {}
         f_maket[m.order].update({m: f_group.get(m)})
 
-    films = Films.objects.filter(status=False).order_by('-date')
+    films = Films.objects.filter(status=False).order_by('-date', 'film_id')
     current_date = datetime.date.today()
     try:
         last_film = films.first().film_id + 1
@@ -104,7 +104,7 @@ def save_to_film(request, id, film):
         film = Films.objects.get(id=film)
     except:
         try:
-            flm = Films.objects.all().order_by('-date').first.film_id
+            flm = Films.objects.all().order_by('-date', '-film_id').first().film_id
             flm = flm + 1
         except:
             flm = 1

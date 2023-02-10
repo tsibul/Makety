@@ -200,7 +200,7 @@
                 <td id="filmout_{{itm.0.id}}" class="align-middle">{% if itm.0.film.id == None %} нет {% else %}
                     {{itm.0.film.film_id}}&nbsp;{% endif %}
                 </td>
-                <td class="align-middle">{% if itm.0.film.id != None %}{% if itm.0.film.status %}{{itm.0.film.date|date:'d.m.Y'}} {% else %}в работе{% endif %}{% endif %} </td>
+                <td class="align-middle" id="dateout_{{itm.0.id}}">{% if itm.0.film.id != None %}{% if itm.0.film.status %}{{itm.0.film.date|date:'d.m.Y'}} {% else %}в работе{% endif %}{% endif %} </td>
                 <td class="align-middle text-end">{{itm.1}}</td>
                 <td class="align-middle text-end">{{itm.2}}</td>
                 <td class="align-middle text-end">{{itm.3|floatformat:2}}</td>

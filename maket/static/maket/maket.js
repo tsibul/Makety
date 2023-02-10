@@ -65,15 +65,18 @@ function save_to_film(obj){
     var flm_data = film_data.split('|');
     var id = document.getElementById('modal_pg_id').value;
     var film = flm_data[0];
-    if(film!==0){
+    if(film!=0){
     var film_date = flm_data[2];
     var film_id = flm_data[1]
     }else{
     var film_date = document.getElementById('current_date').value;
-    var film_id = document.getElementById('last_film').value
+    var film_id = document.getElementById('last_film').value;
+    //film = film_id;
     }
     var filmout = 'filmout_' + id;
-    document.getElementById(filmout).innerHTML = 'пленка: ' + film_id + ' от ' + film_date;
+    var dateout = 'dateout_' + id;
+    document.getElementById(filmout).innerHTML = film_id;
+    document.getElementById(dateout).innerHTML = film_date;
     var xhr = new XMLHttpRequest();
     var url = 'save_to_film/' + id + '/' + film;
     xhr.open("GET", url, true);
