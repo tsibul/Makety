@@ -161,26 +161,29 @@
       <td ondblclick="window.open('/films/vieworder/{{itm.0.maket.order.id}}',
                      'newwindow',
                      'width=900,height=400');
-                      return false;">{{itm.0.maket.order.order_id}}</td>
+                      return false;" class="align-middle">{{itm.0.maket.order.order_id}}</td>
       <td ondblclick="window.open('/films/vieworder/{{itm.0.maket.order.id}}',
                      'newwindow',
                      'width=900,height=400');
-                      return false;">{{itm.0.maket.order.customer.name}}</td>
-      <td ondblclick="window.open('/maket_layout/{{itm.0.maket.order.id}}/{{itm.0.maket.maket_id}}', '_blank');  return false;">
+                      return false;" class="align-middle">{{itm.0.maket.order.customer.name}}</td>
+      <td ondblclick="window.open('/maket_layout/{{itm.0.maket.order.id}}/{{itm.0.maket.maket_id}}', '_blank');  return false;"
+          class="align-middle">
           {{itm.0.maket.maket_id}}
       </td>
       <td style="min-width:160px;"
-          ondblclick="window.open('/maket_layout/{{itm.0.maket.order.id}}/{{itm.0.maket.maket_id}}', '_blank');  return false;">
+          ondblclick="window.open('/maket_layout/{{itm.0.maket.order.id}}/{{itm.0.maket.maket_id}}', '_blank');  return false;"
+          class="align-middle">
           {{itm.0.item.item.print_group.name}}
       </td>
-      <td ondblclick="window.open('/maket_layout/{{itm.0.maket.order.id}}/{{itm.0.maket.maket_id}}', '_blank');  return false;">
+      <td ondblclick="window.open('/maket_layout/{{itm.0.maket.order.id}}/{{itm.0.maket.maket_id}}', '_blank');  return false;"
+          class="align-middle">
           {{itm.0.print_name}}
       </td>
-      <td style="max-width:300px;">{{itm.5|linebreaksbr}}</td>
-      <td class="text-end">{{itm.1}}</td>
-      <td class="text-end">{{itm.2}}</td>
-      <td class="text-end">{{itm.3|floatformat:1}}</td>
-      <td class="text-end">{{itm.4}}</td>
+      <td style="max-width:300px;" class="align-middle">{{itm.5|linebreaksbr}}</td>
+      <td class="text-end align-middle">{{itm.1}}</td>
+      <td class="text-end align-middle">{{itm.2}}</td>
+      <td class="text-end align-middle">{{itm.3|floatformat:1}}</td>
+      <td class="text-end align-middle">{{itm.4}}</td>
     </tr>
 
     </tbody>
