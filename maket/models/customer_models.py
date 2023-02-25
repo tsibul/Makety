@@ -21,7 +21,7 @@ class Customer_all(models.Model):
     our_manager = models.CharField(max_length=255, blank=True)
     date_import = models.DateField(default=datetime.date(2000, 1, 1))
     date_first = models.DateField(default=datetime.date(2000, 1, 1))
-    date_last = models.DateField(default=datetime.date(2100, 1, 1))
+    date_last = models.DateField(default=datetime.date(2000, 1, 1))
     active = models.BooleanField(default=True)
     internal = models.BooleanField(default=False)
 
