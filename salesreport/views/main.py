@@ -22,15 +22,14 @@ def index(request):
     except:
         date_last_cst = '2010-01-01'
     customers_all_quantity = Customer_all.objects.all().count()
-    customers_active_quantity = Customer.objects.filter(active=True, internal=False).count()
-    customers_quantity = Customer.objects.all().count()
+    customers_active_quantity = Customer_all.objects.filter(active=True, internal=False).count()
 
     groups_active_quantity = Customer_groups.objects.filter(active=True).count()
     groups_quantity = Customer_groups.objects.all().count()
 
-    clients_active_quantity = Customer.objects.filter(active=True, internal=False, customer_group__isnull=True).count() + \
+    clients_active_quantity = Customer_all.objects.filter(active=True, internal=False, customer_group__isnull=True).count() + \
                               Customer_groups.objects.filter(active=True).count()
-    clients_quantity = Customer.objects.filter(customer_group__isnull=True).count() + \
+    clients_quantity = Customer_all.objects.filter(customer_group__isnull=True).count() + \
                        Customer_groups.objects.all().count()
 
     sales_doc_quantity = Sales_docs.objects.all().count()
@@ -38,15 +37,15 @@ def index(request):
     no_doc = Sales_doc_imports.objects.filter(sales_doc__isnull=True).count()
     no_cust = Sales_docs.objects.filter(customer__isnull=True).count()
     no_good = Sales_doc_imports.objects.filter(detail_set__isnull=True).count()
-    sinhronized = Customer.objects.filter(Q(customer_all__isnull=False) &
+    sinhronized = Customer.objects.filter(~(Q(customer_all__isnull=False) &
                                           (Q(customer_group=F('customer_all__customer_group')) |
                                           Q(customer_group__isnull=True) & Q(customer_all__customer_group__isnull=True)) &
                                           (Q(customer_type=F('customer_all__customer_type')) |
                                           Q(customer_type__isnull=True) & Q(customer_all__customer_type__isnull=True)) &
                                           Q(inn=F('customer_all__inn')) &
                                           Q(name__endswith=F('customer_all__name'))
-                                          ).count()
-    context = {'navi': navi, 'date_last_cst': date_last_cst, 'customers_quantity': customers_quantity,
+                                          )).count()
+    context = {'navi': navi, 'date_last_cst': date_last_cst,
                'customers_active_quantity': customers_active_quantity, 'sinhronized': sinhronized,
                'date_last': date_last, 'sales_doc_quantity': sales_doc_quantity, 'customers_all_quantity': customers_all_quantity,
                'transactions_quantity': transactions_quantity, 'no_doc': no_doc, 'no_cust': no_cust, 'no_good': no_good,
@@ -59,7 +58,6 @@ def import_report(request):
     report_file = request.FILES['importReport']
     start_date = datetime.datetime.strptime(request.POST['start_date'], '%Y-%m-%d').date()
     Sales_doc_imports.objects.filter(sales_doc_date__gte=start_date).delete()
-    Sales_docs.objects.filter(sales_doc_date__gte=start_date).delete()
     try:
         Sales_docs.objects.filter(sales_doc_date__gte=start_date).delete()
     except:
@@ -125,22 +123,14 @@ def import_report(request):
             try:
                 customer_all = Customer_all.objects.get(frigat_id=customer_frigat_id)
             except:
-                pass
-            try:
-                customer = Customer.objects.get(frigat_id=customer_frigat_id)
-            except:
-                customer = Customer(frigat_id=customer_frigat_id,
-                                    date_first=sales_doc_date,
-                                    name=(customer_all.form + ' ' + customer_all.name), address=customer_all.address,
-                                    inn=customer_all.inn, region=customer_all.region, type=customer_all.type,
-                                    group=customer_all.group, customer_type=customer_all.customer_type,
-                                    customer_group=customer_all.customer_group, customer_all=customer_all)
-            if customer.date_first == datetime.datetime.strptime('2000-01-01', '%Y-%m-%d').date() \
-                    or sales_doc_date < customer.date_first:
-                customer.date_first = sales_doc_date
-            if customer.date_last == datetime.datetime.strptime('2100-01-01', '%Y-%m-%d').date() \
-                    or sales_doc_date > datetime.datetime.strptime(str(customer.date_last), '%Y-%m-%d').date():
-                customer.date_last = sales_doc_date
+                customer_all = Customer_all(frigat_id=customer_frigat_id, date_first=datetime.date(2000, 1, 1),
+                                    date_last=datetime.date(2000, 1, 1), name=customer_name)
+            if customer_all.date_first == datetime.datetime.strptime('2000-01-01', '%Y-%m-%d').date() \
+                    or sales_doc_date < customer_all.date_first:
+                customer_all.date_first = sales_doc_date
+            if customer_all.date_last == datetime.datetime.strptime('2100-01-01', '%Y-%m-%d').date() \
+                    or sales_doc_date > datetime.datetime.strptime(str(customer_all.date_last), '%Y-%m-%d').date():
+                customer_all.date_last = sales_doc_date
             report_record = Sales_doc_imports(import_date=import_date, code=code, detail_set=detail_set,
                                               color_code=color_code, main_color=main_color, item_color=item_color,
                                               series_id=series_id, good_id=good_id, good_group_id=good_group_id,
@@ -150,14 +140,11 @@ def import_report(request):
                                               buy_without_vat=buy_without_vat, buy_with_vat=buy_with_vat,
                                               sales_quantity=sales_quantity, sale_without_vat=sale_without_vat,
                                               sale_with_vat=sale_with_vat, sale_price_vat=sale_price_vat,
-                                              customer_name=customer_name, customer_frigat_id=customer_frigat_id,
-                                              customer=customer, customer_all=customer_all)
+                                              customer_name=customer_name, customer_all=customer_all)
             records_list.append(report_record)
-            customer_list.append(customer)
+            customer_list.append(customer_all)
         new_records = Sales_doc_imports.objects.bulk_create(records_list)
-        new_customers = Customer.objects.bulk_update(customer_list, ['frigat_id', 'date_first', 'name', 'address', 'inn',
-                                                                     'region', 'type', 'group', 'customer_type',
-                                                                     'customer_group', 'customer_all', 'date_last'])
+        new_customers = Customer.objects.bulk_update(customer_list, ['frigat_id', 'date_first', 'name', 'date_last'])
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
@@ -184,7 +171,7 @@ def sales_docs(request):
             if not row.detail_set:
                 sales_object.good_no_error = False
             row.save()
-        sales_object.eco = eco >= sales_object.total_sale_without_vat
+        sales_object.eco = eco >= sales_object.total_sale_without_vat / 2
         sales_object.save()
 
 
@@ -231,19 +218,29 @@ def import_cst(request):
             customer.all_phones = row[13]
             try:
                 customer.customer_type = customer_type_chose(type_tmp, customer.region)
-                customer.type = customer.customer_type.type_name
             except:
                 pass
             customer.save()
-
+            if customer.inn != '':
+                try:
+                    customer_maket = Customer.objects.get(inn=customer.inn)
+                    customer_maket.customer_all = customer
+                    customer_maket.save()
+                except:
+                    pass
+            else:
+                try:
+                    customer_maket = Customer.objects.get(Q(name__endswith=customer.name))
+                    customer_maket.customer_all = customer
+                    customer_maket.save()
+                except:
+                    pass
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
 def cst_sinhro_inn(request):
     customers = Customer.objects.filter(~Q(inn='') &
                                         (Q(customer_all__isnull=True) |
-                                        (~Q(group=F('customer_all__group'))) |
-                                        (~Q(type=F('customer_all__type'))) |
                                         (~Q(customer_group=F('customer_all__customer_group')) &
                                         (Q(customer_group__isnull=False) & Q(customer_all__customer_group__isnull=False))) |
                                         (~Q(customer_type=F('customer_all__customer_type')) &
@@ -252,9 +249,7 @@ def cst_sinhro_inn(request):
     for customer in customers:
         if customer.customer_all and customer.inn == customer.customer_all.inn:
             customer_all = customer.customer_all
-            customer_all.group = customer.group
             customer_all.customer_group = customer.customer_group
-            customer_all.type = customer.type
             customer_all.customer_type = customer.customer_type
             customer_all.save()
         elif customer.inn != '' and not customer.inn:
@@ -262,25 +257,19 @@ def cst_sinhro_inn(request):
             customer.customer_all = customer_all
             customer.frigat_id = customer_all.frigat_id
             customer.save()
-            customer_all.group = customer.group
             customer_all.customer_group = customer.customer_group
-            customer_all.type = customer.type
             customer_all.customer_type = customer.customer_type
             customer_all.save()
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
 def cst_sinhro_group(request):
-    customers = Customer.objects.filter(~Q(group=F('customer_all__group')) |
-                                        ~Q(type=F('customer_all__type')) |
-                                        ~Q(customer_group=F('customer_all__customer_group')) |
+    customers = Customer.objects.filter((~Q(customer_group=F('customer_all__customer_group')) |
                                         ~Q(customer_type=F('customer_all__customer_type')) |
-                                        ~Q(region=F('customer_all__region')))
+                                        ~Q(region=F('customer_all__region'))) & Q(customer_all__isnull=False))
     for customer in customers:
         customer_all = customer.customer_all
-        customer_all.group = customer.group
         customer_all.customer_group = customer.customer_group
-        customer_all.type = customer.type
         customer_all.customer_type = customer.customer_type
         customer_all.region = customer.region
         customer_all.save()
@@ -291,8 +280,6 @@ def cst_sinhro_no(request):
     customers = Customer.objects.filter(Q(inn='') &
                                         (Q(customer_all__isnull=True) |
                                         ~Q(name__endswith=F('customer_all__name')) |
-                                        (~Q(group=F('customer_all__group'))) |
-                                        (~Q(type=F('customer_all__type'))) |
                                         (~Q(customer_group=F('customer_all__customer_group')) &
                                         (Q(customer_group__isnull=False) & Q(customer_all__customer_group__isnull=False))) |
                                         (~Q(customer_type=F('customer_all__customer_type')) &
@@ -305,9 +292,7 @@ def cst_sinhro_no(request):
                 customer.customer_all = customer_all
                 customer.frigat_id = customer_all.frigat_id
                 customer.save()
-                customer_all.group = customer.group
                 customer_all.customer_group = customer.customer_group
-                customer_all.type = customer.type
                 customer_all.customer_type = customer.customer_type
                 customer_all.save()
     return HttpResponseRedirect(reverse('salesreport:index'))
@@ -334,7 +319,7 @@ def cst_set_inactive(request):
 
 def group_set_inactive(request):
     d_n = datetime.date.today() - datetime.timedelta(weeks=154)
-    groups_list = Customer_groups.objects.filter(date_last__lt=d_n)
+    groups_list = Customer_groups.objects.all()
 #    map(lambda x: x.active = False, groups_list)
     for grp in groups_list:
         if grp.date_last < d_n:
@@ -348,8 +333,14 @@ def group_set_inactive(request):
 def group_set_dates(request):
     groups_list = Customer_groups.objects.all()
     for grp in groups_list:
-        date_first = min(Customer.objects.filter(customer_group=grp).values_list('date_first', flat=True))
-        date_last = max(Customer.objects.filter(customer_group=grp).values_list('date_last', flat=True))
+        try:
+            date_first = min(Customer_all.objects.filter(customer_group=grp).values_list('date_first', flat=True))
+        except:
+            date_first = datetime.date(2000, 1, 1)
+        try:
+            date_last = max(Customer_all.objects.filter(customer_group=grp).values_list('date_last', flat=True))
+        except:
+            date_last = datetime.date(2100, 1, 1)
         grp.date_first = date_first
         grp.date_last = date_last
     Customer_groups.objects.bulk_update(groups_list, ['date_first', 'date_last'])
