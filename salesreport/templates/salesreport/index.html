@@ -11,10 +11,6 @@
     <div class="m-1 col-auto">{{customers_all_quantity}}</div>
 </div>
 <div class="row text-nowrap justify-content-between">
-    <div class="m-1 col-auto">Контрагенты всего</div>
-    <div class="m-1 col-auto">{{customers_quantity}}</div>
-</div>
-<div class="row text-nowrap justify-content-between">
     <div class="m-1 col-auto">Контрагенты активные</div>
     <div class="m-1 col-auto">{{customers_active_quantity}}</div>
 </div>
@@ -126,7 +122,7 @@
   </div>
 
   <div class="row text-nowrap justify-content-between">
-  <div class="m-1 col-auto text-nowrap">Синхронизировано клиентов</div>
+  <div class="m-1 col-auto text-nowrap">Не синхронизировано клиентов</div>
   <div class="m-1 col-auto text-nowrap"><a href="{% url 'salesreport:cst_unsinhronized' %}" target="_blank">  {{sinhronized}} </a></div>
   </div>
   <div class="m-1 text-nowrap">
@@ -136,6 +132,7 @@
       <i class="bi bi-people"></i>&nbsp;Синхронизировать клиентов по группе</button>
       </form>
   </div>
+   <!--
    <div class="m-1 text-nowrap">
       <form method="post" action="{% url 'salesreport:cst_sinhro_inn' %}"  id="sinhro">
       {% csrf_token %}
@@ -150,6 +147,7 @@
       <i class="bi bi-plugin"></i>&nbsp;Синхронизировать клиентов без ИНН</button>
       </form>
    </div>
+   -->
 </div>
 
 <!-- Errors-->
