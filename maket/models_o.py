@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.core.files.storage import FileSystemStorage
 
@@ -104,7 +106,12 @@ class Customer_all(models.Model):
     all_mails = models.CharField(max_length=600, null=True, blank=True)
     comment = models.CharField(max_length=255, null=True, blank=True)
     our_manager = models.CharField(max_length=255, blank=True)
-    date_import = models.DateField(default='2000-01-01')
+    date_import = models.DateField(default=datetime.date(2000, 1, 1))
+    date_first = models.DateField(default=datetime.date(2000, 1, 1))
+    date_last = models.DateField(default=datetime.date(2100, 1, 1))
+    active = models.BooleanField(default=True)
+    internal = models.BooleanField(default=False)
+
 
     def __repr__(self):
         return self.name

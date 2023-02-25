@@ -1,6 +1,8 @@
 from django.db import models
-from maket.models import Customer, Detail_set, Item_color, Order_imports, Customer_all
-
+from maket.models.order_models import Order_imports
+from maket.models.customer_models import Customer_all, Customer
+from maket.models.print_color_models import Item_color
+from maket.models.goods_models import Detail_set
 
 class Sales_docs(models.Model):
     sales_document = models.CharField(max_length=255)
