@@ -1,4 +1,6 @@
 from django.db import models
+import datetime
+
 from maket.models.order_models import Order_imports
 from maket.models.customer_models import Customer_all, Customer
 from maket.models.print_color_models import Item_color
@@ -7,8 +9,8 @@ from maket.models.goods_models import Detail_set
 class Sales_docs(models.Model):
     sales_document = models.CharField(max_length=255)
     sales_doc_number = models.CharField(max_length=20, null=True)
-    sales_doc_date = models.DateField(default='2000-01-01')
-    customer = models.ForeignKey(Customer, models.SET_NULL, null=True)
+    sales_doc_date = models.DateField(default=datetime.date(2000, 1, 1))
+    customer = models.ForeignKey(Customer_all, models.SET_NULL, null=True)
     quantity = models.FloatField(default=0)
     total_sale_with_vat = models.FloatField(default=0)
     total_sale_without_vat = models.FloatField(default=0)
@@ -36,7 +38,7 @@ class Sales_doc_imports(models.Model):
     code_1
     """
 
-    import_date = models.DateField(default='2000-01-01')
+    import_date = models.DateField(default=datetime.date(2000, 1, 1))
     code = models.CharField(max_length=30)
     detail_set = models.ForeignKey(Detail_set, models.SET_NULL, null=True)
     color_code = models.CharField(max_length=20, null=True)
@@ -52,7 +54,7 @@ class Sales_doc_imports(models.Model):
     quantity = models.FloatField(default=0)
     sales_doc_name = models.CharField(max_length=255, default='Расходная накладная')
     sales_doc_no = models.CharField(max_length=20, null=True)
-    sales_doc_date = models.DateField(default='2010-01-01')
+    sales_doc_date = models.DateField(default=datetime.date(2000, 1, 1))
     buy_without_vat = models.FloatField(default=0)
     buy_with_vat = models.FloatField(default=0)
     sales_quantity = models.FloatField(default=0)
@@ -61,7 +63,6 @@ class Sales_doc_imports(models.Model):
     sale_price_vat = models.FloatField(default=0)
     customer_name = models.CharField(max_length=255, null=True)
     customer_frigat_id = models.IntegerField(null=True)
-    customer = models.ForeignKey(Customer, models.SET_NULL, null=True)
     customer_all = models.ForeignKey(Customer_all, models.SET_NULL, null=True)
     sales_doc = models.ForeignKey(Sales_docs, models.SET_NULL, null=True)
 
