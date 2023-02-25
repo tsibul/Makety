@@ -73,7 +73,6 @@ function clearModalGoods(){
 function fillModalCustomers(custObj){
     document.getElementById('id').value = custObj.dataset.id;
     document.getElementById('gr_id').value = custObj.dataset.group_id;
-    document.getElementById('fr').value = custObj.dataset.fr;
     document.getElementById('rg').value = custObj.dataset.region;
     document.getElementById('in').value = custObj.dataset.inn;
     document.getElementById('nm').textContent = custObj.dataset.name;
@@ -88,7 +87,6 @@ function fillModalCustomers(custObj){
 function clearModalCustomers(){
     document.getElementById('id').value = null;
     document.getElementById('gr_id').value = null;
-    document.getElementById('fr').value = null;
     document.getElementById('rg').value = null;
     document.getElementById('in').value = null;
     document.getElementById('nm').textContent = null;

@@ -60,12 +60,9 @@
         </div>
         <div class="row mb-1">
             <div class="col-3">
-            <label for="fr">fr #</label>
-            <input class="form-control" type="text" id="fr" name="fr" readonly></div>
-            <div class="col-2">
             <label for="rg">регион</label>
             <input class="form-control" type="text" id="rg" name="rg"></div>
-            <div class="col-7">
+            <div class="col-9">
             <label for="rg">ИНН</label>
             <input class="form-control" type="text" id="in" name="in_"></div>
         </div>
@@ -118,7 +115,7 @@
     <th><strong>Регион</strong></th>
     <th><strong>ИНН</strong></th>
     <th ><strong>Адрес</strong></th>
-    <th ><strong>E-mail</strong></th>
+    <th class="text-nowrap"><strong>E-mail</strong></th>
     <th ><strong>Последняя продажа</strong></th>
     </tr>
 </thead>
@@ -128,20 +125,19 @@
     <tr onclick="fillModalCustomers(this);" id="row_{{cst.id}}" data-bs-toggle="modal" data-bs-target="#custModal" data-id="{{cst.id}}"
         data-name="{{cst.name}}" data-group_old="{{cst.group}}" data-group="{{cst.customer_group.id}}"
         data-type_old="{{cst.type}}" data-type="{{cst.customer_type.id}}" data-region="{{cst.region}}" data-inn="{{cst.inn}}"
-        data-address="{{cst.address}}" data-group_id="{{cst.customer_group.id}}" data-fr="{{cst.frigat_id}}"
-        {% if not cst.active or cst.internal %}class="text-danger"{% endif %}>
+        data-address="{{cst.address}}" data-group_id="{{cst.customer_group.id}}" data-fr="{{cst.frigat_id}}">
     <input type="text" hidden value="{{cst.id}}" id="id_{{cst.id}}">
-    <td id="fr_{{cst.id}}"><div >{{cst.frigat_id}}</div></td>
+    <td id="fr_{{cst.id}}"><div >{{cst.customer_all.frigat_id}}</div></td>
     <td id="nm_{{cst.id}}" class="fw-bold"><div >{{cst.name}}</div></td>
 <!--    <td id="gr_{{cst.id}}">{{cst.group}}</td> <--->
-    <td id="gr2_{{cst.id}}">{{cst.customer_group.group_name}}</td>
+    <td id="gr2_{{cst.id}}" class="text-nowrap">{{cst.customer_group.group_name}}</td>
 <!--    <td id="tp_{{cst.id}}">{{cst.type}}</td> <--->
-    <td id="tp2_{{cst.id}}">{{cst.customer_type.type_name}}</td>
+    <td id="tp2_{{cst.id}}" class="text-nowrap">{{cst.customer_type.type_name}}</td>
     <td id="rg_{{cst.id}}">{{cst.region}}</td>
     <td id="in_{{cst.id}}" >{{cst.inn}}</td>
     <td id="addr_{{cst.id}}">{{cst.address}}</td>
     <td id="mail_{{cst.id}}">{{cst.customer_all.mail}}</td>
-    <td id="dl_{{cst.id}}">{{cst.date_last|date:'d.m.Y'}}</td>
+    <td id="dl_{{cst.id}}">{{cst.customer_all.date_last|date:'d.m.Y'}}</td>
     </tr>
 {% endfor %}
 </tbody>

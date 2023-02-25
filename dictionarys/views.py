@@ -141,7 +141,7 @@ def add_detail(request):
 
 def customers(request):
     navi = 'customers'
-    customers = Customer.objects.all().order_by('customer_all__name')
+    customers = Customer.objects.all().order_by('customer_all__name', 'name')
     customer_types = Customer_types.objects.all()
     customer_groups = Customer_groups.objects.all().order_by('group_name')
     paginator = Paginator(customers, 25)  # Show 25 contacts per page.
