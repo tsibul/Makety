@@ -15,6 +15,7 @@ def transaction_delete(request):
 
 def customer_all_delete(request):
     Customer_all.objects.all().delete()
+    '''
     customers_id = set(Order_imports.objects.all().values_list('customer', flat=True))
     Customer.objects.exclude(id__in=customers_id).delete()
     fr_id = [''] * Customer.objects.all().count()
@@ -22,4 +23,5 @@ def customer_all_delete(request):
     for customer in customers:
         customer.frigat_id = ''
     Customer.objects.bulk_update(customers, ['frigat_id'])
+    '''
     return HttpResponseRedirect(reverse('salesreport:admin'))
