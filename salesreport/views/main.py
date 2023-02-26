@@ -128,9 +128,11 @@ def import_report(request):
             if customer_all.date_first == datetime.datetime.strptime('2000-01-01', '%Y-%m-%d').date() \
                     or sales_doc_date < customer_all.date_first:
                 customer_all.date_first = sales_doc_date
+                customer_all.save()
             if customer_all.date_last == datetime.datetime.strptime('2100-01-01', '%Y-%m-%d').date() \
                     or sales_doc_date > datetime.datetime.strptime(str(customer_all.date_last), '%Y-%m-%d').date():
                 customer_all.date_last = sales_doc_date
+                customer_all.save()
             report_record = Sales_doc_imports(import_date=import_date, code=code, detail_set=detail_set,
                                               color_code=color_code, main_color=main_color, item_color=item_color,
                                               series_id=series_id, good_id=good_id, good_group_id=good_group_id,
@@ -143,8 +145,9 @@ def import_report(request):
                                               customer_name=customer_name, customer_all=customer_all)
             records_list.append(report_record)
             customer_list.append(customer_all)
+        tmp_records = filter(lambda x: x.customer_all == None, records_list)
         new_records = Sales_doc_imports.objects.bulk_create(records_list)
-        new_customers = Customer.objects.bulk_update(customer_list, ['frigat_id', 'date_first', 'name', 'date_last'])
+#        new_customers = Customer.objects.bulk_update(customer_list, ['frigat_id', 'date_first', 'name', 'date_last'])
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
@@ -307,13 +310,13 @@ def cst_sinhro_err(request):
 
 def cst_set_inactive(request):
     d_n = datetime.date.today() - datetime.timedelta(weeks=154)
-    customers_list = Customer.objects.all()
+    customers_list = Customer_all.objects.all()
     for cst in customers_list:
         if cst.date_last < d_n:
             cst.active = False
         else:
             cst.active = True
-    Customer.objects.bulk_update(customers_list, ['active'])
+    Customer_all.objects.bulk_update(customers_list, ['active'])
     return HttpResponseRedirect(reverse('salesreport:index'))
 
 
