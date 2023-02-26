@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lost goods in sales</title>
+</head>
+<body>
+<div class="text-end m-3 text-primary">анализ продаж Ver 2.1.0</div>
+<table class="table table-sm table-hover">
+    <thead>
+    <tr>
+        <th>Дата</th>
+        <th>Товар</th>
+        <th>Аритикул</th>
+        <th>Цена с НДС</th>
+        <th>Кол-во</th>
+        <th>Сумма с НДС</th>
+        <th>Номер документа</th>
+        <th>контрагент</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for sale in sales %}
+    <tr>
+        <td>{{ sale.sales_doc_date|date:'d-m-Y' }}</td>
+        <td>{{ sale.good_name }}</td>
+        <td>{{ sale.good_id }}</td>
+        <td>{{ sale.sale_price_vat }}</td>
+        <td>{{ sale.quantity }}</td>
+        <td>{{ sale.sale_with_vat }}</td>
+        <td>{{ sale.sales_doc_no }}</td>
+        <td>{{ sale.customer_all.name }}</td>
+        <td></td>
+    </tr>
+    {%  endfor %}
+    </tbody>
+
+</table>
+</body>
+</html>
