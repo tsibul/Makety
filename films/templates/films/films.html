@@ -130,7 +130,7 @@
             <i class="bi bi-upload"></i> Загрузить
          </button>
          <button type="button" class="btn btn-sm btn-outline-secondary  text-nowrap" id="but_upl_{{film.id}}"
-                 onclick="window.open('/maket/download_film/{{film.id}}', '_blank');"
+                 onclick="window.open('/films/download_film/{{film.id}}', '_blank');"
             style="font-size:90%" {% if not film.film_upload %}disabled{% endif %}>
             <i class="bi bi-download"></i> Скачать
          </button>
