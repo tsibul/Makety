@@ -11,19 +11,22 @@
         <h1 class="modal-title fs-5" id="custModalLabel">Редактировать Клиента</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="{% url 'dictionarys:update_cst' %}" method="post" id="form_">
+      <form action="{% url 'salesreport:update_cst' %}" method="post" id="form_">
       {% csrf_token %}
       <div class="modal-body">
         <input type="text" name="lookup" value="{{lookup}}" hidden>
         <input type="text" name="look_up" value="{{look_up}}" hidden>
         <input type="number" class="form-control" form="form_" value="{{page_obj.number}}" name="page_no" hidden>
         <div class="row mb-1">
-            <div class="col">
+            <div class="col-4">
                 <label for="id">ID Макеты</label>
                 <input class="form-control" type="text" id="id" name="id" readonly form="form_"></div>
-            <div class="col">
+            <div class="col-5">
                 <label for="gr_id">ID группы клиентов</label>
                 <input class="form-control" type="text" id="gr_id" name="gr_id" form="form_" readonly></div>
+            <div class="col-3">
+                <label class="form-check-label" for="in">Внутренний</label>
+                <input class="form-check" type="checkbox" id="in" name="in" form="form_"></div>
         </div>
         <div class="row mb-1">
             <div class="col-3">
@@ -47,12 +50,6 @@
                 {% endfor %}
                 </select>
             </div>
-            <!--
-            <div class="col">
-            <input class="form-control" type="text" id="gr_o" name="gr_o">
-            </div>
-        </div>
-        <div class="row mb-1"> <--->
             <label for="tp">тип</label>
             <div class="col">
                 <select class="form-select" id="tp" name="tp" aria-label="select tp" form="form_">
@@ -61,9 +58,6 @@
                   {% endfor %}
                 </select>
             </div>
-            <!--
-            <div class="col">
-            <input class="form-control" type="text" id="tp_o" name="tp_o"></div> <--->
         </div>
         <label for="ad">адрес</label>
           <textarea class="form-control" type="text" id="ad" name="ad"></textarea>
@@ -85,7 +79,7 @@
             <div class="col">
             </div>
             <div class="col text-end mt-3 fw-normal" >
-                    {{ page_obj.object_list.0}} - {{ page_obj.object_list.19}}
+                    {{ page_obj.object_list.0}} - {{ page_obj.object_list.149}}
             </div>
                 <div class="col-auto m-2  justify-content-end" >
                 <div class="pagination" xmlns="http://www.w3.org/1999/html">
@@ -106,8 +100,8 @@
             </div>
             <div class="col-auto justify-content-end">
             <div class="form-check form-switch mt-3 me-3">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchActive">
-                <label class="form-check-label fw-normal" for="flexSwitchActive" style="font-size: 120%;">Только активные</label>
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchActive" onclick="clientActive(this);" name="off">
+                <label class="form-check-label fw-normal" for="flexSwitchActive" style="font-size: 120%;" >Только активные</label>
             </div>
             </div>
         </div>
@@ -133,7 +127,7 @@
         data-name="{{cst.name}}" data-group_old="{{cst.group}}" data-group="{{cst.customer_group.id}}"
         data-type_old="{{cst.type}}" data-type="{{cst.customer_type.id}}" data-region="{{cst.region}}" data-inn="{{cst.inn}}"
         data-address="{{cst.address}}" data-group_id="{{cst.customer_group.id}}" data-fr="{{cst.frigat_id}}"
-        {% if not cst.active or cst.internal %}class="text-danger"{% endif %}>
+        {% if not cst.active or cst.internal %}class="text-danger"{% endif %} data-in="{{ cst.internal }}">
     <input type="text" hidden value="{{cst.id}}" id="id_{{cst.id}}">
     <td id="fr_{{cst.id}}"><div >{{cst.frigat_id}}</div></td>
     <td id="nm_{{cst.id}}" class="fw-bold"><div >{{cst.name}}</div></td>
@@ -150,6 +144,5 @@
 </tbody>
 </table>
 <br><br>
-<script src="{% static 'dictionarys/dicts.js' %}"></script>
 
 {% endblock %}
