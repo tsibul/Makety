@@ -366,7 +366,7 @@ def lost_goods(request):
     context = {'sales': sales}
     return render(request, 'salesreport/lost_goods.html', context)
 
-def sales_doc_recheck(request):
+def sales_docs_recheck(request):
     date_from = request.POST['date']
     sales_docs = Sales_docs.objects.filter(sales_doc_date__gte=date_from)
     return HttpResponseRedirect(reverse('salesreport:management'))
