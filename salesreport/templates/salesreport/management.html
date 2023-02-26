@@ -107,6 +107,14 @@
       <i class="bi bi-collection"></i> Группировать по документам</button>
       </form>
    </div>
+   <div class="m-1 text-nowrap">
+      <form action="{% url 'salesreport:sales_docs_recheck' %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-sm btn-primary">
+      <i class="bi bi-collection"></i> Группировать по документам</button>
+      <input type="date" class="form-control" required name="date">
+      </form>
+   </div>
 </div>
 
 <!-- Customer imports-->

@@ -31,6 +31,7 @@ urlpatterns = [
     path('group_set_dates', views.group_set_dates, name='group_set_dates'),
 
     path('sales_docs', views.sales_docs, name='sales_docs'),
+    path('sales_docs_recheck', views.sales_docs_recheck, name='sales_docs_recheck'),
     path('customer_date', views.customer_date, name='customer_date'),
     path('unsinhronized', views.cst_unsinhronized, name='cst_unsinhronized'),
 
