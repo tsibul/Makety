@@ -108,11 +108,11 @@
       </form>
    </div>
    <div class="m-1 text-nowrap">
-      <form action="{% url 'salesreport:sales_docs_recheck' %}" method="post">
+      <form action="{% url 'salesreport:sales_docs_recheck' %}" method="post" style="display: flex; align-items: center;">
       {% csrf_token %}
       <button type="submit" class="btn btn-sm btn-primary">
-      <i class="bi bi-collection"></i> Группировать по документам</button>
-      <input type="date" class="form-control" required name="date">
+      <i class="bi bi-arrow-clockwise"></i>Перепровести документы с</button>
+      <input type="date" class="form-control ms-2" required name="date" style="font-size: 90%;">
       </form>
    </div>
 </div>
