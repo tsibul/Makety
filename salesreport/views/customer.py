@@ -1,25 +1,29 @@
 from django.shortcuts import render, HttpResponseRedirect, reverse
-from maket.models import Customer_all, Customer, Customer_groups, Customer_types, Detail_set, Item_color
+import datetime
+from maket.models import Customer_all, Customer_groups
 from django.core.paginator import Paginator
 from Makety.service import *
 
 
 def customer_active(request):
     navi = 'Клиенты'
-    customers = Customer_all.objects.filter(active=True, internal=False).order_by('name')
-    paginator = Paginator(customers, 20)  # Show 25 contacts per page.
+    customers = Customer_all.objects.filter(date_last__gt=datetime.date(2000, 1,  1), internal=False).order_by('name')
+    customer_types = Customer_types.objects.all()
+    customer_groups = Customer_groups.objects.all().order_by('group_name')
+
+    paginator = Paginator(customers, 30)  # Show contacts per page.
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    context = {'navi': navi, 'page_obj': page_obj}
+    context = {'navi': navi, 'page_obj': page_obj, 'customer_types': customer_types, 'customer_groups': customer_groups}
     return render(request, 'salesreport/customers.html', context)
 
 
 def update_cst(request):
     page_no = '?page=' + request.POST['page_no']
     cst_id = request.POST['id']
-    cst = Customer.objects.get(id=cst_id)
+    cst = Customer_all.objects.get(id=cst_id)
     nm = request.POST['nm']
     gr_id = request.POST['gr_id']
     try:
@@ -41,18 +45,21 @@ def update_cst(request):
             cst.customer_group = group
         except:
             pass
+    try:
+        request.POST['in']
+        cst.internal = True
+    except:
+        pass
     cst.name = nm
     cst.region = rg
     cst.inn = in_
     cst.address = ad
     cst.save()
-    cst.customer_all.customer_group = cst.customer_group
-    cst.customer_all.customer_type = cst.customer_type
-    cst.customer_all.region = cst.region
-    cst.customer_all.save()
+    '''
     try:
         lookup_str = request.POST['look_up']
         lookup = request.POST['lookup']
         return render(request, 'salesreport/customers.html', look_up_cst(lookup))
     except:
-        return HttpResponseRedirect(reverse('salesreport:customers') + page_no)
+    '''
+    return HttpResponseRedirect(reverse('salesreport:customers_active') + page_no)
