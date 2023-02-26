@@ -150,37 +150,7 @@ def import_report(request):
 
 
 def sales_docs(request):
-    sales_docs = set(Sales_doc_imports.objects.filter(sales_doc__isnull=True).values_list('sales_doc_name',
-                                                                                          'sales_doc_no',
-                                                                                          'sales_doc_date', 'customer_all'))
-    for sales_doc in sales_docs:
-        try:
-            sales_object = Sales_docs.objects.get(sales_document=sales_doc[0], sales_doc_number=sales_doc[1],
-                                      sales_doc_date=sales_doc[2], customer=Customer_all.objects.get(id=sales_doc[3]))
-            continue
-        except:
-            sales_object = Sales_docs(sales_document=sales_doc[0], sales_doc_number=sales_doc[1],
-                                      sales_doc_date=sales_doc[2], customer=Customer_all.objects.get(id=sales_doc[3]))
-            sales_object.save()
-            sales_docs_imports = Sales_doc_imports.objects.filter(sales_doc_name=sales_doc[0], sales_doc_no=sales_doc[1],
-                                                                  sales_doc_date=sales_doc[2], customer_all__id=sales_doc[3])
-            eco = 0
-            for row in sales_docs_imports:
-                row.sales_doc = sales_object
-                sales_object.total_sale_with_vat += row.sale_with_vat
-                sales_object.total_sale_without_vat += row.sale_without_vat
-                sales_object.total_buy_with_vat += row.buy_with_vat
-                sales_object.total_buy_without_vat += row.buy_without_vat
-                sales_object.quantity += row.quantity
-                if row.detail_set is not None and row.detail_set.eco:
-                    eco += row.sale_without_vat
-                if not row.detail_set:
-                    sales_object.good_no_error = False
-                row.save()
-            sales_object.eco = eco >= sales_object.total_sale_without_vat / 2
-            sales_object.save()
-
-
+    sls_docs()
     return HttpResponseRedirect(reverse('salesreport:management'))
 
 
@@ -368,5 +338,37 @@ def lost_goods(request):
 
 def sales_docs_recheck(request):
     date_from = request.POST['date']
-    sales_docs = Sales_docs.objects.filter(sales_doc_date__gte=date_from)
+    Sales_docs.objects.filter(sales_doc_date__gte=date_from).delete()
+    sls_docs()
     return HttpResponseRedirect(reverse('salesreport:management'))
+
+def sls_docs():
+    sales_docs = set(Sales_doc_imports.objects.filter(sales_doc__isnull=True).values_list('sales_doc_name',
+                                                                                          'sales_doc_no',
+                                                                                          'sales_doc_date', 'customer_all'))
+    for sales_doc in sales_docs:
+        try:
+            sales_object = Sales_docs.objects.get(sales_document=sales_doc[0], sales_doc_number=sales_doc[1],
+                                      sales_doc_date=sales_doc[2], customer=Customer_all.objects.get(id=sales_doc[3]))
+            continue
+        except:
+            sales_object = Sales_docs(sales_document=sales_doc[0], sales_doc_number=sales_doc[1],
+                                      sales_doc_date=sales_doc[2], customer=Customer_all.objects.get(id=sales_doc[3]))
+            sales_object.save()
+            sales_docs_imports = Sales_doc_imports.objects.filter(sales_doc_name=sales_doc[0], sales_doc_no=sales_doc[1],
+                                                                  sales_doc_date=sales_doc[2], customer_all__id=sales_doc[3])
+            eco = 0
+            for row in sales_docs_imports:
+                row.sales_doc = sales_object
+                sales_object.total_sale_with_vat += row.sale_with_vat
+                sales_object.total_sale_without_vat += row.sale_without_vat
+                sales_object.total_buy_with_vat += row.buy_with_vat
+                sales_object.total_buy_without_vat += row.buy_without_vat
+                sales_object.quantity += row.quantity
+                if row.detail_set is not None and row.detail_set.eco:
+                    eco += row.sale_without_vat
+                if not row.detail_set:
+                    sales_object.good_no_error = False
+                row.save()
+            sales_object.eco = eco >= sales_object.total_sale_without_vat / 2
+            sales_object.save()

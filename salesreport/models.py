@@ -21,10 +21,10 @@ class Sales_docs(models.Model):
     eco = models.BooleanField(default=True)
 
     def __repr__(self):
-        return str(self.sales_doc_number) + ' от ' + str(self.sales_doc_date) + ' заказ ' + str(self.order.order_id)
+        return str(self.sales_doc_number) + ' от ' + str(self.sales_doc_date)
 
     def __str__(self):
-        return str(self.sales_doc_number) + ' от ' + str(self.sales_doc_date) + ' заказ ' + str(self.order.order_id)
+        return str(self.sales_doc_number) + ' от ' + str(self.sales_doc_date)
 
 
 class Sales_doc_imports(models.Model):
