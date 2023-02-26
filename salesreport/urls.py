@@ -12,6 +12,7 @@ urlpatterns = [
 
     path('groups', views.groups, name='groups'),
     path('update_cst_group', views.update_cst_group, name='update_cst_group'),
+    path('group_export', views.group_export, name='group_export'),
 
     path('group_lists', views.group_lists, name='group_lists'),
     path('add_to_group', views.add_to_group, name='add_to_group'),

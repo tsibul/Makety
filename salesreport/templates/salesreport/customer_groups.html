@@ -5,6 +5,15 @@
 
     <div class="row justify-content-end">
         <div class="col-auto justify-content-end m-2">
+            <form action="{% url 'salesreport:group_export'%}" method="post">
+                {% csrf_token %}
+                <input type="number" value="{{ page_obj.number }}" name="page_no" hidden>
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                    Экспорт Групп Клиентов
+                </button>
+            </form>
+        </div>
+        <div class="col-auto justify-content-end m-2">
             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#groupModal">
                 Добавить Группу Клиентов
             </button>
@@ -63,10 +72,11 @@
                 <td>{{ cst_gr.date_last|date:'d.m.Y' }}</td>
                 <td data-bs-target="#" data-bs-toggle="">
                     <form action="{% url 'salesreport:group_lists' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="group_id" value="{{ cst_gr.id }}">
-                    <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-list-task" style="z-index: 100"></i>&nbsp;Состав&nbsp;группы
-                    </button>
+                        {% csrf_token %}
+                        <input type="hidden" name="group_id" value="{{ cst_gr.id }}">
+                        <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-list-task"
+                                                                                        style="z-index: 100"></i>&nbsp;Состав&nbsp;группы
+                        </button>
                     </form>
                 </td>
             </tr>
@@ -77,7 +87,8 @@
 
 
 
-    <!-- Modal -->
+
+    <!-- Modal upd cst group -->
     <div class="modal fade" id="groupModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="groupModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -114,6 +125,6 @@
             </div>
         </div>
     </div>
-    <script src="{% static 'dictionarys/dicts.js' %}"></script>
+    <script src="{% static 'salesreport/dicts.js' %}"></script>
 
 {% endblock %}
