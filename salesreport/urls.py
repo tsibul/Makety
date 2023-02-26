@@ -8,9 +8,14 @@ urlpatterns = [
 
     path('customers_active', views.customer_active, name='customers_active'),
     path('customers_all', views.customers_all, name='customers_all'),
+    path('update_cst', views.update_cst, name='update_cst'),
 
     path('groups', views.groups, name='groups'),
     path('update_cst_group', views.update_cst_group, name='update_cst_group'),
+
+    path('group_lists', views.group_lists, name='group_lists'),
+    path('add_to_group', views.add_to_group, name='add_to_group'),
+    path('delete_from_group', views.delete_from_group, name='delete_from_group'),
 
     path('import_report', views.import_report, name='import_report'),
     path('import_cst', views.import_cst, name='import_cst'),
