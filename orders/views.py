@@ -185,7 +185,7 @@ def import_order(request):
         except:
             customer_all = None
         customer = Customer(name=customer_name, address=customer_address, inn=customer_inn, region=region,
-                            customer_type=typegroup, date_first=order_date, customer_all=customer_all)
+                            customer_type=typegroup, customer_all=customer_all)
         if customer_all:
             customer_all.customer_type = typegroup
             customer_all.save()
