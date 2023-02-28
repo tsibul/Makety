@@ -132,6 +132,15 @@ TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
+#USE_L10N = True
+
+#DECIMAL_SEPARATOR = '.'
+#USE_THOUSAND_SEPARATOR = True
+
+#THOUSAND_SEPARATOR = '\xa0'
+#NUMBER_GROUPING = 3
+
+
 USE_TZ = True
 
 
