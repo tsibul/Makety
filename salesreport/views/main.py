@@ -1,6 +1,7 @@
 import datetime
 from datetime import date
 import os
+from salesreport.reports import *
 
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from maket.models import Customer_all, Customer, Customer_groups, Customer_types, Detail_set, Item_color
@@ -13,6 +14,7 @@ from salesreport.views.service import *
 
 def index(request):
     navi = 'Главная'
+    '''
     try:
         date_last = max(Sales_doc_imports.objects.values_list('import_date', flat=True))
     except:
@@ -51,6 +53,18 @@ def index(request):
                'transactions_quantity': transactions_quantity, 'no_doc': no_doc, 'no_cust': no_cust, 'no_good': no_good,
                'groups_quantity': groups_quantity, 'groups_active_quantity': groups_active_quantity,
                'clients_quantity': clients_quantity, 'clients_active_quantity': clients_active_quantity}
+    '''
+    period = Period(datetime.date(2017, 1, 1), 'year')
+    '''
+    reports = []
+    i = 0
+    while i < 7:
+        reports.append(CustomerSalesCollection(period))
+        i += 1
+        period.plus(1)
+    '''
+    reports = CustomerSalesCollection(period, 7).collection
+    context = {'navi': navi, 'reports': reports}
     return render(request, 'salesreport/index.html', context)
 
 
