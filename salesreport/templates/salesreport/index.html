@@ -1,8 +1,43 @@
 {% extends 'salesreport/main_salesrep.html' %}
 {% block title %}Главная{% endblock %}
 {% block content %}
-<div class="text-end m-3 text-primary">анализ продаж Ver 2.1.1</div>
+    <div class="text-end m-3 text-primary">анализ продаж ver 2.1.1</div>
 
+    <table class="table table-sm table-hover pb-3 pe-3" style="font-size: 90%;">
+        <thead>
+        <tr class="text-center">
+            <th>период</th>
+            <th>всего</th>
+            {% for r  in reports.0.sales_result.keys %}
+                <th colspan="4">{{ r }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+            <tr class="text-end fw-bold">
+            <td></td>
+            <td></td>
+            {% for r  in reports.0.sales_result.keys %}
+                <td>кол-во</td>
+                <td>сумма</td>
+                <td>прибыль</td>
+                <td>%%</td>
+            {% endfor %}
+            </tr>
+        {% for report in reports %}
+            <tr class="text-end">
+                <td>{{ report.period }}</td>
+                <td>{{ report.total|floatformat:0 }}</td>
+                {% for item in report.sales_result.items %}
+                        <td>{{ item.1.0|floatformat:0 }}</td>
+                        <td>{{ item.1.1|floatformat:0 }}</td>
+                        <td>{{ item.1.2|floatformat:0 }}</td>
+                        <td>{{ item.1.3|floatformat:0 }}%</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
 
 {% endblock %}
