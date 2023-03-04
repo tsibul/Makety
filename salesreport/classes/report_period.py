@@ -117,7 +117,7 @@ class ReportPeriod(models.Model):
             self.name = str(quarter) + ' ' + self.period.QUARTER.label + ' ' + str(self.date_begin.year)
         elif self.period == 'YR':
             self.date_begin = datetime.date(self.date_begin.year + n, 1, 1)
-            self.date_end = datetime.date(self.date_begin.year + n, 12, 31)
+            self.date_end = datetime.date(self.date_begin.year, 12, 31)
             self.name = str(self.date_begin.year)
         elif self.period == 'DY':
             self.date_begin = self.date_begin + timedelta(days=n)
