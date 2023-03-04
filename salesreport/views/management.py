@@ -378,6 +378,11 @@ def sls_docs():
 def report_periods(request):
     begin_period = datetime.strptime(request.POST['start_date'], '%Y-%m-%d').date()
     end_period = datetime.strptime(request.POST['end_date'], '%Y-%m-%d').date()
+    try:
+        del_periods = ReportPeriod.objects.filter(date_end__gte=begin_period, date_begin__lte=end_period)
+        del_periods.delete()
+    except:
+        pass
     per = ReportPeriod()
     periods = []
     for period_type in per.calculatableList():
