@@ -54,7 +54,7 @@ def index(request):
                'groups_quantity': groups_quantity, 'groups_active_quantity': groups_active_quantity,
                'clients_quantity': clients_quantity, 'clients_active_quantity': clients_active_quantity}
     '''
-    period = Period(datetime.date(2017, 1, 1), 'year')
+    period = ReportPeriod(datetime.date(2017, 1, 1), 'year')
     '''
     reports = []
     i = 0
