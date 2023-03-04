@@ -1,146 +1,159 @@
 {% extends 'salesreport/main_salesrep.html' %}
 {% block title %}Главная{% endblock %}
 {% block content %}
-<div class="text-end m-3 text-primary">анализ продаж Ver 2.1.0</div>
-<div class="row ms-2 me-2">
-<!-- Customers-->
-<div class="col-auto  border border-1 m-1 p-1" style="font-size: 80%;">
-<div class="m-2"> <h6>Клиенты</h6></div>
-<div class="row text-nowrap justify-content-between">
-    <div class="m-1 col-auto">Контрагенты потенциальные</div>
-    <div class="m-1 col-auto">{{customers_all_quantity}}</div>
-</div>
-<div class="row text-nowrap justify-content-between">
-    <div class="m-1 col-auto">Контрагенты активные</div>
-    <div class="m-1 col-auto">{{customers_active_quantity}}</div>
-</div>
- <div class="m-1 text-nowrap">
-     <form action="{% url 'salesreport:cst_set_inactive' %}" method="post">
-     {% csrf_token %}
-     <button type="submit" class="btn btn-sm btn-primary">
-     <i class="bi bi-binoculars"></i>&nbsp;Проверить активность по контрагентам</button>
-     </form>
- </div>
-<div class="row text-nowrap justify-content-between">
-    <div class="m-1 col-auto">Клиенты всего</div>
-    <div class="m-1 col-auto">{{clients_quantity}}</div>
-</div>
-<div class="row text-nowrap justify-content-between">
-    <div class="m-1 col-auto">Клиенты активные</div>
-    <div class="m-1 col-auto">{{clients_active_quantity}}</div>
-</div>
-</div>
+    <div class="text-end m-3 text-primary">анализ продаж Ver 2.1.0</div>
+    <div class="row ms-2 me-2">
+        <!-- Customers-->
+        <div class="col-auto  border border-1 m-1 p-1" style="font-size: 80%;">
+            <div class="m-2"><h6>Клиенты</h6></div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Контрагенты потенциальные</div>
+                <div class="m-1 col-auto">{{ customers_all_quantity }}</div>
+            </div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Контрагенты активные</div>
+                <div class="m-1 col-auto">{{ customers_active_quantity }}</div>
+            </div>
+            <div class="m-1 text-nowrap">
+                <form action="{% url 'salesreport:cst_set_inactive' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-binoculars"></i>&nbsp;Проверить активность по контрагентам
+                    </button>
+                </form>
+            </div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Клиенты всего</div>
+                <div class="m-1 col-auto">{{ clients_quantity }}</div>
+            </div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Клиенты активные</div>
+                <div class="m-1 col-auto">{{ clients_active_quantity }}</div>
+            </div>
+        </div>
 
-<!-- Customer groups-->
-<div class="col-auto  border border-1 m-1 p-1" style="font-size: 80%;">
-<div class="m-2"> <h6>Группы клиентов</h6></div>
-<div class="row text-nowrap justify-content-between">
-    <div class="m-1 col-auto">Группы всего</div>
-    <div class="m-1 col-auto">{{groups_quantity}}</div>
-</div>
-<div class="row text-nowrap justify-content-between">
-    <div class="m-1 col-auto">Группы активные</div>
-    <div class="m-1 col-auto">{{groups_active_quantity}}</div>
-</div>
-<div class="m-1 text-nowrap">
-     <form action="{% url 'salesreport:group_set_dates' %}" method="post">
-     {% csrf_token %}
-     <button type="submit" class="btn btn-sm btn-primary">
-     <i class="bi bi-calendar-day"></i>&nbsp;Установить даты по группам</button>
-     </form>
- </div>
-<div class="m-1 text-nowrap">
-     <form action="{% url 'salesreport:group_set_inactive' %}" method="post">
-     {% csrf_token %}
-     <button type="submit" class="btn btn-sm btn-primary">
-     <i class="bi bi-binoculars"></i>&nbsp;Проверить активность по группам</button>
-     </form>
- </div>
-</div>
+        <!-- Customer groups-->
+        <div class="col-auto  border border-1 m-1 p-1" style="font-size: 80%;">
+            <div class="m-2"><h6>Группы клиентов</h6></div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Группы всего</div>
+                <div class="m-1 col-auto">{{ groups_quantity }}</div>
+            </div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Группы активные</div>
+                <div class="m-1 col-auto">{{ groups_active_quantity }}</div>
+            </div>
+            <div class="m-1 text-nowrap">
+                <form action="{% url 'salesreport:group_set_dates' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-calendar-day"></i>&nbsp;Установить даты по группам
+                    </button>
+                </form>
+            </div>
+            <div class="m-1 text-nowrap">
+                <form action="{% url 'salesreport:group_set_inactive' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-binoculars"></i>&nbsp;Проверить активность по группам
+                    </button>
+                </form>
+            </div>
+        </div>
 
-<!-- Sales-->
-<div class="col-auto border border-1 m-1 p-1" style="font-size: 80%;">
-<div class="m-2"> <h6>Отгрузки</h6></div>
-<div class="row text-nowrap justify-content-between">
-    <div class="m-1 col-auto">Количество транзакций</div>
-    <div class="m-1 col-auto">{{transactions_quantity}}</div>
-</div>
-<div class="row text-nowrap justify-content-between">
-    <div class="m-1 col-auto">Транзакции, не привязанные к товару</div>
-    <div class="m-1 col-auto"><a href="{%  url 'salesreport:lost_goods' %}" class="" target="_blank">{{no_good}}</a></div>
-</div>
-<div class="row text-nowrap justify-content-between">
-    <div class="m-1 col-auto">Транзакции без документов</div>
-    <div class="m-1 col-auto">{{no_doc}}</div>
-</div>
-<div class="row text-nowrap justify-content-between">
-    <div class="m-1 col-auto">Документы, не привязанные к Клиенту</div>
-    <div class="m-1 col-auto">{{no_cust}}</div>
-</div>
-<div class="row text-nowrap justify-content-between">
-    <div class="m-1 col-auto">Количество отгрузок</div>
-    <div class="m-1 col-auto">{{sales_doc_quantity}}</div>
-</div>
-</div>
+        <!-- Sales-->
+        <div class="col-auto border border-1 m-1 p-1" style="font-size: 80%;">
+            <div class="m-2"><h6>Отгрузки</h6></div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Количество транзакций</div>
+                <div class="m-1 col-auto">{{ transactions_quantity }}</div>
+            </div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Транзакции, не привязанные к товару</div>
+                <div class="m-1 col-auto"><a href="{% url 'salesreport:lost_goods' %}" class=""
+                                             target="_blank">{{ no_good }}</a></div>
+            </div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Транзакции без документов</div>
+                <div class="m-1 col-auto">{{ no_doc }}</div>
+            </div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Документы, не привязанные к Клиенту</div>
+                <div class="m-1 col-auto">{{ no_cust }}</div>
+            </div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Количество отгрузок</div>
+                <div class="m-1 col-auto">{{ sales_doc_quantity }}</div>
+            </div>
+        </div>
 
-<!-- Sales imports-->
-<div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
-<div class="m-2"> <h6>Импорт транзакций </h6></div>
-  <div class="row text-nowrap  justify-content-between">
-  <div class="m-1 col-auto text-nowrap">Дата последнего импорта&nbsp;отгрузок</div>
-  <div class="m-1 col-auto text-nowrap">{{date_last|date:'d.m.Y'}}</div>
-  </div>
-  <div class="row text-nowrap justify-content-between">
-  <div class="m-1 col-auto text-nowrap">Импортировать c&nbsp;</div>
-  <div class="m-1 col-auto text-nowrap"><input type="date" class="form-control" name="start_date"
-                          value="{{date_now}}" required form="import_report" style="font-size: 90%;">
-  </div>
-  </div>
-   <div class="m-1 text-nowrap">
-      <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      <i class="bi bi-wind"></i> Импортировать отчет</button>
-   </div>
-   <div class="m-1 text-nowrap">
-      <form action="{% url 'salesreport:sales_docs' %}" method="post">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-sm btn-primary">
-      <i class="bi bi-collection"></i> Группировать по документам</button>
-      </form>
-   </div>
-   <div class="m-1 text-nowrap">
-      <form action="{% url 'salesreport:sales_docs_recheck' %}" method="post" style="display: flex; align-items: center;">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-sm btn-primary">
-      <i class="bi bi-arrow-clockwise"></i>Перепровести документы с</button>
-      <input type="date" class="form-control ms-2" required name="date" style="font-size: 90%;">
-      </form>
-   </div>
-</div>
+        <!-- Sales imports-->
+        <div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
+            <div class="m-2"><h6>Импорт транзакций </h6></div>
+            <div class="row text-nowrap  justify-content-between">
+                <div class="m-1 col-auto text-nowrap">Дата последнего импорта&nbsp;отгрузок</div>
+                <div class="m-1 col-auto text-nowrap">{{ date_last|date:'d.m.Y' }}</div>
+            </div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto text-nowrap">Импортировать c&nbsp;</div>
+                <div class="m-1 col-auto text-nowrap"><input type="date" class="form-control" name="start_date"
+                                                             value="{{ date_now }}" required form="import_report"
+                                                             style="font-size: 90%;">
+                </div>
+            </div>
+            <div class="m-1 text-nowrap">
+                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                    <i class="bi bi-wind"></i> Импортировать отчет
+                </button>
+            </div>
+            <div class="m-1 text-nowrap">
+                <form action="{% url 'salesreport:sales_docs' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-collection"></i> Группировать по документам
+                    </button>
+                </form>
+            </div>
+            <div class="m-1 text-nowrap">
+                <form action="{% url 'salesreport:sales_docs_recheck' %}" method="post"
+                      style="display: flex; align-items: center;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-arrow-clockwise"></i>Перепровести документы с
+                    </button>
+                    <input type="date" class="form-control ms-2" required name="date" style="font-size: 90%;">
+                </form>
+            </div>
+        </div>
 
-<!-- Customer imports-->
-<div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
-<div class="m-2 col-auto"> <h6>Импорт клиентов </h6></div>
-  <div class="row text-nowrap justify-content-between">
-  <div class="m-1 col-auto text-nowrap">Дата последнего импорта&nbsp;клиентов</div>
-  <div class="m-1 col-auto text-nowrap">{{date_last_cst|date:'d.m.Y'}}</div>
-  </div>
-  <div class="m-1 text-nowrap">
-      <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#cstModal">
-      <i class="bi bi-download"></i> Импортировать клиентов</button>
-  </div>
+        <!-- Customer imports-->
+        <div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
+            <div class="m-2 col-auto"><h6>Импорт клиентов </h6></div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto text-nowrap">Дата последнего импорта&nbsp;клиентов</div>
+                <div class="m-1 col-auto text-nowrap">{{ date_last_cst|date:'d.m.Y' }}</div>
+            </div>
+            <div class="m-1 text-nowrap">
+                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#cstModal">
+                    <i class="bi bi-download"></i> Импортировать клиентов
+                </button>
+            </div>
 
-  <div class="row text-nowrap justify-content-between">
-  <div class="m-1 col-auto text-nowrap">Не синхронизировано клиентов</div>
-  <div class="m-1 col-auto text-nowrap"><a href="{% url 'salesreport:cst_unsinhronized' %}" target="_blank">  {{sinhronized}} </a></div>
-  </div>
-  <div class="m-1 text-nowrap">
-      <form action="{% url 'salesreport:cst_sinhro_group' %}" id="sinhro_group">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-sm btn-primary" form="sinhro_group">
-      <i class="bi bi-people"></i>&nbsp;Синхронизировать клиентов по группе</button>
-      </form>
-  </div>
-   <!--
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto text-nowrap">Не синхронизировано клиентов</div>
+                <div class="m-1 col-auto text-nowrap"><a href="{% url 'salesreport:cst_unsinhronized' %}"
+                                                         target="_blank">  {{ sinhronized }} </a></div>
+            </div>
+            <div class="m-1 text-nowrap">
+                <form action="{% url 'salesreport:cst_sinhro_group' %}" id="sinhro_group">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary" form="sinhro_group">
+                        <i class="bi bi-people"></i>&nbsp;Синхронизировать клиентов по группе
+                    </button>
+                </form>
+            </div>
+            <!--
    <div class="m-1 text-nowrap">
       <form method="post" action="{% url 'salesreport:cst_sinhro_inn' %}"  id="sinhro">
       {% csrf_token %}
@@ -156,79 +169,120 @@
       </form>
    </div>
    -->
-</div>
+        </div>
 
-<!-- Errors-->
-<div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
-  <div class="ms-3 mt-2 col-auto"> <h6>Ошибки</h6></div>
-  <div class="row text-nowrap justify-content-between">
-  <div class="m-1 col-auto">Ошибки синхронизации</div>
-  <div class="m-1 col-auto">{{sinhroerrors}}</div>
-  </div>
-  <div class="m-1 text-nowrap">
-      <form method="post" action="{% url 'salesreport:cst_sinhro_err' %}"  id="sinhro_err">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-sm btn-primary" form="sinhro_err">
-      <i class="bi bi-bug"></i> исправить ошибки по ИНН</button>
-      </form>
-   </div>
-   <div class="m-1 text-nowrap">
-      <form action="{% url 'salesreport:customer_date' %}" method="post">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-sm btn-primary">
-      <i class="bi bi-calendar-date"></i>Дата в клиентах</button>
-      </form>
-   </div>
-</div>
-</div>
-<!-- Modal import_report -->
-<form id="import_report" action="{% url 'salesreport:import_report' %}" method="post" enctype="multipart/form-data"
-      onsubmit="javascript:block_but('but_imp_modal');">
-{% csrf_token %}
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Выберите файл</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-         <label class="custom-file-label" for="importReport"></label>
-         <input type="file" accept=".csv" class="custom-file-input col-auto border" id="importReport" name="importReport" required>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal">Загрузить</button>
-      </div>
+        <!-- Errors-->
+        <div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
+            <div class="ms-3 mt-2 col-auto"><h6>Ошибки</h6></div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Ошибки синхронизации</div>
+                <div class="m-1 col-auto">{{ sinhroerrors }}</div>
+            </div>
+            <div class="m-1 text-nowrap">
+                <form method="post" action="{% url 'salesreport:cst_sinhro_err' %}" id="sinhro_err">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary" form="sinhro_err">
+                        <i class="bi bi-bug"></i> исправить ошибки по ИНН
+                    </button>
+                </form>
+            </div>
+            <div class="m-1 text-nowrap">
+                <form action="{% url 'salesreport:customer_date' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-calendar-date"></i>Дата в клиентах
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Периоды расчета-->
+        <div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
+            <div class="ms-3 mt-2 col-auto"><h6>Периоды расчета</h6></div>
+            <div class="row text-nowrap justify-content-between">
+            </div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto text-nowrap">Начало периода&nbsp;</div>
+                <div class="m-1 col-auto text-nowrap"><input type="date" class="form-control" name="start_date"
+                                                             value="" required form="periods"
+                                                             style="font-size: 100%;">
+                </div>
+            </div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto text-nowrap">Конец периода&nbsp;</div>
+                <div class="m-1 col-auto text-nowrap"><input type="date" class="form-control" name="end_date"
+                                                             value="{{ date_now|date:'Y-m-d' }}" required form="periods"
+                                                             style="font-size: 100%;">
+                </div>
+            </div>
+
+            <div class="m-1 text-nowrap">
+                <form method="post" action="{% url 'salesreport:report_periods' %}" id="periods">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary" form="periods">
+                        <i class="bi bi-calendar-date"></i> Пересоздать периоды расчета
+                    </button>
+                </form>
+            </div>
+        </div>
+
+
     </div>
-  </div>
-</div>
-</form><!-- Modal Import report -->
 
 
-<!-- Modal import_customer -->
-<form id="import_cst" action="{% url 'salesreport:import_cst' %}" method="post" enctype="multipart/form-data"
-      onsubmit="block_but('but_imp_modal_cst');">
-{% csrf_token %}
-<div class="modal fade" id="cstModal" tabindex="-1" aria-labelledby="cstModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="cstModalLabel">Выберите файл</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-         <label class="custom-file-label" for="ChoseCSV"></label>
-         <input type="file" accept=".csv" class="custom-file-input col-auto border" id="ChoseCSV_cst" name="cust" required>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal_cst" >Загрузить</button>
-      </div>
-    </div>
-  </div>
-</div>
-</form><!-- Modal Import customer -->
+
+    <!-- Modal import_report -->
+    <form id="import_report" action="{% url 'salesreport:import_report' %}" method="post" enctype="multipart/form-data"
+          onsubmit="javascript:block_but('but_imp_modal');">
+        {% csrf_token %}
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Выберите файл</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label class="custom-file-label" for="importReport"></label>
+                        <input type="file" accept=".csv" class="custom-file-input col-auto border" id="importReport"
+                               name="importReport" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal">Загрузить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form><!-- Modal Import report -->
+
+
+    <!-- Modal import_customer -->
+    <form id="import_cst" action="{% url 'salesreport:import_cst' %}" method="post" enctype="multipart/form-data"
+          onsubmit="block_but('but_imp_modal_cst');">
+        {% csrf_token %}
+        <div class="modal fade" id="cstModal" tabindex="-1" aria-labelledby="cstModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cstModalLabel">Выберите файл</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label class="custom-file-label" for="ChoseCSV"></label>
+                        <input type="file" accept=".csv" class="custom-file-input col-auto border" id="ChoseCSV_cst"
+                               name="cust" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="submit" name="submit" class="btn btn-primary" id="but_imp_modal_cst">Загрузить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form><!-- Modal Import customer -->
 
 
 {% endblock %}

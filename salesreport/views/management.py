@@ -1,5 +1,5 @@
 import datetime
-from datetime import date
+from datetime import date, datetime
 import os
 
 from django.shortcuts import render, HttpResponseRedirect, reverse
@@ -7,6 +7,7 @@ from salesreport.models import Sales_doc_imports, Sales_docs
 from django.core.files.storage import default_storage
 from django.db.models import Q, F
 from salesreport.views.service import *
+from salesreport.reports import ReportPeriod
 
 
 def management(request):
@@ -43,12 +44,13 @@ def management(request):
                                           Q(inn=F('customer_all__inn')) &
                                           Q(name__endswith=F('customer_all__name'))
                                           )).count()
+    date_now = datetime.today().date()
     context = {'navi': navi, 'date_last_cst': date_last_cst,
                'customers_active_quantity': customers_active_quantity, 'sinhronized': sinhronized,
                'date_last': date_last, 'sales_doc_quantity': sales_doc_quantity, 'customers_all_quantity': customers_all_quantity,
                'transactions_quantity': transactions_quantity, 'no_doc': no_doc, 'no_cust': no_cust, 'no_good': no_good,
                'groups_quantity': groups_quantity, 'groups_active_quantity': groups_active_quantity,
-               'clients_quantity': clients_quantity, 'clients_active_quantity': clients_active_quantity}
+               'clients_quantity': clients_quantity, 'clients_active_quantity': clients_active_quantity, 'date_now': date_now}
     return render(request, 'salesreport/management.html', context)
 
 
@@ -372,3 +374,16 @@ def sls_docs():
                 row.save()
             sales_object.eco = eco >= sales_object.total_sale_without_vat / 2
             sales_object.save()
+
+def report_periods(request):
+    begin_period = datetime.strptime(request.POST['start_date'], '%Y-%m-%d').date()
+    end_period = datetime.strptime(request.POST['end_date'], '%Y-%m-%d').date()
+    per = ReportPeriod()
+    periods = []
+    for period_type in per.calculatableList():
+        per.setPeriod(begin_period, period_type)
+        while per.date_begin < end_period:
+            per.copy().save()
+            per.plus(1)
+
+    return HttpResponseRedirect(reverse('salesreport:management'))

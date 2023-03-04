@@ -36,6 +36,7 @@ urlpatterns = [
     path('unsinhronized', views.cst_unsinhronized, name='cst_unsinhronized'),
 
     path('management', views.management, name='management'),
+    path('report_periods', views.report_periods, name='report_periods'),
     path('lost_goods', views.lost_goods, name='lost_goods'),
 
     path('admin', views.admin, name='admin'),
