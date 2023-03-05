@@ -1,13 +1,8 @@
 from abc import ABC, abstractmethod
-import datetime
-import calendar
-from datetime import timedelta
-
-from django.utils.translation import gettext_lazy as _
 
 from maket.models import Good_crm_type, Good_matrix_type, Customer_all
 from salesreport.models import Sales_doc_imports
-from salesreport.classes import ReportPeriod
+from salesreport.report_period import ReportPeriod
 
 from orders.models import models
 

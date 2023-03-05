@@ -22,6 +22,7 @@ month_rus = {
     12: 'Декабрь',
 }
 
+
 class ReportPeriod(models.Model):
     class Periods(models.TextChoices):
         WEEK = 'WK', _('неделя')
@@ -37,7 +38,6 @@ class ReportPeriod(models.Model):
         def __str__(self):
             return self.label
 
-
     period = models.CharField(max_length=2, choices=Periods.choices, default=Periods.MONTH)
     date_begin = models.DateField(default=datetime.date(2000, 1, 1))
     date_end = models.DateField(default=datetime.date(2000, 1, 31))
@@ -48,7 +48,6 @@ class ReportPeriod(models.Model):
 
     def __str__(self):
         return self.name
-
 
     @classmethod
     def calculatableList(cls):

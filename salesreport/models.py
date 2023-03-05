@@ -5,8 +5,14 @@ from maket.models.order_models import Order_imports
 from maket.models.customer_models import Customer_all, Customer
 from maket.models.print_color_models import Item_color
 from maket.models.goods_models import Detail_set
+from salesreport.report_period import ReportPeriod
+
 
 class Sales_docs(models.Model):
+
+    class Meta:
+        verbose_name = 'отгрузочные документы'
+
     sales_document = models.CharField(max_length=255)
     sales_doc_number = models.CharField(max_length=20, null=True)
     sales_doc_date = models.DateField(default=datetime.date(2000, 1, 1))
@@ -19,12 +25,30 @@ class Sales_docs(models.Model):
     order = models.ForeignKey(Order_imports, models.SET_NULL, null=True)
     good_no_error = models.BooleanField(default=True)
     eco = models.BooleanField(default=True)
+    week = models.ForeignKey(ReportPeriod, models.SET_NULL, null=True, default='', related_name='week')
+    month = models.ForeignKey(ReportPeriod, models.SET_NULL, null=True, default='', related_name='month')
+    quarter = models.ForeignKey(ReportPeriod, models.SET_NULL, null=True, default='', related_name='quarter')
+    year = models.ForeignKey(ReportPeriod, models.SET_NULL, null=True, default='', related_name='year')
 
     def __repr__(self):
         return str(self.sales_doc_number) + ' от ' + str(self.sales_doc_date)
 
     def __str__(self):
         return str(self.sales_doc_number) + ' от ' + str(self.sales_doc_date)
+
+    def set_periods(self):
+        week = ReportPeriod.objects.get(period='WK', date_begin__lte=self.sales_doc_date,
+                                        date_end__gte=self.sales_doc_date)
+        month = ReportPeriod.objects.get(period='MT', date_begin__lte=self.sales_doc_date,
+                                         date_end__gte=self.sales_doc_date)
+        quarter = ReportPeriod.objects.get(period='QT', date_begin__lte=self.sales_doc_date,
+                                           date_end__gte=self.sales_doc_date)
+        year = ReportPeriod.objects.get(period='YR', date_begin__lte=self.sales_doc_date,
+                                        date_end__gte=self.sales_doc_date)
+        self.week = week
+        self.month = month
+        self.quarter = quarter
+        self.year = year
 
 
 class Sales_doc_imports(models.Model):
@@ -65,7 +89,6 @@ class Sales_doc_imports(models.Model):
     customer_frigat_id = models.IntegerField(null=True)
     customer_all = models.ForeignKey(Customer_all, models.SET_NULL, null=True)
     sales_doc = models.ForeignKey(Sales_docs, models.SET_NULL, null=True)
-
 
     def __repr__(self):
         return self.code
