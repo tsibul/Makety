@@ -11,7 +11,7 @@ def customer_active(request):
     customer_types = Customer_types.objects.all()
     customer_groups = Customer_groups.objects.all().order_by('group_name')
 
-    paginator = Paginator(customers, 30)  # Show contacts per page.
+    paginator = Paginator(customers, 2000)  # Show contacts per page.
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
