@@ -43,7 +43,7 @@
                 <div class="m-1 col-auto">Группы активные</div>
                 <div class="m-1 col-auto">{{ groups_active_quantity }}</div>
             </div>
-            <div class="m-1 text-nowrap">
+            <div class="m-2 text-nowrap">
                 <form action="{% url 'salesreport:group_set_dates' %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-primary">
@@ -51,7 +51,7 @@
                     </button>
                 </form>
             </div>
-            <div class="m-1 text-nowrap">
+            <div class="m-2 text-nowrap">
                 <form action="{% url 'salesreport:group_set_inactive' %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-primary">
@@ -101,13 +101,13 @@
                                                              style="font-size: 90%;">
                 </div>
             </div>
-            <div class="m-1 text-nowrap">
+            <div class="m-2 text-nowrap">
                 <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                         data-bs-target="#exampleModal">
                     <i class="bi bi-wind"></i> Импортировать отчет
                 </button>
             </div>
-            <div class="m-1 text-nowrap">
+            <div class="m-2 text-nowrap">
                 <form action="{% url 'salesreport:sales_docs' %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-primary">
@@ -115,7 +115,7 @@
                     </button>
                 </form>
             </div>
-            <div class="m-1 text-nowrap">
+            <div class="m-2 text-nowrap">
                 <form action="{% url 'salesreport:sales_docs_recheck' %}" method="post"
                       style="display: flex; align-items: center;">
                     {% csrf_token %}
@@ -145,11 +145,19 @@
                 <div class="m-1 col-auto text-nowrap"><a href="{% url 'salesreport:cst_unsinhronized' %}"
                                                          target="_blank">  {{ sinhronized }} </a></div>
             </div>
-            <div class="m-1 text-nowrap">
+            <div class="m-1 mb-2 text-nowrap">
                 <form action="{% url 'salesreport:cst_sinhro_group' %}" id="sinhro_group">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-primary" form="sinhro_group">
                         <i class="bi bi-people"></i>&nbsp;Синхронизировать клиентов по группе
+                    </button>
+                </form>
+            </div>
+            <div class="m-1 mt-2 text-nowrap">
+                <form action="{%  url 'salesreport:set_frigat_id' %}" >
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-list-ol"></i>&nbsp;Задать Frigat id
                     </button>
                 </form>
             </div>
@@ -178,7 +186,7 @@
                 <div class="m-1 col-auto">Ошибки синхронизации</div>
                 <div class="m-1 col-auto">{{ sinhroerrors }}</div>
             </div>
-            <div class="m-1 text-nowrap">
+            <div class="m-2 text-nowrap">
                 <form method="post" action="{% url 'salesreport:cst_sinhro_err' %}" id="sinhro_err">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-primary" form="sinhro_err">
@@ -186,11 +194,11 @@
                     </button>
                 </form>
             </div>
-            <div class="m-1 text-nowrap">
+            <div class="m-2 text-nowrap">
                 <form action="{% url 'salesreport:customer_date' %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-primary">
-                        <i class="bi bi-calendar-date"></i>Дата в клиентах
+                        <i class="bi bi-calendar-date"></i>&nbsp;Дата в клиентах
                     </button>
                 </form>
             </div>
@@ -202,26 +210,36 @@
             <div class="row text-nowrap justify-content-between">
             </div>
             <div class="row text-nowrap justify-content-between">
-                <div class="m-1 col-auto text-nowrap">Начало периода&nbsp;</div>
-                <div class="m-1 col-auto text-nowrap"><input type="date" class="form-control" name="start_date"
+                <div class="m-2 col-auto text-nowrap">Начало периода&nbsp;</div>
+                <div class="m-2 col-auto text-nowrap"><input type="date" class="form-control" name="start_date"
                                                              value="" required form="periods"
                                                              style="font-size: 100%;">
                 </div>
             </div>
             <div class="row text-nowrap justify-content-between">
-                <div class="m-1 col-auto text-nowrap">Конец периода&nbsp;</div>
-                <div class="m-1 col-auto text-nowrap"><input type="date" class="form-control" name="end_date"
+                <div class="m-2 col-auto text-nowrap">Конец периода&nbsp;</div>
+                <div class="m-2 col-auto text-nowrap"><input type="date" class="form-control" name="end_date"
                                                              value="{{ date_now|date:'Y-m-d' }}" required form="periods"
                                                              style="font-size: 100%;">
                 </div>
             </div>
 
-            <div class="m-1 text-nowrap">
+            <div class="m-2 text-nowrap">
                 <form method="post" action="{% url 'salesreport:report_periods' %}" id="periods">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-primary" form="periods">
                         <i class="bi bi-calendar-date"></i> Пересоздать периоды расчета
                     </button>
+                </form>
+            </div>
+            <div class="m-2 text-nowrap">
+                <form action="{% url 'salesreport:sales_set_periods' %}" method="post"
+                      style="display: flex; align-items: center;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-markdown"></i>&nbsp;Расставить в документах с
+                    </button>
+                    <input type="date" class="form-control ms-2" required name="date" style="font-size: 100%;">
                 </form>
             </div>
         </div>

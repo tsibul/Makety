@@ -1,5 +1,5 @@
 import datetime
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import os
 
 from django.shortcuts import render, HttpResponseRedirect, reverse
@@ -77,7 +77,7 @@ def import_report(request):
             sales_doc_date = datetime.datetime.strptime(sales_doc_date, '%Y-%m-%d').date()
             if sales_doc_date < start_date:
                 continue
-            import_date = date.today()
+            import_date = datetime.today().date()
             code_imp = row[0]
             code_list = code_imp.split('.')
             code = code_list[0]
@@ -123,8 +123,8 @@ def import_report(request):
             try:
                 customer_all = Customer_all.objects.get(frigat_id=customer_frigat_id)
             except:
-                customer_all = Customer_all(frigat_id=customer_frigat_id, date_first=datetime.date(2000, 1, 1),
-                                    date_last=datetime.date(2000, 1, 1), name=customer_name)
+                customer_all = Customer_all(frigat_id=customer_frigat_id, date_first=datetime(2000, 1, 1).date(),
+                                    date_last=datetime(2000, 1, 1).date(), name=customer_name)
             if customer_all.date_first == datetime.datetime.strptime('2000-01-01', '%Y-%m-%d').date() \
                     or sales_doc_date < customer_all.date_first:
                 customer_all.date_first = sales_doc_date
@@ -175,7 +175,7 @@ def import_cst(request):
                 if customer_import_compare(row, customer):
                     continue
             except:
-                customer = Customer_all(frigat_id=fr_id, date_import=date.today())
+                customer = Customer_all(frigat_id=fr_id, date_import=datetime.today().date())
             customer.name = row[1]
             customer.form = row[2]
             inn = row[3]
@@ -284,7 +284,7 @@ def cst_sinhro_err(request):
 
 
 def cst_set_inactive(request):
-    d_n = datetime.date.today() - datetime.timedelta(weeks=154)
+    d_n = datetime.today().date() - timedelta(weeks=154)
     customers_list = Customer_all.objects.all()
     for cst in customers_list:
         if cst.date_last < d_n:
@@ -294,9 +294,17 @@ def cst_set_inactive(request):
     Customer_all.objects.bulk_update(customers_list, ['active'])
     return HttpResponseRedirect(reverse('salesreport:management'))
 
+def set_frigat_id(request):
+    transations = Sales_doc_imports.objects.filter(customer_frigat_id__isnull=True)
+
+    for transation in transations:
+        transation.customer_frigat_id = transation.customer_all.frigat_id
+    Sales_doc_imports.objects.bulk_update(transations, ['customer_frigat_id'])
+    return HttpResponseRedirect(reverse('salesreport:management'))
+
 
 def group_set_inactive(request):
-    d_n = datetime.date.today() - datetime.timedelta(weeks=154)
+    d_n = datetime.today().date() - timedelta(weeks=154)
     groups_list = Customer_groups.objects.all()
 #    map(lambda x: x.active = False, groups_list)
     for grp in groups_list:
@@ -314,11 +322,11 @@ def group_set_dates(request):
         try:
             date_first = min(Customer_all.objects.filter(customer_group=grp).values_list('date_first', flat=True))
         except:
-            date_first = datetime.date(2000, 1, 1)
+            date_first = datetime(2000, 1, 1).date()
         try:
             date_last = max(Customer_all.objects.filter(customer_group=grp).values_list('date_last', flat=True))
         except:
-            date_last = datetime.date(2100, 1, 1)
+            date_last = datetime(2100, 1, 1).date()
         grp.date_first = date_first
         grp.date_last = date_last
     Customer_groups.objects.bulk_update(groups_list, ['date_first', 'date_last'])
@@ -375,6 +383,7 @@ def sls_docs():
             sales_object.eco = eco >= sales_object.total_sale_without_vat / 2
             sales_object.save()
 
+
 def report_periods(request):
     begin_period = datetime.strptime(request.POST['start_date'], '%Y-%m-%d').date()
     end_period = datetime.strptime(request.POST['end_date'], '%Y-%m-%d').date()
@@ -384,11 +393,27 @@ def report_periods(request):
     except:
         pass
     per = ReportPeriod()
-    periods = []
     for period_type in per.calculatableList():
         per.setPeriod(begin_period, period_type)
         while per.date_begin < end_period:
             per.copy().save()
             per.plus(1)
 
+    return HttpResponseRedirect(reverse('salesreport:management'))
+
+
+def sales_set_periods(request):
+    begin_date = datetime.strptime(request.POST['date'], '%Y-%m-%d').date()
+    sales_documents = Sales_docs.objects.filter(sales_doc_date__gte=begin_date)
+    for doc in sales_documents:
+        doc.set_periods()
+        doc.save()
+    return HttpResponseRedirect(reverse('salesreport:management'))
+
+def transations_set_periods(request):
+    begin_date = datetime.strptime(request.POST['date'], '%Y-%m-%d').date()
+    sales_documents = Sales_doc_imports.objects.filter(sales_doc_date__gte=begin_date)
+    for doc in sales_documents:
+        doc.set_periods()
+        doc.save()
     return HttpResponseRedirect(reverse('salesreport:management'))

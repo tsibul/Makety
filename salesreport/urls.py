@@ -26,6 +26,7 @@ urlpatterns = [
     path('cst_sinhro_no', views.cst_sinhro_no, name='cst_sinhro_no'),
     path('cst_sinhro_group', views.cst_sinhro_group, name='cst_sinhro_group'),
     path('cst_set_inactive', views.cst_set_inactive, name='cst_set_inactive'),
+    path('set_frigat_id', views.set_frigat_id, name='set_frigat_id'),
 
     path('group_set_inactive', views.group_set_inactive, name='group_set_inactive'),
     path('group_set_dates', views.group_set_dates, name='group_set_dates'),
@@ -37,6 +38,7 @@ urlpatterns = [
 
     path('management', views.management, name='management'),
     path('report_periods', views.report_periods, name='report_periods'),
+    path('sales_set_periods', views.sales_set_periods, name='sales_set_periods'),
     path('lost_goods', views.lost_goods, name='lost_goods'),
 
     path('admin', views.admin, name='admin'),
