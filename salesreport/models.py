@@ -96,3 +96,79 @@ class Sales_doc_imports(models.Model):
     def __str__(self):
         return str(self.code)
 
+
+class CustomerPeriods(models.Model):
+    class Meta:
+        abstract = True
+        verbose_name = 'periods where was transactions with Client'
+
+    customer = models.ForeignKey(Customer_all, on_delete=models.CASCADE)
+    sales_with_vat = models.FloatField(default=0, null=True, verbose_name='продажи с НДС')
+    sales_eco_with_vat = models.FloatField(default=0, null=True, verbose_name='продажи эко с НДС')
+    sales_no_eco_with_vat = models.FloatField(default=0, null=True, verbose_name='продажи неэко с НДС')
+    profit = models.FloatField(default=0, null=True, verbose_name='прибыль')
+    profit_eco = models.FloatField(default=0, null=True, verbose_name='прибыль эко')
+    profit_no_eco = models.FloatField(default=0, null=True, verbose_name='прибыль неэко')
+    no_sales = models.SmallIntegerField(default=0, null=True, verbose_name='количество продаж')
+    no_sales_eco = models.SmallIntegerField(default=0, null=True, verbose_name='количество продаж эко')
+    no_sales_no_eco = models.SmallIntegerField(default=0, null=True, verbose_name='количество продаж неэко')
+    average_check = models.FloatField(default=0, null=True, verbose_name='редний чек')
+    average_check_eco = models.FloatField(default=0, null=True, verbose_name='средний чек эко')
+    average_check_no_eco = models.FloatField(default=0, null=True, verbose_name='средний чек неэко')
+
+
+class CustomerPeriodsWeek(CustomerPeriods):
+
+    class Meta(CustomerPeriods.Meta):
+        verbose_name = 'еженедельные данные'
+
+    period = models.ForeignKey(ReportPeriod, on_delete=models.CASCADE, limit_choices_to={'period': 'WK'})
+
+    def __repr__(self):
+        return self.customer.name + ' ' + self.period.name
+
+    def __str__(self):
+        return self.customer.name + ' ' + self.period.name
+
+
+class CustomerPeriodsMonth(CustomerPeriods):
+
+    class Meta(CustomerPeriods.Meta):
+        verbose_name = 'ежеесячные данные'
+
+    period = models.ForeignKey(ReportPeriod, on_delete=models.CASCADE, limit_choices_to={'period': 'MT'})
+
+    def __repr__(self):
+        return self.customer.name + ' ' + self.period.name
+
+    def __str__(self):
+        return self.customer.name + ' ' + self.period.name
+
+
+class CustomerPeriodsQuarter(CustomerPeriods):
+
+    class Meta(CustomerPeriods.Meta):
+        verbose_name = 'ежевартальные данные'
+
+    period = models.ForeignKey(ReportPeriod, on_delete=models.CASCADE, limit_choices_to={'period': 'QT'})
+
+    def __repr__(self):
+        return self.customer.name + ' ' + self.period.name
+
+    def __str__(self):
+        return self.customer.name + ' ' + self.period.name
+
+
+class CustomerPeriodsYear(CustomerPeriods):
+
+    class Meta(CustomerPeriods.Meta):
+        verbose_name = 'ежегодные данные'
+
+    period = models.ForeignKey(ReportPeriod, on_delete=models.CASCADE, limit_choices_to={'period': 'YR'})
+
+    def __repr__(self):
+        return self.customer.name + ' ' + self.period.name
+
+    def __str__(self):
+        return self.customer.name + ' ' + self.period.name
+
