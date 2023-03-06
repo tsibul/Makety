@@ -244,6 +244,57 @@
             </div>
         </div>
 
+        <!-- Клиенты по периодам-->
+        <div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
+            <div class="ms-3 mt-2 col-auto"><h6>Клиенты по периодам</h6></div>
+            <div class="row text-nowrap justify-content-between">
+            </div>
+            <div class="m-2 text-nowrap">
+                <form action="{%  url 'salesreport:customer_period_sales' %}" method="post"
+                      style="display: flex; align-items: center;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-calendar4-week"></i>&nbsp;Еженедельные данные с
+                    </button>
+                    <input type="date" class="form-control ms-2" required name="date" style="font-size: 100%;">
+                    <input type="text" class="form-control ms-2" hidden value="WK" name="period">
+                </form>
+            </div>
+            <div class="m-2 text-nowrap">
+                <form action="{%  url 'salesreport:customer_period_sales' %}" method="post"
+                      style="display: flex; align-items: center;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-calendar2-month"></i>&nbsp;Ежемесячные данные с
+                    </button>
+                    <input type="date" class="form-control ms-2" required name="date" style="font-size: 100%;">
+                    <input type="text" class="form-control ms-2" hidden value="MT" name="period">
+                </form>
+            </div>
+            <div class="m-2 text-nowrap">
+                <form action="{%  url 'salesreport:customer_period_sales' %}" method="post"
+                      style="display: flex; align-items: center;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-stopwatch"></i>&nbsp;Ежеквартальные данные с
+                    </button>
+                    <input type="date" class="form-control ms-2" required name="date" style="font-size: 100%;">
+                    <input type="text" class="form-control ms-2" hidden value="QT" name="period">
+                </form>
+            </div>
+            <div class="m-2 text-nowrap">
+                <form action="{%  url 'salesreport:customer_period_sales' %}" method="post"
+                      style="display: flex; align-items: center;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-table"></i>&nbsp;Ежегодные данные с
+                    </button>
+                    <input type="date" class="form-control ms-2" required name="date" style="font-size: 100%;">
+                    <input type="text" class="form-control ms-2" hidden value="YR" name="period">
+                </form>
+            </div>
+        </div>
+
 
     </div>
 

@@ -3,7 +3,8 @@ from datetime import date, datetime, timedelta
 import os
 
 from django.shortcuts import render, HttpResponseRedirect, reverse
-from salesreport.models import Sales_doc_imports, Sales_docs
+from salesreport.models import Sales_doc_imports, Sales_docs, CustomerPeriodsYear, CustomerPeriodsQuarter, \
+    CustomerPeriodsMonth, CustomerPeriodsWeek
 from django.core.files.storage import default_storage
 from django.db.models import Q, F
 from salesreport.views.service import *
@@ -26,7 +27,8 @@ def management(request):
     groups_active_quantity = Customer_groups.objects.filter(active=True).count()
     groups_quantity = Customer_groups.objects.all().count()
 
-    clients_active_quantity = Customer_all.objects.filter(active=True, internal=False, customer_group__isnull=True).count() + \
+    clients_active_quantity = Customer_all.objects.filter(active=True, internal=False,
+                                                          customer_group__isnull=True).count() + \
                               Customer_groups.objects.filter(active=True).count()
     clients_quantity = Customer_all.objects.filter(customer_group__isnull=True).count() + \
                        Customer_groups.objects.all().count()
@@ -37,20 +39,24 @@ def management(request):
     no_cust = Sales_docs.objects.filter(customer__isnull=True).count()
     no_good = Sales_doc_imports.objects.filter(detail_set__isnull=True).count()
     sinhronized = Customer.objects.filter(~(Q(customer_all__isnull=False) &
-                                          (Q(customer_group=F('customer_all__customer_group')) |
-                                          Q(customer_group__isnull=True) & Q(customer_all__customer_group__isnull=True)) &
-                                          (Q(customer_type=F('customer_all__customer_type')) |
-                                          Q(customer_type__isnull=True) & Q(customer_all__customer_type__isnull=True)) &
-                                          Q(inn=F('customer_all__inn')) &
-                                          Q(name__endswith=F('customer_all__name'))
-                                          )).count()
+                                            (Q(customer_group=F('customer_all__customer_group')) |
+                                             Q(customer_group__isnull=True) & Q(
+                                                        customer_all__customer_group__isnull=True)) &
+                                            (Q(customer_type=F('customer_all__customer_type')) |
+                                             Q(customer_type__isnull=True) & Q(
+                                                        customer_all__customer_type__isnull=True)) &
+                                            Q(inn=F('customer_all__inn')) &
+                                            Q(name__endswith=F('customer_all__name'))
+                                            )).count()
     date_now = datetime.today().date()
     context = {'navi': navi, 'date_last_cst': date_last_cst,
                'customers_active_quantity': customers_active_quantity, 'sinhronized': sinhronized,
-               'date_last': date_last, 'sales_doc_quantity': sales_doc_quantity, 'customers_all_quantity': customers_all_quantity,
+               'date_last': date_last, 'sales_doc_quantity': sales_doc_quantity,
+               'customers_all_quantity': customers_all_quantity,
                'transactions_quantity': transactions_quantity, 'no_doc': no_doc, 'no_cust': no_cust, 'no_good': no_good,
                'groups_quantity': groups_quantity, 'groups_active_quantity': groups_active_quantity,
-               'clients_quantity': clients_quantity, 'clients_active_quantity': clients_active_quantity, 'date_now': date_now}
+               'clients_quantity': clients_quantity, 'clients_active_quantity': clients_active_quantity,
+               'date_now': date_now}
     return render(request, 'salesreport/management.html', context)
 
 
@@ -124,7 +130,7 @@ def import_report(request):
                 customer_all = Customer_all.objects.get(frigat_id=customer_frigat_id)
             except:
                 customer_all = Customer_all(frigat_id=customer_frigat_id, date_first=datetime(2000, 1, 1).date(),
-                                    date_last=datetime(2000, 1, 1).date(), name=customer_name)
+                                            date_last=datetime(2000, 1, 1).date(), name=customer_name)
             if customer_all.date_first == datetime.datetime.strptime('2000-01-01', '%Y-%m-%d').date() \
                     or sales_doc_date < customer_all.date_first:
                 customer_all.date_first = sales_doc_date
@@ -147,7 +153,7 @@ def import_report(request):
             customer_list.append(customer_all)
         tmp_records = filter(lambda x: x.customer_all == None, records_list)
         new_records = Sales_doc_imports.objects.bulk_create(records_list)
-#        new_customers = Customer.objects.bulk_update(customer_list, ['frigat_id', 'date_first', 'name', 'date_last'])
+    #        new_customers = Customer.objects.bulk_update(customer_list, ['frigat_id', 'date_first', 'name', 'date_last'])
     return HttpResponseRedirect(reverse('salesreport:management'))
 
 
@@ -219,10 +225,12 @@ def import_cst(request):
 def cst_sinhro_inn(request):
     customers = Customer.objects.filter(~Q(inn='') &
                                         (Q(customer_all__isnull=True) |
-                                        (~Q(customer_group=F('customer_all__customer_group')) &
-                                        (Q(customer_group__isnull=False) & Q(customer_all__customer_group__isnull=False))) |
-                                        (~Q(customer_type=F('customer_all__customer_type')) &
-                                        (Q(customer_type__isnull=False) & Q(customer_all__customer_type__isnull=False)))
+                                         (~Q(customer_group=F('customer_all__customer_group')) &
+                                          (Q(customer_group__isnull=False) & Q(
+                                              customer_all__customer_group__isnull=False))) |
+                                         (~Q(customer_type=F('customer_all__customer_type')) &
+                                          (Q(customer_type__isnull=False) & Q(
+                                              customer_all__customer_type__isnull=False)))
                                          ))
     for customer in customers:
         if customer.customer_all and customer.inn == customer.customer_all.inn:
@@ -243,8 +251,8 @@ def cst_sinhro_inn(request):
 
 def cst_sinhro_group(request):
     customers = Customer.objects.filter((~Q(customer_group=F('customer_all__customer_group')) |
-                                        ~Q(customer_type=F('customer_all__customer_type')) |
-                                        ~Q(region=F('customer_all__region'))) & Q(customer_all__isnull=False))
+                                         ~Q(customer_type=F('customer_all__customer_type')) |
+                                         ~Q(region=F('customer_all__region'))) & Q(customer_all__isnull=False))
     for customer in customers:
         customer_all = customer.customer_all
         customer_all.customer_group = customer.customer_group
@@ -257,11 +265,13 @@ def cst_sinhro_group(request):
 def cst_sinhro_no(request):
     customers = Customer.objects.filter(Q(inn='') &
                                         (Q(customer_all__isnull=True) |
-                                        ~Q(name__endswith=F('customer_all__name')) |
-                                        (~Q(customer_group=F('customer_all__customer_group')) &
-                                        (Q(customer_group__isnull=False) & Q(customer_all__customer_group__isnull=False))) |
-                                        (~Q(customer_type=F('customer_all__customer_type')) &
-                                        (Q(customer_type__isnull=False) & Q(customer_all__customer_type__isnull=False)))
+                                         ~Q(name__endswith=F('customer_all__name')) |
+                                         (~Q(customer_group=F('customer_all__customer_group')) &
+                                          (Q(customer_group__isnull=False) & Q(
+                                              customer_all__customer_group__isnull=False))) |
+                                         (~Q(customer_type=F('customer_all__customer_type')) &
+                                          (Q(customer_type__isnull=False) & Q(
+                                              customer_all__customer_type__isnull=False)))
                                          ))
     customers_all = Customer_all.objects.filter(inn='')
     for customer in customers:
@@ -294,6 +304,7 @@ def cst_set_inactive(request):
     Customer_all.objects.bulk_update(customers_list, ['active'])
     return HttpResponseRedirect(reverse('salesreport:management'))
 
+
 def set_frigat_id(request):
     transations = Sales_doc_imports.objects.filter(customer_frigat_id__isnull=True)
 
@@ -306,7 +317,7 @@ def set_frigat_id(request):
 def group_set_inactive(request):
     d_n = datetime.today().date() - timedelta(weeks=154)
     groups_list = Customer_groups.objects.all()
-#    map(lambda x: x.active = False, groups_list)
+    #    map(lambda x: x.active = False, groups_list)
     for grp in groups_list:
         if grp.date_last < d_n:
             grp.active = False
@@ -346,27 +357,33 @@ def lost_goods(request):
     context = {'sales': sales}
     return render(request, 'salesreport/lost_goods.html', context)
 
+
 def sales_docs_recheck(request):
     date_from = request.POST['date']
     Sales_docs.objects.filter(sales_doc_date__gte=date_from).delete()
     sls_docs()
     return HttpResponseRedirect(reverse('salesreport:management'))
 
+
 def sls_docs():
     sales_docs = set(Sales_doc_imports.objects.filter(sales_doc__isnull=True).values_list('sales_doc_name',
                                                                                           'sales_doc_no',
-                                                                                          'sales_doc_date', 'customer_all'))
+                                                                                          'sales_doc_date',
+                                                                                          'customer_all'))
     for sales_doc in sales_docs:
         try:
             sales_object = Sales_docs.objects.get(sales_document=sales_doc[0], sales_doc_number=sales_doc[1],
-                                      sales_doc_date=sales_doc[2], customer=Customer_all.objects.get(id=sales_doc[3]))
+                                                  sales_doc_date=sales_doc[2],
+                                                  customer=Customer_all.objects.get(id=sales_doc[3]))
             continue
         except:
             sales_object = Sales_docs(sales_document=sales_doc[0], sales_doc_number=sales_doc[1],
                                       sales_doc_date=sales_doc[2], customer=Customer_all.objects.get(id=sales_doc[3]))
             sales_object.save()
-            sales_docs_imports = Sales_doc_imports.objects.filter(sales_doc_name=sales_doc[0], sales_doc_no=sales_doc[1],
-                                                                  sales_doc_date=sales_doc[2], customer_all__id=sales_doc[3])
+            sales_docs_imports = Sales_doc_imports.objects.filter(sales_doc_name=sales_doc[0],
+                                                                  sales_doc_no=sales_doc[1],
+                                                                  sales_doc_date=sales_doc[2],
+                                                                  customer_all__id=sales_doc[3])
             eco = 0
             for row in sales_docs_imports:
                 row.sales_doc = sales_object
@@ -398,7 +415,6 @@ def report_periods(request):
         while per.date_begin < end_period:
             per.copy().save()
             per.plus(1)
-
     return HttpResponseRedirect(reverse('salesreport:management'))
 
 
@@ -410,10 +426,67 @@ def sales_set_periods(request):
         doc.save()
     return HttpResponseRedirect(reverse('salesreport:management'))
 
-def transations_set_periods(request):
+
+def transactions_set_periods(request):
     begin_date = datetime.strptime(request.POST['date'], '%Y-%m-%d').date()
     sales_documents = Sales_doc_imports.objects.filter(sales_doc_date__gte=begin_date)
     for doc in sales_documents:
         doc.set_periods()
         doc.save()
     return HttpResponseRedirect(reverse('salesreport:management'))
+
+
+def customer_period_sales(request):
+    begin_date = datetime.strptime(request.POST['date'], '%Y-%m-%d').date()
+    period_type = request.POST['period']
+    Class = check_class(period_type)
+    try:
+        items_to_delete = Class.objects.filter(period__date_end__gte=begin_date)
+        items_to_delete.delete()
+    except:
+        pass
+    periods = ReportPeriod.objects.filter(period=period_type, date_end__gte=begin_date)
+    customer_periods_list = []
+    groups = set(Customer_all.objects.filter(date_last__gte=begin_date, customer_group__isnull=False).values_list(
+        'customer_group', flat=True))
+    for i in groups:
+        for period in periods:
+            group = Customer_groups.objects.get(id=i)
+            customer = Customer_all.objects.filter(customer_group=group, date_last__gte=begin_date).last()
+            customer_regular = Class(group=group, period=period, name=group.group_name, customer=customer)
+            sales_documents = sales_doc_request_for_period_group(group, period)
+            if sales_documents.count():
+                customer_regular.set_sales_data(sales_documents)
+                customer_periods_list.append(customer_regular)
+    customers = Customer_all.objects.filter(date_last__gte=begin_date, customer_group__isnull=True, internal=False)
+    for customer in customers:
+        for period in periods:
+            customer_regular = Class(customer=customer, period=period, name=customer.name.replace('"', ''))
+            sales_documents = sales_doc_request_for_period_customer(customer, period)
+            if sales_documents.count():
+                customer_regular.set_sales_data(sales_documents)
+                customer_periods_list.append(customer_regular)
+    Class.objects.bulk_create(customer_periods_list)
+    return HttpResponseRedirect(reverse('salesreport:management'))
+
+
+def sales_doc_request_for_period_group(group, period: ReportPeriod):
+    if period.period == 'WK':
+        return Sales_docs.objects.filter(customer__customer_group=group, week=period)
+    elif period.period == 'MT':
+        return Sales_docs.objects.filter(customer__customer_group=group, month=period)
+    elif period.period == 'QT':
+        return Sales_docs.objects.filter(customer__customer_group=group, quarter=period)
+    else:
+        return Sales_docs.objects.filter(customer__customer_group=group, year=period)
+
+
+def sales_doc_request_for_period_customer(customer, period: ReportPeriod):
+    if period.period == 'WK':
+        return Sales_docs.objects.filter(customer=customer, week=period)
+    elif period.period == 'MT':
+        return Sales_docs.objects.filter(customer=customer, month=period)
+    elif period.period == 'QT':
+        return Sales_docs.objects.filter(customer=customer, quarter=period)
+    else:
+        return Sales_docs.objects.filter(customer=customer, year=period)

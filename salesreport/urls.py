@@ -41,6 +41,8 @@ urlpatterns = [
     path('sales_set_periods', views.sales_set_periods, name='sales_set_periods'),
     path('lost_goods', views.lost_goods, name='lost_goods'),
 
+    path('customer_period_sales', views.customer_period_sales, name='customer_period_sales'),
+
     path('admin', views.admin, name='admin'),
     path('transaction_delete', views.transaction_delete, name='transaction_delete'),
     path('customer_all_delete', views.customer_all_delete, name='customer_all_delete'),
