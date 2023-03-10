@@ -24,7 +24,6 @@
     {% for cst in customers %}
     <tr class="text-secondary">
         <td>
-            <div>{{cst.frigat_id}}</div>
             <div>{{cst.customer_all.frigat_id}}</div>
         </td>
         <td>
@@ -36,16 +35,8 @@
             <div>{{cst.customer_all.region}}</div>
         </td>
         <td>
-            <div>{{cst.group}}</div>
-            <div>{{cst.customer_all.group}}</div>
-        </td>
-        <td>
             <div>{{cst.customer_group.group_name}}</div>
             <div>{{cst.customer_all.customer_group.group_name}}</div>
-        </td>
-        <td>
-            <div>{{cst.type}}</div>
-            <div>{{cst.customer_all.type}}</div>
         </td>
         <td>
             <div>{{cst.customer_type.type_name}}</div>
