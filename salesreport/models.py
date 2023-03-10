@@ -105,13 +105,13 @@ class CustomerPeriods(models.Model):
 
     customer = models.ForeignKey(Customer_all, on_delete=models.CASCADE)
     group = models.ForeignKey(Customer_groups, models.SET_NULL, null=True)
-    name = models.CharField(max_length=100, null=True, default=customer.name)
+    name = models.CharField(max_length=100, null=True, default=customer.name, db_index=True)
     quantity = models.IntegerField(default=0 , verbose_name='количество')
     quantity_eco = models.IntegerField(default=0 , verbose_name='количество эко')
     quantity_no_eco = models.IntegerField(default=0 , verbose_name='количество неэко')
     sales_with_vat = models.FloatField(default=0, null=True, verbose_name='продажи с НДС')
-    sales_eco_with_vat = models.FloatField(default=0, null=True, verbose_name='продажи эко с НДС')
-    sales_no_eco_with_vat = models.FloatField(default=0, null=True, verbose_name='продажи неэко с НДС')
+    sales_with_vat_eco = models.FloatField(default=0, null=True, verbose_name='продажи эко с НДС')
+    sales_with_vat_no_eco = models.FloatField(default=0, null=True, verbose_name='продажи неэко с НДС')
     profit = models.FloatField(default=0, null=True, verbose_name='прибыль')
     profit_eco = models.FloatField(default=0, null=True, verbose_name='прибыль эко')
     profit_no_eco = models.FloatField(default=0, null=True, verbose_name='прибыль неэко')
@@ -124,8 +124,8 @@ class CustomerPeriods(models.Model):
 
     def set_sales_data(self, sales_docs):
         sales_with_vat = 0
-        sales_eco_with_vat = 0
-        sales_no_eco_with_vat = 0
+        sales_with_vat_eco = 0
+        sales_with_vat_no_eco = 0
         profit = 0
         profit_eco = 0
         profit_no_eco = 0
@@ -142,17 +142,17 @@ class CustomerPeriods(models.Model):
             quantity += sales_doc.quantity
             if sales_doc.eco:
                 no_sales_eco += 1
-                sales_eco_with_vat += sales_doc.total_sale_with_vat
+                sales_with_vat_eco += sales_doc.total_sale_with_vat
                 profit_eco += sales_doc.total_sale_without_vat - sales_doc.total_buy_without_vat
                 quantity_eco += sales_doc.quantity
             else:
                 no_sales_no_eco += 1
-                sales_no_eco_with_vat += sales_doc.total_sale_with_vat
+                sales_with_vat_no_eco += sales_doc.total_sale_with_vat
                 profit_no_eco += sales_doc.total_sale_without_vat - sales_doc.total_buy_without_vat
                 quantity_no_eco += sales_doc.quantity
         self.average_check = sales_with_vat / no_sales if no_sales else 0
-        self.average_check_eco = sales_eco_with_vat / no_sales_eco if no_sales_eco else 0
-        self.average_check_no_eco = sales_no_eco_with_vat / no_sales_no_eco if no_sales_no_eco else 0
+        self.average_check_eco = sales_with_vat_eco / no_sales_eco if no_sales_eco else 0
+        self.average_check_no_eco = sales_with_vat_no_eco / no_sales_no_eco if no_sales_no_eco else 0
         self.no_sales = no_sales
         self.no_sales_eco = no_sales_eco
         self.no_sales_no_eco = no_sales_no_eco
@@ -160,8 +160,8 @@ class CustomerPeriods(models.Model):
         self.quantity_eco = quantity_eco
         self.quantity_no_eco = quantity_no_eco
         self.sales_with_vat = sales_with_vat
-        self.sales_eco_with_vat = sales_eco_with_vat
-        self.sales_no_eco_with_vat = sales_no_eco_with_vat
+        self.sales_with_vat_eco = sales_with_vat_eco
+        self.sales_with_vat_no_eco = sales_with_vat_no_eco
         self.profit = profit
         self.profit_eco = profit_eco
         self.profit_no_eco = profit_no_eco
