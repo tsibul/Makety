@@ -13,6 +13,7 @@ urlpatterns = [
     path('groups', views.groups, name='groups'),
     path('update_cst_group', views.update_cst_group, name='update_cst_group'),
     path('group_export', views.group_export, name='group_export'),
+    path('group_import', views.group_import, name='group_import'),
 
     path('group_lists', views.group_lists, name='group_lists'),
     path('group_delete', views.group_delete, name='group_delete'),
@@ -22,9 +23,6 @@ urlpatterns = [
     path('import_report', views.import_report, name='import_report'),
     path('import_cst', views.import_cst, name='import_cst'),
 
-    path('cst_sinhro_inn', views.cst_sinhro_inn, name='cst_sinhro_inn'),
-    path('cst_sinhro_err', views.cst_sinhro_err, name='cst_sinhro_err'),
-    path('cst_sinhro_no', views.cst_sinhro_no, name='cst_sinhro_no'),
     path('cst_sinhro_group', views.cst_sinhro_group, name='cst_sinhro_group'),
     path('cst_set_inactive', views.cst_set_inactive, name='cst_set_inactive'),
     path('set_frigat_id', views.set_frigat_id, name='set_frigat_id'),
@@ -34,8 +32,8 @@ urlpatterns = [
 
     path('sales_docs', views.sales_docs, name='sales_docs'),
     path('sales_docs_recheck', views.sales_docs_recheck, name='sales_docs_recheck'),
-    path('customer_date', views.customer_date, name='customer_date'),
     path('unsinhronized', views.cst_unsinhronized, name='cst_unsinhronized'),
+    path('no_inn', views.cst_no_inn, name='cst_no_inn'),
 
     path('management', views.management, name='management'),
     path('report_periods', views.report_periods, name='report_periods'),

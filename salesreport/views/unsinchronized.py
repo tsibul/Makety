@@ -17,3 +17,9 @@ def cst_unsinhronized(request):
     return render(request, 'salesreport/unsinhronized.html', context)
 
 
+def cst_no_inn(request):
+    no_inn = Customer_all.objects.filter(Q(active=True) & Q(internal=False) & (Q(inn='') | Q(inn__isnull=True)))
+    context = {'customers': no_inn}
+
+    return render(request, 'salesreport/no_inn.html', context)
+
