@@ -17,7 +17,7 @@ function fillModalCustomers(custObj){
     document.getElementById('id').value = custObj.dataset.id;
     document.getElementById('gr_id').value = custObj.dataset.group_id;
     document.getElementById('rg').value = custObj.dataset.region;
-    document.getElementById('in').value = custObj.dataset.inn;
+    document.getElementById('inn').value = custObj.dataset.inn;
     document.getElementById('nm').textContent = custObj.dataset.name;
     document.getElementById('gr').value = custObj.dataset.group;
     document.getElementById('fr').value = custObj.dataset.fr;
@@ -40,7 +40,7 @@ function clearModalCustomers(){
     document.getElementById('fr').value = null;
     document.getElementById('tp').value = '1';
     document.getElementById('ad').textContent = null;
-    document.getElementById('in').value=null;
+    document.getElementById('inn').value=null;
 }
 
 function fillModalCustomerGroups(custObj){

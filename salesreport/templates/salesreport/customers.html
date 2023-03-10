@@ -37,7 +37,7 @@
             <input class="form-control" type="text" id="rg" name="rg"></div>
             <div class="col-7">
             <label for="rg">ИНН</label>
-            <input class="form-control" type="text" id="in" name="in_"></div>
+            <input class="form-control" type="text" id="inn" name="in_"></div>
         </div>
         <label for="nm">название</label>
           <textarea class="form-control mb-1" type="text" id="nm" name="nm"></textarea>
@@ -136,7 +136,7 @@
     <td id="rg_{{cst.id}}">{{cst.region}}</td>
     <td id="in_{{cst.id}}" >{{cst.inn}}</td>
     <td id="addr_{{cst.id}}">{{cst.address}}</td>
-    <td id="mail_{{cst.id}}">{{cst.customer_all.mail}}</td>
+    <td id="mail_{{cst.id}}">{{cst.mail}}</td>
     <td id="df_{{cst.id}}">{{cst.date_first|date:'d.m.Y'}}</td>
     <td id="dl_{{cst.id}}">{{cst.date_last|date:'d.m.Y'}}</td>
     </tr>
