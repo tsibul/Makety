@@ -15,6 +15,7 @@ urlpatterns = [
     path('group_export', views.group_export, name='group_export'),
 
     path('group_lists', views.group_lists, name='group_lists'),
+    path('group_delete', views.group_delete, name='group_delete'),
     path('add_to_group', views.add_to_group, name='add_to_group'),
     path('delete_from_group', views.delete_from_group, name='delete_from_group'),
 
@@ -46,5 +47,10 @@ urlpatterns = [
     path('admin', views.admin, name='admin'),
     path('transaction_delete', views.transaction_delete, name='transaction_delete'),
     path('customer_all_delete', views.customer_all_delete, name='customer_all_delete'),
+
+    path('report_customer_period', views.report_customer_period, name='report_customer_period'),
+
+    path('client_transactions/<int:client_id>/<int:period_id>', views.client_transactions, name='client_transactions'),
+    path('detail/<int:salesdoc_id>', views.detail, name='detail'),
 
 ]
