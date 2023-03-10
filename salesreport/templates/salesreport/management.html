@@ -17,9 +17,13 @@
             <div class="m-1 text-nowrap">
                 <form action="{% url 'salesreport:cst_set_inactive' %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-primary">
-                        <i class="bi bi-binoculars"></i>&nbsp;Проверить активность по контрагентам
-                    </button>
+                    <div style="display: flex">
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="bi bi-binoculars"></i>&nbsp;Активные не более недель:
+                        </button>
+                        <input style="font-size: 100%; width: 50px;" type="text" class="ms-1 form-control" value="154"
+                               name="weeks">
+                    </div>
                 </form>
             </div>
             <div class="row text-nowrap justify-content-between">
@@ -46,7 +50,7 @@
             <div class="m-2 text-nowrap">
                 <form action="{% url 'salesreport:group_set_dates' %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-primary">
+                    <button type="submit" class="btn btn-sm btn-primary" style="width: 100%;">
                         <i class="bi bi-calendar-day"></i>&nbsp;Установить даты по группам
                     </button>
                 </form>
@@ -103,14 +107,14 @@
             </div>
             <div class="m-2 text-nowrap">
                 <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal">
+                        data-bs-target="#exampleModal" style="width: 100%;">
                     <i class="bi bi-wind"></i> Импортировать отчет
                 </button>
             </div>
             <div class="m-2 text-nowrap">
                 <form action="{% url 'salesreport:sales_docs' %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-primary">
+                    <button type="submit" class="btn btn-sm btn-primary" style="width: 100%;">
                         <i class="bi bi-collection"></i> Группировать по документам
                     </button>
                 </form>
@@ -135,7 +139,8 @@
                 <div class="m-1 col-auto text-nowrap">{{ date_last_cst|date:'d.m.Y' }}</div>
             </div>
             <div class="m-1 text-nowrap">
-                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#cstModal">
+                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#cstModal"
+                        style="width: 100%;">
                     <i class="bi bi-download"></i> Импортировать клиентов
                 </button>
             </div>
@@ -144,6 +149,11 @@
                 <div class="m-1 col-auto text-nowrap">Не синхронизировано клиентов</div>
                 <div class="m-1 col-auto text-nowrap"><a href="{% url 'salesreport:cst_unsinhronized' %}"
                                                          target="_blank">  {{ sinhronized }} </a></div>
+            </div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto text-nowrap">Активных без ИНН</div>
+                <div class="m-1 col-auto text-nowrap"><a href="{%  url 'salesreport:cst_no_inn' %}"
+                                                         target="_blank">  {{ no_inn }} </a></div>
             </div>
             <div class="m-1 mb-2 text-nowrap">
                 <form action="{% url 'salesreport:cst_sinhro_group' %}" id="sinhro_group">
@@ -154,51 +164,10 @@
                 </form>
             </div>
             <div class="m-1 mt-2 text-nowrap">
-                <form action="{%  url 'salesreport:set_frigat_id' %}" >
+                <form action="{% url 'salesreport:set_frigat_id' %}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-primary">
+                    <button type="submit" class="btn btn-sm btn-primary" style="width: 100%;">
                         <i class="bi bi-list-ol"></i>&nbsp;Задать Frigat id
-                    </button>
-                </form>
-            </div>
-            <!--
-   <div class="m-1 text-nowrap">
-      <form method="post" action="{% url 'salesreport:cst_sinhro_inn' %}"  id="sinhro">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-sm btn-primary" form="sinhro">
-      <i class="bi bi-plugin"></i>&nbsp;Синхронизировать клиентов по ИНН</button>
-      </form>
-   </div>
-   <div class="m-1 text-nowrap">
-      <form method="post" action="{% url 'salesreport:cst_sinhro_no' %}"  id="sinhro_no">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-sm btn-primary" form="sinhro_no">
-      <i class="bi bi-plugin"></i>&nbsp;Синхронизировать клиентов без ИНН</button>
-      </form>
-   </div>
-   -->
-        </div>
-
-        <!-- Errors-->
-        <div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
-            <div class="ms-3 mt-2 col-auto"><h6>Ошибки</h6></div>
-            <div class="row text-nowrap justify-content-between">
-                <div class="m-1 col-auto">Ошибки синхронизации</div>
-                <div class="m-1 col-auto">{{ sinhroerrors }}</div>
-            </div>
-            <div class="m-2 text-nowrap">
-                <form method="post" action="{% url 'salesreport:cst_sinhro_err' %}" id="sinhro_err">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-primary" form="sinhro_err">
-                        <i class="bi bi-bug"></i> исправить ошибки по ИНН
-                    </button>
-                </form>
-            </div>
-            <div class="m-2 text-nowrap">
-                <form action="{% url 'salesreport:customer_date' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-primary">
-                        <i class="bi bi-calendar-date"></i>&nbsp;Дата в клиентах
                     </button>
                 </form>
             </div>
@@ -227,7 +196,7 @@
             <div class="m-2 text-nowrap">
                 <form method="post" action="{% url 'salesreport:report_periods' %}" id="periods">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-primary" form="periods">
+                    <button type="submit" class="btn btn-sm btn-primary" form="periods" style="width: 100%;">
                         <i class="bi bi-calendar-date"></i> Пересоздать периоды расчета
                     </button>
                 </form>
@@ -250,48 +219,63 @@
             <div class="row text-nowrap justify-content-between">
             </div>
             <div class="m-2 text-nowrap">
-                <form action="{%  url 'salesreport:customer_period_sales' %}" method="post"
+                <form action="{% url 'salesreport:customer_period_sales' %}" method="post"
                       style="display: flex; align-items: center;">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-primary">
+                    <button type="submit" class="btn btn-sm btn-primary" style="width: 100%;">
                         <i class="bi bi-calendar4-week"></i>&nbsp;Еженедельные данные с
                     </button>
-                    <input type="date" class="form-control ms-2" required name="date" style="font-size: 100%;">
+                    <input type="date" class="form-control ms-2" required name="date"
+                           style="font-size: 100%; width: 45%;">
                     <input type="text" class="form-control ms-2" hidden value="WK" name="period">
                 </form>
             </div>
             <div class="m-2 text-nowrap">
-                <form action="{%  url 'salesreport:customer_period_sales' %}" method="post"
+                <form action="{% url 'salesreport:customer_period_sales' %}" method="post"
                       style="display: flex; align-items: center;">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-primary">
+                    <button type="submit" class="btn btn-sm btn-primary" style="width: 100%;">
                         <i class="bi bi-calendar2-month"></i>&nbsp;Ежемесячные данные с
                     </button>
-                    <input type="date" class="form-control ms-2" required name="date" style="font-size: 100%;">
+                    <input type="date" class="form-control ms-2" required name="date"
+                           style="font-size: 100%; width: 45%;">
                     <input type="text" class="form-control ms-2" hidden value="MT" name="period">
                 </form>
             </div>
             <div class="m-2 text-nowrap">
-                <form action="{%  url 'salesreport:customer_period_sales' %}" method="post"
+                <form action="{% url 'salesreport:customer_period_sales' %}" method="post"
                       style="display: flex; align-items: center;">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-primary">
+                    <button type="submit" class="btn btn-sm btn-primary" style="width: 100%;">
                         <i class="bi bi-stopwatch"></i>&nbsp;Ежеквартальные данные с
                     </button>
-                    <input type="date" class="form-control ms-2" required name="date" style="font-size: 100%;">
+                    <input type="date" class="form-control ms-2" required name="date"
+                           style="font-size: 100%; width: 45%;">
                     <input type="text" class="form-control ms-2" hidden value="QT" name="period">
                 </form>
             </div>
             <div class="m-2 text-nowrap">
-                <form action="{%  url 'salesreport:customer_period_sales' %}" method="post"
+                <form action="{% url 'salesreport:customer_period_sales' %}" method="post"
                       style="display: flex; align-items: center;">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-primary">
+                    <button type="submit" class="btn btn-sm btn-primary" style="width: 100%;">
                         <i class="bi bi-table"></i>&nbsp;Ежегодные данные с
                     </button>
-                    <input type="date" class="form-control ms-2" required name="date" style="font-size: 100%;">
+                    <input type="date" class="form-control ms-2" required name="date"
+                           style="font-size: 100%; width: 45%;">
                     <input type="text" class="form-control ms-2" hidden value="YR" name="period">
                 </form>
+            </div>
+        </div>
+
+        <!-- Errors-->
+        <div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
+            <div class="ms-3 mt-2 col-auto"><h6>Ошибки</h6></div>
+            <div class="row text-nowrap justify-content-between">
+                <div class="m-1 col-auto">Ошибки синхронизации</div>
+                <div class="m-1 col-auto">{{ sinhroerrors }}</div>
+            </div>
+            <div class="m-2 text-nowrap">
             </div>
         </div>
 
