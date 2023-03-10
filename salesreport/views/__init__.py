@@ -5,3 +5,5 @@ from salesreport.views.customer_all import *
 from salesreport.views.group import *
 from salesreport.views.admin import *
 from salesreport.views.management import *
+from salesreport.views.exra_reports import *
+from salesreport.views.report_customer_period import *

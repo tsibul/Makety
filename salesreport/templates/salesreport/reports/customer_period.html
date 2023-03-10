@@ -1,0 +1,93 @@
+{% extends 'salesreport/main_salesrep.html' %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+{%  load salesreport_extras %}
+    <div style="margin-left: 240px; display: flex">
+           <form action="{% url 'salesreport:report_customer_period' %}" method="post">
+            {% csrf_token %}
+            <div style="display: flex; align-items: center;">
+                <label for="cst_period_period" class="form-label m-2" style="width: 10vw;">детализация</label>
+                <select class="form-select m-2" style="width: 10vw;" name="period_type" id="cst_period_period">
+                    {% for p_type in period_types %}
+                        <option value="{{ p_type.value }}"
+                                {% if p_type == 'YR' %}selected{% endif %}>{{ p_type.label }}</option>
+                    {% endfor %}
+                </select>
+                <label for="cst_period_date_begin" class="form-label m-2" >начало&nbsp;периода</label>
+                <input type="date" value="{{ date_begin|date:'Y-m-d' }}" name="date_begin"
+                       class="form-control m-2" id="cst_period_date_begin" >
+                <label for="cst_period_date_end" class="form-label m-2" >конец&nbsp;периода</label>
+                <input type="date" value="{{ date_end|date:'Y-m-d' }}" name="date_end"
+                       class="form-control m-2" id="cst_period_date_end">
+                <label for="cst_period_report_type" class="form-label m-2" >детализация</label>
+                <select class="form-select m-2"  name="report_type" id="cst_period_report_type">
+                        <option value="sales_with_vat" selected>Продажи с НДС</option>
+                        <option value="profit" >Прибыль</option>
+                        <option value="no_sales">Количество продаж</option>
+                </select>
+                <button class="btn btn-primary p-2 m-2" type="submit">пересчитать</button>
+            </div>
+        </form>
+
+    </div>
+    <div style="margin-top: 8px; margin-right: 8px;">
+        <div style="display: flex">
+        <h4 style="margin-left: 16px; width: 80px;">Не эко</h4>
+        <div style="overflow-y: auto; height: 400px; "  class="m-2">
+            <table class="table table-sm table-hover p-3" style="font-size: 90%;">
+                <thead>
+                <tr class="text-center">
+                    <th style="width: 450px;">Наименование</th>
+                    {% for period  in periods %}
+                        <th class="text-end">{{ period.name }}</th>
+                    {% endfor %}
+                    <th class="text-end">Всего за период</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in report_no_eco %}
+                    <tr class="">
+                        <td>{{ row.0 }}</td>
+                        {% for r  in row.1 %}
+                            <td class="text-end"
+                                ondblclick="window.open('/salesreport/client_transactions/{{ r.customer.id }}/{{ r.period.id }}',
+                                        '_blank');">{{ r|floatformat:'0g' }}</td>
+                        {% endfor %}
+                        <td class="text-end">{{ row.2|floatformat:'0g' }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+        <div style="display: flex">
+        <h4 style="margin-left: 16px; width: 80px;">Эко</h4>
+        <div style="overflow-y: auto; height: 400px; " class="m-2">
+            <table class="table table-sm table-hover p-3" style="font-size: 90%;">
+                <thead>
+                <tr class="text-center">
+                    <th style="width: 450px;">Наименование</th>
+                    {% for period  in periods %}
+                        <th>{{ period.name }}</th>
+                    {% endfor %}
+                    <th>Всего за период</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in report_eco %}
+                    <tr class="">
+                        <td>{{ row.0 }}</td>
+                        {% for r  in row.1 %}
+                            <td class="text-end"
+                                ondblclick="window.open('/salesreport/client_transactions/{{ r.customer.id }}/{{ r.period.id }}',
+                                        '_blank');">{{ r|floatformat:'0g' }}</td>
+                        {% endfor %}
+                        <td class="text-end">{{ row.2|floatformat:'0g' }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+{% endblock %}
