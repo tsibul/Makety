@@ -17,8 +17,8 @@ class Customer_types(models.Model):
 class Customer_groups(models.Model):
     group_name = models.CharField(max_length=255, unique=True)
     group_type = models.ForeignKey(Customer_types, models.SET_NULL, null=True)
-    phone = models.CharField(max_length=20, default='')
-    mail = models.CharField(max_length=150, default='')
+    phone = models.CharField(max_length=255, default='')
+    mail = models.CharField(max_length=255, default='')
     date_first = models.DateField(default=datetime.date(2000, 1, 1))
     date_last = models.DateField(default=datetime.date(2000, 1, 1))
     active = models.BooleanField(default=True)
