@@ -7,34 +7,21 @@
         <div class="col-auto justify-content-end m-2">
             <form action="{% url 'salesreport:group_export' %}" method="post">
                 {% csrf_token %}
-                <input type="number" value="{{ page_obj.number }}" name="page_no" hidden>
                 <button type="submit" class="btn btn-sm btn-outline-secondary">
                     Экспорт Групп Клиентов
                 </button>
             </form>
         </div>
         <div class="col-auto justify-content-end m-2">
+            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-target="#importGroupModal"
+                    data-bs-toggle="modal">
+                Импорт Групп Клиентов
+            </button>
+        </div>
+        <div class="col-auto justify-content-end m-2">
             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#groupModal">
                 Добавить Группу Клиентов
             </button>
-        </div>
-        <div class="col-auto m-2">
-            <div class="pagination" xmlns="http://www.w3.org/1999/html">
-    <span class="step-links dropup">
-        {% if page_obj.has_previous %}
-            <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; первая</a>
-            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
-        {% endif %}
-        <span class="current btn btn-sm btn-outline-secondary">
-           страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }}
-        </span>
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}"
-               class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
-        {% endif %}
-    </span>
-            </div>
         </div>
         <div class="col-auto justify-content-end">
             <div class="form-check form-switch mt-3 me-3">
@@ -63,40 +50,47 @@
         {% for cst_gr in page_obj %}
             <tr {% if not cst_gr.0.active %}class="text-danger"{% endif %}>
                 <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
-                data-name="{{ cst_gr.0.group_name }}"
-                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.group_name }}</td>
+                    data-name="{{ cst_gr.0.group_name }}"
+                    data-type="{{ cst_gr.0.group_type.id }}"
+                    onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.group_name }}</td>
                 <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
-                data-name="{{ cst_gr.0.group_name }}"
-                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.group_type.code }}</td>
+                    data-name="{{ cst_gr.0.group_name }}"
+                    data-type="{{ cst_gr.0.group_type.id }}"
+                    onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.group_type.code }}</td>
                 <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
-                data-name="{{ cst_gr.0.group_name }}"
-                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.group_type.type_name }}</td>
+                    data-name="{{ cst_gr.0.group_name }}"
+                    data-type="{{ cst_gr.0.group_type.id }}"
+                    onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.group_type.type_name }}</td>
                 <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
-                data-name="{{ cst_gr.0.group_name }}"
-                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.group_type.group_discount }}&nbsp;%</td>
+                    data-name="{{ cst_gr.0.group_name }}"
+                    data-type="{{ cst_gr.0.group_type.id }}"
+                    onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.group_type.group_discount }}&nbsp;%
+                </td>
                 <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
-                data-name="{{ cst_gr.0.group_name }}"
-                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.date_first|date:'d.m.Y' }}</td>
+                    data-name="{{ cst_gr.0.group_name }}"
+                    data-type="{{ cst_gr.0.group_type.id }}"
+                    onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.date_first|date:'d.m.Y' }}</td>
                 <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
-                data-name="{{ cst_gr.0.group_name }}"
-                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.date_last|date:'d.m.Y' }}</td>
+                    data-name="{{ cst_gr.0.group_name }}"
+                    data-type="{{ cst_gr.0.group_type.id }}"
+                    onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.date_last|date:'d.m.Y' }}</td>
                 <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
-                data-name="{{ cst_gr.0.group_name }}"
-                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.1 }}</td>
-                <td style="display: flex; z-index: 50;" class="text-end" >
+                    data-name="{{ cst_gr.0.group_name }}"
+                    data-type="{{ cst_gr.0.group_type.id }}"
+                    onclick="fillModalCustomerGroups(this);">{{ cst_gr.1 }}</td>
+                <td style="display: flex; z-index: 50;" class="text-end">
                     <form action="{% url 'salesreport:group_lists' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="group_id" value="{{ cst_gr.0.id }}">
                         <button type="submit" class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-list-task"
-                                                                                        style="z-index: 100"></i>&nbsp;Состав&nbsp;группы
+                                                                                             style="z-index: 100"></i>&nbsp;Состав&nbsp;группы
                         </button>
                     </form>
                     <form action="{% url 'salesreport:group_delete' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="group_id" value="{{ cst_gr.0.id }}">
-                        <input type="number" class="form-control" value="{{ page_obj.number }}"
-                               name="page_no" hidden>
-                        <button type="submit" class="btn btn-sm btn-outline-danger ms-1" {%  if cst_gr.1 != 0 %}disabled{% endif %}><i class="bi bi-x-lg"></i>&nbsp;Удалить
+                        <button type="submit" class="btn btn-sm btn-outline-danger ms-1"
+                                {% if cst_gr.1 != 0 %}disabled{% endif %}><i class="bi bi-x-lg"></i>&nbsp;Удалить
                             группу
                         </button>
                     </form>
@@ -107,6 +101,31 @@
         </tbody>
     </table>
 
+    <!-- Modal import cst group -->
+    <div class="modal fade" id="importGroupModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="importGroupModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="importGroupModalLabel">Импорт групп</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'salesreport:group_import' %}" method="post" id="group_import"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <label class="custom-file-label" for="importGroup"></label>
+                        <input type="file" accept=".csv" class="custom-file-input col-auto border" id="importGroup"
+                               name="importGroup" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-primary">Записать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -124,8 +143,6 @@
                     <div class="modal-body">
                         <div class=""><input type="number" name="gr_id" class="form-control" readonly id="id" hidden>
                         </div>
-                        <input type="number" class="form-control" form="group_update" value="{{ page_obj.number }}"
-                               name="page_no" hidden>
                         <div class="row">
                             <div class="col-7"><input type="text" name="gr_nm" class="form-control" id="nm"></div>
                             <div class="col-5">

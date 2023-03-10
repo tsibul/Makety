@@ -16,13 +16,14 @@ def management(request):
     try:
         date_last = max(Sales_doc_imports.objects.values_list('import_date', flat=True))
     except:
-        date_last = '2000-01-01'
+        date_last = datetime(2000, 1, 1).date()
     try:
         date_last_cst = max(Customer_all.objects.values_list('date_import', flat=True))
     except:
-        date_last_cst = '2010-01-01'
+        date_last_cst = datetime(2000, 1, 1).date()
     customers_all_quantity = Customer_all.objects.all().count()
     customers_active_quantity = Customer_all.objects.filter(active=True, internal=False).count()
+    no_inn = Customer_all.objects.filter(Q(active=True) & Q(internal=False) & (Q(inn='') | Q(inn__isnull=True))).count()
 
     groups_active_quantity = Customer_groups.objects.filter(active=True).count()
     groups_quantity = Customer_groups.objects.all().count()
@@ -56,13 +57,13 @@ def management(request):
                'transactions_quantity': transactions_quantity, 'no_doc': no_doc, 'no_cust': no_cust, 'no_good': no_good,
                'groups_quantity': groups_quantity, 'groups_active_quantity': groups_active_quantity,
                'clients_quantity': clients_quantity, 'clients_active_quantity': clients_active_quantity,
-               'date_now': date_now}
+               'date_now': date_now, 'no_inn': no_inn}
     return render(request, 'salesreport/management.html', context)
 
 
 def import_report(request):
     report_file = request.FILES['importReport']
-    start_date = datetime.datetime.strptime(request.POST['start_date'], '%Y-%m-%d').date()
+    start_date = datetime.strptime(request.POST['start_date'], '%Y-%m-%d').date()
     Sales_doc_imports.objects.filter(sales_doc_date__gte=start_date).delete()
     try:
         Sales_docs.objects.filter(sales_doc_date__gte=start_date).delete()
@@ -79,8 +80,8 @@ def import_report(request):
         customer_list = []
         for line in enumerate(cust_csv, 1):
             row = line[1].rstrip('\r\n').split(';')
-            sales_doc_date = datetime.datetime.strptime(row[13], '%d.%m.%Y').strftime("%Y-%m-%d")
-            sales_doc_date = datetime.datetime.strptime(sales_doc_date, '%Y-%m-%d').date()
+            sales_doc_date = datetime.strptime(row[13], '%d.%m.%Y').strftime("%Y-%m-%d")
+            sales_doc_date = datetime.strptime(sales_doc_date, '%Y-%m-%d').date()
             if sales_doc_date < start_date:
                 continue
             import_date = datetime.today().date()
@@ -131,12 +132,10 @@ def import_report(request):
             except:
                 customer_all = Customer_all(frigat_id=customer_frigat_id, date_first=datetime(2000, 1, 1).date(),
                                             date_last=datetime(2000, 1, 1).date(), name=customer_name)
-            if customer_all.date_first == datetime.datetime.strptime('2000-01-01', '%Y-%m-%d').date() \
-                    or sales_doc_date < customer_all.date_first:
+            if sales_doc_date < customer_all.date_first or customer_all.date_first == datetime(2000, 1, 1).date():
                 customer_all.date_first = sales_doc_date
                 customer_all.save()
-            if customer_all.date_last == datetime.datetime.strptime('2100-01-01', '%Y-%m-%d').date() \
-                    or sales_doc_date > datetime.datetime.strptime(str(customer_all.date_last), '%Y-%m-%d').date():
+            if sales_doc_date > customer_all.date_last:
                 customer_all.date_last = sales_doc_date
                 customer_all.save()
             report_record = Sales_doc_imports(import_date=import_date, code=code, detail_set=detail_set,
@@ -171,10 +170,13 @@ def import_cst(request):
     file_name = default_storage.save('cust_file', cust_file)
 
     with open(file_name, newline='', encoding='utf-8') as cust_csv:
+#        tmp_lst = []
         for line in enumerate(cust_csv, 1):
             row = line[1].rstrip('\r\n').split(';')
             fr_id = row[0]
             if not customer_check_row(row):
+#                tmp_lst.append(line)
+#                tmp_lst.append(row)
                 continue
             try:
                 customer = Customer_all.objects.get(frigat_id=fr_id)
@@ -213,39 +215,14 @@ def import_cst(request):
                 except:
                     pass
             else:
+#                tmp_lst.append(line)
+#                tmp_lst.append(row)
                 try:
                     customer_maket = Customer.objects.get(Q(name__endswith=customer.name))
                     customer_maket.customer_all = customer
                     customer_maket.save()
                 except:
                     pass
-    return HttpResponseRedirect(reverse('salesreport:management'))
-
-
-def cst_sinhro_inn(request):
-    customers = Customer.objects.filter(~Q(inn='') &
-                                        (Q(customer_all__isnull=True) |
-                                         (~Q(customer_group=F('customer_all__customer_group')) &
-                                          (Q(customer_group__isnull=False) & Q(
-                                              customer_all__customer_group__isnull=False))) |
-                                         (~Q(customer_type=F('customer_all__customer_type')) &
-                                          (Q(customer_type__isnull=False) & Q(
-                                              customer_all__customer_type__isnull=False)))
-                                         ))
-    for customer in customers:
-        if customer.customer_all and customer.inn == customer.customer_all.inn:
-            customer_all = customer.customer_all
-            customer_all.customer_group = customer.customer_group
-            customer_all.customer_type = customer.customer_type
-            customer_all.save()
-        elif customer.inn != '' and not customer.inn:
-            customer_all = Customer_all.objects.filter(inn=customer.inn).order_by('frigat_id').last()
-            customer.customer_all = customer_all
-            customer.frigat_id = customer_all.frigat_id
-            customer.save()
-            customer_all.customer_group = customer.customer_group
-            customer_all.customer_type = customer.customer_type
-            customer_all.save()
     return HttpResponseRedirect(reverse('salesreport:management'))
 
 
@@ -256,45 +233,19 @@ def cst_sinhro_group(request):
     for customer in customers:
         customer_all = customer.customer_all
         customer.customer_group = customer_all.customer_group
-        customer.customer_type = customer_all.customer_type
+        if customer.customer_type:
+            customer_all.customer_type = customer.customer_type
+            customer_all.save()
+        elif customer_all.customer_type:
+            customer.customer_type = customer_all.customer_type
         customer.region = customer_all.region
         customer.save()
     return HttpResponseRedirect(reverse('salesreport:management'))
 
 
-def cst_sinhro_no(request):
-    customers = Customer.objects.filter(Q(inn='') &
-                                        (Q(customer_all__isnull=True) |
-                                         ~Q(name__endswith=F('customer_all__name')) |
-                                         (~Q(customer_group=F('customer_all__customer_group')) &
-                                          (Q(customer_group__isnull=False) & Q(
-                                              customer_all__customer_group__isnull=False))) |
-                                         (~Q(customer_type=F('customer_all__customer_type')) &
-                                          (Q(customer_type__isnull=False) & Q(
-                                              customer_all__customer_type__isnull=False)))
-                                         ))
-    customers_all = Customer_all.objects.filter(inn='')
-    for customer in customers:
-        for customer_all in customers_all:
-            if customer.name.endswith(customer_all.name):
-                customer.customer_all = customer_all
-                customer.frigat_id = customer_all.frigat_id
-                customer.save()
-                customer_all.customer_group = customer.customer_group
-                customer_all.customer_type = customer.customer_type
-                customer_all.save()
-    return HttpResponseRedirect(reverse('salesreport:management'))
-
-
-def cst_sinhro_err(request):
-    customers = Customer.objects.filter(~Q(inn=F('customer_all__inn')) & ~Q(inn=''))
-    for customer in customers:
-        set_inn(customer)
-    return HttpResponseRedirect(reverse('salesreport:management'))
-
-
 def cst_set_inactive(request):
-    d_n = datetime.today().date() - timedelta(weeks=154)
+    no_weeks = int(request.POST['weeks'])
+    d_n = datetime.today().date() - timedelta(weeks=no_weeks)
     customers_list = Customer_all.objects.all()
     for cst in customers_list:
         if cst.date_last < d_n:
@@ -337,18 +288,10 @@ def group_set_dates(request):
         try:
             date_last = max(Customer_all.objects.filter(customer_group=grp).values_list('date_last', flat=True))
         except:
-            date_last = datetime(2100, 1, 1).date()
+            date_last = datetime(2000, 1, 1).date()
         grp.date_first = date_first
         grp.date_last = date_last
     Customer_groups.objects.bulk_update(groups_list, ['date_first', 'date_last'])
-    return HttpResponseRedirect(reverse('salesreport:management'))
-
-
-def customer_date(request):
-    customers = Customer.objects.all()
-    for cst in customers:
-        if type(cst.date_first) == 'str':
-            cst.date_first = datetime.datetime.strptime(cst.date_first, '%Y-%m-%d').date()
     return HttpResponseRedirect(reverse('salesreport:management'))
 
 
