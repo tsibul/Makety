@@ -5,7 +5,7 @@
 
     <div class="row justify-content-end">
         <div class="col-auto justify-content-end m-2">
-            <form action="{% url 'salesreport:group_export'%}" method="post">
+            <form action="{% url 'salesreport:group_export' %}" method="post">
                 {% csrf_token %}
                 <input type="number" value="{{ page_obj.number }}" name="page_no" hidden>
                 <button type="submit" class="btn btn-sm btn-outline-secondary">
@@ -56,26 +56,48 @@
             <th>Скидка</th>
             <th>Первая продажа</th>
             <th>Последняя продажа</th>
+            <th>Кол-во контрагентов</th>
             <th></th>
         </tr>
         </thead>
         {% for cst_gr in page_obj %}
-            <tr data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.id }}"
-                data-name="{{ cst_gr.group_name }}"
-                data-type="{{ cst_gr.group_type.id }}" onclick="fillModalCustomerGroups(this);"
-                {% if not cst_gr.active %}class="text-danger"{% endif %}>
-                <td>{{ cst_gr.group_name }}</td>
-                <td>{{ cst_gr.group_type.code }}</td>
-                <td>{{ cst_gr.group_type.type_name }}</td>
-                <td>{{ cst_gr.group_type.group_discount }}&nbsp;%</td>
-                <td>{{ cst_gr.date_first|date:'d.m.Y' }}</td>
-                <td>{{ cst_gr.date_last|date:'d.m.Y' }}</td>
-                <td data-bs-target="#" data-bs-toggle="">
+            <tr {% if not cst_gr.0.active %}class="text-danger"{% endif %}>
+                <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
+                data-name="{{ cst_gr.0.group_name }}"
+                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.group_name }}</td>
+                <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
+                data-name="{{ cst_gr.0.group_name }}"
+                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.group_type.code }}</td>
+                <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
+                data-name="{{ cst_gr.0.group_name }}"
+                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.group_type.type_name }}</td>
+                <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
+                data-name="{{ cst_gr.0.group_name }}"
+                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.group_type.group_discount }}&nbsp;%</td>
+                <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
+                data-name="{{ cst_gr.0.group_name }}"
+                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.date_first|date:'d.m.Y' }}</td>
+                <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
+                data-name="{{ cst_gr.0.group_name }}"
+                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.0.date_last|date:'d.m.Y' }}</td>
+                <td data-bs-target="#groupModal" data-bs-toggle="modal" data-id="{{ cst_gr.0.id }}"
+                data-name="{{ cst_gr.0.group_name }}"
+                data-type="{{ cst_gr.0.group_type.id }}" onclick="fillModalCustomerGroups(this);">{{ cst_gr.1 }}</td>
+                <td style="display: flex; z-index: 50;" class="text-end" >
                     <form action="{% url 'salesreport:group_lists' %}" method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="group_id" value="{{ cst_gr.id }}">
-                        <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-list-task"
+                        <input type="hidden" name="group_id" value="{{ cst_gr.0.id }}">
+                        <button type="submit" class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-list-task"
                                                                                         style="z-index: 100"></i>&nbsp;Состав&nbsp;группы
+                        </button>
+                    </form>
+                    <form action="{% url 'salesreport:group_delete' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="group_id" value="{{ cst_gr.0.id }}">
+                        <input type="number" class="form-control" value="{{ page_obj.number }}"
+                               name="page_no" hidden>
+                        <button type="submit" class="btn btn-sm btn-outline-danger ms-1" {%  if cst_gr.1 != 0 %}disabled{% endif %}><i class="bi bi-x-lg"></i>&nbsp;Удалить
+                            группу
                         </button>
                     </form>
                 </td>

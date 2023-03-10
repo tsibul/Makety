@@ -9,7 +9,10 @@ from django.core.paginator import Paginator
 
 def groups(request):
     navi = 'Группы'
-    cst_groups = Customer_groups.objects.all().order_by('group_name')
+    customer_groups = Customer_groups.objects.all().order_by('group_name')
+    cst_groups = []
+    for group in customer_groups:
+        cst_groups.append([group, Customer_all.objects.filter(customer_group=group).count()])
     cst_types = Customer_types.objects.all()
     group_quan = Customer_groups.objects.all().order_by('group_name').count()
 
@@ -53,6 +56,16 @@ def group_lists(request):
     context = {'navi': navi, 'groups': groups, 'customers': customers, 'customers_other': customers_other_list,
                'group_id': group_id}
     return render(request, 'salesreport/groups.html', context)
+
+
+def group_delete(request):
+    page_no = '?page=' + request.POST['page_no']
+    group_id = request.POST['group_id']
+    group = Customer_groups.objects.get(id=group_id)
+    members = Customer_all.objects.filter(customer_group=group).count()
+    if not members:
+        group.delete()
+    return HttpResponseRedirect(reverse('salesreport:groups') + page_no)
 
 
 def add_to_group(request):
