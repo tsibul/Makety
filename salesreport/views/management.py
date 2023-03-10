@@ -255,10 +255,10 @@ def cst_sinhro_group(request):
                                          ~Q(region=F('customer_all__region'))) & Q(customer_all__isnull=False))
     for customer in customers:
         customer_all = customer.customer_all
-        customer_all.customer_group = customer.customer_group
-        customer_all.customer_type = customer.customer_type
-        customer_all.region = customer.region
-        customer_all.save()
+        customer.customer_group = customer_all.customer_group
+        customer.customer_type = customer_all.customer_type
+        customer.region = customer_all.region
+        customer.save()
     return HttpResponseRedirect(reverse('salesreport:management'))
 
 
@@ -455,30 +455,32 @@ def customer_period_sales(request):
             customer = Customer_all.objects.filter(customer_group=group, date_last__gte=begin_date).last()
             customer_regular = Class(group=group, period=period, name=group.group_name, customer=customer)
             sales_documents = sales_doc_request_for_period_group(group, period)
-            if sales_documents.count():
-                customer_regular.set_sales_data(sales_documents)
-                customer_periods_list.append(customer_regular)
+            customer_regular.set_sales_data(sales_documents)
+            customer_periods_list.append(customer_regular)
     customers = Customer_all.objects.filter(date_last__gte=begin_date, customer_group__isnull=True, internal=False)
     for customer in customers:
         for period in periods:
             customer_regular = Class(customer=customer, period=period, name=customer.name.replace('"', ''))
             sales_documents = sales_doc_request_for_period_customer(customer, period)
-            if sales_documents.count():
-                customer_regular.set_sales_data(sales_documents)
-                customer_periods_list.append(customer_regular)
+            customer_regular.set_sales_data(sales_documents)
+            customer_periods_list.append(customer_regular)
     Class.objects.bulk_create(customer_periods_list)
     return HttpResponseRedirect(reverse('salesreport:management'))
 
 
 def sales_doc_request_for_period_group(group, period: ReportPeriod):
     if period.period == 'WK':
-        return Sales_docs.objects.filter(customer__customer_group=group, week=period)
+        return Sales_docs.objects.filter(customer__customer_group=group, week=period).exclude(
+            sales_doc_number__startswith='О')
     elif period.period == 'MT':
-        return Sales_docs.objects.filter(customer__customer_group=group, month=period)
+        return Sales_docs.objects.filter(customer__customer_group=group, month=period).exclude(
+            sales_doc_number__startswith='О')
     elif period.period == 'QT':
-        return Sales_docs.objects.filter(customer__customer_group=group, quarter=period)
+        return Sales_docs.objects.filter(customer__customer_group=group, quarter=period).exclude(
+            sales_doc_number__startswith='О')
     else:
-        return Sales_docs.objects.filter(customer__customer_group=group, year=period)
+        return Sales_docs.objects.filter(customer__customer_group=group, year=period).exclude(
+            sales_doc_number__startswith='О')
 
 
 def sales_doc_request_for_period_customer(customer, period: ReportPeriod):
