@@ -3,8 +3,8 @@ import os
 
 from django.http import FileResponse
 from django.shortcuts import render, HttpResponseRedirect, reverse
-from maket.models import Customer_all, Customer, Customer_groups, Customer_types, Detail_set, Item_color
-from django.core.paginator import Paginator
+from maket.models import Customer_all, Customer_groups, Customer_types
+from django.core.files.storage import default_storage
 
 
 def groups(request):
@@ -16,17 +16,12 @@ def groups(request):
     cst_types = Customer_types.objects.all()
     group_quan = Customer_groups.objects.all().order_by('group_name').count()
 
-    paginator = Paginator(cst_groups, 20)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    context = {'navi': navi, 'active2': 'active', 'page_obj': page_obj, 'cst_types': cst_types,
+    context = {'navi': navi, 'active2': 'active', 'page_obj': cst_groups, 'cst_types': cst_types,
                'group_quan': group_quan}
     return render(request, 'salesreport/customer_groups.html', context)
 
 
 def update_cst_group(request):
-    page_no = '?page=' + request.POST['page_no']
     group_name = request.POST['gr_nm']
     type_id = request.POST['tp']
     gr_tp = Customer_types.objects.get(id=type_id)
@@ -38,7 +33,7 @@ def update_cst_group(request):
         group = Customer_groups(group_name=group_name)
     group.group_type = gr_tp
     group.save()
-    return HttpResponseRedirect(reverse('salesreport:groups') + page_no)
+    return HttpResponseRedirect(reverse('salesreport:groups'))
 
 
 def group_lists(request):
@@ -59,13 +54,12 @@ def group_lists(request):
 
 
 def group_delete(request):
-    page_no = '?page=' + request.POST['page_no']
     group_id = request.POST['group_id']
     group = Customer_groups.objects.get(id=group_id)
     members = Customer_all.objects.filter(customer_group=group).count()
     if not members:
         group.delete()
-    return HttpResponseRedirect(reverse('salesreport:groups') + page_no)
+    return HttpResponseRedirect(reverse('salesreport:groups'))
 
 
 def add_to_group(request):
@@ -104,7 +98,6 @@ def delete_from_group(request):
 
 
 def group_export(request):
-    page_no = '?page=' + request.POST['page_no']
     date_rep = datetime.date.today().strftime('%d%m%Y')
     customers = Customer_all.objects.filter(customer_group__isnull=False).order_by('customer_group')
     export_file_name = 'export_groups_' + date_rep + '.csv'
@@ -112,12 +105,41 @@ def group_export(request):
     with open(export_file_name, 'a+', newline='', encoding='utf-8') as export_file:
         for customer in customers:
             string = customer.customer_group.group_name + ';' + customer.customer_group.group_type.code + ';' + \
-            customer.frigat_id + ';' + customer.name + ';' + customer.inn + '\n'
+                     customer.frigat_id + ';' + customer.name + ';' + customer.inn + '\n'
             export_file.write(string)
     try:
         return FileResponse(open(export_file_name, 'rb'), content_type='application/force-download')
     except:
-        return HttpResponseRedirect(reverse('salesreport:groups') + page_no)
+        return HttpResponseRedirect(reverse('salesreport:groups'))
+
+
+def group_import(request):
+    report_file = request.FILES['importGroup']
+    try:
+        os.remove('report_file')
+    except:
+        pass
+    file_name = default_storage.save('report_file', report_file)
+    with open(file_name, newline='', encoding='utf-8') as group_csv:
+        for line in enumerate(group_csv, 1):
+            groups = Customer_groups.objects.all().values_list('group_name', flat=True)
+            row = line[1].rstrip('\r\n').split(';')
+            customer = Customer_all.objects.get(frigat_id=row[2])
+            customer_maket = Customer_all.objects.get(frigat_id=row[2])
+            customer_type = Customer_types.objects.get(code=row[1])
+            if row[0] not in groups:
+                new_group = Customer_groups(group_name=row[0], group_type=customer_type, phone=customer.phone,
+                                            mail=customer.mail)
+                new_group.save()
+            else:
+                new_group = Customer_groups.objects.get(group_name=row[0])
+            customer.customer_group = new_group
+            if not customer.customer_type:
+                customer.customer_type = customer_type
+            customer.save()
+            customer_maket.customer_group = new_group
+            customer_maket.save()
+        return HttpResponseRedirect(reverse('salesreport:groups'))
 
 
 def prepare_other_customers(customers, group):
