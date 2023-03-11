@@ -3,147 +3,148 @@
 {% block title %}Клиенты{% endblock %}
 {% block content %}
 
-<!--Customer Modal -->
-<div class="modal fade" id="custModal" tabindex="-1" aria-labelledby="custModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="custModalLabel">Редактировать Клиента</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="{% url 'salesreport:update_cst' %}" method="post" id="form_">
-      {% csrf_token %}
-      <div class="modal-body">
-        <input type="text" name="lookup" value="{{lookup}}" hidden>
-        <input type="text" name="look_up" value="{{look_up}}" hidden>
-        <input type="number" class="form-control" form="form_" value="{{page_obj.number}}" name="page_no" hidden>
-        <div class="row mb-1">
-            <div class="col-4">
-                <label for="id">ID Макеты</label>
-                <input class="form-control" type="text" id="id" name="id" readonly form="form_"></div>
-            <div class="col-5">
-                <label for="gr_id">ID группы клиентов</label>
-                <input class="form-control" type="text" id="gr_id" name="gr_id" form="form_" readonly></div>
-            <div class="col-3">
-                <label class="form-check-label" for="in">Внутренний</label>
-                <input class="form-check" type="checkbox" id="in" name="in" form="form_"></div>
-        </div>
-        <div class="row mb-1">
-            <div class="col-3">
-            <label for="fr">fr #</label>
-            <input class="form-control" type="text" id="fr" name="fr" readonly></div>
-            <div class="col-2">
-            <label for="rg">регион</label>
-            <input class="form-control" type="text" id="rg" name="rg"></div>
-            <div class="col-7">
-            <label for="rg">ИНН</label>
-            <input class="form-control" type="text" id="inn" name="in_"></div>
-        </div>
-        <label for="nm">название</label>
-          <textarea class="form-control mb-1" type="text" id="nm" name="nm"></textarea>
-        <div class="row mb-1">
-            <label for="gr">группа</label>
-            <div class="col">
-                <select class="form-select" id="gr" name="gr">
-                {% for cst_group in customer_groups %}
-                    <option value="{{cst_group.id}}">{{cst_group.group_name}}</option>
-                {% endfor %}
-                </select>
-            </div>
-            <label for="tp">тип</label>
-            <div class="col">
-                <select class="form-select" id="tp" name="tp" aria-label="select tp" form="form_">
-                  {% for cst_type in customer_types %}
-                  <option value="{{cst_type.id}}">{{cst_type.type_name}}</option>
-                  {% endfor %}
-                </select>
-            </div>
-        </div>
-        <label for="ad">адрес</label>
-          <textarea class="form-control" type="text" id="ad" name="ad"></textarea>
-      </div>
-      </form>
-      <div class="modal-footer">
-        <button type="button" onclick="clearModalCustomers();" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-        <button type="submit" form="form_" class="btn btn-primary">Сохранить</button>
-      </div>
-    </div>
-  </div>
-</div>
-<div style="overflow-y: auto; max-height: 720px;">
-<table class="table table-sm table-hover ms-1" style="font-size: 80%;">
-<thead class="sticky-top">
-    <tr class="table-light">
-        <th colspan="12">
-        <div class="row">
-            <div class="col">
-            </div>
-            <div class="col text-end mt-3 fw-normal" >
-                    {{ page_obj.object_list.0}} - {{ page_obj.object_list.149}}
-            </div>
-                <div class="col-auto m-2  justify-content-end" >
-                <div class="pagination" xmlns="http://www.w3.org/1999/html">
-                <span class="step-links dropup">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; первая</a>
-                        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary">предыдущая</a>
-                    {% endif %}
-                    <span class="current btn btn-sm btn-outline-secondary">
-                       страница {{ page_obj.number }}  из {{ page_obj.paginator.num_pages }}
-                    </span>
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary">следующая</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">последняя &raquo;</a>
-                    {% endif %}
-                </span>
+    <!--Customer Modal -->
+    <div class="modal fade" id="custModal" tabindex="-1" aria-labelledby="custModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="custModalLabel">Редактировать Клиента</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'salesreport:update_cst' %}" method="post" id="form_">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="text" name="lookup" value="{{ lookup }}" hidden>
+                        <input type="text" name="look_up" value="{{ look_up }}" hidden>
+                        <input type="number" class="form-control" form="form_" value="{{ page_obj.number }}"
+                               name="page_no" hidden>
+                        <div class="row mb-1">
+                            <div class="col-4">
+                                <label for="id">ID Макеты</label>
+                                <input class="form-control" type="text" id="id" name="id" readonly form="form_"></div>
+                            <div class="col-5">
+                                <label for="gr_id">ID группы клиентов</label>
+                                <input class="form-control" type="text" id="gr_id" name="gr_id" form="form_" readonly>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-check-label" for="in">Внутренний</label>
+                                <input class="form-check" type="checkbox" id="in" name="in" form="form_"></div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-3">
+                                <label for="fr">fr #</label>
+                                <input class="form-control" type="text" id="fr" name="fr" readonly></div>
+                            <div class="col-2">
+                                <label for="rg">регион</label>
+                                <input class="form-control" type="text" id="rg" name="rg"></div>
+                            <div class="col-7">
+                                <label for="rg">ИНН</label>
+                                <input class="form-control" type="text" id="inn" name="in_"></div>
+                        </div>
+                        <label for="nm">название</label>
+                        <textarea class="form-control mb-1" type="text" id="nm" name="nm"></textarea>
+                        <div class="row mb-1">
+                            <label for="gr">группа</label>
+                            <div class="col">
+                                <select class="form-select" id="gr" name="gr">
+                                    {% for cst_group in customer_groups %}
+                                        <option value="{{ cst_group.id }}">{{ cst_group.group_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label for="tp">тип</label>
+                            <div class="col">
+                                <select class="form-select" id="tp" name="tp" aria-label="select tp" form="form_">
+                                    {% for cst_type in customer_types %}
+                                        <option value="{{ cst_type.id }}">{{ cst_type.type_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <label for="ad">адрес</label>
+                        <textarea class="form-control" type="text" id="ad" name="ad"></textarea>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" onclick="clearModalCustomers();" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Закрыть
+                    </button>
+                    <button type="submit" form="form_" class="btn btn-primary">Сохранить</button>
                 </div>
             </div>
-            <div class="col-auto justify-content-end">
-            <div class="form-check form-switch mt-3 me-3">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchActive" onclick="clientActive(this);" name="off">
-                <label class="form-check-label fw-normal" for="flexSwitchActive" style="font-size: 120%;" >Только активные</label>
-            </div>
-            </div>
         </div>
-        </th>
-    </tr>
-    <tr  class="table-light">
-    <th class="text-nowrap"><strong>Fr #&nbsp;</strong></th>
-    <th><strong>Название Клиента</strong></th>
-    <th colspan=""><strong>Группа</strong></th>
-    <th colspan=""><strong>Тип</strong></th>
-    <th><strong>Регион</strong></th>
-    <th><strong>ИНН</strong></th>
-    <th ><strong>Адрес</strong></th>
-    <th ><strong>E-mail</strong></th>
-    <th ><strong>Первая продажа</strong></th>
-    <th ><strong>Последняя продажа</strong></th>
-    </tr>
-</thead>
-<tbody>
+    </div>
 
-{% for cst in page_obj %}
-    <tr onclick="fillModalCustomers(this);" id="row_{{cst.id}}" data-bs-toggle="modal" data-bs-target="#custModal" data-id="{{cst.id}}"
-        data-name="{{cst.name}}" data-group_old="{{cst.group}}" data-group="{{cst.customer_group.id}}"
-        data-type_old="{{cst.type}}" data-type="{{cst.customer_type.id}}" data-region="{{cst.region}}" data-inn="{{cst.inn}}"
-        data-address="{{cst.address}}" data-group_id="{{cst.customer_group.id}}" data-fr="{{cst.frigat_id}}"
-        {% if not cst.active or cst.internal %}class="text-danger"{% endif %} data-in="{{ cst.internal }}">
-    <input type="text" hidden value="{{cst.id}}" id="id_{{cst.id}}">
-    <td id="fr_{{cst.id}}"><div >{{cst.frigat_id}}</div></td>
-    <td id="nm_{{cst.id}}" class="fw-bold"><div >{{cst.name}}</div></td>
-    <td id="gr2_{{cst.id}}">{{cst.customer_group.group_name}}</td>
-    <td id="tp2_{{cst.id}}">{{cst.customer_type.type_name}}</td>
-    <td id="rg_{{cst.id}}">{{cst.region}}</td>
-    <td id="in_{{cst.id}}" >{{cst.inn}}</td>
-    <td id="addr_{{cst.id}}">{{cst.address}}</td>
-    <td id="mail_{{cst.id}}">{{cst.mail}}</td>
-    <td id="df_{{cst.id}}">{{cst.date_first|date:'d.m.Y'}}</td>
-    <td id="dl_{{cst.id}}">{{cst.date_last|date:'d.m.Y'}}</td>
-    </tr>
-{% endfor %}
-</tbody>
-</table>
-</div>
-<br><br>
+    <div style="overflow-y: auto; margin-left: 16px; margin-right: 32px; height: 92vh;">
+        <table class="table table-sm table-hover ms-1" style="font-size: 80%;">
+            <thead class="sticky-top">
+            <tr class="table-light">
+                <th colspan="12">
+                    <div class="row justify-content-end">
+                        <div class="col-auto m-2">
+                            <form action="{% url 'salesreport:import_inn' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Импорт ИНН</button>
+                            </form>
+                        </div>
+                        <div class="col-auto m-2">
+                            <button type="button" class="btn btn-sm btn-outline-primary">Экспорт типов клиентов</button>
+                        </div>
+                        <div class="col-auto justify-content-end">
+                            <div class="form-check form-switch mt-3 me-3">
+                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchActive"
+                                       onclick="clientActive(this);" name="off">
+                                <label class="form-check-label fw-normal" for="flexSwitchActive"
+                                       style="font-size: 120%;">Только активные</label>
+                            </div>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            <tr class="table-light">
+                <th class="text-nowrap"><strong>Fr #&nbsp;</strong></th>
+                <th><strong>Название Клиента</strong></th>
+                <th colspan=""><strong>Группа</strong></th>
+                <th colspan=""><strong>Тип</strong></th>
+                <th><strong>Регион</strong></th>
+                <th><strong>ИНН</strong></th>
+                <th><strong>Адрес</strong></th>
+                <th><strong>E-mail</strong></th>
+                <th><strong>Первая продажа</strong></th>
+                <th><strong>Последняя продажа</strong></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for cst in page_obj %}
+                <tr onclick="fillModalCustomers(this);" id="row_{{ cst.id }}" data-bs-toggle="modal"
+                    data-bs-target="#custModal" data-id="{{ cst.id }}"
+                    data-name="{{ cst.name }}" data-group_old="{{ cst.group }}" data-group="{{ cst.customer_group.id }}"
+                    data-type_old="{{ cst.type }}" data-type="{{ cst.customer_type.id }}" data-region="{{ cst.region }}"
+                    data-inn="{{ cst.inn }}"
+                    data-address="{{ cst.address }}" data-group_id="{{ cst.customer_group.id }}"
+                    data-fr="{{ cst.frigat_id }}"
+                    {% if not cst.active or cst.internal %}class="text-danger"{% endif %} data-in="{{ cst.internal }}">
+                    <input type="text" hidden value="{{ cst.id }}" id="id_{{ cst.id }}">
+                    <td id="fr_{{ cst.id }}">
+                        <div>{{ cst.frigat_id }}</div>
+                    </td>
+                    <td id="nm_{{ cst.id }}" class="fw-bold">
+                        <div>{{ cst.name }}</div>
+                    </td>
+                    <td id="gr2_{{ cst.id }}">{{ cst.customer_group.group_name }}</td>
+                    <td id="tp2_{{ cst.id }}">{{ cst.customer_type.type_name }}</td>
+                    <td id="rg_{{ cst.id }}">{{ cst.region }}</td>
+                    <td id="in_{{ cst.id }}">{{ cst.inn }}</td>
+                    <td id="addr_{{ cst.id }}">{{ cst.address }}</td>
+                    <td id="mail_{{ cst.id }}">{{ cst.mail }}</td>
+                    <td id="df_{{ cst.id }}">{{ cst.date_first|date:'d.m.Y' }}</td>
+                    <td id="dl_{{ cst.id }}">{{ cst.date_last|date:'d.m.Y' }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br><br>
 
 {% endblock %}
