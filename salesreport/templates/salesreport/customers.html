@@ -88,7 +88,11 @@
                             </form>
                         </div>
                         <div class="col-auto m-2">
-                            <button type="button" class="btn btn-sm btn-outline-primary">Экспорт типов клиентов</button>
+                            <form action="{% url 'salesreport:export_cst_types' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Экспорт типов клиентов
+                                </button>
+                            </form>
                         </div>
                         <div class="col-auto justify-content-end">
                             <div class="form-check form-switch mt-3 me-3">

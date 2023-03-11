@@ -1,3 +1,4 @@
+from django.http import FileResponse
 from django.shortcuts import render, HttpResponseRedirect, reverse
 import datetime
 from maket.models import Customer_all, Customer_groups
@@ -74,3 +75,24 @@ def import_inn(request):
                 customer.inn = inn
                 customer.save()
     return HttpResponseRedirect(reverse('salesreport:customers_active'))
+
+def export_cst_types(request):
+    customers = Customer_all.objects.filter(customer_type__isnull=False, internal=False)
+    customers_int = Customer_all.objects.filter(internal=True)
+    date_rep = datetime.date.today().strftime('%d%m%Y')
+    export_file_name = 'export_types_' + date_rep + '.csv'
+
+    with open(export_file_name, 'a+', newline='', encoding='utf-8') as export_file:
+        for customer in customers:
+            string = customer.frigat_id + ';' + customer.customer_type.code + ';' + \
+                     str(customer.internal) + ';' + customer.name + ';' + customer.inn + '\n'
+            export_file.write(string)
+        for customer in customers_int:
+            string = customer.frigat_id + ';' + '' + ';' + \
+                     str(customer.internal) + ';' + customer.name + ';' + customer.inn + '\n'
+            export_file.write(string)
+    try:
+        return FileResponse(open(export_file_name, 'rb'), content_type='application/force-download')
+    except:
+        return HttpResponseRedirect(reverse('salesreport:customers_active'))
+

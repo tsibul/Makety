@@ -10,6 +10,7 @@ urlpatterns = [
     path('customers_all', views.customers_all, name='customers_all'),
     path('update_cst', views.update_cst, name='update_cst'),
     path('import_inn', views.import_inn, name='import_inn'),
+    path('export_cst_types', views.export_cst_types, name='export_cst_types'),
 
     path('groups', views.groups, name='groups'),
     path('update_cst_group', views.update_cst_group, name='update_cst_group'),
