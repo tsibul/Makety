@@ -1,34 +1,38 @@
 {% extends 'salesreport/main_salesrep.html' %}
 {% block title %}Главная{% endblock %}
 {% block content %}
-    <div class="row align-items-center">
-        <div class="col-3"></div>
-        <div class="col-4">
-            <form action="{% url 'salesreport:group_lists' %}" method="post" id="choose_group">
-                {% csrf_token %}
-                <select class="form-select" name="group_id">
-                    {% for group in groups %}
-                        <option value="{{ group.id }}"
-                                {% if group.id == group_id %}selected{% endif %}>{{ group.group_name }}</option>
-                    {% endfor %}
-                </select>
-            </form>
-        </div>
-        <div class="col-2">
-            <button type="submit" class="btn btn-primary" form="choose_group">Выбрать</button>
-        </div>
-        <div class="col-auto justify-content-end">
-            <div class="form-check form-switch mt-3 me-3">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchActive"
-                       onclick="clientActive(this);" name="off">
-                <label class="form-check-label fw-normal" for="flexSwitchActive" style="font-size: 120%;">Только
-                    активные</label>
-            </div>
-        </div>
-
-    </div>
     <table class="table table-hover table-sm">
-        <thead>
+        <thead class="sticky-top bg-light">
+        <tr>
+            <th colspan="8">
+                <div class="row align-items-center">
+                    <div class="col-3"></div>
+                    <div class="col-4">
+                        <form action="{% url 'salesreport:group_lists' %}" method="post" id="choose_group">
+                            {% csrf_token %}
+                            <select class="form-select" name="group_id">
+                                {% for group in groups %}
+                                    <option value="{{ group.id }}"
+                                            {% if group.id == group_id %}selected{% endif %}>{{ group.group_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-primary" form="choose_group">Выбрать</button>
+                    </div>
+                    <div class="col-auto justify-content-end">
+                        <div class="form-check form-switch mt-3 me-3">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchActive"
+                                   onclick="clientActive(this);" name="off">
+                            <label class="form-check-label fw-normal" for="flexSwitchActive" style="font-size: 120%;">Только
+                                активные</label>
+                        </div>
+                    </div>
+
+                </div>
+            </th>
+        </tr>
         <tr>
             <th>Название</th>
             <th>Регион</th>
@@ -42,7 +46,7 @@
         </thead>
         <tbody>
         <tr>
-            <td colspan="7" class="table-secondary">Кто входит</td>
+            <td colspan="8" class="table-secondary">Кто входит</td>
         </tr>
         {% for customer in customers %}
             <tr style="font-size: 80%;">
@@ -53,17 +57,18 @@
                 <td>{{ customer.mail }}</td>
                 <td>{{ customer.customer_type.type_name }}</td>
                 <td>{{ customer.date_first|date:'d.m.Y' }}-{{ customer.date_last|date:'d.m.Y' }}</td>
-                <td><form action="{%  url 'salesreport:delete_from_group' %}" method="post">
-                    {%  csrf_token %}
-                    <input type="hidden" value="{{ group_id }}" name="{{ group_id }}">
-                    <input type="hidden" value="{{ customer.id }}" name="{{ cust_id }}">
-                    <button type="button" class="btn btn-sm btn-outline-danger">Удалить из группы</button>
+                <td>
+                    <form action="{% url 'salesreport:delete_from_group' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ group_id }}" name="{{ group_id }}">
+                        <input type="hidden" value="{{ customer.id }}" name="{{ cust_id }}">
+                        <button type="button" class="btn btn-sm btn-outline-danger">Удалить из группы</button>
                     </form>
                 </td>
             </tr>
         {% endfor %}
         <tr>
-            <td colspan="7" class="table-secondary">Кто может входить</td>
+            <td colspan="8" class="table-secondary">Кто может входить</td>
         </tr>
         {% for other in customers_other %}
             <tr style="font-size: 80%;" {% if not other.active %} }} class="text-danger"{% endif %}>
@@ -74,11 +79,12 @@
                 <td>{{ other.mail }}</td>
                 <td>{{ other.customer_type.type_name }}</td>
                 <td>{{ other.date_first|date:'d.m.Y' }}-{{ other.date_last|date:'d.m.Y' }}</td>
-                <td><form action="{% url 'salesreport:add_to_group' %}" method="post">
-                    {%  csrf_token %}
-                    <input type="hidden" value="{{ group_id }}" name="group_id">
-                    <input type="hidden" value="{{ other.id }}" name="cust_id">
-                    <button type="submit" class="btn btn-sm btn-outline-primary">Добавить в группу</button>
+                <td>
+                    <form action="{% url 'salesreport:add_to_group' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ group_id }}" name="group_id">
+                        <input type="hidden" value="{{ other.id }}" name="cust_id">
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Добавить в группу</button>
                     </form>
                 </td>
             </tr>
