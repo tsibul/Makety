@@ -30,11 +30,11 @@
     <table class="table table-hover table-sm">
         <thead>
         <tr>
-            <th></th>
             <th>Название</th>
             <th>Регион</th>
             <th>ИНН</th>
             <th>Адрес</th>
+            <th>Почта</th>
             <th>Тип</th>
             <th>Период</th>
             <th></th>
@@ -50,6 +50,7 @@
                 <td>{{ customer.region }}</td>
                 <td>{{ customer.inn }}</td>
                 <td>{{ customer.address }}</td>
+                <td>{{ customer.mail }}</td>
                 <td>{{ customer.customer_type.type_name }}</td>
                 <td>{{ customer.date_first|date:'d.m.Y' }}-{{ customer.date_last|date:'d.m.Y' }}</td>
                 <td><form action="{%  url 'salesreport:delete_from_group' %}" method="post">
@@ -70,6 +71,7 @@
                 <td>{{ other.region }}</td>
                 <td>{{ other.inn }}</td>
                 <td>{{ other.address }}</td>
+                <td>{{ other.mail }}</td>
                 <td>{{ other.customer_type.type_name }}</td>
                 <td>{{ other.date_first|date:'d.m.Y' }}-{{ other.date_last|date:'d.m.Y' }}</td>
                 <td><form action="{% url 'salesreport:add_to_group' %}" method="post">

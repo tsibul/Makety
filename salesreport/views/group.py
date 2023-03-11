@@ -153,7 +153,8 @@ def prepare_other_customers(customers, group):
                 replace('.', '').replace(',', '').replace('-', '').replace(' ', '')
             if ((c_a in o_a or customer.name[2:-2] in other.name) or (
                     customer.region != '77' and customer.region != '50' and customer.region != '97' and
-                    customer.region == other.region) and other not in customers_other_list):
+                    customer.region == other.region) and other not in customers_other_list) or (
+                    customer.mail == other.mail and other.mail != ''):
                 customers_other_list.append(other)
     if not customers.count():
         for other in customers_other:
