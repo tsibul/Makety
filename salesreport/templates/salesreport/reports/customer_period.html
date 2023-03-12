@@ -2,15 +2,16 @@
 {% block title %}Главная{% endblock %}
 {% block content %}
 {%  load salesreport_extras %}
-    <div style="margin-left: 240px; display: flex">
+    <div >
            <form action="{% url 'salesreport:report_customer_period' %}" method="post">
             {% csrf_token %}
+    <div style="margin-left: 160px; width: 80vw;" class="bg-secondary text-white" >
             <div style="display: flex; align-items: center;">
                 <label for="cst_period_period" class="form-label m-2" style="width: 10vw;">детализация</label>
-                <select class="form-select m-2" style="width: 10vw;" name="period_type" id="cst_period_period">
+                <select class="form-select m-2" name="period_type" id="cst_period_period">
                     {% for p_type in period_types %}
                         <option value="{{ p_type.value }}"
-                                {% if p_type == 'YR' %}selected{% endif %}>{{ p_type.label }}</option>
+                                {% if p_type == per_type %}selected{% endif %}>{{ p_type.label }}</option>
                     {% endfor %}
                 </select>
                 <label for="cst_period_date_begin" class="form-label m-2" >начало&nbsp;периода</label>
@@ -27,9 +28,9 @@
                 </select>
                 <button class="btn btn-primary p-2 m-2" type="submit">пересчитать</button>
             </div>
+    </div>
         </form>
 
-    </div>
     <div style="margin-top: 8px; margin-right: 8px;">
         <div style="display: flex">
         <h4 style="margin-left: 16px; width: 80px;">Не эко</h4>
@@ -49,9 +50,9 @@
                     <tr class="">
                         <td>{{ row.0 }}</td>
                         {% for r  in row.1 %}
-                            <td class="text-end"
-                                ondblclick="window.open('/salesreport/client_transactions/{{ r.customer.id }}/{{ r.period.id }}',
-                                        '_blank');">{{ r|floatformat:'0g' }}</td>
+                            <td class="text-end" onmouseenter="redNumberColor(this);" onmouseleave="backNumberColor(this);"
+                                ondblclick="window.open('/salesreport/client_transactions/{{ r.1 }}/{{ r.2 }}',
+                                        '_blank');">{{ r.0|floatformat:'0g' }}</td>
                         {% endfor %}
                         <td class="text-end">{{ row.2|floatformat:'0g' }}</td>
                     </tr>
@@ -78,9 +79,9 @@
                     <tr class="">
                         <td>{{ row.0 }}</td>
                         {% for r  in row.1 %}
-                            <td class="text-end"
-                                ondblclick="window.open('/salesreport/client_transactions/{{ r.customer.id }}/{{ r.period.id }}',
-                                        '_blank');">{{ r|floatformat:'0g' }}</td>
+                            <td class="text-end" onmouseenter="redNumberColor(this);" onmouseleave="backNumberColor(this);"
+                                ondblclick="window.open('/salesreport/client_transactions/{{ r.1 }}/{{ r.2 }}',
+                                        '_blank');">{{ r.0|floatformat:'0g' }}</td>
                         {% endfor %}
                         <td class="text-end">{{ row.2|floatformat:'0g' }}</td>
                     </tr>

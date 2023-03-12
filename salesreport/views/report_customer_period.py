@@ -8,7 +8,7 @@ from salesreport.report_period import ReportPeriod
 
 def report_customer_period(request):
     print(datetime.datetime.now().time())
-    navi = 'Клиенты по периодам'
+    navi = 'ABC-анализ'
     report_type = request.POST['report_type']
     report_type_eco = report_type + '_eco'
     report_type_no_eco = report_type + '_no_eco'
@@ -30,14 +30,17 @@ def report_customer_period(request):
         total_amount_no_eco = sum(list(customers_periods.values_list(report_type_no_eco, flat=True)))
         if total_amount_no_eco:
             report_no_eco.append(
-                [name, list(customers_periods.values_list(report_type_no_eco, flat=True)), total_amount_no_eco])
+                [name, list(customers_periods.values_list(report_type_no_eco, 'customer', 'period')),
+                 total_amount_no_eco])
         if total_amount_eco:
-            report_eco.append([name, list(customers_periods.values_list(report_type_eco, flat=True)), total_amount_eco])
+            report_eco.append(
+                [name, list(customers_periods.values_list(report_type_eco, 'customer', 'period')), total_amount_eco])
     print(datetime.datetime.now().time())
     report_eco.sort(reverse=True, key=lambda x: x[2])
     report_no_eco.sort(reverse=True, key=lambda x: x[2])
     period_types = ReportPeriod.calculatableList()
     print(datetime.datetime.now().time())
     context = {'navi': navi, 'report_eco': report_eco, 'report_no_eco': report_no_eco, 'periods': periods,
-               'period_types': period_types, 'report_type': report_type}
+               'period_types': period_types, 'report_type': report_type, 'date_begin': date_start,
+               'date_end': date_finish, 'per_type': period_type}
     return render(request, 'salesreport/reports/customer_period.html', context)

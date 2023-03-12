@@ -55,3 +55,11 @@ function clearModalCustomerGroups(){
     document.getElementById('nm').value = null;
     document.getElementById('tp').value = '1';
 }
+
+function redNumberColor(tdObj){
+    tdObj.classList.add('text-danger' )
+}
+
+function backNumberColor(tdObj){
+    tdObj.classList.remove('text-danger' )
+}
