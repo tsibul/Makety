@@ -21,9 +21,9 @@
                        class="form-control m-2" id="cst_period_date_end">
                 <label for="cst_period_report_type" class="form-label m-2" >детализация</label>
                 <select class="form-select m-2"  name="report_type" id="cst_period_report_type">
-                        <option value="sales_with_vat" selected>Продажи с НДС</option>
-                        <option value="profit" >Прибыль</option>
-                        <option value="no_sales">Количество продаж</option>
+                        <option value="sales_with_vat" {% if report_type == 'sales_with_vat' %}selected{% endif %}>Продажи с НДС</option>
+                        <option value="profit" {% if report_type == 'profit' %}selected{% endif %}>Прибыль</option>
+                        <option value="no_sales" {% if report_type == 'no_sales' %}selected{% endif %}>Количество продаж</option>
                 </select>
                 <button class="btn btn-primary p-2 m-2" type="submit">пересчитать</button>
             </div>
