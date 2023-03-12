@@ -18,10 +18,10 @@ def client_transactions(request, client_id, period_id):
         name = group.group_name
 
     context = {'transactions': transactions, 'name': name, 'period': period}
-    return render(request, 'salesreport/client_transactions.html', context)
+    return render(request, 'salesreport/reports/client_transactions.html', context)
 
 
 def detail(request, salesdoc_id):
     operations = Sales_doc_imports.objects.filter(sales_doc__id=salesdoc_id)
     context = {'operations': operations}
-    return render(request, 'salesreport/detail.html', context)
+    return render(request, 'salesreport/reports/detail.html', context)

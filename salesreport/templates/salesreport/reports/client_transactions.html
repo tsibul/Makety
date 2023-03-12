@@ -21,7 +21,12 @@
     <table class="table table-sm table-hover">
         <thead>
         <tr>
-
+            <th>Дата</th>
+            <th>Юр. лицо</th>
+            <th class="text-end">Эко</th>
+            <th class="text-end">Количество</th>
+            <th class="text-end">Сумма с НДС</th>
+            <th class="text-end">Номер накладной</th>
         </tr>
         </thead>
         <tbody>
@@ -30,7 +35,8 @@
                     'newwindow', 'width=900,height=400');">
                 <td>{{ item.sales_doc_date|date:'d.m.Y' }}</td>
                 <td>{{ item.customer.name }}</td>
-                <td class="text-end">{{ item.quantity }}</td>
+                <td class="text-end">{{ item.eco }}</td>
+                <td class="text-end">{{ item.quantity|floatformat:'0g' }}</td>
                 <td class="text-end">{{ item.total_sale_with_vat|floatformat:'0g' }}</td>
                 <td class="text-end">{{ item.sales_doc_number }}</td>
             </tr>

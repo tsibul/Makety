@@ -18,17 +18,26 @@
 
 <table class="table table-sm">
     <thead>
-    <tr></tr>
+    <tr>
+        <th>Дата</th>
+        <th>Номер накладной</th>
+        <th>Артикул</th>
+        <th>Название</th>
+        <th>Цена с НДС</th>
+        <th>Количество</th>
+        <th>Сумма с НДС</th>
+    </tr>
     </thead>
     <tbody>
     {%  for oper in operations %}
         <tr>
         <td>{{ oper.sales_doc_date|date:'d.m.Y' }}</td>
+        <td>{{ oper.sales_doc_no }}</td>
         <td>{{ oper.code }}</td>
         <td>{{ oper.good_name }}</td>
-        <td>{{ oper.sale_price_vat }}</td>
-        <td>{{ oper.quantity }}</td>
-        <td>{{ oper.sale_with_vat }}</td>
+        <td class="text-end">{{ oper.sale_price_vat|floatformat:'2g' }}</td>
+        <td class="text-end">{{ oper.quantity|floatformat:'0g' }}</td>
+        <td class="text-end">{{ oper.sale_with_vat|floatformat:'2g' }}</td>
         </tr>
     {%  endfor %}
     </tbody>
