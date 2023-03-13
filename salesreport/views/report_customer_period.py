@@ -45,8 +45,8 @@ def report_customer_period(request):
     report_no_eco.sort(reverse=True, key=lambda x: x[2])
     period_types = ReportPeriod.calculatableList()
     print(datetime.datetime.now().time())
-    report_eco_c, report_eco = abc_check(report_eco, grand_total_eco)
-    report_no_eco_c, report_no_eco = abc_check(report_no_eco, grand_total_no_eco)
+    abc_check(report_eco, grand_total_eco)
+    abc_check(report_no_eco, grand_total_no_eco)
     context = {'navi': navi, 'report_eco': report_eco, 'report_no_eco': report_no_eco, 'periods': periods,
                'period_types': period_types, 'report_type': report_type, 'date_begin': date_start,
                'date_end': date_finish, 'per_type': period_type, 'grand_total_eco': grand_total_eco,
@@ -66,7 +66,11 @@ def abc_check(report, grand_total):
     start_letter = 'A'
     tmp_sum = 0
     number_of_periods = [(0, 0, 0) for i in report[0][1]]
+    report_total_a = ['Клиенты "A"', number_of_periods, 0]
+    report_total_b = ['Клиенты "B"', number_of_periods, 0]
     report_total_c = ['Клиенты "C"', number_of_periods, 0]
+    report_a = []
+    report_b = []
     report_c = []
     for rep in report:
         rep.append(start_letter)
@@ -75,11 +79,21 @@ def abc_check(report, grand_total):
             start_letter = 'B'
         elif grand_total * 0.95 < tmp_sum:
             start_letter = 'C'
-        if rep[3] == 'C':
+        if rep[3] == 'A':
+            report_total_a[1] = list(map(lambda x: (x[0][0] + x[1][0], 0, 0), list(zip(rep[1], report_total_a[1]))))
+            report_total_a[2] += rep[2]
+            report_a.append(rep)
+        elif rep[3] == 'B':
+            report_total_b[1] = list(map(lambda x: (x[0][0] + x[1][0], 0, 0), list(zip(rep[1], report_total_b[1]))))
+            report_total_b[2] += rep[2]
+            report_b.append(rep)
+        elif rep[3] == 'C':
             report_total_c[1] = list(map(lambda x: (x[0][0] + x[1][0], 0, 0), list(zip(rep[1], report_total_c[1]))))
             report_total_c[2] += rep[2]
             report_c.append(rep)
+    report_total_a.append('A')
+    report_total_b.append('B')
     report_total_c.append('C')
-    report_n = list(filter(lambda x: x[3] != 'C', report))
-    report_n.append(report_total_c)
-    return report_c, report_n
+    report.append(report_total_a)
+    report.append(report_total_b)
+    report.append(report_total_c)

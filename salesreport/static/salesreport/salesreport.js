@@ -63,3 +63,14 @@ function redNumberColor(tdObj){
 function backNumberColor(tdObj){
     tdObj.classList.remove('text-danger' )
 }
+
+function showClientsC(trObj){
+    var objId = trObj.parentElement.id
+    document.querySelectorAll("." + objId.toString()).forEach((x) =>  {x.style.display = "table-row"})
+    trObj.parentElement.style.display =  'none'
+}
+
+function hideClientsC(param){
+    document.querySelectorAll("." + param).forEach((x) =>  {x.style.display = "none"})
+    document.getElementById(param).style.display =  'table-row'
+}
