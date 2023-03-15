@@ -5,7 +5,7 @@
     <div>
     <form action="{% url 'salesreport:report_customer_period' %}" method="post">
         {% csrf_token %}
-        <div style="margin-left: 160px; width: 80vw;" class="bg-secondary text-white">
+        <div style="margin-left: 180px; width: 81vw;" class="bg-secondary text-white">
             <div style="display: flex; align-items: center;">
                 <label for="cst_period_period" class="form-label m-2" style="width: 10vw;">детализация</label>
                 <select class="form-select m-2" name="period_type" id="cst_period_period">
@@ -36,7 +36,20 @@
 
     <div style="margin-top: 8px; margin-right: 8px;">
         <div style="display: flex">
-            <h4 style="margin-left: 16px; width: 200px;">Не эко</h4>
+            <div style="flex-direction:column; max-width: 460px;">
+                <h4>Не ЭКО</h4>
+                <table class="table table-sm lh-1">
+                    <tbody>
+                    {% for item in abc_no_eco %}
+                        <tr>
+                            {% for column in item %}
+                                <th class="{% if item.0 != 'Группа' %}text-end  fw-normal{% endif %}">{{ column }}</th>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             <div style="" class="m-2">
                 <table class="table table-sm table-hover p-3" style="font-size: 90%;">
                     <thead>
@@ -75,7 +88,20 @@
             </div>
         </div>
         <div style="display: flex">
-            <h4 style="margin-left: 16px; width: 200px;">Эко</h4>
+            <div style="flex-direction:column; max-width: 460px;">
+                <h4>ЭКО</h4>
+                <table class="table table-sm lh-1">
+                    <tbody>
+                    {% for item in abc_eco %}
+                        <tr>
+                            {% for column in item %}
+                                <th class="{% if item.0 != 'Группа' %}text-end fw-normal{% endif %}">{{ column }}</th>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             <div class="m-2">
                 <table class="table table-sm table-hover p-3" style="font-size: 90%;">
                     <thead>
