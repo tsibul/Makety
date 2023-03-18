@@ -1,0 +1,64 @@
+{% extends 'salesreport/main_salesrep.html' %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+    {% load salesreport_extras %}
+
+    <div style="margin-right: 8px;">
+        <table class="table table-sm lh1">
+            <thead class="sticky-top bg-light">
+            <tr >
+                <th colspan="9">
+                    <form action="{% url 'salesreport:report_customer_migrations' %}" method="post">
+                        {% csrf_token %}
+                        <div style="margin-left: 240px; width: 76vw;" class="bg-secondary text-white">
+                            <div style="display: flex; align-items: center;">
+                                <label for="cst_period_period" class="form-label m-2"
+                                       style="width: 10vw;">детализация</label>
+                                <select class="form-select m-2" name="period_type" id="cst_period_period">
+                                    {% for p_type in period_types %}
+                                        <option value="{{ p_type.value }}"
+                                                {% if p_type == per_type %}selected{% endif %}>{{ p_type.label }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label for="cst_period_date_begin" class="form-label m-2">начало&nbsp;периода</label>
+                                <input type="date" value="{{ date_begin|date:'Y-m-d' }}" name="date_begin"
+                                       class="form-control m-2" id="cst_period_date_begin" required>
+                                <label for="cst_period_date_end" class="form-label m-2">конец&nbsp;периода</label>
+                                <input type="date" value="{{ date_end|date:'Y-m-d' }}" name="date_end"
+                                       class="form-control m-2" id="cst_period_date_end" required>
+                                <button class="btn btn-primary p-2 m-2" type="submit">пересчитать</button>
+                            </div>
+                        </div>
+                    </form>
+                </th>
+            </tr>
+            <tr class="text-center">
+                <th>Период</th>
+                <th>На начало</th>
+                <th>Новых</th>
+                <th>% новых</th>
+                <th>Потеряно</th>
+                <th>% потеряно</th>
+                <th>Продажи</th>
+                <th>Конверсия</th>
+                <th>На конец</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for migration in migration_list %}
+                <tr class="text-center">
+                    <td class="text-start">{{ migration.period.name }}</td>
+                    <td>{{ migration.clients_start }}</td>
+                    <td>{{ migration.clients_come }}</td>
+                    <td>{{ migration.clients_come_percent|floatformat:'2' }}</td>
+                    <td>{{ migration.clients_gone }}</td>
+                    <td>{{ migration.clients_gone_percent|floatformat:'2' }}</td>
+                    <td>{{ migration.clients_sales }}</td>
+                    <td>{{ migration.clients_conversion|floatformat:'2' }}</td>
+                    <td>{{ migration.clients_end }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

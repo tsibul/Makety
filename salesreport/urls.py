@@ -49,6 +49,7 @@ urlpatterns = [
     path('customer_all_delete', views.customer_all_delete, name='customer_all_delete'),
 
     path('report_customer_period', views.report_customer_period, name='report_customer_period'),
+    path('report_customer_migrations', views.report_customer_migrations, name='report_customer_migrations'),
 
     path('client_transactions/<int:client_id>/<int:period_id>', views.client_transactions, name='client_transactions'),
     path('detail/<int:salesdoc_id>', views.detail, name='detail'),
