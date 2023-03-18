@@ -14,6 +14,8 @@ def index(request):
     navi = 'Главная'
     period_types = ReportPeriod.calculatableList()
     date_begin = datetime.date(2017, 1, 1)
+    date_begin2 = datetime.date(2020, 1, 1)
     date_end = datetime.date.today()
-    context = {'navi': navi, 'period_types': period_types, 'date_begin': date_begin, 'date_end': date_end}
+    context = {'navi': navi, 'period_types': period_types, 'date_begin': date_begin, 'date_end': date_end,
+               'date_begin2': date_begin2}
     return render(request, 'salesreport/index.html', context)
