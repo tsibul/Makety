@@ -20,7 +20,7 @@
                 <label for="cst_period_date_end" class="form-label m-2">конец&nbsp;периода</label>
                 <input type="date" value="{{ date_end|date:'Y-m-d' }}" name="date_end"
                        class="form-control m-2" id="cst_period_date_end" required>
-                <label for="cst_period_report_type" class="form-label m-2">детализация</label>
+                <label for="cst_period_report_type" class="form-label m-2">показатель</label>
                 <select class="form-select m-2" name="report_type" id="cst_period_report_type">
                     <option value="sales_with_vat" {% if report_type == 'sales_with_vat' %}selected{% endif %}>Продажи с
                         НДС
