@@ -1,7 +1,4 @@
 import datetime
-from datetime import date
-from functools import partial
-from salesreport.reports import *
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from salesreport.views.service import *
 from salesreport.report_period import ReportPeriod
@@ -62,13 +59,13 @@ class GroupMarketingFigures:
         self.sales_per_client = self.no_sales / self.quantity
 
 
-def sum_abc(a: GroupMarketingFigures, b: GroupMarketingFigures, c: GroupMarketingFigures):
+def sum_abc(rep):
     abc_group = 'A+B+C'
-    eco_group = a.eco_group
-    quantity = a.quantity + b.quantity + c.quantity
-    sales = a.sales + b.sales + c.sales
-    profit = a.profit + b.profit + c.profit
-    no_sales = a.no_sales + b.no_sales + c.no_sales
+    eco_group = rep[0].eco_group
+    quantity = rep[0].quantity + rep[1].quantity + rep[2].quantity
+    sales = rep[0].sales + rep[1].sales + rep[2].sales
+    profit = rep[0].profit + rep[1].profit + rep[2].profit
+    no_sales = rep[0].no_sales + rep[1].no_sales + rep[2].no_sales
     average_check = sales / no_sales
     average_profit_per_client = profit / quantity
     average_sales_per_client = sales / quantity
@@ -78,7 +75,6 @@ def sum_abc(a: GroupMarketingFigures, b: GroupMarketingFigures, c: GroupMarketin
 
 
 def report_customer_period(request):
-    print(datetime.datetime.now().time())
     navi = 'ABC-Клиенты'
     report_type = request.POST['report_type']
     report_type_eco = report_type + '_eco'
@@ -90,15 +86,10 @@ def report_customer_period(request):
                                           date_begin__lte=date_finish).order_by('date_begin')
     Class = check_class(period_type)
     customers_period = Class.objects.filter(period__in=periods)
-    names = set(customers_period.values_list('name', flat=True))
+    names = customers_period.values_list('name', flat=True).distinct()
     grand_total_eco = sum(customers_period.values_list(report_type_eco, flat=True))
     grand_total_no_eco = sum(customers_period.values_list(report_type_no_eco, flat=True))
-    report_eco = []
-    report_no_eco = []
-    print(datetime.datetime.now().time())
-    #    report_eco = filter(lambda x: x is not None, map(partial(create_final_list, Class, periods, report_type_eco), names))
-    #    report_no_eco = filter(lambda x: x is not None, map(partial(create_final_list, Class, periods, report_type_no_eco), names))
-
+    report_eco, report_no_eco = [], []
     for name in names:
         customers_periods = Class.objects.filter(period__in=periods, name=name)
         total_amount_eco = sum(list(customers_periods.values_list(report_type_eco, flat=True)))
@@ -110,38 +101,18 @@ def report_customer_period(request):
         if total_amount_eco:
             report_eco.append(
                 [name, list(customers_periods.values_list(report_type_eco, 'customer', 'period')), total_amount_eco])
-    print(datetime.datetime.now().time())
     report_eco.sort(reverse=True, key=lambda x: x[2])
     report_no_eco.sort(reverse=True, key=lambda x: x[2])
     period_types = ReportPeriod.calculatableList()
-    print(datetime.datetime.now().time())
     abc_check(report_eco, grand_total_eco)
     abc_check(report_no_eco, grand_total_no_eco)
+    abc_eco = abc_out_lists(customers_period, report_eco, 'eco')
+    abc_no_eco = abc_out_lists(customers_period, report_no_eco, 'no_eco')
 
-    a_eco = GroupMarketingFigures('A', 'eco')
-    a_eco.set_figures(customers_period, report_eco)
-    b_eco = GroupMarketingFigures('B', 'eco')
-    b_eco.set_figures(customers_period, report_eco)
-    c_eco = GroupMarketingFigures('C', 'eco')
-    c_eco.set_figures(customers_period, report_eco)
-    abc_total_eco = sum_abc(a_eco, b_eco, c_eco)
-    abc_eco = out_client_table(a_eco, b_eco, c_eco, abc_total_eco)
-
-    a_no_eco = GroupMarketingFigures('A', 'no_eco')
-    a_no_eco.set_figures(customers_period, report_no_eco)
-    b_no_eco = GroupMarketingFigures('B', 'no_eco')
-    b_no_eco.set_figures(customers_period, report_no_eco)
-    c_no_eco = GroupMarketingFigures('C', 'no_eco')
-    c_no_eco.set_figures(customers_period, report_no_eco)
-    abc_total_no_eco = sum_abc(a_no_eco, b_no_eco, c_no_eco)
-    abc_no_eco = out_client_table(a_no_eco, b_no_eco, c_no_eco, abc_total_no_eco)
-
-    print(datetime.datetime.now().time())
     context = {'navi': navi, 'report_eco': report_eco, 'report_no_eco': report_no_eco, 'periods': periods,
                'period_types': period_types, 'report_type': report_type, 'date_begin': date_start,
                'date_end': date_finish, 'per_type': period_type, 'grand_total_eco': grand_total_eco,
                'grand_total_no_eco': grand_total_no_eco, 'abc_eco': abc_eco, 'abc_no_eco': abc_no_eco}
-    print(datetime.datetime.now().time())
     return render(request, 'salesreport/reports/customer_period.html', context)
 
 
@@ -156,12 +127,10 @@ def abc_check(report, grand_total):
     start_letter = 'A'
     tmp_sum = 0
     number_of_periods = [(0, 0, 0) for i in report[0][1]]
-    report_total_a = ['Клиенты "A"', number_of_periods, 0]
-    report_total_b = ['Клиенты "B"', number_of_periods, 0]
-    report_total_c = ['Клиенты "C"', number_of_periods, 0]
-    report_a = []
-    report_b = []
-    report_c = []
+    report_total_a, report_total_b, report_total_c = ['Клиенты "A"', number_of_periods, 0], \
+                                                     ['Клиенты "B"', number_of_periods, 0], \
+                                                     ['Клиенты "C"', number_of_periods, 0]
+    report_a, report_b, report_c = [], [], []
     for rep in report:
         rep.append(start_letter)
         tmp_sum += rep[2]
@@ -189,7 +158,19 @@ def abc_check(report, grand_total):
     report.append(report_total_c)
 
 
-def out_client_table(a, b, c, abc):
+def abc_out_lists(customers_period, report, eco):
+    r_eco = []
+    for letter in ['A', 'B', 'C']:
+        tmp = GroupMarketingFigures(letter, eco)
+        tmp.set_figures(customers_period, report)
+        r_eco.append(tmp)
+    r_sum = sum_abc(r_eco)
+    r_eco.append(r_sum)
+    return out_client_table(r_eco)
+
+
+def out_client_table(r):
+    a, b, c, abc = r[0], r[1], r[2], r[3]
     abc_out = []
     i = -1
     for y in a.__dict__:
@@ -204,3 +185,6 @@ def out_client_table(a, b, c, abc):
             abc_out[i].append(element)
     del abc_out[1]
     return abc_out
+
+
+
