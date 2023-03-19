@@ -50,6 +50,7 @@ urlpatterns = [
 
     path('report_customer_period', views.report_customer_period, name='report_customer_period'),
     path('report_customer_migrations', views.report_customer_migrations, name='report_customer_migrations'),
+    path('report_customer_geography', views.report_customer_geography, name='report_customer_geography'),
 
     path('client_transactions/<int:client_id>/<int:period_id>', views.client_transactions, name='client_transactions'),
     path('detail/<int:salesdoc_id>', views.detail, name='detail'),
