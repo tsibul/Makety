@@ -24,6 +24,13 @@
                                 <label for="cst_period_date_end" class="form-label m-2">конец&nbsp;периода</label>
                                 <input type="date" value="{{ date_end|date:'Y-m-d' }}" name="date_end"
                                        class="form-control m-2" id="cst_period_date_end" required>
+                                <select class="form-select m-2" style="width: 10vw;" name="cst_period_activelife"
+                                        id="cst_period_activelife">
+                                    <option value="1" {% if active_life == 1 %} selected {% endif %}>1 год</option>
+                                    <option value="2" {% if active_life == 2 %} selected {% endif %}>2 года</option>
+                                    <option value="3" {% if active_life == 3 %} selected {% endif %}>3 года</option>
+                                </select>
+
                                 <button class="btn btn-primary p-2 m-2" type="submit">пересчитать</button>
                             </div>
                         </div>

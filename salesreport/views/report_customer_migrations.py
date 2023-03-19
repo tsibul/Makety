@@ -26,6 +26,7 @@ class MigrationReport:
 
 def report_customer_migrations(request):
     navi = 'Миграции клиентов'
+    active_life = int(request.POST['cst_period_activelife'])
     period_types = ReportPeriod.calculatableList()
     date_start = datetime.datetime.strptime(request.POST['date_begin'], '%Y-%m-%d').date()
     date_finish = datetime.datetime.strptime(request.POST['date_end'], '%Y-%m-%d').date()
@@ -36,12 +37,16 @@ def report_customer_migrations(request):
 
     migration_list = []
     for period in periods:
-        date_begin_3_years_ago = period.date_begin.replace(year=period.date_begin.year - 3)
-        date_end_3_years_ago = period.date_end.replace(year=period.date_end.year - 3)
-        customer_start_no = Customer_all.objects.filter(date_last__gte=date_begin_3_years_ago,
+        date_begin_years_ago = period.date_begin.replace(year=period.date_begin.year - active_life)
+        try:
+            date_end_years_ago = period.date_end.replace(year=period.date_end.year - active_life)
+        except:
+            date_end_years_ago = period.date_end.replace(year=period.date_end.year - active_life, day=28)
+
+        customer_start_no = Customer_all.objects.filter(date_last__gte=date_begin_years_ago,
                                                         date_first__lt=period.date_begin, internal=False,
                                                         customer_group=None).count()
-        group_start_no = Customer_groups.objects.filter(date_last__gte=date_begin_3_years_ago,
+        group_start_no = Customer_groups.objects.filter(date_last__gte=date_begin_years_ago,
                                                         date_first__lt=period.date_begin).count()
         clients_quantity_start = customer_start_no + group_start_no
         customer_come = Customer_all.objects.filter(date_first__gte=period.date_begin,
@@ -55,12 +60,12 @@ def report_customer_migrations(request):
             group_come.values_list('group_name', flat=True))
 
         clients_quantity_come = customer_come_no + group_come_no
-        customer_gone = Customer_all.objects.filter(date_last__gte=date_begin_3_years_ago,
-                                                    date_last__lte=date_end_3_years_ago, internal=False,
+        customer_gone = Customer_all.objects.filter(date_last__gte=date_begin_years_ago,
+                                                    date_last__lte=date_end_years_ago, internal=False,
                                                     customer_group=None)
         customer_gone_no = customer_gone.count()
-        group_gone = Customer_groups.objects.filter(date_last__gte=date_begin_3_years_ago,
-                                                    date_last__lte=date_end_3_years_ago)
+        group_gone = Customer_groups.objects.filter(date_last__gte=date_begin_years_ago,
+                                                    date_last__lte=date_end_years_ago)
         group_gone_no = group_gone.count()
         customer_gone = list(customer_gone.values_list('name', flat=True)) + list(
             group_gone.values_list('group_name', flat=True))
@@ -71,5 +76,5 @@ def report_customer_migrations(request):
                             clients_sales_quantity), customer_come, customer_gone])
 
     context = {'navi': navi, 'period_types': period_types, 'per_type': period_type, 'date_begin': date_start,
-               'date_end': date_finish, 'migration_list': migration_list}
+               'date_end': date_finish, 'migration_list': migration_list, 'active_life': active_life }
     return render(request, 'salesreport/reports/customer_migrations.html', context)
