@@ -46,7 +46,26 @@
             <div style="" class="m-2">
                 <table class="table table-sm table-hover p-3" style="font-size: 90%;">
                     <thead>
+                    <tr class="text-center">
+                        <th style="width: 450px;">Тип</th>
+                        {% for period  in periods %}
+                            <th class="text-end">{{ period.name }}<br>-</th>
+                        {% endfor %}
+                        <th class="text-wrap text-end">
+                            Всего&nbsp;за&nbsp;период<br>{{ grand_total_no_eco|floatformat:'0g' }}</th>
+                    </tr>
                     </thead>
+                    <tbody>
+                    {% for row in report_no_eco %}
+                        <tr class="">
+                            <td>{{ row.0 }}</td>
+                            {% for r  in row.1 %}
+                                <td class="text-end" onmouseenter="redNumberColor(this);"
+                                    onmouseleave="backNumberColor(this);">{{ r.0|floatformat:'0g' }}</td>
+                            {% endfor %}
+                            <td class="text-end">{{ row.2|floatformat:'0g' }}</td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -62,8 +81,26 @@
             <div class="m-2">
                 <table class="table table-sm table-hover p-3" style="font-size: 90%;">
                     <thead>
+                    <tr class="text-center">
+                        <th style="width: 450px;">Тип</th>
+                        {% for period  in periods %}
+                            <th class="text-end">{{ period.name }}<br>-</th>
+                        {% endfor %}
+                        <th class="text-wrap text-end">
+                            Всего&nbsp;за&nbsp;период<br>{{ grand_total_eco|floatformat:'0g' }}</th>
+                    </tr>
                     </thead>
                     <tbody>
+                    {% for row in report_eco %}
+                        <tr class="">
+                            <td>{{ row.0 }}</td>
+                            {% for r  in row.1 %}
+                                <td class="text-end" onmouseenter="redNumberColor(this);"
+                                    onmouseleave="backNumberColor(this);">{{ r.0|floatformat:'0g' }}</td>
+                            {% endfor %}
+                            <td class="text-end">{{ row.2|floatformat:'0g' }}</td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>

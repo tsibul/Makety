@@ -1,10 +1,98 @@
 import datetime
 from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.db.models import Q
 from salesreport.views.service import *
 from salesreport.report_period import ReportPeriod
+from maket.models import Customer_types
 
-
-
+region_code = {
+    '01': 'Адыгея республика',
+    '02': 'Башкортостан республика',
+    '03': 'Бурятия республика',
+    '04': 'Алтай республика',
+    '05': 'Дагестан республика',
+    '06': 'Ингушетия республика',
+    '07': 'Кабардино-Балкарская республика',
+    '08': 'Калмыкия республика',
+    '09': 'Карачаево-Черкесская республика',
+    '10': 'Карелия республика',
+    '11': 'Коми республика',
+    '12': 'Марий Эл республика',
+    '13': 'Мордовия республика',
+    '14': 'Саха /Якутия/ республика',
+    '15': 'Северная Осетия - Алания республика',
+    '16': 'Татарстан республика',
+    '17': 'Тыва республика',
+    '18': 'Удмуртская республика',
+    '19': 'Хакасия республика',
+    '20': 'Чеченская республика',
+    '21': 'Чувашская Республика - Чувашия',
+    '22': 'Алтайский край',
+    '23': 'Краснодарский край',
+    '24': 'Красноярский край',
+    '25': 'Приморский край',
+    '26': 'Ставропольский край',
+    '27': 'Хабаровский край',
+    '28': 'Амурская область',
+    '29': 'Архангельская область',
+    '30': 'Астраханская область',
+    '31': 'Белгородская область',
+    '32': 'Брянская область',
+    '33': 'Владимирская область',
+    '34': 'Волгоградская область',
+    '35': 'Вологодская область',
+    '36': 'Воронежская область',
+    '37': 'Ивановская область',
+    '38': 'Иркутская область',
+    '39': 'Калининградская область',
+    '40': 'Калужская область',
+    '41': 'Камчатский край',
+    '42': 'Кемеровская область',
+    '43': 'Кировская область',
+    '44': 'Костромская область',
+    '45': 'Курганская область',
+    '46': 'Курская область',
+    '47': 'Ленинградская область',
+    '48': 'Липецкая область',
+    '49': 'Магаданская область',
+    '50': 'Московская область',
+    '51': 'Мурманская область',
+    '52': 'Нижегородская область',
+    '53': 'Новгородская область',
+    '54': 'Новосибирская область',
+    '55': 'Омская область',
+    '56': 'Оренбургская область',
+    '57': 'Орловская область',
+    '58': 'Пензенская область',
+    '59': 'Пермский край',
+    '60': 'Псковская область',
+    '61': 'Ростовская область',
+    '62': 'Рязанская область',
+    '63': 'Самарская область',
+    '64': 'Саратовская область',
+    '65': 'Сахалинская область',
+    '66': 'Свердловская область',
+    '67': 'Смоленская область',
+    '68': 'Тамбовская область',
+    '69': 'Тверская область',
+    '70': 'Томская область',
+    '71': 'Тульская область',
+    '72': 'Тюменская область',
+    '73': 'Ульяновская область',
+    '74': 'Челябинская область',
+    '75': 'Забайкальский край',
+    '76': 'Ярославская область',
+    '77': 'Москва город',
+    '78': 'Санкт-Петербург город',
+    '79': 'Еврейская автономная область',
+    '83': 'Ненецкий автономный округ',
+    '86': 'Ханты-Мансийский Автономный округ - Югра автономный округ',
+    '87': 'Чукотский автономный округ',
+    '89': 'Ямало-Ненецкий автономный округ',
+    '91': 'Крым республика',
+    '92': 'Севастополь город',
+    '99': 'Байконур город'
+}
 
 
 def report_customer_geography(request):
@@ -20,81 +108,38 @@ def report_customer_geography(request):
                                           date_begin__lte=date_finish).order_by('date_begin')
     Class = check_class(period_type)
     customers_period = Class.objects.filter(period__in=periods)
+    grand_total_eco = sum(customers_period.values_list(report_type_eco, flat=True))
+    grand_total_no_eco = sum(customers_period.values_list(report_type_no_eco, flat=True))
+    report_eco, report_no_eco = [], []
+    customers_types = Customer_types.objects.all().order_by('-group_discount')
+    for type in customers_types:
+        customers_periods = Class.objects.filter(Q(period__in=periods) & (
+                Q(group__isnull=True) & Q(customer__customer_type=type) | Q(group__group_type=type)))
+        total_amount_eco = sum(list(customers_periods.values_list(report_type_eco, flat=True)))
+        total_amount_no_eco = sum(list(customers_periods.values_list(report_type_no_eco, flat=True)))
+        list_eco_type, list_no_eco_type, list_eco_region, list_no_eco_region = [], [], [], []
+        for period in periods:
+            cst_periods_tmp = customers_periods.filter(period=period)
+            list_eco_type.append([sum(cst_periods_tmp.values_list(report_type_eco, flat=True)), period.id])
+            list_no_eco_type.append([sum(cst_periods_tmp.values_list(report_type_no_eco, flat=True)), period.id])
+            '''
+            region_iter = filter(lambda x: x in cst_periods_tmp.values_list('customer__region', flat=True), region_code.keys())
+            for region in region_iter:
+                cst_region_tmp = cst_periods_tmp.filter(customer__region=region)
+                list_eco_region.append([sum(cst_region_tmp.values_list(report_type_eco, flat=True)), period.id, region])
+                list_no_eco_region.append([sum(cst_region_tmp.values_list(report_type_no_eco, flat=True)), period.id, region])
+            '''
+        if total_amount_no_eco:
+            report_no_eco.append([type.type_name, list_no_eco_type, total_amount_no_eco])
+        #                [type.type_name, list(customers_periods.filter(~Q(**{report_type_no_eco: 0})).values_list(report_type_no_eco, 'period')),
+        #                 total_amount_no_eco])
+        if total_amount_eco:
+            report_eco.append([type.type_name, list_eco_type, total_amount_eco])
+    #            report_eco.append(
+    #                [type.type_name, list(customers_periods.filter(~Q(**{report_type_eco: 0})).values_list(report_type_eco, 'period')), total_amount_eco])
 
-    context = {'navi': navi,  'report_type': report_type, 'date_begin': date_start,
-               'date_end': date_finish, 'per_type': period_type, 'period_types': period_types,}
+    context = {'navi': navi, 'report_type': report_type, 'date_begin': date_start, 'report_eco': report_eco,
+               'report_no_eco': report_no_eco, 'grand_total_no_eco': grand_total_no_eco,
+               'grand_total_eco': grand_total_eco, 'date_end': date_finish, 'per_type': period_type,
+               'period_types': period_types, 'periods': periods}
     return render(request, 'salesreport/reports/customer_geography.html', context)
-
-
-def create_final_list(Class, periods, report_type_eco, name):
-    customers_periods = Class.objects.filter(period__in=periods, name=name)
-    total_amount_eco = sum(list(customers_periods.values_list(report_type_eco, flat=True)))
-    if total_amount_eco:
-        return [name, list(customers_periods.values_list(report_type_eco, 'customer', 'period')), total_amount_eco]
-
-
-def abc_check(report, grand_total):
-    start_letter = 'A'
-    tmp_sum = 0
-    number_of_periods = [(0, 0, 0) for i in report[0][1]]
-    report_total_a, report_total_b, report_total_c = ['Клиенты "A"', number_of_periods, 0], \
-                                                     ['Клиенты "B"', number_of_periods, 0], \
-                                                     ['Клиенты "C"', number_of_periods, 0]
-    report_a, report_b, report_c = [], [], []
-    for rep in report:
-        rep.append(start_letter)
-        tmp_sum += rep[2]
-        if grand_total * 0.95 > tmp_sum > grand_total * 0.8:
-            start_letter = 'B'
-        elif grand_total * 0.95 < tmp_sum:
-            start_letter = 'C'
-        if rep[3] == 'A':
-            report_total_a[1] = list(map(lambda x: (x[0][0] + x[1][0], 0, 0), list(zip(rep[1], report_total_a[1]))))
-            report_total_a[2] += rep[2]
-            report_a.append(rep)
-        elif rep[3] == 'B':
-            report_total_b[1] = list(map(lambda x: (x[0][0] + x[1][0], 0, 0), list(zip(rep[1], report_total_b[1]))))
-            report_total_b[2] += rep[2]
-            report_b.append(rep)
-        elif rep[3] == 'C':
-            report_total_c[1] = list(map(lambda x: (x[0][0] + x[1][0], 0, 0), list(zip(rep[1], report_total_c[1]))))
-            report_total_c[2] += rep[2]
-            report_c.append(rep)
-    report_total_a.append('A')
-    report_total_b.append('B')
-    report_total_c.append('C')
-    report.append(report_total_a)
-    report.append(report_total_b)
-    report.append(report_total_c)
-
-
-def abc_out_lists(customers_period, report, eco):
-    r_eco = []
-    for letter in ['A', 'B', 'C']:
-        tmp = GroupMarketingFigures(letter, eco)
-        tmp.set_figures(customers_period, report)
-        r_eco.append(tmp)
-    r_sum = sum_abc(r_eco)
-    r_eco.append(r_sum)
-    return out_client_table(r_eco)
-
-
-def out_client_table(r):
-    a, b, c, abc = r[0], r[1], r[2], r[3]
-    abc_out = []
-    i = -1
-    for y in a.__dict__:
-        i += 1
-        abc_out.append([a.russian_name(y)])
-        for x in [a, b, c, abc]:
-            element = getattr(x, y)
-            if not isinstance(element, str) and y != 'sales_per_client':
-                element = f'{int(element):,}'
-            elif y == 'sales_per_client':
-                element = str(round(element, 2))
-            abc_out[i].append(element)
-    del abc_out[1]
-    return abc_out
-
-
-
