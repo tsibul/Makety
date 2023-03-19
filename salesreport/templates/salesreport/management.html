@@ -21,8 +21,8 @@
                         <button type="submit" class="btn btn-sm btn-primary">
                             <i class="bi bi-binoculars"></i>&nbsp;Активные не более недель:
                         </button>
-                        <input style="font-size: 100%; width: 50px;" type="text" class="ms-1 form-control" value="154"
-                               name="weeks">
+                        <input style="font-size: 100%; width: 50px;" type="text" class="ms-1 form-control" value="104"
+                               name="weeks" onchange="activeWeeksNo(this);">
                     </div>
                 </form>
             </div>
@@ -55,14 +55,16 @@
                     </button>
                 </form>
             </div>
-            <div class="m-2 text-nowrap">
-                <form action="{% url 'salesreport:group_set_inactive' %}" method="post">
-                    {% csrf_token %}
+            <form action="{% url 'salesreport:group_set_inactive' %}" method="post">
+                {% csrf_token %}
+                <div class="m-2 text-nowrap" style="display: flex">
                     <button type="submit" class="btn btn-sm btn-primary">
-                        <i class="bi bi-binoculars"></i>&nbsp;Проверить активность по группам
+                        <i class="bi bi-binoculars"></i>&nbsp;Активные не более недель:
                     </button>
-                </form>
-            </div>
+                    <input style="font-size: 100%; width: 50px;" type="text" class="ms-1 form-control" value="104"
+                           name="group_weeks" readonly id="group_weeks">
+                </div>
+            </form>
         </div>
 
         <!-- Sales-->
@@ -152,7 +154,7 @@
             </div>
             <div class="row text-nowrap justify-content-between">
                 <div class="m-1 col-auto text-nowrap">Активных без ИНН</div>
-                <div class="m-1 col-auto text-nowrap"><a href="{%  url 'salesreport:cst_no_inn' %}"
+                <div class="m-1 col-auto text-nowrap"><a href="{% url 'salesreport:cst_no_inn' %}"
                                                          target="_blank">  {{ no_inn }} </a></div>
             </div>
             <div class="m-1 mb-2 text-nowrap">

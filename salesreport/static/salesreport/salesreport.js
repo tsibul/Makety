@@ -98,3 +98,7 @@ function listCustomers(listObj) {
     }
 }
 
+function activeWeeksNo(inpObj){
+    document.getElementById('group_weeks').value = inpObj.value;
+
+}

@@ -266,7 +266,8 @@ def set_frigat_id(request):
 
 
 def group_set_inactive(request):
-    d_n = datetime.today().date() - timedelta(weeks=154)
+    weeks_no = int(request.POST['group_weeks'])
+    d_n = datetime.today().date() - timedelta(weeks=weeks_no)
     groups_list = Customer_groups.objects.all()
     #    map(lambda x: x.active = False, groups_list)
     for grp in groups_list:
