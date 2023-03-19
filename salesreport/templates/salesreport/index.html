@@ -10,7 +10,7 @@
                 <button class="btn btn-primary p-2 m-2" style="width: 20vw;" type="submit"><i
                         class="bi bi-bar-chart"></i>&nbsp;ABC&nbsp;-&nbsp;анализ&nbsp;клиенты
                 </button>
-                <label for="cst_period_period" class="form-label m-2" style="width: 10vw;">детализация</label>
+                <label for="cst_period_period" class="form-label m-2" >детализация</label>
                 <select class="form-select m-2" style="width: 10vw;" name="period_type" id="cst_period_period">
                     {% for p_type in period_types %}
                         <option value="{{ p_type.value }}"
@@ -53,19 +53,27 @@
         </form>
 
         <div style="display: flex; align-items: center;">
-            <button class="btn btn-primary p-2 m-2" style="width: 50vw;">Отчет по</button>
-            <select class="form-select m-2" style="width: 15vw;" name="period_type">
+            <button class="btn btn-primary p-2 m-2" style="width: 26vw;"><i class="bi bi-globe-europe-africa"></i>&nbsp;Типы и география</button>
+            <label for="cst_period_geography" class="form-label m-2">детализация</label>
+            <select class="form-select m-2" style="width: 15vw;" name="period_type" id="cst_period_geography">
                 {% for p_type in period_types %}
                     <option value="{{ p_type.value }}"
-                            {% if p_type == 'YR' %}selected{% endif %}>{{ p_type.label }}</option>
+                            {% if p_type == 'QT' %}selected{% endif %}>{{ p_type.label }}</option>
                 {% endfor %}
             </select>
             <label for="2_period_date_begin" class="form-label m-2">начало&nbsp;периода</label>
-            <input type="date" value="{{ date_begin|date:'Y-m-d' }}" name="date_begin"
+            <input type="date" value="{{ date_begin2|date:'Y-m-d' }}" name="date_begin"
                    class="form-control m-2" id="2_period_date_begin" style="width: 15vw;">
             <label for="2_period_date_end" class="form-label m-2">конец&nbsp;периода</label>
             <input type="date" value="{{ date_end|date:'Y-m-d' }}" name="date_end"
                    class="form-control m-2" id="2_period_date_end" style="width: 15vw;">
+                            <label for="cst_period_report_type" class="form-label m-2" style="width: 10vw;">показатель</label>
+                <select class="form-select m-2" style="width: 10vw;" name="report_type" id="cst_geography_report_type">
+                    <option value="sales_with_vat" selected>Продажи с НДС</option>
+                    <option value="profit">Прибыль</option>
+                    <option value="no_sales">Количество продаж</option>
+                </select>
+
         </div>
     </div>
 {% endblock %}
