@@ -44,22 +44,31 @@ def report_customer_migrations(request):
         group_start_no = Customer_groups.objects.filter(date_last__gte=date_begin_3_years_ago,
                                                         date_first__lt=period.date_begin).count()
         clients_quantity_start = customer_start_no + group_start_no
-        customer_come_no = Customer_all.objects.filter(date_first__gte=period.date_begin,
-                                                       date_first__lte=period.date_end, internal=False,
-                                                       customer_group=None).count()
-        group_come_no = Customer_groups.objects.filter(date_first__gte=period.date_begin,
-                                                       date_first__lte=period.date_end).count()
+        customer_come = Customer_all.objects.filter(date_first__gte=period.date_begin,
+                                                    date_first__lte=period.date_end, internal=False,
+                                                    customer_group=None)
+        customer_come_no = customer_come.count()
+        group_come = Customer_groups.objects.filter(date_first__gte=period.date_begin,
+                                                    date_first__lte=period.date_end)
+        group_come_no = group_come.count()
+        customer_come = list(customer_come.values_list('name', flat=True)) + list(
+            group_come.values_list('group_name', flat=True))
+
         clients_quantity_come = customer_come_no + group_come_no
-        customer_gone_no = Customer_all.objects.filter(date_last__gte=date_begin_3_years_ago,
-                                                       date_last__lte=date_end_3_years_ago, internal=False,
-                                                       customer_group=None).count()
-        group_gone_no = Customer_groups.objects.filter(date_last__gte=date_begin_3_years_ago,
-                                                       date_last__lte=date_end_3_years_ago).count()
+        customer_gone = Customer_all.objects.filter(date_last__gte=date_begin_3_years_ago,
+                                                    date_last__lte=date_end_3_years_ago, internal=False,
+                                                    customer_group=None)
+        customer_gone_no = customer_gone.count()
+        group_gone = Customer_groups.objects.filter(date_last__gte=date_begin_3_years_ago,
+                                                    date_last__lte=date_end_3_years_ago)
+        group_gone_no = group_gone.count()
+        customer_gone = list(customer_gone.values_list('name', flat=True)) + list(
+            group_gone.values_list('group_name', flat=True))
         clients_quantity_gone = customer_gone_no + group_gone_no
         clients_sales_quantity = Class.objects.filter(~Q(sales_with_vat=0) & Q(period=period)).count()
-        migration_list.append(
+        migration_list.append([
             MigrationReport(period, clients_quantity_start, clients_quantity_come, clients_quantity_gone,
-                            clients_sales_quantity))
+                            clients_sales_quantity), customer_come, customer_gone])
 
     context = {'navi': navi, 'period_types': period_types, 'per_type': period_type, 'date_begin': date_start,
                'date_end': date_finish, 'migration_list': migration_list}

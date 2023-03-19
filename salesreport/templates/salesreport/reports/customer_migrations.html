@@ -1,12 +1,10 @@
 {% extends 'salesreport/main_salesrep.html' %}
 {% block title %}Главная{% endblock %}
 {% block content %}
-    {% load salesreport_extras %}
-
     <div style="margin-right: 8px;">
         <table class="table table-sm lh1">
             <thead class="sticky-top bg-light">
-            <tr >
+            <tr>
                 <th colspan="9">
                     <form action="{% url 'salesreport:report_customer_migrations' %}" method="post">
                         {% csrf_token %}
@@ -47,18 +45,44 @@
             <tbody>
             {% for migration in migration_list %}
                 <tr class="text-center">
-                    <td class="text-start">{{ migration.period.name }}</td>
-                    <td>{{ migration.clients_start }}</td>
-                    <td>{{ migration.clients_come }}</td>
-                    <td>{{ migration.clients_come_percent|floatformat:'2' }}</td>
-                    <td>{{ migration.clients_gone }}</td>
-                    <td>{{ migration.clients_gone_percent|floatformat:'2' }}</td>
-                    <td>{{ migration.clients_sales }}</td>
-                    <td>{{ migration.clients_conversion|floatformat:'2' }}</td>
-                    <td>{{ migration.clients_end }}</td>
+                    <td class="text-start">{{ migration.0.period.name }}</td>
+                    <td>{{ migration.0.clients_start }}</td>
+                    <td data-list="{{ migration.1 }}" data-bs-toggle="modal" data-name="Новые Клиенты"
+                        onclick="listCustomers(this);" data-bs-target="#customerListModal"
+                        onmouseenter="redNumberColor(this);"
+                        onmouseleave="backNumberColor(this);">{{ migration.0.clients_come }}</td>
+                    <td>{{ migration.0.clients_come_percent|floatformat:'2' }}</td>
+                    <td data-list="{{ migration.2 }}" data-bs-toggle="modal" data-name="Потерянные Клиенты"
+                        onclick="listCustomers(this);" data-bs-target="#customerListModal"
+                        onmouseenter="redNumberColor(this);"
+                        onmouseleave="backNumberColor(this);">{{ migration.0.clients_gone }}</td>
+                    <td>{{ migration.0.clients_gone_percent|floatformat:'2' }}</td>
+                    <td>{{ migration.0.clients_sales }}</td>
+                    <td>{{ migration.0.clients_conversion|floatformat:'2' }}</td>
+                    <td>{{ migration.0.clients_end }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
+    <!-- customer list modal -->
+    <div class="modal fade" id="customerListModal" tabindex="-1" aria-labelledby="customerListModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="customerListModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-body"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end customer list modal -->
+
+
+
+
 {% endblock %}
