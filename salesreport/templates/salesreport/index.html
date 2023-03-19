@@ -4,6 +4,7 @@
     <div class="text-end m-3 text-primary"><h6>анализ продаж ver 2.4.0</h6></div>
     <br>
     <div style="margin-left: 60px; display: flex; flex-direction: column; margin-right: 220px;">
+    <h5 class="text-primary">Отчеты&nbsp;по&nbsp;клиентам</h5>
         <form action="{% url 'salesreport:report_customer_period' %}" method="post">
             {% csrf_token %}
             <div style="display: flex; align-items: center;">
@@ -35,7 +36,7 @@
         <form action="{% url 'salesreport:report_customer_migrations' %}" method="post">
             {% csrf_token %}
             <div style="display: flex; align-items: center;">
-                <button class="btn btn-primary p-2 m-2" style="width: 24vw;"><i class="bi bi-airplane"></i>&nbsp;Миграции&nbsp;клиентов
+                <button class="btn btn-primary p-2 m-2" style="width: 25vw;"><i class="bi bi-airplane"></i>&nbsp;Миграции&nbsp;клиентов
                 </button>
                 <label for="cst_period_migration" class="form-label m-2" style="width: 10vw;">детализация</label>
                 <select class="form-select m-2" style="width: 15vw;" name="period_type" id="cst_period_migration">
@@ -63,7 +64,7 @@
         <form action="{% url 'salesreport:report_customer_geography' %}" method="post">
             {% csrf_token %}
             <div style="display: flex; align-items: center;">
-                <button class="btn btn-primary p-2 m-2" style="width: 26vw;"><i class="bi bi-globe-europe-africa"></i>&nbsp;Типы
+                <button class="btn btn-primary p-2 m-2" style="width: 28vw;"><i class="bi bi-globe-europe-africa"></i>&nbsp;Типы
                     и география
                 </button>
                 <label for="cst_period_geography" class="form-label m-2">детализация</label>
@@ -88,6 +89,7 @@
 
             </div>
         </form>
+    <h5 class="text-primary">Отчеты&nbsp;по&nbsp;номенклатуре</h5>
     </div>
 {% endblock %}
 
