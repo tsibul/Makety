@@ -4,7 +4,7 @@
     <div class="text-end m-3 text-primary">анализ продаж Ver 2.4.0</div>
     <div class="row ms-2 me-2">
         <!-- Customers-->
-        <div class="col-auto  border border-1 m-1 p-1" style="font-size: 80%;">
+        <div class="col-auto  border border-1 border-primary m-1 p-1" style="font-size: 80%;">
             <div class="m-2"><h6>Клиенты</h6></div>
             <div class="row text-nowrap justify-content-between">
                 <div class="m-1 col-auto">Контрагенты потенциальные</div>
@@ -34,10 +34,18 @@
                 <div class="m-1 col-auto">Клиенты активные</div>
                 <div class="m-1 col-auto">{{ clients_active_quantity }}</div>
             </div>
+            <div class="m-1 text-nowrap">
+                <form action="{% url 'salesreport:region_97' %}" method="post">
+                    {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-primary" style="width: 100%;">
+                            <i class="bi bi-binoculars"></i>&nbsp;Регион 97
+                        </button>
+                </form>
+            </div>
         </div>
 
         <!-- Customer groups-->
-        <div class="col-auto  border border-1 m-1 p-1" style="font-size: 80%;">
+        <div class="col-auto  border border-1 border-primary m-1 p-1" style="font-size: 80%;">
             <div class="m-2"><h6>Группы клиентов</h6></div>
             <div class="row text-nowrap justify-content-between">
                 <div class="m-1 col-auto">Группы всего</div>
@@ -68,7 +76,7 @@
         </div>
 
         <!-- Sales-->
-        <div class="col-auto border border-1 m-1 p-1" style="font-size: 80%;">
+        <div class="col-auto border border-1 border-primary m-1 p-1" style="font-size: 80%;">
             <div class="m-2"><h6>Отгрузки</h6></div>
             <div class="row text-nowrap justify-content-between">
                 <div class="m-1 col-auto">Количество транзакций</div>
@@ -94,7 +102,7 @@
         </div>
 
         <!-- Sales imports-->
-        <div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
+        <div class="col-auto m-1 p-1 border border-1 border-primary" style="font-size: 80%;">
             <div class="m-2"><h6>Импорт транзакций </h6></div>
             <div class="row text-nowrap  justify-content-between">
                 <div class="m-1 col-auto text-nowrap">Дата последнего импорта&nbsp;отгрузок</div>
@@ -134,7 +142,7 @@
         </div>
 
         <!-- Customer imports-->
-        <div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
+        <div class="col-auto m-1 p-1 border border-1 border-primary" style="font-size: 80%;">
             <div class="m-2 col-auto"><h6>Импорт клиентов </h6></div>
             <div class="row text-nowrap justify-content-between">
                 <div class="m-1 col-auto text-nowrap">Дата последнего импорта&nbsp;клиентов</div>
@@ -157,7 +165,7 @@
                 <div class="m-1 col-auto text-nowrap"><a href="{% url 'salesreport:cst_no_inn' %}"
                                                          target="_blank">  {{ no_inn }} </a></div>
             </div>
-            <div class="m-1 mb-2 text-nowrap">
+            <div class="m-1 mb-2 text-nowrap" style="width: 100%;">
                 <form action="{% url 'salesreport:cst_sinhro_group' %}" id="sinhro_group">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-primary" form="sinhro_group">
@@ -176,7 +184,7 @@
         </div>
 
         <!-- Периоды расчета-->
-        <div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
+        <div class="col-auto m-1 p-1 border border-1 border-primary" style="font-size: 80%;">
             <div class="ms-3 mt-2 col-auto"><h6>Периоды расчета</h6></div>
             <div class="row text-nowrap justify-content-between">
             </div>
@@ -216,7 +224,7 @@
         </div>
 
         <!-- Клиенты по периодам-->
-        <div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
+        <div class="col-auto m-1 p-1 border border-1 border-primary" style="font-size: 80%;">
             <div class="ms-3 mt-2 col-auto"><h6>Клиенты по периодам</h6></div>
             <div class="row text-nowrap justify-content-between">
             </div>
@@ -271,7 +279,7 @@
         </div>
 
         <!-- Errors-->
-        <div class="col-auto m-1 p-1 border border-1" style="font-size: 80%;">
+        <div class="col-auto m-1 p-1 border border-1 border-primary" style="font-size: 80%;">
             <div class="ms-3 mt-2 col-auto"><h6>Ошибки</h6></div>
             <div class="row text-nowrap justify-content-between">
                 <div class="m-1 col-auto">Ошибки синхронизации</div>
