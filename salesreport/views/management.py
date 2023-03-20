@@ -436,3 +436,11 @@ def sales_doc_request_for_period_customer(customer, period: ReportPeriod):
         return Sales_docs.objects.filter(customer=customer, quarter=period)
     else:
         return Sales_docs.objects.filter(customer=customer, year=period)
+
+
+def region_97(request):
+    customers_97 = Customer_all.objects.filter(region='97')
+    customers_00 = Customer_all.objects.filter(Q(region='') | Q(region='0'))
+    customers_97.update(region='77')
+    customers_00.update(region='00')
+    return HttpResponseRedirect(reverse('salesreport:management'))
