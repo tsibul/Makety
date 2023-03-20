@@ -91,11 +91,14 @@ region_code = {
     '89': 'Ямало-Ненецкий автономный округ',
     '91': 'Крым республика',
     '92': 'Севастополь город',
-    '99': 'Байконур город'
+    '99': 'Иностранные компании',
+    '00': 'неопределен',
+    '80': 'Экспорт'
 }
 
 
 def report_customer_geography(request):
+    global total_amount_region_eco
     navi = 'Типы и география'
     period_types = ReportPeriod.calculatableList()
     report_type = request.POST['report_type']
@@ -122,24 +125,34 @@ def report_customer_geography(request):
             cst_periods_tmp = customers_periods.filter(period=period)
             list_eco_type.append([sum(cst_periods_tmp.values_list(report_type_eco, flat=True)), period.id])
             list_no_eco_type.append([sum(cst_periods_tmp.values_list(report_type_no_eco, flat=True)), period.id])
-            '''
-            region_iter = filter(lambda x: x in cst_periods_tmp.values_list('customer__region', flat=True), region_code.keys())
-            for region in region_iter:
-                cst_region_tmp = cst_periods_tmp.filter(customer__region=region)
-                list_eco_region.append([sum(cst_region_tmp.values_list(report_type_eco, flat=True)), period.id, region])
-                list_no_eco_region.append([sum(cst_region_tmp.values_list(report_type_no_eco, flat=True)), period.id, region])
-            '''
         if total_amount_no_eco:
-            report_no_eco.append([type.type_name, list_no_eco_type, total_amount_no_eco])
-        #                [type.type_name, list(customers_periods.filter(~Q(**{report_type_no_eco: 0})).values_list(report_type_no_eco, 'period')),
-        #                 total_amount_no_eco])
+            report_no_eco.append([type.type_name, list_no_eco_type, total_amount_no_eco, 'все', type.code])
         if total_amount_eco:
-            report_eco.append([type.type_name, list_eco_type, total_amount_eco])
-    #            report_eco.append(
-    #                [type.type_name, list(customers_periods.filter(~Q(**{report_type_eco: 0})).values_list(report_type_eco, 'period')), total_amount_eco])
+            report_eco.append([type.type_name, list_eco_type, total_amount_eco, 'все', type.code])
+    report_eco_region, report_no_eco_region = [], []
+    for type in customers_types:
+        customers_periods = Class.objects.filter(Q(period__in=periods) & (
+                Q(group__isnull=True) & Q(customer__customer_type=type) | Q(group__group_type=type)))
+        regions = customers_periods.values_list('customer__region', flat=True).distinct()
+        for region in regions:
+            customer_region = customers_periods.filter(customer__region=region)
+            total_amount_region_eco = sum(list(customer_region.values_list(report_type_eco, flat=True)))
+            total_amount_region_no_eco = sum(list(customer_region.values_list(report_type_no_eco, flat=True)))
+            list_eco_region, list_no_eco_region = [], [],
+            for period in periods:
+                cst_periods_tmp = customer_region.filter(period=period)
+                list_eco_region.append([sum(cst_periods_tmp.values_list(report_type_eco, flat=True)), period.id])
+                list_no_eco_region.append([sum(cst_periods_tmp.values_list(report_type_no_eco, flat=True)), period.id])
+            if total_amount_region_no_eco:
+                report_no_eco_region.append(
+                    [type.type_name, list_no_eco_region, total_amount_region_no_eco, region_code[region], type.code])
+            if total_amount_region_eco:
+                report_eco_region.append(
+                    [type.type_name, list_eco_region, total_amount_region_eco, region_code[region], type.code])
 
     context = {'navi': navi, 'report_type': report_type, 'date_begin': date_start, 'report_eco': report_eco,
                'report_no_eco': report_no_eco, 'grand_total_no_eco': grand_total_no_eco,
                'grand_total_eco': grand_total_eco, 'date_end': date_finish, 'per_type': period_type,
-               'period_types': period_types, 'periods': periods}
+               'period_types': period_types, 'periods': periods, 'report_eco_region': report_eco_region,
+               'report_no_eco_region': report_no_eco_region}
     return render(request, 'salesreport/reports/customer_geography.html', context)

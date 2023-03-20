@@ -102,3 +102,29 @@ function activeWeeksNo(inpObj){
     document.getElementById('group_weeks').value = inpObj.value;
 
 }
+
+function redParentNumberColor(tdObj) {
+    tdObj.classList.add('text-danger')
+    tdObj.classList.add('table-secondary')
+}
+
+function backParentNumberColor(tdObj) {
+    tdObj.classList.remove('text-danger')
+    tdObj.classList.remove('table-secondary')
+}
+
+
+function showClientsG(trObj) {
+    var objId = trObj.id
+    document.querySelectorAll("." + objId.toString()).forEach((x) => {
+        x.style.display = "table-row"
+    })
+    trObj.style.display = 'none'
+}
+
+function hideClientsG(param) {
+    document.querySelectorAll("." + param).forEach((x) => {
+        x.style.display = "none"
+    })
+    document.getElementById(param).style.display = 'table-row'
+}

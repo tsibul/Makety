@@ -44,10 +44,10 @@
                 </table>
             </div>
             <div style="" class="m-2">
-                <table class="table table-sm table-hover p-3" style="font-size: 90%;">
+                <table class="table table-sm p-3" style="font-size: 90%;">
                     <thead>
                     <tr class="text-center">
-                        <th style="width: 450px;">Тип</th>
+                        <th colspan="2" style="width: 450px;">Тип</th>
                         {% for period  in periods %}
                             <th class="text-end">{{ period.name }}<br>-</th>
                         {% endfor %}
@@ -57,11 +57,23 @@
                     </thead>
                     <tbody>
                     {% for row in report_no_eco %}
-                        <tr class="">
+                        <tr class="fw-normal" id="{{ row.4 }}_no_eco"  onmouseenter="redParentNumberColor(this);"
+                                    onmouseleave="backParentNumberColor(this);" ondblclick="showClientsG(this);">
+                            <td>{{ row.0 }}</td>
+                            <td >{{ row.3 }}</td>
+                            {% for r  in row.1 %}
+                                <td>{{ r.0|floatformat:'0g' }}</td>
+                            {% endfor %}
+                            <td class="text-end" >{{ row.2|floatformat:'0g' }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% for row in report_no_eco_region %}
+                        <tr class="{{ row.4 }}_no_eco table-success" style="display: none" ondblclick="hideClientsG('{{ row.4 }}_no_eco');" onmouseenter="redParentNumberColor(this);"
+                                    onmouseleave="backParentNumberColor(this);">
+                            <td>{{ row.3 }}</td>
                             <td>{{ row.0 }}</td>
                             {% for r  in row.1 %}
-                                <td class="text-end" onmouseenter="redNumberColor(this);"
-                                    onmouseleave="backNumberColor(this);">{{ r.0|floatformat:'0g' }}</td>
+                                <td class="text-end" >{{ r.0|floatformat:'0g' }}</td>
                             {% endfor %}
                             <td class="text-end">{{ row.2|floatformat:'0g' }}</td>
                         </tr>
@@ -79,10 +91,10 @@
                 </table>
             </div>
             <div class="m-2">
-                <table class="table table-sm table-hover p-3" style="font-size: 90%;">
+                <table class="table table-sm p-3" style="font-size: 90%;">
                     <thead>
                     <tr class="text-center">
-                        <th style="width: 450px;">Тип</th>
+                        <th colspan="2" style="width: 450px;">Тип</th>
                         {% for period  in periods %}
                             <th class="text-end">{{ period.name }}<br>-</th>
                         {% endfor %}
@@ -92,15 +104,28 @@
                     </thead>
                     <tbody>
                     {% for row in report_eco %}
-                        <tr class="">
-                            <td>{{ row.0 }}</td>
+                        <tr id="{{ row.4 }}_eco" onmouseenter="redParentNumberColor(this);"
+                                    onmouseleave="backParentNumberColor(this);" ondblclick="showClientsG(this);">
+                            <td >{{ row.0 }}</td>
+                            <td >{{ row.3 }}</td>
                             {% for r  in row.1 %}
-                                <td class="text-end" onmouseenter="redNumberColor(this);"
-                                    onmouseleave="backNumberColor(this);">{{ r.0|floatformat:'0g' }}</td>
+                                <td class="text-end">{{ r.0|floatformat:'0g' }}</td>
                             {% endfor %}
                             <td class="text-end">{{ row.2|floatformat:'0g' }}</td>
                         </tr>
                     {% endfor %}
+                    {% for row in report_eco_region %}
+                        <tr class="{{ row.4 }}_eco table-success" style="display: none" ondblclick="hideClientsG('{{ row.4 }}_eco');" onmouseenter="redParentNumberColor(this);"
+                                    onmouseleave="backParentNumberColor(this);">
+                            <td>{{ row.3 }}</td>
+                            <td>{{ row.0 }}</td>
+                            {% for r  in row.1 %}
+                                <td>{{ r.0|floatformat:'0g' }}</td>
+                            {% endfor %}
+                            <td class="text-end">{{ row.2|floatformat:'0g' }}</td>
+                        </tr>
+                    {% endfor %}
+
                     </tbody>
                 </table>
             </div>
