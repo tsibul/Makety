@@ -1,5 +1,6 @@
 from maket.models import Customer_all, Customer, Customer_groups, Customer_types, Detail_set, Item_color
-from salesreport.models import CustomerPeriodsYear, CustomerPeriodsQuarter, CustomerPeriodsMonth, CustomerPeriodsWeek
+from salesreport.models import CustomerPeriodsYear, CustomerPeriodsQuarter, CustomerPeriodsMonth, CustomerPeriodsWeek, \
+    GoodsPeriodsWeek, GoodsPeriodsMonth, GoodsPeriodsQuarter, GoodsPeriodsYear
 
 
 def customer_import_compare(row, customer):
@@ -64,3 +65,12 @@ def check_class(period):
         return CustomerPeriodsYear
 
 
+def check_goods_class(period):
+    if period == 'WK':
+        return GoodsPeriodsWeek
+    elif period == 'MT':
+        return GoodsPeriodsMonth
+    elif period == 'QT':
+        return GoodsPeriodsQuarter
+    else:
+        return GoodsPeriodsYear

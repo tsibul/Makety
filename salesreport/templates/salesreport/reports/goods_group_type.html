@@ -1,0 +1,85 @@
+{% extends 'salesreport/main_salesrep.html' %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+    {% load salesreport_extras %}
+    <div>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div style="margin-left: 220px; width: 76vw;" class="bg-secondary text-white">
+            <div style="display: flex; align-items: center;">
+                <label for="cst_period_period" class="form-label m-2" style="width: 10vw;">детализация</label>
+                <select class="form-select m-2" name="period_type" id="cst_period_period">
+                    {% for p_type in period_types %}
+                        <option value="{{ p_type.value }}"
+                                {% if p_type == per_type %}selected{% endif %}>{{ p_type.label }}</option>
+                    {% endfor %}
+                </select>
+                <label for="cst_period_date_begin" class="form-label m-2">начало&nbsp;периода</label>
+                <input type="date" value="{{ date_begin|date:'Y-m-d' }}" name="date_begin"
+                       class="form-control m-2" id="cst_period_date_begin" required>
+                <label for="cst_period_date_end" class="form-label m-2">конец&nbsp;периода</label>
+                <input type="date" value="{{ date_end|date:'Y-m-d' }}" name="date_end"
+                       class="form-control m-2" id="cst_period_date_end" required>
+                <label for="cst_period_report_type" class="form-label m-2">показатель</label>
+                <select class="form-select m-2" name="report_type" id="cst_period_report_type">
+                    <option value="sale_with_vat" {% if report_type == 'sale_with_vat' %}selected{% endif %}>Продажи с
+                        НДС
+                    </option>
+                    <option value="profit" {% if report_type == 'profit' %}selected{% endif %}>Прибыль</option>
+                    <option value="quantity" {% if report_type == 'quantity' %}selected{% endif %}>Количество
+                    </option>
+                </select>
+                <button class="btn btn-primary p-2 m-2" type="submit">пересчитать</button>
+            </div>
+        </div>
+    </form>
+
+    <div style="margin-top: 8px; margin-right: 8px;">
+        <div style="display: flex">
+            <div style="flex-direction:column; max-width: 460px;">
+                <h4></h4>
+                <table class="table table-sm lh-1">
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div style="" class="m-2">
+                <table class="table table-sm p-3" style="font-size: 90%;">
+                    <thead>
+                    <tr class="text-center">
+                        <th colspan="1" style="width: 450px;">Тип</th>
+                        {% for period  in periods %}
+                            <th class="text-end">{{ period.name }}<br>-</th>
+                        {% endfor %}
+                        <th class="text-wrap text-end">
+                            Всего&nbsp;за&nbsp;период<br>{{ grand_total|floatformat:'0g' }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in report %}
+                        <tr class="fw-normal" id="{{ row.4 }}_no_eco"  onmouseenter="redParentNumberColor(this);"
+                                    onmouseleave="backParentNumberColor(this);" ondblclick="showClientsG(this);">
+                            <td>{{ row.0 }}</td>
+                            {% for r  in row.1 %}
+                                <td class="text-end">{{ r.0|floatformat:'0g' }}</td>
+                            {% endfor %}
+                            <td class="text-end" >{{ row.2|floatformat:'0g' }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% for row in report_no_eco_region %}
+                        <tr class="{{ row.4 }}_no_eco table-success" style="display: none" ondblclick="hideClientsG('{{ row.4 }}_no_eco');" onmouseenter="redParentNumberColor(this);"
+                                    onmouseleave="backParentNumberColor(this);">
+                            <td>{{ row.3 }}</td>
+                            <td>{{ row.0 }}</td>
+                            {% for r  in row.1 %}
+                                <td class="text-end" >{{ r.0|floatformat:'0g' }}</td>
+                            {% endfor %}
+                            <td class="text-end">{{ row.2|floatformat:'0g' }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

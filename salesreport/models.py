@@ -64,7 +64,7 @@ class Sales_doc_imports(models.Model):
 
     import_date = models.DateField(default=datetime.date(2000, 1, 1))
     code = models.CharField(max_length=30)
-    detail_set = models.ForeignKey(Detail_set, models.SET_NULL, null=True)
+    detail_set = models.ForeignKey(Detail_set, models.SET_NULL, null=True, db_index=True)
     color_code = models.CharField(max_length=40, null=True)
     main_color = models.CharField(max_length=12, null=True)
     item_color = models.ForeignKey(Item_color, models.SET_NULL, null=True)
@@ -88,7 +88,7 @@ class Sales_doc_imports(models.Model):
     customer_name = models.CharField(max_length=255, null=True)
     customer_frigat_id = models.IntegerField(null=True)
     customer_all = models.ForeignKey(Customer_all, models.SET_NULL, null=True)
-    sales_doc = models.ForeignKey(Sales_docs, models.SET_NULL, null=True)
+    sales_doc = models.ForeignKey(Sales_docs, models.SET_NULL, null=True, db_index=True)
 
     def __repr__(self):
         return self.code
@@ -222,3 +222,97 @@ class CustomerPeriodsYear(CustomerPeriods):
     def __str__(self):
         return self.name + ' ' + self.period.name
 
+
+class GoodsPeriods(models.Model):
+
+    class Meta:
+        abstract = True
+        verbose_name = 'periods where was sales of goods'
+
+    good = models.ForeignKey(Detail_set, on_delete=models.CASCADE, db_index=True)
+    main_color = models.ForeignKey(Item_color, on_delete=models.CASCADE, null=True, db_index=True)
+
+    quantity = models.IntegerField(default=0)
+    cost_without_vat = models.FloatField(default=0)
+    profit = models.FloatField(default=0)
+    price_with_vat = models.FloatField(default=0)
+    price_without_vat = models.FloatField(default=0)
+    sale_with_vat = models.FloatField(default=0)
+    sale_without_vat = models.FloatField(default=0)
+
+    def set_goods_data(self, sales_imports):
+        quantity = 0
+        profit = 0
+        buy_without_vat = 0
+        sale_with_vat = 0
+        sale_without_vat = 0
+        for sales in sales_imports:
+            quantity += sales.quantity
+            sale_with_vat += sales.sale_with_vat
+            sale_without_vat += sales.sale_without_vat
+            buy_without_vat += sales.buy_without_vat
+            profit += sales.sale_without_vat - sales.buy_without_vat
+        if quantity:
+            self.quantity = quantity
+            self.sale_without_vat = sale_without_vat
+            self.sale_with_vat = sale_with_vat
+            self.profit = profit
+            self.price_without_vat = self.sale_without_vat / quantity
+            self.price_with_vat = self.sale_with_vat / quantity
+            self.cost_without_vat = buy_without_vat / quantity
+
+
+class GoodsPeriodsWeek(GoodsPeriods):
+
+    class Meta(GoodsPeriods.Meta):
+        verbose_name = 'еженедельные данные'
+
+    period = models.ForeignKey(ReportPeriod, on_delete=models.CASCADE, limit_choices_to={'period': 'WK'})
+
+    def __repr__(self):
+        return self.good.name + ' ' + self.period.name
+
+    def __str__(self):
+        return self.good.name + ' ' + self.period.name
+
+
+class GoodsPeriodsMonth(GoodsPeriods):
+
+    class Meta(GoodsPeriods.Meta):
+        verbose_name = 'еженедельные данные'
+
+    period = models.ForeignKey(ReportPeriod, on_delete=models.CASCADE, limit_choices_to={'period': 'MT'})
+
+    def __repr__(self):
+        return self.good.name + ' ' + self.period.name
+
+    def __str__(self):
+        return self.good.name + ' ' + self.period.name
+
+
+class GoodsPeriodsQuarter(GoodsPeriods):
+
+    class Meta(GoodsPeriods.Meta):
+        verbose_name = 'еженедельные данные'
+
+    period = models.ForeignKey(ReportPeriod, on_delete=models.CASCADE, limit_choices_to={'period': 'QT'})
+
+    def __repr__(self):
+        return self.good.name + ' ' + self.period.name
+
+    def __str__(self):
+        return self.good.name + ' ' + self.period.name
+
+
+class GoodsPeriodsYear(GoodsPeriods):
+
+    class Meta(GoodsPeriods.Meta):
+        verbose_name = 'еженедельные данные'
+
+    period = models.ForeignKey(ReportPeriod, on_delete=models.CASCADE, limit_choices_to={'period': 'YR'})
+
+    def __repr__(self):
+        return self.good.name + ' ' + self.period.name
+
+    def __str__(self):
+        return self.good.name + ' ' + self.period.name

@@ -44,6 +44,7 @@ urlpatterns = [
     path('lost_goods', views.lost_goods, name='lost_goods'),
 
     path('customer_period_sales', views.customer_period_sales, name='customer_period_sales'),
+    path('goods_period_sales', views.goods_period_sales, name='goods_period_sales'),
 
     path('admin', views.admin, name='admin'),
     path('transaction_delete', views.transaction_delete, name='transaction_delete'),
@@ -52,6 +53,9 @@ urlpatterns = [
     path('report_customer_period', views.report_customer_period, name='report_customer_period'),
     path('report_customer_migrations', views.report_customer_migrations, name='report_customer_migrations'),
     path('report_customer_geography', views.report_customer_geography, name='report_customer_geography'),
+
+    path('report_goods_group', views.report_goods_group, name='report_goods_group'),
+    path('report_goods_type', views.report_goods_type, name='report_goods_type'),
 
     path('client_transactions/<int:client_id>/<int:period_id>', views.client_transactions, name='client_transactions'),
     path('detail/<int:salesdoc_id>', views.detail, name='detail'),

@@ -170,13 +170,13 @@ def import_cst(request):
     file_name = default_storage.save('cust_file', cust_file)
 
     with open(file_name, newline='', encoding='utf-8') as cust_csv:
-#        tmp_lst = []
+        #        tmp_lst = []
         for line in enumerate(cust_csv, 1):
             row = line[1].rstrip('\r\n').split(';')
             fr_id = row[0]
             if not customer_check_row(row):
-#                tmp_lst.append(line)
-#                tmp_lst.append(row)
+                #                tmp_lst.append(line)
+                #                tmp_lst.append(row)
                 continue
             try:
                 customer = Customer_all.objects.get(frigat_id=fr_id)
@@ -215,8 +215,8 @@ def import_cst(request):
                 except:
                     pass
             else:
-#                tmp_lst.append(line)
-#                tmp_lst.append(row)
+                #                tmp_lst.append(line)
+                #                tmp_lst.append(row)
                 try:
                     customer_maket = Customer.objects.get(Q(name__endswith=customer.name))
                     customer_maket.customer_all = customer
@@ -408,7 +408,7 @@ def customer_period_sales(request):
             sales_documents = sales_doc_request_for_period_customer(customer, period)
             customer_regular.set_sales_data(sales_documents)
             customer_periods_list.append(customer_regular)
-    Class.objects.bulk_create(customer_periods_list)
+    Class.objects.bulk_create(customer_periods_list, batch_size=3000)
     return HttpResponseRedirect(reverse('salesreport:management'))
 
 
@@ -429,13 +429,17 @@ def sales_doc_request_for_period_group(group, period: ReportPeriod):
 
 def sales_doc_request_for_period_customer(customer, period: ReportPeriod):
     if period.period == 'WK':
-        return Sales_docs.objects.filter(customer=customer, week=period)
+        return Sales_docs.objects.filter(customer=customer, week=period).exclude(
+            sales_doc_number__startswith='О')
     elif period.period == 'MT':
-        return Sales_docs.objects.filter(customer=customer, month=period)
+        return Sales_docs.objects.filter(customer=customer, month=period).exclude(
+            sales_doc_number__startswith='О')
     elif period.period == 'QT':
-        return Sales_docs.objects.filter(customer=customer, quarter=period)
+        return Sales_docs.objects.filter(customer=customer, quarter=period).exclude(
+            sales_doc_number__startswith='О')
     else:
-        return Sales_docs.objects.filter(customer=customer, year=period)
+        return Sales_docs.objects.filter(customer=customer, year=period).exclude(
+            sales_doc_number__startswith='О')
 
 
 def region_97(request):
@@ -444,3 +448,70 @@ def region_97(request):
     customers_97.update(region='77')
     customers_00.update(region='00')
     return HttpResponseRedirect(reverse('salesreport:management'))
+
+
+def goods_period_sales(request):
+    begin_date = datetime.strptime(request.POST['date'], '%Y-%m-%d').date()
+    period_type = request.POST['period']
+    Class = check_goods_class(period_type)
+    try:
+        items_to_delete = Class.objects.filter(period__date_end__gte=begin_date)
+        items_to_delete.delete()
+    except:
+        pass
+    periods = ReportPeriod.objects.filter(period=period_type, date_end__gte=begin_date)
+    goods_periods_list = []
+    goods = Detail_set.objects.all()
+    for good in goods:
+        colors = Item_color.objects.filter(color_scheme=good.color_scheme)
+        for period in periods:
+            good_regular = Class(good=good, period=period)
+            sales_imports = sales_request_for_period_goods_no_color(good, period)
+            good_regular.set_goods_data(sales_imports)
+            goods_periods_list.append(good_regular)
+            for color in colors:
+                good_regular = Class(good=good, period=period, main_color=color)
+                sales_imports = sales_request_for_period_goods(good, period, color)
+                good_regular.set_goods_data(sales_imports)
+                goods_periods_list.append(good_regular)
+
+    Class.objects.bulk_create(goods_periods_list, batch_size=3000)
+    return HttpResponseRedirect(reverse('salesreport:management'))
+
+
+def sales_request_for_period_goods(good, period: ReportPeriod, color):
+    if period.period == 'WK':
+        return Sales_doc_imports.objects.filter(detail_set=good, sales_doc__week=period, item_color=color,
+                                                customer_all__internal=False).exclude(
+            sales_doc_no__startswith='О')
+    elif period.period == 'MT':
+        return Sales_doc_imports.objects.filter(detail_set=good, sales_doc__month=period, item_color=color,
+                                                customer_all__internal=False).exclude(
+            sales_doc_no__startswith='О')
+    elif period.period == 'QT':
+        return Sales_doc_imports.objects.filter(detail_set=good, sales_doc__quarter=period, item_color=color,
+                                                customer_all__internal=False).exclude(
+            sales_doc_no__startswith='О')
+    else:
+        return Sales_doc_imports.objects.filter(detail_set=good, sales_doc__year=period, item_color=color,
+                                                customer_all__internal=False).exclude(
+            sales_doc_no__startswith='О')
+
+
+def sales_request_for_period_goods_no_color(good, period: ReportPeriod):
+    if period.period == 'WK':
+        return Sales_doc_imports.objects.filter(detail_set=good, sales_doc__week=period,
+                                                item_color__isnull=True, customer_all__internal=False).exclude(
+            sales_doc_no__startswith='О')
+    elif period.period == 'MT':
+        return Sales_doc_imports.objects.filter(detail_set=good, sales_doc__month=period,
+                                                item_color__isnull=True, customer_all__internal=False).exclude(
+            sales_doc_no__startswith='О')
+    elif period.period == 'QT':
+        return Sales_doc_imports.objects.filter(detail_set=good, sales_doc__quarter=period,
+                                                item_color__isnull=True, customer_all__internal=False).exclude(
+            sales_doc_no__startswith='О')
+    else:
+        return Sales_doc_imports.objects.filter(detail_set=good, sales_doc__year=period,
+                                                item_color__isnull=True, customer_all__internal=False).exclude(
+            sales_doc_no__startswith='О')

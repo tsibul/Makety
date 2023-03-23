@@ -4,12 +4,12 @@
     <div class="text-end m-3 text-primary"><h6>анализ продаж ver 2.4.0</h6></div>
     <br>
     <div style="margin-left: 60px; display: flex; flex-direction: column; margin-right: 220px;">
-    <h5 class="text-primary">Отчеты&nbsp;по&nbsp;клиентам</h5>
+        <h5 class="text-primary">Отчеты&nbsp;по&nbsp;клиентам</h5>
         <form action="{% url 'salesreport:report_customer_period' %}" method="post">
             {% csrf_token %}
             <div style="display: flex; align-items: center;">
                 <button class="btn btn-primary p-2 m-2" style="width: 20vw;" type="submit"><i
-                        class="bi bi-bar-chart"></i>&nbsp;ABC&nbsp;-&nbsp;анализ&nbsp;клиенты
+                        class="bi bi-bar-chart"></i>&nbsp;ABC-анализ&nbsp;клиенты
                 </button>
                 <label for="cst_period_period" class="form-label m-2">детализация</label>
                 <select class="form-select m-2" style="width: 10vw;" name="period_type" id="cst_period_period">
@@ -89,7 +89,115 @@
 
             </div>
         </form>
-    <h5 class="text-primary">Отчеты&nbsp;по&nbsp;номенклатуре</h5>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div style="display: flex; align-items: center;">
+                <button class="btn btn-primary p-2 m-2" style="width: 28vw;"><i class="bi bi-tree"></i>&nbsp;Виды&nbsp;клиентов
+                </button>
+                <label for="cst_period_geography" class="form-label m-2">детализация</label>
+                <select class="form-select m-2" style="width: 15vw;" name="period_type" id="cst_period_geography">
+                    {% for p_type in period_types %}
+                        <option value="{{ p_type.value }}"
+                                {% if p_type == 'QT' %}selected{% endif %}>{{ p_type.label }}</option>
+                    {% endfor %}
+                </select>
+                <label for="2_period_date_begin" class="form-label m-2">начало&nbsp;периода</label>
+                <input type="date" value="{{ date_begin2|date:'Y-m-d' }}" name="date_begin"
+                       class="form-control m-2" id="2_period_date_begin" style="width: 15vw;">
+                <label for="2_period_date_end" class="form-label m-2">конец&nbsp;периода</label>
+                <input type="date" value="{{ date_end|date:'Y-m-d' }}" name="date_end"
+                       class="form-control m-2" id="2_period_date_end" style="width: 15vw;">
+                <label for="cst_period_report_type" class="form-label m-2" style="width: 10vw;">показатель</label>
+                <select class="form-select m-2" style="width: 10vw;" name="report_type" id="cst_geography_report_type">
+                    <option value="sales_with_vat" selected>Продажи с НДС</option>
+                    <option value="profit">Прибыль</option>
+                    <option value="no_sales">Количество продаж</option>
+                </select>
+
+            </div>
+        </form>
+        <h5 class="text-primary">Отчеты&nbsp;по&nbsp;номенклатуре</h5>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div style="display: flex; align-items: center;">
+                <button class="btn btn-primary p-2 m-2" style="width: 28vw;"><i class="bi bi-tree"></i>&nbsp;ABC-анализ&nbsp;товары
+                </button>
+                <label for="cst_period_geography" class="form-label m-2">детализация</label>
+                <select class="form-select m-2" style="width: 15vw;" name="period_type" id="cst_period_geography">
+                    {% for p_type in period_types %}
+                        <option value="{{ p_type.value }}"
+                                {% if p_type == 'QT' %}selected{% endif %}>{{ p_type.label }}</option>
+                    {% endfor %}
+                </select>
+                <label for="2_period_date_begin" class="form-label m-2">начало&nbsp;периода</label>
+                <input type="date" value="{{ date_begin2|date:'Y-m-d' }}" name="date_begin"
+                       class="form-control m-2" id="2_period_date_begin" style="width: 15vw;">
+                <label for="2_period_date_end" class="form-label m-2">конец&nbsp;периода</label>
+                <input type="date" value="{{ date_end|date:'Y-m-d' }}" name="date_end"
+                       class="form-control m-2" id="2_period_date_end" style="width: 15vw;">
+                <label for="cst_period_report_type" class="form-label m-2" style="width: 10vw;">показатель</label>
+                <select class="form-select m-2" style="width: 10vw;" name="report_type" id="cst_geography_report_type">
+                    <option value="sales_with_vat" selected>Продажи с НДС</option>
+                    <option value="profit">Прибыль</option>
+                    <option value="no_sales">Количество продаж</option>
+                </select>
+
+            </div>
+        </form>
+        <form action="{% url 'salesreport:report_goods_group' %}" method="post">
+            {% csrf_token %}
+            <div style="display: flex; align-items: center;">
+                <button class="btn btn-primary p-2 m-2" style="width: 28vw;"><i class="bi bi-tree"></i>&nbsp;Группы&nbsp;товара
+                </button>
+                <label for="cst_period_geography" class="form-label m-2">детализация</label>
+                <select class="form-select m-2" style="width: 15vw;" name="period_type" id="good_period_group">
+                    {% for p_type in period_types %}
+                        <option value="{{ p_type.value }}"
+                                {% if p_type == 'QT' %}selected{% endif %}>{{ p_type.label }}</option>
+                    {% endfor %}
+                </select>
+                <label for="2_period_date_begin" class="form-label m-2">начало&nbsp;периода</label>
+                <input type="date" value="{{ date_begin2|date:'Y-m-d' }}" name="date_begin"
+                       class="form-control m-2" id="2_period_date_begin" style="width: 15vw;">
+                <label for="2_period_date_end" class="form-label m-2">конец&nbsp;периода</label>
+                <input type="date" value="{{ date_end|date:'Y-m-d' }}" name="date_end"
+                       class="form-control m-2" id="2_period_date_end" style="width: 15vw;">
+                <label for="cst_period_report_type" class="form-label m-2" style="width: 10vw;">показатель</label>
+                <select class="form-select m-2" style="width: 10vw;" name="report_type" id="good_group_report_type">
+                    <option value="sale_with_vat" selected>Продажи с НДС</option>
+                    <option value="profit">Прибыль</option>
+                    <option value="quantity">Количество</option>
+                </select>
+
+            </div>
+        </form>
+        <form action="{% url 'salesreport:report_goods_type' %}" method="post">
+            {% csrf_token %}
+            <div style="display: flex; align-items: center;">
+                <button class="btn btn-primary p-2 m-2" style="width: 28vw;"><i class="bi bi-tree"></i>&nbsp;Товарная&nbsp;матрица
+                </button>
+                <label for="cst_period_geography" class="form-label m-2">детализация</label>
+                <select class="form-select m-2" style="width: 15vw;" name="period_type" id="cst_period_geography">
+                    {% for p_type in period_types %}
+                        <option value="{{ p_type.value }}"
+                                {% if p_type == 'QT' %}selected{% endif %}>{{ p_type.label }}</option>
+                    {% endfor %}
+                </select>
+                <label for="2_period_date_begin" class="form-label m-2">начало&nbsp;периода</label>
+                <input type="date" value="{{ date_begin2|date:'Y-m-d' }}" name="date_begin"
+                       class="form-control m-2" id="2_period_date_begin" style="width: 15vw;">
+                <label for="2_period_date_end" class="form-label m-2">конец&nbsp;периода</label>
+                <input type="date" value="{{ date_end|date:'Y-m-d' }}" name="date_end"
+                       class="form-control m-2" id="2_period_date_end" style="width: 15vw;">
+                <label for="cst_period_report_type" class="form-label m-2" style="width: 10vw;">показатель</label>
+                <select class="form-select m-2" style="width: 10vw;" name="report_type" id="cst_geography_report_type">
+                    <option value="sale_with_vat" selected>Продажи с НДС</option>
+                    <option value="profit">Прибыль</option>
+                    <option value="quantity">Количество продаж</option>
+                </select>
+
+            </div>
+        </form>
     </div>
 {% endblock %}
 

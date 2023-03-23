@@ -9,3 +9,4 @@ from salesreport.views.exra_reports import *
 from salesreport.views.report_customer_period import *
 from salesreport.views.report_customer_migrations import *
 from salesreport.views.report_customer_geography import *
+from salesreport.views.report_goods_group import *
